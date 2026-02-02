@@ -1,0 +1,9 @@
+@import "./design-tokens.css";
+
+/* Typography Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&family=Hind:wght@400;500;600&family=Mina:wght@400;700&display=swap');
+
+.font-heading { font-family: "Montserrat", sans-serif; }
+.font-body { font-family: "Open Sans", sans-serif; }
+.font-ui { font-family: "Hind", sans-serif; }
+.font-stat { font-family: "Mina", sans-serif; }
