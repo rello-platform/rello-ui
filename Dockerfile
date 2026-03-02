@@ -17,6 +17,7 @@ RUN npm ci
 COPY --from=lib-build /app/dist /app/dist
 COPY --from=lib-build /app/src /app/src
 COPY --from=lib-build /app/package.json /app/package.json
+COPY --from=lib-build /app/node_modules /app/node_modules
 COPY configurator/ ./
 RUN npx vite build
 RUN npx tsc -p tsconfig.server.json
