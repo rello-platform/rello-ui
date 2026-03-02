@@ -1,0 +1,70 @@
+import { Meta } from "@storybook/blocks";
+import { SpacingItem, RadiusItem, ShadowItem } from "./helpers/SpacingBlock";
+
+<Meta title="Foundations/Spacing & Layout" />
+
+# Spacing, Radius & Shadows
+
+## Spacing Scale
+
+Based on a 4px/8px grid system.
+
+<SpacingItem token="--space-1" value="4px" />
+<SpacingItem token="--space-2" value="8px" />
+<SpacingItem token="--space-3" value="12px" />
+<SpacingItem token="--space-4" value="16px" />
+<SpacingItem token="--space-5" value="20px" />
+<SpacingItem token="--space-6" value="24px" />
+<SpacingItem token="--space-8" value="32px" />
+<SpacingItem token="--space-10" value="40px" />
+<SpacingItem token="--space-12" value="48px" />
+
+## Border Radius
+
+Soft, rounded edges are core to Rello's visual identity.
+
+<RadiusItem token="--radius-xs" value="4px" />
+<RadiusItem token="--radius-sm" value="6px" />
+<RadiusItem token="--radius-md" value="8px" />
+<RadiusItem token="--radius-lg" value="12px" />
+<RadiusItem token="--radius-xl" value="16px" />
+<RadiusItem token="--radius-full" value="9999px" />
+
+## Shadows
+
+Elevation system for depth and layering.
+
+<ShadowItem token="--shadow-xs" value="0 1px 2px rgba(0,0,0,0.04)" />
+<ShadowItem token="--shadow-sm" value="0 1px 2px rgba(0,0,0,0.05)" />
+<ShadowItem token="--shadow-md" value="0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)" />
+<ShadowItem token="--shadow-lg" value="0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)" />
+<ShadowItem token="--shadow-xl" value="0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)" />
+
+## Transitions
+
+| Token | Duration | Use |
+|-------|----------|-----|
+| `--transition-fast` | 150ms | Micro-interactions (hover, toggle) |
+| `--transition-normal` | 200ms | Standard transitions |
+| `--transition-slow` | 300ms | Complex animations (modals, drawers) |
+
+## Z-Index Scale
+
+| Token | Value | Use |
+|-------|-------|-----|
+| `--z-dropdown` | 10 | Dropdown menus |
+| `--z-sticky` | 20 | Sticky headers |
+| `--z-fixed` | 30 | Fixed elements |
+| `--z-overlay` | 40 | Overlays |
+| `--z-modal` | 50 | Modals, dialogs |
+| `--z-popover` | 60 | Popovers |
+| `--z-tooltip` | 70 | Tooltips |
+
+## Responsive Breakpoints
+
+| Name | Width | Target |
+|------|-------|--------|
+| Mobile | < 640px | Phones |
+| Tablet | 640px - 1024px | Tablets |
+| Desktop | 1024px - 1440px | Laptops |
+| Wide | > 1440px | Large monitors |

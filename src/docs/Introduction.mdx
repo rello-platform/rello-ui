@@ -1,0 +1,73 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Getting Started/Introduction" />
+
+# @rello/ui Design System
+
+The shared UI component library for the Rello platform — powering Rello, Home Ready, The Oven, Home Stretch, and future applications.
+
+## Design Principles
+
+| Principle | Description |
+|-----------|-------------|
+| **Minimal** | Only what's needed, nothing more |
+| **Warm** | Cool grays balanced with terracotta accents |
+| **Rounded** | Soft edges create approachability |
+| **Spacious** | Generous whitespace aids focus |
+| **Brandable** | Full white-label support via CSS custom properties |
+
+## Installation
+
+```bash
+npm install @rello/ui
+```
+
+## Setup
+
+Import the styles in your app's global CSS:
+
+```css
+@import "@rello/ui/styles";
+```
+
+Or import just the tokens:
+
+```css
+@import "@rello/ui/tokens";
+```
+
+## Usage
+
+```tsx
+import { Button, Card, Badge, Input } from "@rello/ui";
+
+function MyPage() {
+  return (
+    <Card>
+      <Input label="Email" placeholder="you@example.com" />
+      <Button variant="primary">Submit</Button>
+    </Card>
+  );
+}
+```
+
+## White-Label Theming
+
+Override CSS custom properties to brand the entire system:
+
+```css
+:root {
+  --brand-primary: #1a73e8;
+  --brand-accent: #e8453a;
+}
+```
+
+Every component automatically picks up the new brand colors.
+
+## Architecture
+
+- **Tailwind CSS v4** with CSS custom properties for design tokens
+- **CVA** (class-variance-authority) for component variant management
+- **Radix UI** primitives for accessible interactive components
+- **Iconoir** for consistent iconography
+- **clsx + tailwind-merge** via `cn()` utility for smart class composition

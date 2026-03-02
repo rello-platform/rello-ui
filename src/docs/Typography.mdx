@@ -1,0 +1,121 @@
+import { Meta } from "@storybook/blocks";
+import { FontFamilySample, TypeSample } from "./helpers/TypeSample";
+
+<Meta title="Foundations/Typography" />
+
+# Typography
+
+Rello uses four purpose-built font families, each assigned to a specific role.
+
+## Font Families
+
+<FontFamilySample
+  name="Montserrat"
+  fontFamily="'Montserrat', sans-serif"
+  role="Headings & Titles"
+  weights={[400, 500, 600, 700]}
+/>
+
+<FontFamilySample
+  name="Open Sans"
+  fontFamily="'Open Sans', sans-serif"
+  role="Body Text & Descriptions"
+  weights={[400, 500, 600]}
+/>
+
+<FontFamilySample
+  name="Hind"
+  fontFamily="'Hind', sans-serif"
+  role="UI Labels, Buttons & Badges"
+  weights={[400, 500, 600]}
+/>
+
+<FontFamilySample
+  name="Mina"
+  fontFamily="'Mina', sans-serif"
+  role="Statistics, Scores & Metrics"
+  weights={[400, 700]}
+/>
+
+## Type Scale
+
+<TypeSample
+  label="H1"
+  fontFamily="'Montserrat', sans-serif"
+  fontSize="32px"
+  fontWeight={700}
+  lineHeight="1.2"
+  sampleText="Page Title — 32px Bold"
+/>
+
+<TypeSample
+  label="H2"
+  fontFamily="'Montserrat', sans-serif"
+  fontSize="24px"
+  fontWeight={600}
+  lineHeight="1.3"
+  sampleText="Section Header — 24px Semibold"
+/>
+
+<TypeSample
+  label="H3"
+  fontFamily="'Montserrat', sans-serif"
+  fontSize="20px"
+  fontWeight={600}
+  lineHeight="1.4"
+  sampleText="Card Title — 20px Semibold"
+/>
+
+<TypeSample
+  label="H4"
+  fontFamily="'Montserrat', sans-serif"
+  fontSize="16px"
+  fontWeight={600}
+  lineHeight="1.4"
+  sampleText="Subsection — 16px Semibold"
+/>
+
+<TypeSample
+  label="Body"
+  fontFamily="'Open Sans', sans-serif"
+  fontSize="14px"
+  fontWeight={400}
+  lineHeight="1.5"
+  sampleText="Default body text used for descriptions, paragraphs, and general content throughout the platform."
+/>
+
+<TypeSample
+  label="Small"
+  fontFamily="'Open Sans', sans-serif"
+  fontSize="12px"
+  fontWeight={400}
+  lineHeight="1.4"
+  sampleText="Captions, metadata, and secondary information"
+/>
+
+<TypeSample
+  label="Tiny / Label"
+  fontFamily="'Hind', sans-serif"
+  fontSize="11px"
+  fontWeight={500}
+  lineHeight="1.3"
+  sampleText="BADGE TEXT AND TAGS"
+/>
+
+<TypeSample
+  label="Stat"
+  fontFamily="'Mina', sans-serif"
+  fontSize="32px"
+  fontWeight={600}
+  lineHeight="1.2"
+  sampleText="1,247"
+/>
+
+## CSS Classes
+
+| Class | Font Family | Use |
+|-------|-------------|-----|
+| `.font-heading` | Montserrat | Section headers, titles |
+| `.font-body` | Open Sans | Body text, descriptions |
+| `.font-ui` | Hind | Buttons, badges, labels |
+| `.font-stat` | Mina | Stats, scores, metrics |

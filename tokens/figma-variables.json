@@ -1,0 +1,220 @@
+{
+  "brand/primary": {
+    "$value": "#3B5998",
+    "$type": "color"
+  },
+  "brand/accent": {
+    "$value": "#C9785D",
+    "$type": "color"
+  },
+  "brand/primary-light": {
+    "$value": "#3B599826",
+    "$type": "color"
+  },
+  "brand/accent-light": {
+    "$value": "#C9785D26",
+    "$type": "color"
+  },
+
+  "pipeline/hot": {
+    "$value": "#D9534F",
+    "$type": "color"
+  },
+  "pipeline/qualified": {
+    "$value": "#E8915A",
+    "$type": "color"
+  },
+  "pipeline/engaged": {
+    "$value": "#D4A84B",
+    "$type": "color"
+  },
+  "pipeline/warming": {
+    "$value": "#6A9FB5",
+    "$type": "color"
+  },
+  "pipeline/cold": {
+    "$value": "#939CA3",
+    "$type": "color"
+  },
+  "pipeline/hot-light": {
+    "$value": "#D9534F26",
+    "$type": "color"
+  },
+  "pipeline/qualified-light": {
+    "$value": "#E8915A26",
+    "$type": "color"
+  },
+  "pipeline/engaged-light": {
+    "$value": "#D4A84B26",
+    "$type": "color"
+  },
+  "pipeline/warming-light": {
+    "$value": "#6A9FB526",
+    "$type": "color"
+  },
+  "pipeline/cold-light": {
+    "$value": "#939CA326",
+    "$type": "color"
+  },
+
+  "status/success": {
+    "$value": "#6B9080",
+    "$type": "color"
+  },
+  "status/success-light": {
+    "$value": "#6B908026",
+    "$type": "color"
+  },
+  "status/warning": {
+    "$value": "#D4A84B",
+    "$type": "color"
+  },
+  "status/warning-light": {
+    "$value": "#D4A84B26",
+    "$type": "color"
+  },
+  "status/error": {
+    "$value": "#C9605D",
+    "$type": "color"
+  },
+  "status/error-light": {
+    "$value": "#C9605D26",
+    "$type": "color"
+  },
+  "status/info": {
+    "$value": "#3298DC",
+    "$type": "color"
+  },
+  "status/info-light": {
+    "$value": "#3298DC26",
+    "$type": "color"
+  },
+
+  "neutral/50": {
+    "$value": "#FAFBFC",
+    "$type": "color"
+  },
+  "neutral/100": {
+    "$value": "#E1E4E8",
+    "$type": "color"
+  },
+  "neutral/200": {
+    "$value": "#C8CED3",
+    "$type": "color"
+  },
+  "neutral/300": {
+    "$value": "#B0B7BF",
+    "$type": "color"
+  },
+  "neutral/400": {
+    "$value": "#98A1AA",
+    "$type": "color"
+  },
+  "neutral/500": {
+    "$value": "#646F77",
+    "$type": "color"
+  },
+  "neutral/600": {
+    "$value": "#525B62",
+    "$type": "color"
+  },
+  "neutral/700": {
+    "$value": "#434B52",
+    "$type": "color"
+  },
+  "neutral/800": {
+    "$value": "#353C42",
+    "$type": "color"
+  },
+  "neutral/900": {
+    "$value": "#2D3339",
+    "$type": "color"
+  },
+
+  "semantic/background": {
+    "$value": "#FAFBFC",
+    "$type": "color"
+  },
+  "semantic/foreground": {
+    "$value": "#2D3339",
+    "$type": "color"
+  },
+  "semantic/card-background": {
+    "$value": "#FFFFFF",
+    "$type": "color"
+  },
+  "semantic/card-border": {
+    "$value": "#E1E4E8",
+    "$type": "color"
+  },
+  "semantic/muted": {
+    "$value": "#E1E4E8",
+    "$type": "color"
+  },
+  "semantic/muted-foreground": {
+    "$value": "#646F77",
+    "$type": "color"
+  },
+
+  "spacing/1": {
+    "$value": 4,
+    "$type": "number"
+  },
+  "spacing/2": {
+    "$value": 8,
+    "$type": "number"
+  },
+  "spacing/3": {
+    "$value": 12,
+    "$type": "number"
+  },
+  "spacing/4": {
+    "$value": 16,
+    "$type": "number"
+  },
+  "spacing/5": {
+    "$value": 20,
+    "$type": "number"
+  },
+  "spacing/6": {
+    "$value": 24,
+    "$type": "number"
+  },
+  "spacing/8": {
+    "$value": 32,
+    "$type": "number"
+  },
+  "spacing/10": {
+    "$value": 40,
+    "$type": "number"
+  },
+  "spacing/12": {
+    "$value": 48,
+    "$type": "number"
+  },
+
+  "radius/xs": {
+    "$value": 4,
+    "$type": "number"
+  },
+  "radius/sm": {
+    "$value": 6,
+    "$type": "number"
+  },
+  "radius/md": {
+    "$value": 8,
+    "$type": "number"
+  },
+  "radius/lg": {
+    "$value": 12,
+    "$type": "number"
+  },
+  "radius/xl": {
+    "$value": 16,
+    "$type": "number"
+  },
+  "radius/full": {
+    "$value": 9999,
+    "$type": "number"
+  }
+}

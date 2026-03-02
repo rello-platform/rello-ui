@@ -1,0 +1,80 @@
+import { Meta } from "@storybook/blocks";
+import { ColorGroup } from "./helpers/ColorSwatch";
+
+<Meta title="Foundations/Colors" />
+
+# Color System
+
+All colors are defined as CSS custom properties in `design-tokens.css`. Brand colors are customizable per tenant; all other colors remain constant for UI consistency.
+
+## Brand Colors (Customizable)
+
+These change per tenant via CSS variable overrides.
+
+<ColorGroup
+  title="Brand"
+  colors={[
+    { name: "Primary", variable: "--brand-primary", hex: "#3B5998" },
+    { name: "Accent", variable: "--brand-accent", hex: "#C9785D" },
+    { name: "Primary Light", variable: "--brand-primary-light", hex: "rgba(59,89,152,0.15)" },
+    { name: "Accent Light", variable: "--brand-accent-light", hex: "rgba(201,120,93,0.15)" },
+  ]}
+/>
+
+## Pipeline Stage Colors (Universal)
+
+Consistent across all tenants for universal understanding of lead lifecycle.
+
+<ColorGroup
+  title="Pipeline Stages"
+  colors={[
+    { name: "Hot", variable: "--hot", hex: "#D9534F" },
+    { name: "Qualified", variable: "--qualified", hex: "#E8915A" },
+    { name: "Engaged", variable: "--engaged", hex: "#D4A84B" },
+    { name: "Warming", variable: "--warming", hex: "#6A9FB5" },
+    { name: "Cold", variable: "--cold", hex: "#939CA3" },
+  ]}
+/>
+
+## Status Colors
+
+<ColorGroup
+  title="Status"
+  colors={[
+    { name: "Success", variable: "--success", hex: "#6B9080" },
+    { name: "Warning", variable: "--warning", hex: "#D4A84B" },
+    { name: "Error", variable: "--error", hex: "#C9605D" },
+    { name: "Info", variable: "--info", hex: "#3298DC" },
+  ]}
+/>
+
+## Neutrals
+
+The gray scale used for text, backgrounds, borders, and UI chrome.
+
+<ColorGroup
+  title="Neutral Palette"
+  colors={[
+    { name: "50 — Snow", variable: "--neutral-50", hex: "#FAFBFC" },
+    { name: "100 — Cloud", variable: "--neutral-100", hex: "#E1E4E8" },
+    { name: "200", variable: "--neutral-200", hex: "#C8CED3" },
+    { name: "300 — Mist", variable: "--neutral-300", hex: "#B0B7BF" },
+    { name: "400", variable: "--neutral-400", hex: "#98A1AA" },
+    { name: "500 — Slate", variable: "--neutral-500", hex: "#646F77" },
+    { name: "600", variable: "--neutral-600", hex: "#525B62" },
+    { name: "700 — Storm", variable: "--neutral-700", hex: "#434B52" },
+    { name: "800", variable: "--neutral-800", hex: "#353C42" },
+    { name: "900 — Charcoal", variable: "--neutral-900", hex: "#2D3339" },
+  ]}
+/>
+
+## Semantic Aliases
+
+| Token | Maps To | Use |
+|-------|---------|-----|
+| `--background` | `--neutral-50` | Page background |
+| `--foreground` | `--neutral-900` | Primary text |
+| `--card-background` | `#FFFFFF` | Card surfaces |
+| `--card-border` | `--neutral-100` | Card borders |
+| `--muted` | `--neutral-100` | Muted backgrounds |
+| `--muted-foreground` | `--neutral-500` | Secondary text |

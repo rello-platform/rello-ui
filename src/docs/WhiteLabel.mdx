@@ -1,0 +1,79 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Foundations/White Label" />
+
+# White-Label Theming
+
+Every Rello platform app supports full white-label customization. Tenants (MLOs and Brokers) can override brand colors, and the entire UI adapts automatically.
+
+## How It Works
+
+All brand-aware components reference CSS custom properties rather than hardcoded colors:
+
+```css
+/* Default Rello branding */
+:root {
+  --brand-primary: #3B5998;
+  --brand-accent: #C9785D;
+  --brand-primary-light: rgba(59, 89, 152, 0.15);
+  --brand-accent-light: rgba(201, 120, 93, 0.15);
+}
+```
+
+## Overriding for a Tenant
+
+To apply a tenant's branding, override these four variables:
+
+```css
+:root {
+  --brand-primary: #1a73e8;
+  --brand-accent: #e8453a;
+  --brand-primary-light: rgba(26, 115, 232, 0.15);
+  --brand-accent-light: rgba(232, 69, 58, 0.15);
+}
+```
+
+Every button, badge, focus ring, icon container, and branded element updates automatically.
+
+## What Changes vs. What Stays
+
+| Element | Customizable? | Notes |
+|---------|:---:|-------|
+| Primary color | Yes | Buttons, links, focus rings, active states |
+| Accent color | Yes | Secondary actions, highlights |
+| Pipeline stage colors | No | Hot/Qualified/Engaged/Warming/Cold are universal |
+| Status colors | No | Success/Warning/Error/Info are universal |
+| Neutral palette | No | Grays remain constant for consistency |
+| Typography | No | Font families and scale are fixed |
+| Spacing & radius | No | Layout tokens are fixed |
+
+## Subscriber Branding Hierarchy
+
+| Element | MLO Sets | Broker Sets |
+|---------|:---:|:---:|
+| Primary Logo | Yes | Yes |
+| Primary Color | Yes | Yes |
+| Accent Color | Yes | Yes |
+| Company Name | Yes | Yes |
+| Contact Info | Yes | Yes |
+
+### Broker Agent Sub-Branding
+
+Brokers can optionally enable agent-level personalization, where individual agents get their own photo and contact info displayed alongside the brokerage brand.
+
+## Integration
+
+```tsx
+// In your app's BrandingProvider or layout
+useEffect(() => {
+  if (tenant.colorPrimary) {
+    document.documentElement.style.setProperty("--brand-primary", tenant.colorPrimary);
+    // Compute the light variant
+    const rgb = hexToRgb(tenant.colorPrimary);
+    document.documentElement.style.setProperty(
+      "--brand-primary-light",
+      `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)`
+    );
+  }
+}, [tenant]);
+```

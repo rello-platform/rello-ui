@@ -1,0 +1,35 @@
+[
+  {
+    "id": "core",
+    "name": "Core",
+    "$description": "Universal tokens — pipeline, status, neutral, semantic, spacing, radius, shadow, typography. Never changes per tenant.",
+    "selectedTokenSets": {
+      "tokens": "source"
+    },
+    "group": "Foundation"
+  },
+  {
+    "id": "rello-default",
+    "name": "Rello Default",
+    "$description": "Default Rello brand: primary=#3B5998, accent=#C9785D",
+    "selectedTokenSets": {
+      "tokens": "source"
+    },
+    "group": "Brand"
+  },
+  {
+    "id": "tenant-example",
+    "name": "Tenant Example",
+    "$description": "Demo white-label override: green primary, purple accent",
+    "selectedTokenSets": {
+      "tokens": "source"
+    },
+    "$figmaVariableReferences": {
+      "brand.primary": "#2E7D32",
+      "brand.accent": "#8B5CF6",
+      "brand.primary-light": "rgba(46, 125, 50, 0.15)",
+      "brand.accent-light": "rgba(139, 92, 246, 0.15)"
+    },
+    "group": "Brand"
+  }
+]

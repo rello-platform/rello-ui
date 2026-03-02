@@ -1,0 +1,56 @@
+import { Meta } from "@storybook/blocks";
+import { IconGrid } from "./helpers/IconGrid";
+
+<Meta title="Foundations/Icons" />
+
+# Iconography — Iconoir
+
+Rello uses [Iconoir](https://iconoir.com), a free, open-source icon library with a minimal, consistent aesthetic.
+
+## Style Guidelines
+
+| Property | Value |
+|----------|-------|
+| **Default size** | 20px |
+| **Small size** | 16px |
+| **Large size** | 24px |
+| **Stroke width** | 1.5px |
+| **Default color** | `var(--neutral-500)` / `#646F77` |
+| **Active color** | `var(--brand-primary)` |
+
+## Usage
+
+```tsx
+import { Home, Mail, Settings } from "iconoir-react";
+
+// Standard usage
+<Home width={20} height={20} strokeWidth={1.5} />
+
+// With brand color
+<Home width={24} height={24} className="text-[var(--brand-primary)]" />
+```
+
+## Icon Catalog
+
+The curated set of Iconoir icons approved for use across the Rello platform.
+
+<IconGrid />
+
+## Icon Container Pattern
+
+Icons in cards and headers should be wrapped in colored containers:
+
+```tsx
+import { Icon, IconContainer } from "@rello/ui";
+import { Home } from "iconoir-react";
+
+<IconContainer size="md" color="primary">
+  <Icon icon={Home} size="md" />
+</IconContainer>
+```
+
+| Size | Dimensions | Border Radius |
+|------|------------|---------------|
+| `sm` | 32 x 32px | 8px |
+| `md` | 40 x 40px | 12px |
+| `lg` | 48 x 48px | 16px |
