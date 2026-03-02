@@ -1,130 +1,226 @@
 {
+  "designPrinciples": {
+    "summary": "Every card earns its space. Illustrations create identity. Color communicates, not decorates. Motion orients the user. Fast over slow. Content should never jump or reflow unexpectedly.",
+    "principles": [
+      "Every card earns its space. If a card does not contain content the user needs on this page, remove it. Visual interest comes from the quality and variety of a few well-designed cards, not from filling every pixel.",
+      "Illustrations create identity. A user should identify which section they are looking at by the illustration alone, without reading the title.",
+      "Color communicates, not decorates. Every use of color carries meaning — status, category, or hierarchy. Color is never applied purely for visual variety.",
+      "Motion should feel natural, not performative. Animations exist to orient the user, provide feedback, and create continuity. If an animation does not serve one of those purposes, remove it.",
+      "Fast over slow. Most transitions land in the 200–400ms range. Anything over 500ms feels sluggish. Users should never wait for an animation to finish.",
+      "Content should never jump or reflow unexpectedly. Use drawers over inline panels, stacked carousels over expanding rows. The user's spatial map of the page must remain stable.",
+      "Avoid the trending default. If a pattern is in every SaaS template and dashboard kit, evaluate whether it serves our users or just follows convention."
+    ]
+  },
+  "antiPatterns": [
+    "No colored side borders on cards. Use dot indicators, tinted backgrounds, branded illustrations, or status badges instead.",
+    "No generic icon library icons as primary card visuals. Library icons are fine for navigation, buttons, and inline indicators — but card-level identity requires custom SVG illustrations.",
+    "No inline detail panels that push or compress content. Always use overlay drawers.",
+    "No uniform card sizing. Every dashboard page uses at least two different card tiers.",
+    "No emoji as icons. Emoji render differently across OS, cannot be color-controlled, and don't support decorative backgrounds."
+  ],
   "components": {
     "drawer": {
       "name": "Drawer (Side Panel)",
       "category": "overlay",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "A right-anchored overlay panel that slides in from the right edge of the viewport to show detail views. Overlays the main content without displacing it. A scrim dims the underlying content to signal focus.",
+      "behavior": "Slides in from right (translateX: 100% to 0). Duration: 250–350ms. Easing: ease-in-out or cubic-bezier(0.4, 0.0, 0.2, 1). Scrim fades to 30–40% black. Closes via X button, scrim click, or Escape key. Closing reverses the animation. Main content beneath remains exactly as the user left it — no shifting, no resizing.",
+      "appearance": "Width: 400–520px (or ~35–40% of viewport). Background: card-background color. Border-left with card-border color. Shadow-xl on the left edge. Z-index above all main content but below system modals. Scrim is semi-transparent black overlay covering the full viewport.",
+      "doUse": "Lead detail views from any list, table, or card. File/document preview. Notification detail. Any item-level drill-down where the user clicks to see more about a specific item in a list.",
+      "dontUse": "Full-page forms with significant data entry — use a full-page view or centered modal instead. Multi-step wizards or step-by-step flows — these should live in their own full-screen view, not stacked inside a drawer.",
+      "parameters": {
+        "duration": { "value": 300, "min": 150, "max": 500, "unit": "ms", "label": "Slide duration" },
+        "width": { "value": 480, "min": 320, "max": 640, "unit": "px", "label": "Drawer width" },
+        "scrimOpacity": { "value": 0.35, "min": 0.1, "max": 0.6, "unit": "", "label": "Scrim opacity" },
+        "easing": { "value": "cubic-bezier(0.4, 0.0, 0.2, 1)", "options": ["ease-in-out", "ease-out", "cubic-bezier(0.4, 0.0, 0.2, 1)", "cubic-bezier(0.0, 0.0, 0.2, 1)"], "label": "Easing curve" }
+      }
     },
     "toast": {
       "name": "Toast Notification",
       "category": "feedback",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "A small, non-blocking message that appears briefly to confirm an action or surface a notification, then auto-dismisses. Does not require user interaction to close.",
+      "behavior": "Slides in from the top-right or bottom-right. Auto-dismisses after 4–5 seconds. Can be manually dismissed by clicking an X or swiping. Multiple toasts stack vertically with 8px gap. New toasts push older ones down. Duration: 200–300ms for enter/exit animation.",
+      "appearance": "Background: card-background with shadow-lg. Border-radius: radius-lg. Padding: 12px 16px. Max-width: 400px. Includes an icon (success/warning/error/info), a title, and optional description text. Status color accent on the left icon.",
+      "doUse": "Action confirmations (saved, deleted, sent). Background process completions. Non-critical notifications that don't need immediate attention.",
+      "dontUse": "Critical errors that require user action — use a dialog instead. Long messages or complex content. Anything that needs the user to make a decision.",
+      "parameters": {
+        "duration": { "value": 250, "min": 100, "max": 500, "unit": "ms", "label": "Animation duration" },
+        "autoDismiss": { "value": 4000, "min": 2000, "max": 8000, "unit": "ms", "label": "Auto-dismiss after" },
+        "position": { "value": "top-right", "options": ["top-right", "top-center", "bottom-right", "bottom-center"], "label": "Position" }
+      }
     },
     "skeleton": {
       "name": "Skeleton Loader",
       "category": "feedback",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "Placeholder shapes with a shimmer animation shown while real content loads. Preserves the layout structure so the page doesn't jump when content arrives.",
+      "behavior": "Renders immediately on mount, before data loads. A subtle shimmer (light gradient) sweeps left-to-right across the skeleton shapes on a loop. When data arrives, skeleton fades out and real content fades in (200ms crossfade). Skeleton shapes match the approximate size and position of the real content they replace.",
+      "appearance": "Shapes use neutral-100 as the base fill. Shimmer highlight is neutral-50 at 60% opacity, sweeping across. Border-radius matches the real content (rounded rectangles for text lines, circles for avatars). Animate shimmer with 1.5–2s duration, infinite loop.",
+      "doUse": "Initial page loads. Tab switches where new data is being fetched. Any component that has a loading state longer than 300ms. Card content, table rows, profile sections, stat values.",
+      "dontUse": "Instant state changes (optimistic updates). Content that is already cached/available. Interactive elements that should be disabled instead of replaced.",
+      "parameters": {
+        "shimmerDuration": { "value": 1800, "min": 1000, "max": 3000, "unit": "ms", "label": "Shimmer speed" },
+        "baseColor": { "value": "#E1E4E8", "label": "Base color" },
+        "highlightColor": { "value": "#FAFBFC", "label": "Highlight color" }
+      }
     },
     "card": {
       "name": "Card",
       "category": "layout",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "The primary content container in the Rello platform. Cards come in four tiers of visual hierarchy: Hero (Tier 1), Feature (Tier 2), Stat Pill (Tier 3), and Utility (Tier 4). Every dashboard uses a mix of tiers to create a natural reading order.",
+      "behavior": "Cards mount with staggered entrance animation (see Staggered Entrance). Hoverable cards transition shadow on hover (200ms). Clickable cards show pointer cursor and open detail drawers. Feature Cards include Branded Card Illustrations in the header area.",
+      "appearance": "Tier 1 Hero: Full-width or two-thirds, dark gradient or bold color background, large branded illustration, primary metric, call-to-action. One per view. Tier 2 Feature: White background with subtle border, branded illustration in top-right header, section title and subtitle, primary content area. Two-column layout typical. Tier 3 Stat Pill: Compact single-metric card with small icon in 36–40px tinted container. Rows of 4–6. White background, subtle border. Tier 4 Utility: Smallest cards in 5-column grid. Large branded illustration filling top third, title and tagline below.",
+      "doUse": "Every dashboard page should use at least two card tiers. Start with one Hero Card at top, follow with Stat Pills for context, then Feature Cards for main content, optionally Utility Cards for hub navigation.",
+      "dontUse": "Never use a grid of identically-sized cards — this creates a flat layout with no hierarchy. Never use colored side borders on cards — use dot indicators, tinted backgrounds, or branded illustrations instead.",
+      "parameters": {
+        "borderRadius": { "value": 12, "min": 4, "max": 24, "unit": "px", "label": "Corner radius" },
+        "shadowLevel": { "value": "sm", "options": ["xs", "sm", "md", "lg"], "label": "Default shadow" },
+        "hoverShadow": { "value": "md", "options": ["sm", "md", "lg", "xl"], "label": "Hover shadow" }
+      }
+    },
+    "branded-card-illustration": {
+      "name": "Branded Card Illustration",
+      "category": "layout",
+      "description": "A large (72–100px) custom-drawn SVG illustration with three visual layers that serves as the primary visual identifier on a content card. Every major section of the platform is assigned a permanent illustration.",
+      "behavior": "Static on mount — no animation on the illustration itself (the card's staggered entrance handles motion). On dark card backgrounds, the illustration adapts: tinted container becomes very subtle white at 5–8% opacity, decorative pattern renders in accent color at 10–20%, primary icon renders as stroke-only outline at 40–60% opacity.",
+      "appearance": "Layer 1 — Tinted Container: Rounded rectangle (border-radius 16–20px, 80–96px size), filled with card accent color at 6–10% opacity. Positioned top-right of card header, vertically aligned with title block. Layer 2 — Decorative Background: Low-opacity (3–12%) geometric pattern inside the container — concentric circles, dot grids, hexagons, orbital rings, or dashed orbits. Reads as texture, not noise. Layer 3 — Primary Icon: Custom SVG using the card's accent color at varied opacities for depth. Includes at least one micro-detail (sparkle, wave, wisp, ring). Feels illustrative, not utilitarian.",
+      "doUse": "Every Tier 2 Feature Card must include a Branded Card Illustration in its header. Tier 4 Utility Cards use a large illustration filling the top third. Tier 1 Hero Cards include a branded illustration adapted for dark backgrounds.",
+      "dontUse": "Never substitute with generic icon library icons (Lucide, Heroicons, etc.) for card-level identity. Never reuse the same illustration across different sections. Never swap assigned illustrations between cards.",
+      "parameters": {
+        "iconSize": { "value": 84, "min": 64, "max": 120, "unit": "px", "label": "Illustration size" },
+        "containerSize": { "value": 88, "min": 72, "max": 112, "unit": "px", "label": "Container size" },
+        "containerOpacity": { "value": 0.08, "min": 0.04, "max": 0.15, "unit": "", "label": "Container fill opacity" },
+        "patternOpacity": { "value": 0.07, "min": 0.03, "max": 0.15, "unit": "", "label": "Pattern opacity" }
+      }
+    },
+    "stacked-carousel": {
+      "name": "Stacked Carousel",
+      "category": "layout",
+      "description": "A browsable stack of cards showing one item at a time with visible depth cues — like a stack of papers on a desk. Shadow cards peek out behind the active card to communicate that more items exist.",
+      "behavior": "Active card is fully visible in foreground. Two shadow cards peek out behind, each offset and smaller. User navigates with arrow buttons (bottom-right) and dot indicators (bottom-left). Card counter shows position (e.g., '2/4') in top-right. Advancing to next card: current card animates out, next card animates in. Transition: crossfade or slide, 250–300ms, ease-in-out.",
+      "appearance": "Active card: full size, border-radius 20–22px, z-index top. Shadow card 1: offset 4px inward from each edge, 2px down, 80% opacity. Shadow card 2: offset 8px inward, 4px down, 50% opacity. Shadow card colors: neutral warm tones (bone, light warm gray). Navigation arrows: 32px, rounded, bordered. Dot indicators: active dot is wider (20px) with accent color, inactive dots are default size. Card counter: muted text.",
+      "doUse": "Browsing 2–6 items of the same type without leaving the current view. Active deals, lead batches, reports, pipeline sessions.",
+      "dontUse": "Mixed content types — never stack cards of different types. Single items — show a regular card, not a stack. More than 6 items — use a scrollable list with detail drawer instead. The stack metaphor breaks down when users can't gauge depth.",
+      "parameters": {
+        "transitionDuration": { "value": 275, "min": 150, "max": 500, "unit": "ms", "label": "Card transition" },
+        "shadowOffset1": { "value": 4, "min": 2, "max": 8, "unit": "px", "label": "Shadow card 1 offset" },
+        "shadowOffset2": { "value": 8, "min": 4, "max": 16, "unit": "px", "label": "Shadow card 2 offset" },
+        "shadowOpacity1": { "value": 0.8, "min": 0.5, "max": 1, "unit": "", "label": "Shadow card 1 opacity" },
+        "shadowOpacity2": { "value": 0.5, "min": 0.2, "max": 0.8, "unit": "", "label": "Shadow card 2 opacity" }
+      }
     },
     "button": {
       "name": "Button",
       "category": "action",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "The primary interactive element for triggering actions. Comes in 7 variants (primary, secondary, accent, ghost, danger, outline, link) and 8 sizes (xs through xl, plus 3 icon sizes).",
+      "behavior": "Hover: slight opacity reduction (0.9) on solid variants, background tint on ghost/outline. Focus: ring-2 with brand-primary color. Active: slight scale reduction. Loading state: shows spinner, disables interaction. Disabled: 50% opacity, no pointer events. Transitions: 150ms ease for all interactive states.",
+      "appearance": "Primary: brand-primary background, white text. Accent: brand-accent background, white text. Secondary: neutral-100 background, neutral text. Ghost: transparent, text only, hover shows background. Danger: error color background, white text. Outline: white background, border, neutral text. Link: brand-primary text, underlined. All variants use rounded-md (8px) corners and font-ui family.",
+      "doUse": "Form submissions, dialog confirmations, navigation triggers, calls-to-action. Use primary for the main action, secondary or ghost for supporting actions, danger for destructive actions.",
+      "dontUse": "Navigation that should be a link. Toggles that should be switches. Status indicators that should be badges.",
+      "parameters": {
+        "borderRadius": { "value": 8, "min": 4, "max": 16, "unit": "px", "label": "Corner radius" },
+        "hoverOpacity": { "value": 0.9, "min": 0.7, "max": 1, "unit": "", "label": "Hover opacity" },
+        "transitionDuration": { "value": 150, "min": 50, "max": 300, "unit": "ms", "label": "Transition speed" }
+      }
     },
     "badge": {
       "name": "Badge",
       "category": "data-display",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "Small pill-shaped labels that communicate status, category, or pipeline stage. Available in 12 variants including 5 pipeline stages (hot, qualified, engaged, warming, cold) and 4 status types (success, warning, error, info).",
+      "behavior": "Static — no animation on mount or interaction. Optional dot indicator pulses subtly for active statuses. Pipeline badges use their assigned colors consistently across all views.",
+      "appearance": "Pill-shaped (rounded-full). Light tinted background with solid text in the variant color. Sizes: xs (10px text), sm (12px), md (12px, more padding), lg (14px). Optional leading dot indicator (1.5px circle in current color). Optional leading icon (12px). Font-ui family, medium weight.",
+      "doUse": "Pipeline stage indicators on lead cards and tables. Status labels (active, pending, overdue). Category tags. Counts or quantities. Use dot indicators for statuses that represent live/active state.",
+      "dontUse": "Long text content — keep to 1–2 words. Navigation or clickable elements — badges are display only. Colored side borders on cards — use badges inline instead.",
+      "parameters": {}
     },
     "input": {
       "name": "Input / Form Fields",
       "category": "form",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "Text input fields with optional labels, hints, error messages, and icons. The foundation of all form interactions in the platform.",
+      "behavior": "Focus: border transitions to brand-primary, ring-2 appears at 20% opacity. Error state: border and ring switch to error color. Disabled: 50% opacity, neutral-50 background, no pointer events. Labels sit above the field with 6px gap. Hint text appears below in neutral-500. Error text replaces hint text in error color.",
+      "appearance": "Height: 36px (h-9). White background, neutral-200 border, rounded-md corners. Text: 14px in foreground color. Placeholder: neutral-400. Shadow-xs. Icons (optional): positioned absolutely at 12px from left or right edge, neutral-400 color. When icon is present, input padding adjusts to 40px on that side.",
+      "doUse": "All single-line text entry. Email, phone, name, search, URL fields. Always include a label for accessibility unless the context is unambiguous (e.g., a lone search field with an icon).",
+      "dontUse": "Multi-line content — use Textarea instead. Selection from a fixed set — use Select instead. Binary choices — use Checkbox or Toggle instead.",
+      "parameters": {}
     },
     "dialog": {
       "name": "Dialog / Modal",
       "category": "overlay",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "A centered overlay that demands user attention for confirmations, short forms, or critical decisions. Blocks interaction with the underlying page until dismissed.",
+      "behavior": "Opens with fade-in (opacity 0 to 1) and subtle zoom (scale 0.95 to 1), 200ms. Overlay scrim fades to 50% black. Closes via X button (top-right), clicking scrim, or Escape key. Closing reverses animations. Focus is trapped inside the dialog while open.",
+      "appearance": "Max-width: 32rem (lg). Centered vertically and horizontally. White background, card-border, rounded-lg corners, shadow-lg. Padding: 24px. Header: title (18px semibold) + description (14px neutral-500). Footer: buttons right-aligned, gap-2. On mobile: max-width is viewport minus 32px.",
+      "doUse": "Delete confirmations. Critical decisions that require explicit user choice. Short forms (1–3 fields) that should feel modal. Alerts that require acknowledgment.",
+      "dontUse": "Detail views — use a Drawer instead. Long forms or multi-step flows — use a full page. Non-critical information — use a Toast instead. Content browsing — dialogs block the page, which frustrates exploration.",
+      "parameters": {
+        "duration": { "value": 200, "min": 100, "max": 400, "unit": "ms", "label": "Animation duration" },
+        "scrimOpacity": { "value": 0.5, "min": 0.2, "max": 0.7, "unit": "", "label": "Scrim opacity" }
+      }
     },
     "table": {
       "name": "Table",
       "category": "data-display",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "A structured data display for lists of leads, contacts, deals, or any homogeneous data set. Supports sorting, row click for detail drill-down, loading skeleton, and empty states.",
+      "behavior": "Header cells with sortable columns show a sort indicator (arrow) in brand-primary on the active sort column. Clicking a sortable header toggles asc/desc. Rows highlight on hover (neutral-50 background, 150ms transition). Clickable rows show pointer cursor and open a Drawer on click. Loading state shows skeleton rows with shimmer. Empty state shows centered message.",
+      "appearance": "White background with rounded-xl corners and neutral-100 border. Header row: neutral-50 background, neutral-600 text, 12px uppercase tracking-wider. Body rows: 14px text in foreground color, divided by neutral-100 borders. Cell padding: 12px horizontal, 12px vertical. No outer border between header and body — just the background color difference.",
+      "doUse": "Any list of 5+ homogeneous items. Lead lists, contact directories, deal pipelines, activity logs, transaction histories.",
+      "dontUse": "Heterogeneous content — use cards instead. Fewer than 5 items — a simple list or card layout is better. Highly visual data — use cards with branded illustrations.",
+      "parameters": {}
     },
     "empty-state": {
       "name": "Empty State",
       "category": "feedback",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "A centered placeholder shown when a list, table, or content area has no data. Communicates that the empty state is intentional and provides a path forward.",
+      "behavior": "Mounts with a subtle fade-in (200ms). If the empty state includes an action button, the button uses the primary variant. The icon (if provided) sits in a large neutral-100 circle for visual weight.",
+      "appearance": "Centered vertically and horizontally within its container. Icon container: 64px circle with neutral-100 background, icon in neutral-400. Title: 18px semibold. Description: 14px neutral-500, max-width 24rem. Action button below with 16px gap. Generous vertical padding (48px top and bottom).",
+      "doUse": "Empty tables, empty search results, first-time views with no data yet, empty inboxes or notification lists.",
+      "dontUse": "Error states — use an error message or dialog instead. Loading states — use skeleton loaders. Partially loaded content — show what you have.",
+      "parameters": {}
     },
     "pagination": {
       "name": "Pagination",
       "category": "navigation",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "Page navigation for long lists of data. Shows current position, total pages, and provides direct page access with ellipsis for large ranges.",
+      "behavior": "Previous/next arrows are disabled at the boundaries (page 1 and last page). Current page button uses brand-primary background with white text. Ellipsis appears when there are gaps in the page range. Clicking a page number triggers immediate navigation. Shows 'Showing page X of Y (Z total)' text.",
+      "appearance": "White background, border-top with neutral-100. Buttons: 32px min-width, 32px height, rounded-lg. Active page: brand-primary background, white text. Inactive pages: neutral-600 text, hover shows neutral-100 background. Arrows: 16px icons in neutral-600, disabled state is neutral-300. Total text: 14px neutral-500.",
+      "doUse": "Tables and lists with more than 20 items. Any paginated API response. Search results.",
+      "dontUse": "Short lists — show all items. Infinite scroll contexts. Carousel navigation — use carousel dots instead.",
+      "parameters": {}
     },
     "staggered-entrance": {
       "name": "Staggered Entrance Animation",
       "category": "motion",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "A choreographed mount animation where cards and content blocks fade in and slide upward sequentially, creating a cascading waterfall effect that gives the interface spatial awareness and rhythm.",
+      "behavior": "Each card begins invisible (opacity: 0) and positioned 16–24px below its final resting place. On mount, cards simultaneously fade in and slide upward. Multiple cards stagger their start times with 50–100ms delay between each. The first card anchors attention, subsequent cards flow in naturally. Total stagger time for a group should stay under 800ms (e.g., 6 cards at 100ms = last card starts at 500ms, finishes around 800–900ms).",
+      "appearance": "Starting state: opacity: 0, translateY: 16–24px. Ending state: opacity: 1, translateY: 0. Duration per card: 300–400ms. Easing: ease-out or cubic-bezier(0.0, 0.0, 0.2, 1). The animation should feel like cards are rising gently into place, not snapping or bouncing.",
+      "doUse": "Page/view transitions when navigating via sidebar or primary navigation. Dashboard initial loads. Tab switches within the same view. Any time new card-level content replaces existing content.",
+      "dontUse": "Inline data updates within already-visible cards (e.g., a score updating). Micro-interactions on small elements (buttons, toggles). Content that is being added incrementally to an existing list (e.g., infinite scroll new items).",
+      "parameters": {
+        "duration": { "value": 350, "min": 200, "max": 500, "unit": "ms", "label": "Duration per card" },
+        "staggerDelay": { "value": 75, "min": 30, "max": 150, "unit": "ms", "label": "Stagger delay" },
+        "distance": { "value": 20, "min": 8, "max": 40, "unit": "px", "label": "Slide distance" },
+        "easing": { "value": "cubic-bezier(0.0, 0.0, 0.2, 1)", "options": ["ease-out", "cubic-bezier(0.0, 0.0, 0.2, 1)", "cubic-bezier(0.25, 0.1, 0.25, 1)"], "label": "Easing curve" }
+      }
     },
     "page-transition": {
       "name": "Page Transition",
       "category": "motion",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "The overall animation pattern when navigating between top-level views or routes. Provides continuity and spatial context as the user moves through the application.",
+      "behavior": "Outgoing view fades out (opacity 1 to 0, 150ms). Brief pause (50ms). Incoming view content uses staggered entrance animation. The transition should feel like turning a page, not teleporting. Route changes in the sidebar trigger this pattern. Back navigation reverses the direction hint if applicable.",
+      "appearance": "Outgoing: opacity fades to 0 over 150ms with ease-in. Incoming: handled by staggered entrance animation on the new view's cards. No horizontal sliding of the entire page — individual cards handle their own entrance. The sidebar and header remain static during transitions.",
+      "doUse": "All top-level route changes triggered by sidebar navigation. Switching between major sections of the app.",
+      "dontUse": "Tab switches within the same view (those use staggered entrance only, no fade-out). Drawer open/close. Dialog open/close. In-page filtering or sorting.",
+      "parameters": {
+        "fadeOutDuration": { "value": 150, "min": 50, "max": 300, "unit": "ms", "label": "Fade-out duration" },
+        "pauseDuration": { "value": 50, "min": 0, "max": 150, "unit": "ms", "label": "Pause between" }
+      }
     },
     "milo-chat": {
       "name": "Milo Smart Assistant Chat",
       "category": "feature",
-      "description": "",
-      "behavior": "",
-      "appearance": "",
-      "doUse": "",
-      "dontUse": ""
+      "description": "Milo is Rello's Smart Assistant — a conversational interface that helps agents with market data, lead insights, daily planning, and property information. Milo is always referred to as a 'Smart Assistant', never as 'AI'.",
+      "behavior": "Milo chat opens as a right-side panel (similar to drawer behavior) or as an expandable FAB (floating action button) in the bottom-right. Messages stream in with a typing indicator. Milo's responses use a subtle staggered entrance for multi-part answers. The chat maintains conversation context within the session. Quick-action chips appear below Milo's responses for common follow-ups.",
+      "appearance": "Milo's avatar: the milo-circle.svg or milo-head.svg image. Message bubbles: Milo's messages use a light brand-primary-light background, user messages use neutral-100. Font: body font (Open Sans) at 14px. Chat panel width matches drawer width (400–520px). Input area at bottom with send button in brand-primary.",
+      "doUse": "Contextual help and data retrieval. Market data queries. Lead scoring explanations. Daily planning assistance. Property comparisons and insights.",
+      "dontUse": "Critical actions that require explicit confirmation — use a dialog. Bulk operations. Anything that modifies data without the user's explicit instruction.",
+      "parameters": {}
     }
   }
 }

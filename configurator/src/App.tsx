@@ -8,6 +8,7 @@ import { RadiusEditor } from "./components/editors/RadiusEditor";
 import { FontFamilyEditor } from "./components/editors/FontFamilyEditor";
 import { SpecSection } from "./components/editors/SpecEditor";
 import { ComponentShowcase } from "./components/preview/ComponentShowcase";
+import { DemoRouter } from "./components/preview/demos/DemoRouter";
 
 type Tab = "tokens" | "specs";
 
@@ -16,6 +17,7 @@ export function App() {
   const { specs, loading: specsLoading, updateSpec, isDirty: specsDirty, submitSpecs, submitting: specsSubmitting } = useSpecs();
   const previewStyle = usePreview(tokens);
   const [tab, setTab] = useState<Tab>("tokens");
+  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [submitMessage, setSubmitMessage] = useState("");
   const [submitResult, setSubmitResult] = useState<{ success: boolean; sha?: string } | null>(null);
 
@@ -203,7 +205,7 @@ export function App() {
             )}
 
             {tab === "specs" && specs && (
-              <SpecSection specs={specs.components} onUpdate={updateSpec} />
+              <SpecSection specs={specs.components} onUpdate={updateSpec} selectedId={selectedComponent} onSelect={setSelectedComponent} />
             )}
           </div>
         </aside>
@@ -216,31 +218,10 @@ export function App() {
             </div>
           ) : (
             <div className="bg-white rounded-xl shadow-lg min-h-full p-8">
-              <h2 className="font-heading text-xl font-semibold text-[var(--neutral-900)] mb-2">Component Design Brief</h2>
-              <p className="text-sm text-[var(--neutral-500)] mb-6">
-                Describe how each component should look and behave. These specs are committed to the <code className="text-xs bg-[var(--neutral-100)] px-1.5 py-0.5 rounded">specs/component-specs.json</code> file in the rello-ui repo. When building a new app, these instructions guide exactly how each component gets implemented.
-              </p>
-              <div className="border-t border-[var(--neutral-200)] pt-6">
-                <h3 className="text-sm font-semibold text-[var(--neutral-700)] mb-3">How to fill these out</h3>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div className="bg-[var(--neutral-50)] rounded-lg p-4">
-                    <p className="font-medium text-[var(--neutral-800)] mb-1">What is it?</p>
-                    <p className="text-[var(--neutral-500)] text-xs">One sentence describing the component's purpose.</p>
-                  </div>
-                  <div className="bg-[var(--neutral-50)] rounded-lg p-4">
-                    <p className="font-medium text-[var(--neutral-800)] mb-1">How should it behave?</p>
-                    <p className="text-[var(--neutral-500)] text-xs">Describe interactions — animations, timing, triggers, how it opens/closes.</p>
-                  </div>
-                  <div className="bg-[var(--neutral-50)] rounded-lg p-4">
-                    <p className="font-medium text-[var(--neutral-800)] mb-1">How should it look?</p>
-                    <p className="text-[var(--neutral-500)] text-xs">Visual style — positioning, sizing, colors, typography, spacing.</p>
-                  </div>
-                  <div className="bg-[var(--neutral-50)] rounded-lg p-4">
-                    <p className="font-medium text-[var(--neutral-800)] mb-1">When to use / not use</p>
-                    <p className="text-[var(--neutral-500)] text-xs">Scenarios where this component is the right (or wrong) choice.</p>
-                  </div>
-                </div>
-              </div>
+              <DemoRouter
+                componentId={selectedComponent}
+                spec={selectedComponent && specs?.components[selectedComponent] ? specs.components[selectedComponent] : null}
+              />
             </div>
           )}
         </main>

@@ -25,16 +25,18 @@ interface SpecEditorProps {
   componentId: string;
   spec: ComponentSpec;
   onUpdate: (componentId: string, field: keyof ComponentSpec, value: string) => void;
+  isSelected?: boolean;
+  onSelect?: (id: string) => void;
 }
 
-function SpecCard({ componentId, spec, onUpdate }: SpecEditorProps) {
+function SpecCard({ componentId, spec, onUpdate, isSelected, onSelect }: SpecEditorProps) {
   const [open, setOpen] = useState(false);
   const hasContent = FIELD_CONFIG.some((f) => spec[f.key]?.trim());
 
   return (
-    <div className="border border-[var(--neutral-200)] rounded-lg bg-white overflow-hidden">
+    <div className={`border rounded-lg bg-white overflow-hidden transition-colors ${isSelected ? "border-[var(--brand-primary)] ring-1 ring-[var(--brand-primary)]/20" : "border-[var(--neutral-200)]"}`}>
       <button
-        onClick={() => setOpen(!open)}
+        onClick={() => { setOpen(!open); onSelect?.(componentId); }}
         className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[var(--neutral-50)] transition-colors"
       >
         <div className="flex items-center gap-2">
@@ -71,9 +73,11 @@ function SpecCard({ componentId, spec, onUpdate }: SpecEditorProps) {
 interface SpecSectionProps {
   specs: Record<string, ComponentSpec>;
   onUpdate: (componentId: string, field: keyof ComponentSpec, value: string) => void;
+  selectedId: string | null;
+  onSelect: (id: string) => void;
 }
 
-export function SpecSection({ specs, onUpdate }: SpecSectionProps) {
+export function SpecSection({ specs, onUpdate, selectedId, onSelect }: SpecSectionProps) {
   const categories = [
     { id: "overlay", label: "Overlays" },
     { id: "feedback", label: "Feedback & Loading" },
@@ -102,7 +106,7 @@ export function SpecSection({ specs, onUpdate }: SpecSectionProps) {
             <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-1.5">{cat.label}</p>
             <div className="flex flex-col gap-2">
               {items.map(([id, spec]) => (
-                <SpecCard key={id} componentId={id} spec={spec} onUpdate={onUpdate} />
+                <SpecCard key={id} componentId={id} spec={spec} onUpdate={onUpdate} isSelected={selectedId === id} onSelect={onSelect} />
               ))}
             </div>
           </div>
