@@ -4,6 +4,17 @@ import { ToastDemo } from "./ToastDemo";
 import { StaggerDemo } from "./StaggerDemo";
 import { SkeletonDemo } from "./SkeletonDemo";
 import { StackedCarouselDemo } from "./StackedCarouselDemo";
+import { DialogDemo } from "./DialogDemo";
+import { EmptyStateDemo } from "./EmptyStateDemo";
+import { CardTiersDemo } from "./CardTiersDemo";
+import { BrandedIllustrationDemo } from "./BrandedIllustrationDemo";
+import { ButtonDemo } from "./ButtonDemo";
+import { BadgeDemo } from "./BadgeDemo";
+import { TableDemo } from "./TableDemo";
+import { InputDemo } from "./InputDemo";
+import { PaginationDemo } from "./PaginationDemo";
+import { PageTransitionDemo } from "./PageTransitionDemo";
+import { MiloChatDemo } from "./MiloChatDemo";
 
 interface DemoRouterProps {
   componentId: string | null;
@@ -35,13 +46,26 @@ export function DemoRouter({ componentId, spec }: DemoRouterProps) {
     );
   }
 
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   const demos: Record<string, () => React.ReactNode> = {
-    drawer: () => <DrawerDemo params={params as { duration?: number; width?: number; scrimOpacity?: number; easing?: string }} />,
-    toast: () => <ToastDemo params={params as { duration?: number; autoDismiss?: number; position?: string }} />,
-    "staggered-entrance": () => <StaggerDemo params={params as { duration?: number; staggerDelay?: number; distance?: number; easing?: string }} />,
-    skeleton: () => <SkeletonDemo params={params as { shimmerDuration?: number; baseColor?: string; highlightColor?: string }} />,
-    "stacked-carousel": () => <StackedCarouselDemo params={params as Record<string, number>} />,
+    "drawer": () => <DrawerDemo params={params as any} />,
+    "toast": () => <ToastDemo params={params as any} />,
+    "staggered-entrance": () => <StaggerDemo params={params as any} />,
+    "skeleton": () => <SkeletonDemo params={params as any} />,
+    "stacked-carousel": () => <StackedCarouselDemo params={params as any} />,
+    "dialog": () => <DialogDemo params={params as any} />,
+    "empty-state": () => <EmptyStateDemo />,
+    "card": () => <CardTiersDemo params={params as any} />,
+    "branded-card-illustration": () => <BrandedIllustrationDemo params={params as any} />,
+    "button": () => <ButtonDemo params={params as any} />,
+    "badge": () => <BadgeDemo />,
+    "table": () => <TableDemo />,
+    "input": () => <InputDemo />,
+    "pagination": () => <PaginationDemo />,
+    "page-transition": () => <PageTransitionDemo params={params as any} />,
+    "milo-chat": () => <MiloChatDemo />,
   };
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   const demoRenderer = demos[componentId];
 
@@ -56,12 +80,9 @@ export function DemoRouter({ componentId, spec }: DemoRouterProps) {
       )}
 
       {/* Live demo */}
-      {demoRenderer ? (
-        demoRenderer()
-      ) : (
+      {demoRenderer ? demoRenderer() : (
         <div className="bg-[var(--neutral-50)] rounded-xl border border-[var(--neutral-200)] p-8 text-center">
           <p className="text-sm text-[var(--neutral-500)]">No interactive demo available for this component yet.</p>
-          <p className="text-xs text-[var(--neutral-400)] mt-1">The spec text will be used as build instructions.</p>
         </div>
       )}
 
