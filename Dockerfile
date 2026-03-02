@@ -31,4 +31,4 @@ COPY --from=app-build /app/configurator/node_modules ./node_modules
 COPY --from=app-build /app/configurator/package.json ./
 ENV NODE_ENV=production
 EXPOSE 3000
-CMD ["node", "dist-server/index.js"]
+CMD ["node", "dist-server/server/index.js"]
