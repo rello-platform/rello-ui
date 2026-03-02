@@ -1,0 +1,10 @@
+node_modules
+configurator/node_modules
+configurator/dist
+configurator/dist-server
+dist
+storybook-static
+.storybook
+.git
+.DS_Store
+*.md
