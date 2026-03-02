@@ -1,0 +1,130 @@
+{
+  "components": {
+    "drawer": {
+      "name": "Drawer (Side Panel)",
+      "category": "overlay",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "toast": {
+      "name": "Toast Notification",
+      "category": "feedback",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "skeleton": {
+      "name": "Skeleton Loader",
+      "category": "feedback",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "card": {
+      "name": "Card",
+      "category": "layout",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "button": {
+      "name": "Button",
+      "category": "action",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "badge": {
+      "name": "Badge",
+      "category": "data-display",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "input": {
+      "name": "Input / Form Fields",
+      "category": "form",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "dialog": {
+      "name": "Dialog / Modal",
+      "category": "overlay",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "table": {
+      "name": "Table",
+      "category": "data-display",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "empty-state": {
+      "name": "Empty State",
+      "category": "feedback",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "pagination": {
+      "name": "Pagination",
+      "category": "navigation",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "staggered-entrance": {
+      "name": "Staggered Entrance Animation",
+      "category": "motion",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "page-transition": {
+      "name": "Page Transition",
+      "category": "motion",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    },
+    "milo-chat": {
+      "name": "Milo Smart Assistant Chat",
+      "category": "feature",
+      "description": "",
+      "behavior": "",
+      "appearance": "",
+      "doUse": "",
+      "dontUse": ""
+    }
+  }
+}

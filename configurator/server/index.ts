@@ -3,15 +3,17 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import { tokenRoutes } from "./routes/tokens.js";
+import { specRoutes } from "./routes/specs.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
 
 // API routes
 app.use("/api", tokenRoutes);
+app.use("/api", specRoutes);
 
 // In production, serve the Vite-built frontend
 if (process.env.NODE_ENV === "production") {
