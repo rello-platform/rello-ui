@@ -15,6 +15,7 @@ import { InputDemo } from "./InputDemo";
 import { PaginationDemo } from "./PaginationDemo";
 import { PageTransitionDemo } from "./PageTransitionDemo";
 import { MiloChatDemo } from "./MiloChatDemo";
+import { SurveyStepDemo } from "./SurveyStepDemo";
 
 interface DemoRouterProps {
   componentId: string | null;
@@ -63,6 +64,7 @@ export function DemoRouter({ componentId, spec }: DemoRouterProps) {
     "input": () => <InputDemo />,
     "pagination": () => <PaginationDemo />,
     "page-transition": () => <PageTransitionDemo params={params as any} />,
+    "survey-step": () => <SurveyStepDemo />,
     "milo-chat": () => <MiloChatDemo />,
   };
   /* eslint-enable @typescript-eslint/no-explicit-any */

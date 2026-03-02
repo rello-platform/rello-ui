@@ -212,6 +212,21 @@
         "pauseDuration": { "value": 50, "min": 0, "max": 150, "unit": "ms", "label": "Pause between" }
       }
     },
+    "survey-step": {
+      "name": "Survey Step Card",
+      "category": "form",
+      "description": "A step-by-step questionnaire card used in consumer-facing intake flows (Home Ready, Home Stretch). Shows one question at a time with a progress bar, topic icon, question heading, helper text, a selection grid, and a live score/feedback footer.",
+      "behavior": "Each question is a full card that transitions to the next on selection. Progress bar animates smoothly as user advances. Selecting an option highlights it with brand-primary border and light background, then auto-advances to the next question after 300–400ms. Back navigation supported. Score/feedback footer updates in real-time as answers are collected. The card body transitions with a subtle fade + slide (similar to page transition).",
+      "appearance": "Card: white background, rounded-2xl (20px), shadow-md, centered on page with max-width ~448px. Progress bar: 8px height, rounded-full, brand-primary fill, neutral-100 track. Icon: 48px container with neutral-50 background, centered above question. Question: heading font, 20–24px, bold, centered. Helper text: 14px, neutral-500, centered. Option grid: 2-column layout, 10px gap. Option buttons: rounded-xl (12px), border-2, py-12px px-16px, 14px medium text. Selected state: brand-primary border, brand-primary-light background, brand-primary text. Footer: rounded-xl border, centered text in brand-primary, 14px medium.",
+      "doUse": "Home Ready intake questionnaire. Home Stretch qualification flow. Any consumer-facing multi-step survey or assessment. Lead scoring questionnaires. Pre-approval intake forms.",
+      "dontUse": "Back-office forms (Rello admin) — use standard form fields instead. Single-question forms — use a simple input or select. Complex forms with many fields per step — use a full-page form layout.",
+      "parameters": {
+        "transitionDuration": { "value": 300, "min": 150, "max": 500, "unit": "ms", "label": "Step transition" },
+        "optionColumns": { "value": 2, "min": 1, "max": 3, "unit": "", "label": "Option columns" },
+        "borderRadius": { "value": 20, "min": 8, "max": 28, "unit": "px", "label": "Card radius" },
+        "optionRadius": { "value": 12, "min": 4, "max": 20, "unit": "px", "label": "Option radius" }
+      }
+    },
     "milo-chat": {
       "name": "Milo Smart Assistant Chat",
       "category": "feature",
