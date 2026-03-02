@@ -1,7 +1,71 @@
 @import "tailwindcss";
-@import "../../../src/styles/design-tokens.css";
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&family=Hind:wght@400;500;600&family=Mina:wght@400;700&display=swap');
+
+/* Configurator chrome tokens — the preview panel overrides these dynamically */
+:root {
+  --brand-primary: #3B5998;
+  --brand-accent: #C9785D;
+  --brand-primary-light: rgba(59, 89, 152, 0.15);
+  --brand-accent-light: rgba(201, 120, 93, 0.15);
+  --neutral-50: #FAFBFC;
+  --neutral-100: #E1E4E8;
+  --neutral-200: #C8CED3;
+  --neutral-300: #B0B7BF;
+  --neutral-400: #98A1AA;
+  --neutral-500: #646F77;
+  --neutral-600: #525B62;
+  --neutral-700: #434B52;
+  --neutral-800: #353C42;
+  --neutral-900: #2D3339;
+  --background: var(--neutral-50);
+  --foreground: var(--neutral-900);
+  --card-background: #FFFFFF;
+  --card-border: var(--neutral-100);
+  --muted: var(--neutral-100);
+  --muted-foreground: var(--neutral-500);
+  --success: #6B9080;
+  --success-light: rgba(107, 144, 128, 0.15);
+  --warning: #D4A84B;
+  --warning-light: rgba(212, 168, 75, 0.15);
+  --error: #C9605D;
+  --error-light: rgba(201, 96, 93, 0.15);
+  --info: #3298DC;
+  --info-light: rgba(50, 152, 220, 0.15);
+  --hot: #D9534F;
+  --qualified: #E8915A;
+  --engaged: #D4A84B;
+  --warming: #6A9FB5;
+  --cold: #939CA3;
+  --hot-light: rgba(217, 83, 79, 0.15);
+  --qualified-light: rgba(232, 145, 90, 0.15);
+  --engaged-light: rgba(212, 168, 75, 0.15);
+  --warming-light: rgba(106, 159, 181, 0.15);
+  --cold-light: rgba(147, 156, 163, 0.15);
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+}
 
 @layer base {
   body {
