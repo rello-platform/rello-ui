@@ -86,6 +86,318 @@
         "accentColor": "Brand primary blue / purple",
         "size": "large",
         "notes": ""
+      },
+
+      "__section_lead_generation": { "name": "— LEAD GENERATION —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
+
+      "accountability-coach": {
+        "name": "Accountability Coach",
+        "assignedCard": "Accountability Coach — daily habit tracking and goal accountability",
+        "iconDescription": "Clipboard with checkmarks and a sparkle accent, suggesting structured tracking with a motivational finish",
+        "backgroundPattern": "Stacked horizontal lines (checklist rows) with a sparkle cluster in the upper-right corner",
+        "accentColor": "Success green",
+        "size": "large",
+        "notes": ""
+      },
+      "social-media-engine": {
+        "name": "Social Media Engine",
+        "assignedCard": "Social Media Engine — automated social content distribution",
+        "iconDescription": "Connected nodes in a network pattern with a central share icon, surrounded by a subtle pulse ring",
+        "backgroundPattern": "Connected dot network — nodes with thin connecting lines radiating outward",
+        "accentColor": "Info blue",
+        "size": "large",
+        "notes": ""
+      },
+      "video-marketing": {
+        "name": "Video Marketing",
+        "assignedCard": "Video Marketing — video content creation and distribution",
+        "iconDescription": "Play button triangle inside a camera/film shape with light rays emanating outward",
+        "backgroundPattern": "Radiating light rays — thin lines fanning outward from behind the play button",
+        "accentColor": "Hot red / brand accent",
+        "size": "large",
+        "notes": ""
+      },
+      "expired-fsbo-finder": {
+        "name": "Expired / FSBO Finder",
+        "assignedCard": "Expired & FSBO Finder — sourcing off-market listing opportunities",
+        "iconDescription": "Magnifying glass overlapping a small house silhouette, with radar/scanner rings sweeping around it",
+        "backgroundPattern": "Radar sweep — concentric quarter-circle arcs suggesting a scanning pattern",
+        "accentColor": "Qualified orange",
+        "size": "large",
+        "notes": ""
+      },
+      "campaign-manager": {
+        "name": "Campaign Manager",
+        "assignedCard": "Campaign Manager — multi-channel marketing campaign orchestration",
+        "iconDescription": "Megaphone or small rocket with a trajectory arc curving upward, suggesting launch and reach",
+        "backgroundPattern": "Trajectory arc — a dotted curved line arcing from lower-left to upper-right with small burst dots at the end",
+        "accentColor": "Brand primary blue",
+        "size": "large",
+        "notes": ""
+      },
+      "quick-send": {
+        "name": "Quick Send",
+        "assignedCard": "Quick Send — instant one-off messages to leads and contacts",
+        "iconDescription": "Paper airplane at a slight upward angle with speed lines trailing behind it",
+        "backgroundPattern": "Speed lines — parallel diagonal dashes behind the airplane suggesting motion",
+        "accentColor": "Info blue",
+        "size": "large",
+        "notes": ""
+      },
+
+      "__section_lead_capture": { "name": "— LEAD CAPTURE —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
+
+      "landing-pages": {
+        "name": "Landing Pages",
+        "assignedCard": "Landing Pages — custom lead capture pages",
+        "iconDescription": "Browser window frame with a cursor arrow clicking, plus a sparkle suggesting conversion magic",
+        "backgroundPattern": "Grid of small rectangles (page layout blocks) at low opacity",
+        "accentColor": "Brand primary blue",
+        "size": "large",
+        "notes": ""
+      },
+      "open-house-copilot": {
+        "name": "Open House Copilot",
+        "assignedCard": "Open House Copilot — open house management and lead capture",
+        "iconDescription": "Open door on a house outline with welcome wave lines emanating from the doorway",
+        "backgroundPattern": "Concentric semicircle arcs radiating outward from the door — welcoming wave effect",
+        "accentColor": "Brand accent terracotta",
+        "size": "large",
+        "notes": ""
+      },
+      "cma-generator": {
+        "name": "CMA Generator",
+        "assignedCard": "CMA Generator — comparative market analysis builder",
+        "iconDescription": "Bar chart with a small house silhouette overlaid and thin comparison/arrow lines between bars",
+        "backgroundPattern": "Vertical bar grid — evenly-spaced thin vertical lines suggesting data columns",
+        "accentColor": "Brand primary blue",
+        "size": "large",
+        "notes": ""
+      },
+      "homeready": {
+        "name": "HomeReady",
+        "assignedCard": "HomeReady — consumer readiness assessment and intake",
+        "iconDescription": "Gauge or thermometer with a rising arrow pointing upward, suggesting readiness scoring",
+        "backgroundPattern": "Curved gauge arc — a semicircle arc with tick marks like a speedometer",
+        "accentColor": "Success green / brand primary blue",
+        "size": "large",
+        "notes": ""
+      },
+      "newsletter-studio": {
+        "name": "Newsletter Studio",
+        "assignedCard": "Newsletter Studio — email newsletter builder and distribution",
+        "iconDescription": "Envelope with a newspaper/content block layout peeking out of the top, suggesting rich email content",
+        "backgroundPattern": "Content block grid — small rectangles of varying widths stacked like a newsletter layout",
+        "accentColor": "Brand accent terracotta",
+        "size": "large",
+        "notes": "Related to Morning Brew but distinct — Newsletter Studio is the builder tool, Morning Brew is the daily market intel card"
+      },
+      "social-capture": {
+        "name": "Social Capture",
+        "assignedCard": "Social Capture — lead capture from social media channels",
+        "iconDescription": "Magnet with small social media-style icons (circles, squares) being pulled toward it",
+        "backgroundPattern": "Curved attraction lines — thin curved dashes arcing toward the magnet center",
+        "accentColor": "Info blue / brand primary",
+        "size": "large",
+        "notes": ""
+      },
+
+      "__section_lead_nurture": { "name": "— LEAD NURTURE —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
+
+      "journey-engine": {
+        "name": "Journey Engine",
+        "assignedCard": "Journey Engine — automated lead nurture journey builder",
+        "iconDescription": "Winding path or road that curves through milestone dots, suggesting a journey with checkpoints",
+        "backgroundPattern": "Milestone dots along a curved path — dots of increasing size along a winding line",
+        "accentColor": "Engaged gold / brand primary",
+        "size": "large",
+        "notes": ""
+      },
+      "neighborhood-intel": {
+        "name": "Neighborhood Intel",
+        "assignedCard": "Neighborhood Intel — local market data and neighborhood insights",
+        "iconDescription": "Map pin with small community house silhouettes clustered nearby, surrounded by thin data rings",
+        "backgroundPattern": "Data rings — concentric circles around the map pin with small data dots scattered along the rings",
+        "accentColor": "Success green / info blue",
+        "size": "large",
+        "notes": ""
+      },
+      "price-alerts": {
+        "name": "Price Alerts",
+        "assignedCard": "Price Alerts — automated price change notifications",
+        "iconDescription": "Bell with a dollar sign inside and a pulse ring emanating outward, suggesting an active price notification",
+        "backgroundPattern": "Pulse rings — concentric circles radiating outward from the bell",
+        "accentColor": "Warning gold / qualified orange",
+        "size": "large",
+        "notes": ""
+      },
+
+      "__section_listing_help": { "name": "— LISTING HELP —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
+
+      "pre-listing-prep": {
+        "name": "Pre-Listing Prep",
+        "assignedCard": "Pre-Listing Prep — seller preparation checklist and tasks",
+        "iconDescription": "Checklist with a small house and a sparkle accent, suggesting organized preparation with a polished finish",
+        "backgroundPattern": "Checklist lines — horizontal dashes with small check circles at the left edge",
+        "accentColor": "Success green",
+        "size": "large",
+        "notes": ""
+      },
+      "launch-system": {
+        "name": "Launch System",
+        "assignedCard": "Launch System — listing launch and marketing activation",
+        "iconDescription": "Rocket with a house silhouette on its body and a trajectory arc curving upward",
+        "backgroundPattern": "Trajectory arc with burst — a curved dotted line ending in a small starburst",
+        "accentColor": "Hot red / brand primary",
+        "size": "large",
+        "notes": "Distinct from Pipeline Rocket — this one has a house on the rocket body and a more aggressive upward trajectory"
+      },
+      "showing-feedback": {
+        "name": "Showing Feedback",
+        "assignedCard": "Showing Feedback — post-showing buyer feedback collection",
+        "iconDescription": "Two overlapping speech bubbles with a star inside one, plus a small house accent",
+        "backgroundPattern": "Chat bubble cluster — small rounded rectangles scattered at low opacity",
+        "accentColor": "Info blue / brand accent",
+        "size": "large",
+        "notes": ""
+      },
+
+      "__section_client_retention": { "name": "— CLIENT RETENTION —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
+
+      "homeowner-portal": {
+        "name": "Homeowner Portal",
+        "assignedCard": "Homeowner Portal — post-close client engagement hub",
+        "iconDescription": "House with a heart inside and a subtle shield outline behind, suggesting home + care + protection",
+        "backgroundPattern": "Concentric house outlines — nested house silhouettes at decreasing sizes and opacity",
+        "accentColor": "Brand accent terracotta / success green",
+        "size": "large",
+        "notes": ""
+      },
+      "anniversary-tracker": {
+        "name": "Anniversary Tracker",
+        "assignedCard": "Anniversary Tracker — home purchase anniversary and milestone reminders",
+        "iconDescription": "Calendar with a gift box and celebration sparkle accents, suggesting milestone celebrations",
+        "backgroundPattern": "Confetti scatter — small dots and short lines scattered at varied angles",
+        "accentColor": "Engaged gold / brand accent",
+        "size": "large",
+        "notes": ""
+      },
+      "referral-engine": {
+        "name": "Referral Engine",
+        "assignedCard": "Referral Engine — referral generation and tracking system",
+        "iconDescription": "Two or three connected person silhouettes with directional arrows between them, suggesting referral flow",
+        "backgroundPattern": "Connection lines — thin lines connecting scattered dots in a network pattern",
+        "accentColor": "Brand primary blue",
+        "size": "large",
+        "notes": ""
+      },
+      "review-generator": {
+        "name": "Review Generator",
+        "assignedCard": "Review Generator — automated review request and collection",
+        "iconDescription": "Five-star rating with a quote/speech bubble behind it, suggesting testimonials and reviews",
+        "backgroundPattern": "Star scatter — small stars at varied sizes and opacity scattered behind the main stars",
+        "accentColor": "Warning gold / engaged gold",
+        "size": "large",
+        "notes": ""
+      },
+
+      "__section_broker": { "name": "— BROKER MANAGEMENT —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
+
+      "team-performance-hub": {
+        "name": "Team Performance Hub",
+        "assignedCard": "Team Performance Hub — broker team analytics and leaderboards",
+        "iconDescription": "Group of person silhouettes with a bar chart rising behind them and a small trophy accent",
+        "backgroundPattern": "Rising bar chart lines — vertical bars of increasing height at low opacity",
+        "accentColor": "Brand primary blue / success green",
+        "size": "large",
+        "notes": ""
+      },
+      "mlo-partner-manager": {
+        "name": "MLO Partner Manager",
+        "assignedCard": "MLO Partner Manager — lender partnership and co-marketing tools",
+        "iconDescription": "Handshake with connection lines extending outward, suggesting partnership and collaboration",
+        "backgroundPattern": "Connection web — thin lines radiating from the handshake center to scattered dots",
+        "accentColor": "Brand accent terracotta",
+        "size": "large",
+        "notes": ""
+      },
+
+      "__section_engines": { "name": "— ENGINES & CORE —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
+
+      "milo-assistant": {
+        "name": "Milo Smart Assistant",
+        "assignedCard": "Milo — platform-wide Smart Assistant chat and insights",
+        "iconDescription": "Milo's character avatar (the existing milo-circle.svg) or a chat bubble with a brain/lightbulb inside and sparkle accents",
+        "backgroundPattern": "Thought bubbles — small circles in a thought-bubble trail pattern",
+        "accentColor": "Brand primary blue",
+        "size": "large",
+        "notes": "Uses the existing Milo character asset from assets/milo/. Never refer to as AI — always Smart Assistant."
+      },
+      "content-engine": {
+        "name": "Content Engine",
+        "assignedCard": "Content Engine — content creation and library management",
+        "iconDescription": "Pencil or pen with content block shapes and a sparkle, suggesting creative content production",
+        "backgroundPattern": "Content blocks — small rectangles of varied widths stacked with slight rotation for dynamism",
+        "accentColor": "Brand accent terracotta",
+        "size": "large",
+        "notes": ""
+      },
+      "market-intel": {
+        "name": "Market Intel",
+        "assignedCard": "Market Intel — real-time market data and trend analysis",
+        "iconDescription": "Line graph with a trending upward arrow and a small globe accent, suggesting data and market scope",
+        "backgroundPattern": "Graph grid — thin horizontal and vertical lines forming a chart grid",
+        "accentColor": "Info blue / success green",
+        "size": "large",
+        "notes": "Related to Morning Brew but distinct — Market Intel is the data engine, Morning Brew is the daily summary card"
+      },
+      "property-engine": {
+        "name": "Property Engine",
+        "assignedCard": "Property Engine — property data aggregation and matching",
+        "iconDescription": "House with layered data sheets behind it, suggesting multiple data layers stacked on a property",
+        "backgroundPattern": "Stacked layers — offset rectangles at decreasing opacity behind the house",
+        "accentColor": "Brand primary blue",
+        "size": "large",
+        "notes": ""
+      },
+      "pipeline-thermometer-icon": {
+        "name": "Pipeline Thermometer",
+        "assignedCard": "Pipeline Thermometer — lead temperature visualization",
+        "iconDescription": "Thermometer with a heat gradient fill (cold blue at bottom to hot red at top) and small heat waves at the top",
+        "backgroundPattern": "Heat gradient bands — horizontal bands transitioning from cool to warm colors at low opacity",
+        "accentColor": "Gradient from cold (blue/gray) through warming to hot (red)",
+        "size": "large",
+        "notes": "This icon represents the Pipeline Thermometer component — the core visualization of the platform"
+      },
+
+      "__section_dashboard": { "name": "— DASHBOARD SECTIONS —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
+
+      "todays-schedule": {
+        "name": "Today's Schedule",
+        "assignedCard": "Today's Schedule — daily time-blocked schedule view",
+        "iconDescription": "Clock face with a small calendar icon overlapping, suggesting time + date awareness",
+        "backgroundPattern": "Clock tick marks — short lines radiating from center at 12 positions like a clock face",
+        "accentColor": "Brand primary blue / info blue",
+        "size": "large",
+        "notes": "Distinct from Today's Agenda — Schedule is time-blocked, Agenda is task-based"
+      },
+      "hot-leads-alert": {
+        "name": "Hot Leads Alert",
+        "assignedCard": "Hot Leads Alert — urgent hot lead notification card",
+        "iconDescription": "Flame with a notification bell overlapping, suggesting urgency and active alerts",
+        "backgroundPattern": "Heat waves — curved lines rising upward like heat distortion",
+        "accentColor": "Hot red",
+        "size": "large",
+        "notes": ""
+      },
+      "agent-partners": {
+        "name": "Agent Partners",
+        "assignedCard": "Agent Partners — partner agent network and collaboration",
+        "iconDescription": "Two person silhouettes connected by a line with a building/office icon between them",
+        "backgroundPattern": "Network nodes — scattered dots connected by thin lines in a loose network",
+        "accentColor": "Brand primary blue / brand accent",
+        "size": "large",
+        "notes": ""
       }
     }
   },
