@@ -17,6 +17,10 @@ import { PageTransitionDemo } from "./PageTransitionDemo";
 import { MiloChatDemo } from "./MiloChatDemo";
 import { SurveyStepDemo } from "./SurveyStepDemo";
 import { IconCatalogDemo } from "./IconCatalogDemo";
+import { PipelineThermometerDemo } from "./PipelineThermometerDemo";
+import { StatCardDemo } from "./StatCardDemo";
+import { TimelineDemo } from "./TimelineDemo";
+import { StepperDemo } from "./StepperDemo";
 
 interface DemoRouterProps {
   componentId: string | null;
@@ -67,6 +71,10 @@ export function DemoRouter({ componentId, spec }: DemoRouterProps) {
     "page-transition": () => <PageTransitionDemo params={params as any} />,
     "survey-step": () => <SurveyStepDemo />,
     "icon-catalog": () => <IconCatalogDemo />,
+    "pipeline-thermometer": () => <PipelineThermometerDemo />,
+    "stat-card": () => <StatCardDemo />,
+    "timeline": () => <TimelineDemo />,
+    "stepper-wizard": () => <StepperDemo />,
     "milo-chat": () => <MiloChatDemo />,
   };
   /* eslint-enable @typescript-eslint/no-explicit-any */

@@ -18,6 +18,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   form: "bg-[var(--engaged-light)] text-[var(--engaged)]",
   navigation: "bg-[var(--neutral-100)] text-[var(--neutral-600)]",
   motion: "bg-[var(--qualified-light)] text-[var(--qualified)]",
+  rello: "bg-[var(--brand-primary-light)] text-[var(--brand-primary)]",
   feature: "bg-[var(--hot-light)] text-[var(--hot)]",
 };
 
@@ -87,6 +88,7 @@ export function SpecSection({ specs, onUpdate, selectedId, onSelect }: SpecSecti
     { id: "form", label: "Forms" },
     { id: "navigation", label: "Navigation" },
     { id: "motion", label: "Motion & Animation" },
+    { id: "rello", label: "Rello-Specific" },
     { id: "feature", label: "Features" },
   ];
 
