@@ -115,10 +115,10 @@ export function App() {
         </div>
       )}
 
-      {/* Main layout */}
-      <div className="flex flex-1 overflow-hidden">
+      {/* Main layout — both panels scroll independently */}
+      <div className="flex flex-1 min-h-0">
         {/* Sidebar */}
-        <aside className="w-96 bg-white border-r border-[var(--neutral-200)] overflow-y-auto flex-shrink-0">
+        <aside className="w-96 bg-white border-r border-[var(--neutral-200)] overflow-y-auto flex-shrink-0 h-[calc(100vh-52px)]" style={{ position: "sticky", top: 52 }}>
           <div className="p-4 flex flex-col gap-6">
             {/* Commit message */}
             {isDirty && (
@@ -210,8 +210,8 @@ export function App() {
           </div>
         </aside>
 
-        {/* Preview panel */}
-        <main className="flex-1 overflow-y-auto p-6">
+        {/* Preview panel — scrolls independently */}
+        <main className="flex-1 overflow-y-auto p-6 h-[calc(100vh-52px)]">
           {tab === "tokens" ? (
             <div style={previewStyle} className="bg-[var(--background)] rounded-xl shadow-lg min-h-full">
               <ComponentShowcase />

@@ -12,16 +12,67 @@
     ]
   },
   "iconCatalog": {
-    "description": "Every major content card in the Rello platform uses a large custom-drawn SVG illustration (72–100px) as its primary visual identifier. These are NOT generic icon library icons — they are illustrative, distinctive, and permanently assigned to their section. Each icon has 3 layers: a tinted container, a decorative background pattern, and the primary icon shape.",
-    "guidelines": "Each icon uses a single accent hue at varied opacities for depth. Icons include at least one micro-detail (sparkle, wave, wisp, ring). On dark card backgrounds, icons adapt to stroke-only outlines. Icons should feel editorial, not utilitarian.",
+    "description": "Master registry of all branded card illustrations. Each is permanently assigned, never swapped or reused. Full spec: specs/BRANDED-CARD-ILLUSTRATION-REGISTRY.md",
+    "guidelines": "Assignments are permanent. No duplicates. Pattern family enforcement by lifecycle phase. No two adjacent cards share accent color. Every illustration gets a creative codename. Dark mode required from day one. SVGs only — clean, no embedded rasters, viewBox set.",
+    "constructionReference": {
+      "layer1": "Tinted Container: 80–96px, border-radius 16–20px, accent color at 6–10% opacity",
+      "layer2": "Decorative Pattern: 3–12% opacity geometric texture (circles, dots, hexagons, orbits, waves)",
+      "layer3": "Primary Icon: Custom SVG, accent color at varied opacities, minimum one micro-detail",
+      "darkAdaptation": {
+        "container": "White at 5–8% opacity (instead of accent tint)",
+        "pattern": "Accent color at 10–20% opacity",
+        "icon": "Stroke-only outline at 40–60% opacity"
+      }
+    },
+    "patternFamilies": {
+      "discovery-leadgen": { "pattern": "Orbital rings / dashed orbits", "rationale": "Outward expansion, finding leads" },
+      "capture-engagement": { "pattern": "Dot grids", "rationale": "Connection points, data collection" },
+      "nurture-education": { "pattern": "Concentric circles", "rationale": "Deepening relationship, growing inward" },
+      "transaction-closing": { "pattern": "Hexagons", "rationale": "Structure, precision, interlocking steps" },
+      "post-close-retention": { "pattern": "Wave lines", "rationale": "Long-term flow, ongoing relationship" },
+      "intelligence-tools": { "pattern": "Concentric circles", "rationale": "Central knowledge, radiating insight" }
+    },
+    "accentPalette": {
+      "coral-rose": { "hex": "#C9785D", "phase": "Discovery / Lead Gen" },
+      "burnt-sienna": { "hex": "#B85C38", "phase": "Discovery / Lead Gen" },
+      "amber-gold": { "hex": "#D4943A", "phase": "Discovery / Lead Gen" },
+      "dusty-mauve": { "hex": "#A67B8A", "phase": "Discovery / Lead Gen" },
+      "terracotta": { "hex": "#C27052", "phase": "Discovery / Lead Gen" },
+      "periwinkle": { "hex": "#7B8EC2", "phase": "Capture / Engagement" },
+      "slate-blue": { "hex": "#5A7EB5", "phase": "Capture / Engagement" },
+      "soft-indigo": { "hex": "#6E6EA8", "phase": "Capture / Engagement" },
+      "lavender": { "hex": "#8E7CC3", "phase": "Capture / Engagement" },
+      "teal": { "hex": "#5B9EA6", "phase": "Nurture / Education" },
+      "sage-green": { "hex": "#7A9E7E", "phase": "Nurture / Education" },
+      "forest": { "hex": "#5E8C6A", "phase": "Nurture / Education" },
+      "deep-teal": { "hex": "#3D7A80", "phase": "Transaction / Closing" },
+      "steel-blue": { "hex": "#4A7B94", "phase": "Transaction / Closing" },
+      "plum": { "hex": "#8B5E83", "phase": "Transaction / Closing" },
+      "warm-taupe": { "hex": "#9E8B7E", "phase": "Post-Close / Retention" },
+      "dusty-rose": { "hex": "#B07A7A", "phase": "Post-Close / Retention" },
+      "copper": { "hex": "#B07850", "phase": "Post-Close / Retention" },
+      "soft-navy": { "hex": "#5B6B8A", "phase": "Intelligence / Tools" },
+      "cool-gray": { "hex": "#7A8A95", "phase": "Intelligence / Tools" }
+    },
+    "buildPriority": {
+      "phase1": "Dashboard Essentials: The Launchpad, The Thermometer, The Radar, The Agenda",
+      "phase2": "Production Apps: The Compass (HomeReady), The Finish Line (HomeStretch), The Hearth (The Oven), The Press (Newsletter Studio)",
+      "phase3": "Rello Modules: The Runway, The Blueprint, The Web, The Tracker",
+      "phase4": "New Apps: The Welcome Mat, The Fields, The Signal, Command Center, The Observatory",
+      "phase5": "Admin & Broker: Engine identity cards + Broker-specific cards"
+    },
     "icons": {
       "five-before-9": {
-        "name": "Five Before 9 (Calls)",
-        "assignedCard": "Five Before 9 — morning call list",
-        "iconDescription": "Phone handset with radiating pulse rings emanating outward, suggesting active calling and urgency",
-        "backgroundPattern": "Concentric radiating circles — rings that pulse outward from the icon's center",
-        "accentColor": "Hot red / warm amber",
-        "size": "large",
+        "name": "Five Before 9",
+        "codename": "Five Before 9",
+        "assignedCard": "Calls / Daily Outreach",
+        "iconDescription": "Play/dial button with forward motion lines",
+        "backgroundPattern": "Concentric circles",
+        "accentColor": "#C9785D",
+        "accentName": "Coral Rose",
+        "microDetail": "Small pulse ring on button corner",
+        "tier": "Tier 2 Feature Card",
+        "status": "built",
         "notes": ""
       },
       "the-pulse": {
