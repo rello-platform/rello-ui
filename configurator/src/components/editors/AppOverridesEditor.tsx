@@ -17,11 +17,16 @@ function ColorField({ label, value, defaultValue, onChange }: { label: string; v
     <div className="flex items-center gap-2">
       <div className="relative">
         <button
-          onClick={() => !isInherited && setPickerOpen(!pickerOpen)}
-          className="size-6 rounded border border-[var(--neutral-200)] shadow-xs shrink-0"
+          onClick={() => {
+            if (isInherited) {
+              onChange(defaultValue);
+            }
+            setPickerOpen(!pickerOpen);
+          }}
+          className="size-6 rounded border border-[var(--neutral-200)] shadow-xs shrink-0 cursor-pointer"
           style={{ backgroundColor: displayColor, opacity: isInherited ? 0.4 : 1 }}
         />
-        {pickerOpen && !isInherited && (
+        {pickerOpen && (
           <>
             <div className="fixed inset-0 z-20" onClick={() => setPickerOpen(false)} />
             <div className="fixed z-30 bg-white rounded-lg shadow-xl p-3 border border-[var(--neutral-200)]" style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
