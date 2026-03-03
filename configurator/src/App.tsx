@@ -22,7 +22,7 @@ type Tab = "tokens" | "specs" | "apps" | "assets" | "layouts";
 export function App() {
   const { tokens, loading, error, updateToken, resetTokens, isDirty: tokensDirty, submitTokens, submitting: tokensSubmitting } = useTokens();
   const { specs, loading: specsLoading, updateSpec, updateParam, isDirty: specsDirty, submitSpecs, submitting: specsSubmitting, makeDefault: specsMakeDefault, resetToDefault: specsResetToDefault } = useSpecs();
-  const { overrides, loading: overridesLoading, updateApp, isDirty: overridesDirty, submitOverrides, submitting: overridesSubmitting, resetToDefault: overridesResetToDefault } = useAppOverrides();
+  const { overrides, loading: overridesLoading, updateApp, isDirty: overridesDirty, submitOverrides, submitting: overridesSubmitting, resetToDefault: overridesResetToDefault, makeDefault: overridesMakeDefault } = useAppOverrides();
   const { files: assetFiles, loading: assetsLoading, refresh: refreshAssets } = useAssets();
   const { layouts, loading: layoutsLoading, updateLayout, isDirty: layoutsDirty, submitLayouts, submitting: layoutsSubmitting, resetToDefault: layoutsResetToDefault } = useAppLayouts();
   const previewStyle = usePreview(tokens);
@@ -98,9 +98,9 @@ export function App() {
   const handleMakeDefault = () => {
     if (tab === "specs") {
       specsMakeDefault();
+    } else if (tab === "apps") {
+      overridesMakeDefault();
     }
-    // For tokens, "make default" means the current state becomes the baseline
-    // without committing to GitHub — just locks in locally
     setPreviewing(false);
     setSubmitResult({ success: true, action: "locked" });
   };
