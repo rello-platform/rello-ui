@@ -66,7 +66,9 @@ export function AlertBannerDemo() {
               <p className="text-sm font-medium" style={{ color: alert.color }}>{alert.title}</p>
               <p className="text-xs mt-0.5" style={{ color: alert.color, opacity: 0.8 }}>{alert.desc}</p>
             </div>
-            <button onClick={() => setDismissed(p => [...p, alert.id])} className="text-sm opacity-50 hover:opacity-100" style={{ color: alert.color }}>&times;</button>
+            <button onClick={() => setDismissed(p => [...p, alert.id])} className="size-7 rounded-md flex items-center justify-center hover:bg-black/5 transition-colors shrink-0" style={{ color: alert.color }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+            </button>
           </div>
         ))}
       </div>

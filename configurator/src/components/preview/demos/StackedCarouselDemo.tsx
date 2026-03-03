@@ -45,25 +45,25 @@ export function StackedCarouselDemo({ params }: StackedCarouselDemoProps) {
       </div>
       <div className="p-6 flex justify-center">
         <div className="relative w-72 h-48">
-          {/* Shadow card 2 (deepest) */}
+          {/* Shadow card 2 (deepest) — peeks out wider to the sides */}
           <div
-            className="absolute bg-[var(--neutral-200)] rounded-[20px]"
+            className="absolute bg-[var(--neutral-200)] rounded-[20px] border border-[var(--neutral-300)]"
             style={{
-              top: offset2,
-              left: offset2,
-              right: offset2,
-              bottom: 0,
+              top: offset2 + 2,
+              left: -(offset2),
+              right: -(offset2),
+              bottom: offset2,
               opacity: opacity2,
             }}
           />
-          {/* Shadow card 1 */}
+          {/* Shadow card 1 — peeks out slightly to the sides */}
           <div
-            className="absolute bg-[var(--neutral-100)] rounded-[20px]"
+            className="absolute bg-[var(--neutral-100)] rounded-[20px] border border-[var(--neutral-200)]"
             style={{
-              top: offset1,
-              left: offset1,
-              right: offset1,
-              bottom: 0,
+              top: offset1 + 1,
+              left: -(offset1),
+              right: -(offset1),
+              bottom: offset1,
               opacity: opacity1,
             }}
           />
