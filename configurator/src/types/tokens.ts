@@ -70,6 +70,8 @@ export interface TokenState {
     body: string;
     ui: string;
     stat: string;
+    appTitle: string;
+    appSubtitle: string;
   };
   typography: {
     h1: TypographyToken;
