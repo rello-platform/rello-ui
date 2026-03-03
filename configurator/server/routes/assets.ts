@@ -81,3 +81,87 @@ assetRoutes.get("/assets/file/*", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch asset" });
   }
 });
+
+// Upload an asset — expects JSON with base64 content
+assetRoutes.post("/assets/upload", async (req, res) => {
+  try {
+    const { folder, fileName, content, message } = req.body as {
+      folder: string; // e.g. "logos/home-ready" or "milo"
+      fileName: string;
+      content: string; // base64 encoded file content
+      message?: string;
+    };
+
+    if (!folder || !fileName || !content) {
+      res.status(400).json({ error: "Missing folder, fileName, or content" });
+      return;
+    }
+
+    const ext = fileName.split(".").pop()?.toLowerCase() || "";
+    const allowed = ["svg", "png", "webp", "jpg", "jpeg"];
+    if (!allowed.includes(ext)) {
+      res.status(400).json({ error: `File type .${ext} not allowed. Use: ${allowed.join(", ")}` });
+      return;
+    }
+
+    const filePath = `assets/${folder}/${fileName}`;
+    const commitMessage = message || `Add ${fileName} to ${folder} via Configurator`;
+
+    const octokit = getOctokit();
+
+    // Check if file already exists (to get its SHA for overwrite)
+    let existingSha: string | undefined;
+    try {
+      const { data } = await octokit.rest.repos.getContent({ owner, repo, path: filePath, ref: branch });
+      if ("sha" in data) existingSha = data.sha;
+    } catch {
+      // File doesn't exist yet — that's fine
+    }
+
+    // Use Contents API — handles binary files correctly
+    const { data: result } = await octokit.rest.repos.createOrUpdateFileContents({
+      owner, repo, branch,
+      path: filePath,
+      message: commitMessage,
+      content, // already base64
+      ...(existingSha ? { sha: existingSha } : {}),
+    });
+
+    res.json({ success: true, path: filePath, sha: result.commit.sha });
+  } catch (err) {
+    console.error("Failed to upload asset:", err);
+    res.status(500).json({ error: "Failed to upload asset" });
+  }
+});
+
+// Delete an asset
+assetRoutes.post("/assets/delete", async (req, res) => {
+  try {
+    const { path, message } = req.body as { path: string; message?: string };
+    if (!path || !path.startsWith("assets/")) {
+      res.status(400).json({ error: "Invalid asset path" });
+      return;
+    }
+
+    const octokit = getOctokit();
+
+    // Get the file's SHA first
+    const { data } = await octokit.rest.repos.getContent({ owner, repo, path, ref: branch });
+    if (!("sha" in data)) {
+      res.status(404).json({ error: "File not found" });
+      return;
+    }
+
+    await octokit.rest.repos.deleteFile({
+      owner, repo, path,
+      message: message || `Delete ${path.split("/").pop()} via Configurator`,
+      sha: data.sha,
+      branch,
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Failed to delete asset:", err);
+    res.status(500).json({ error: "Failed to delete asset" });
+  }
+});

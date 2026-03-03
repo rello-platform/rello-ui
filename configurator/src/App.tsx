@@ -20,7 +20,7 @@ export function App() {
   const { tokens, loading, error, updateToken, resetTokens, isDirty: tokensDirty, submitTokens, submitting: tokensSubmitting } = useTokens();
   const { specs, loading: specsLoading, updateSpec, updateParam, isDirty: specsDirty, submitSpecs, submitting: specsSubmitting, makeDefault: specsMakeDefault, resetToDefault: specsResetToDefault } = useSpecs();
   const { overrides, loading: overridesLoading, updateApp, isDirty: overridesDirty, submitOverrides, submitting: overridesSubmitting, resetToDefault: overridesResetToDefault } = useAppOverrides();
-  const { files: assetFiles, loading: assetsLoading } = useAssets();
+  const { files: assetFiles, loading: assetsLoading, refresh: refreshAssets } = useAssets();
   const previewStyle = usePreview(tokens);
   const [tab, setTab] = useState<Tab>("tokens");
   const [selectedAsset, setSelectedAsset] = useState<AssetFile | null>(null);
@@ -274,7 +274,7 @@ export function App() {
             )}
 
             {tab === "assets" && (
-              <BrandAssetsViewer files={assetFiles} selectedAsset={selectedAsset} onSelect={setSelectedAsset} />
+              <BrandAssetsViewer files={assetFiles} selectedAsset={selectedAsset} onSelect={setSelectedAsset} onRefresh={refreshAssets} />
             )}
           </div>
         </aside>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export interface AssetFile {
   path: string;
@@ -13,8 +13,10 @@ export interface AssetFile {
 export function useAssets() {
   const [files, setFiles] = useState<AssetFile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
+    setLoading(true);
     fetch("/api/assets")
       .then((res) => res.json())
       .then((data) => {
@@ -22,7 +24,9 @@ export function useAssets() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [refreshKey]);
 
-  return { files, loading };
+  const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
+
+  return { files, loading, refresh };
 }
