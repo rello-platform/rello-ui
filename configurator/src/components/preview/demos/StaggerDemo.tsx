@@ -16,8 +16,8 @@ const CARDS = [
 export function StaggerDemo({ params }: StaggerDemoProps) {
   const [key, setKey] = useState(0);
   const [mounted, setMounted] = useState(true);
-  const duration = params.duration ?? 350;
-  const staggerDelay = params.staggerDelay ?? 75;
+  const duration = params.duration ?? 500;
+  const staggerDelay = params.staggerDelay ?? 150;
   const distance = params.distance ?? 20;
   const easing = params.easing ?? "cubic-bezier(0.0, 0.0, 0.2, 1)";
 

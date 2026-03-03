@@ -15,8 +15,8 @@ export function PageTransitionDemo({ params }: PageTransitionDemoProps) {
   const [phase, setPhase] = useState<"visible" | "fading" | "entering">("visible");
   const [pendingIdx, setPendingIdx] = useState(0);
 
-  const fadeOut = params.fadeOutDuration ?? 150;
-  const pause = params.pauseDuration ?? 50;
+  const fadeOut = params.fadeOutDuration ?? 300;
+  const pause = params.pauseDuration ?? 150;
 
   const navigate = useCallback((idx: number) => {
     if (idx === activeIdx || phase !== "visible") return;
@@ -26,7 +26,7 @@ export function PageTransitionDemo({ params }: PageTransitionDemoProps) {
       setActiveIdx(idx);
       setTimeout(() => setPhase("entering"), pause);
     }, fadeOut);
-    setTimeout(() => setPhase("visible"), fadeOut + pause + 500);
+    setTimeout(() => setPhase("visible"), fadeOut + pause + 1200);
   }, [activeIdx, phase, fadeOut, pause]);
 
   const activePage = PAGES[activeIdx];
@@ -64,7 +64,7 @@ export function PageTransitionDemo({ params }: PageTransitionDemoProps) {
                   key={`${activeIdx}-${card}`}
                   className="bg-white rounded-lg border border-[var(--neutral-100)] p-3 shadow-xs"
                   style={{
-                    animation: phase === "entering" ? `stagger-up 350ms cubic-bezier(0,0,0.2,1) ${i * 75}ms both` : "none",
+                    animation: phase === "entering" ? `stagger-up 500ms cubic-bezier(0,0,0.2,1) ${i * 150}ms both` : "none",
                   }}
                 >
                   <style>{`@keyframes stagger-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }`}</style>

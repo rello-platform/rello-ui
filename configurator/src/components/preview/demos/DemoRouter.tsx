@@ -17,6 +17,7 @@ import { PageTransitionDemo } from "./PageTransitionDemo";
 import { MiloChatDemo } from "./MiloChatDemo";
 import { SurveyStepDemo } from "./SurveyStepDemo";
 import { IconCatalogDemo } from "./IconCatalogDemo";
+import { ColorPickerDemo } from "./ColorPickerDemo";
 import { PipelineThermometerDemo } from "./PipelineThermometerDemo";
 import { StatCardDemo } from "./StatCardDemo";
 import { TimelineDemo } from "./TimelineDemo";
@@ -94,7 +95,7 @@ export function DemoRouter({ componentId, spec }: DemoRouterProps) {
     "date-picker": () => <DatePickerDemo />,
     "file-upload": () => <FileUploadDemo />,
     "search-input": () => <SearchInputDemo />,
-    "color-picker": () => <InputDemo />,
+    "color-picker": () => <ColorPickerDemo />,
     "survey-step": () => <SurveyStepDemo />,
     "pagination": () => <PaginationDemo />,
     "tab-navigation": () => <TabNavigationDemo />,
