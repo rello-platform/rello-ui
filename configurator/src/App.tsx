@@ -12,28 +12,33 @@ import { ComponentShowcase } from "./components/preview/ComponentShowcase";
 import { DemoRouter } from "./components/preview/demos/DemoRouter";
 import { useAppOverrides, COLOR_FIELDS } from "./hooks/useAppOverrides";
 import { useAssets, type AssetFile } from "./hooks/useAssets";
+import { useAppLayouts } from "./hooks/useAppLayouts";
 import { BrandAssetsViewer } from "./components/editors/BrandAssetsViewer";
+import { AppLayoutEditor } from "./components/editors/AppLayoutEditor";
+import { AppShellPreview } from "./components/preview/AppShellPreview";
 
-type Tab = "tokens" | "specs" | "apps" | "assets";
+type Tab = "tokens" | "specs" | "apps" | "assets" | "layouts";
 
 export function App() {
   const { tokens, loading, error, updateToken, resetTokens, isDirty: tokensDirty, submitTokens, submitting: tokensSubmitting } = useTokens();
   const { specs, loading: specsLoading, updateSpec, updateParam, isDirty: specsDirty, submitSpecs, submitting: specsSubmitting, makeDefault: specsMakeDefault, resetToDefault: specsResetToDefault } = useSpecs();
   const { overrides, loading: overridesLoading, updateApp, isDirty: overridesDirty, submitOverrides, submitting: overridesSubmitting, resetToDefault: overridesResetToDefault } = useAppOverrides();
   const { files: assetFiles, loading: assetsLoading, refresh: refreshAssets } = useAssets();
+  const { layouts, loading: layoutsLoading, updateLayout, isDirty: layoutsDirty, submitLayouts, submitting: layoutsSubmitting, resetToDefault: layoutsResetToDefault } = useAppLayouts();
   const previewStyle = usePreview(tokens);
   const [tab, setTab] = useState<Tab>("tokens");
   const [selectedAsset, setSelectedAsset] = useState<AssetFile | null>(null);
+  const [selectedLayoutApp, setSelectedLayoutApp] = useState<string | null>(null);
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [submitMessage, setSubmitMessage] = useState("");
   const [submitResult, setSubmitResult] = useState<{ success: boolean; sha?: string; action?: string } | null>(null);
   // Preview state: when true, the preview shows current edits. When false, shows the "default" (last saved state)
   const [previewing, setPreviewing] = useState(false);
 
-  const isDirty = tab === "tokens" ? tokensDirty : tab === "specs" ? specsDirty : overridesDirty;
-  const submitting = tab === "tokens" ? tokensSubmitting : tab === "specs" ? specsSubmitting : overridesSubmitting;
+  const isDirty = tab === "tokens" ? tokensDirty : tab === "specs" ? specsDirty : tab === "apps" ? overridesDirty : tab === "layouts" ? layoutsDirty : false;
+  const submitting = tab === "tokens" ? tokensSubmitting : tab === "specs" ? specsSubmitting : tab === "apps" ? overridesSubmitting : tab === "layouts" ? layoutsSubmitting : false;
 
-  if (loading || specsLoading || overridesLoading || assetsLoading) {
+  if (loading || specsLoading || overridesLoading || assetsLoading || layoutsLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -66,7 +71,11 @@ export function App() {
       ? await submitTokens(msg)
       : tab === "specs"
       ? await submitSpecs(msg)
-      : await submitOverrides(msg);
+      : tab === "apps"
+      ? await submitOverrides(msg)
+      : tab === "layouts"
+      ? await submitLayouts(msg)
+      : undefined;
     setSubmitResult({ ...result, action: "committed" });
     setSubmitMessage("");
     setPreviewing(false);
@@ -77,8 +86,10 @@ export function App() {
       resetTokens();
     } else if (tab === "specs") {
       specsResetToDefault();
-    } else {
+    } else if (tab === "apps") {
       overridesResetToDefault();
+    } else if (tab === "layouts") {
+      layoutsResetToDefault();
     }
     setPreviewing(false);
     setSubmitResult({ success: true, action: "reset" });
@@ -124,6 +135,13 @@ export function App() {
             >
               App Colors
               {overridesDirty && <span className="ml-1.5 size-1.5 inline-block rounded-full bg-[var(--warning)]" />}
+            </button>
+            <button
+              onClick={() => setTab("layouts")}
+              className={`px-3 py-1 text-sm rounded-md transition-colors ${tab === "layouts" ? "bg-white text-[var(--neutral-900)] font-medium shadow-xs" : "text-[var(--neutral-500)] hover:text-[var(--neutral-700)]"}`}
+            >
+              App Layouts
+              {layoutsDirty && <span className="ml-1.5 size-1.5 inline-block rounded-full bg-[var(--warning)]" />}
             </button>
             <button
               onClick={() => setTab("assets")}
@@ -273,6 +291,10 @@ export function App() {
               <AppOverridesEditor defaults={overrides.defaults} apps={overrides.apps} onUpdate={updateApp} />
             )}
 
+            {tab === "layouts" && layouts && (
+              <AppLayoutEditor apps={layouts.apps} selectedApp={selectedLayoutApp} onSelect={setSelectedLayoutApp} onUpdate={updateLayout} />
+            )}
+
             {tab === "assets" && (
               <BrandAssetsViewer files={assetFiles} selectedAsset={selectedAsset} onSelect={setSelectedAsset} onRefresh={refreshAssets} />
             )}
@@ -406,6 +428,36 @@ export function App() {
                       </div>
                     );
                   })}
+                </div>
+              )}
+            </div>
+          ) : tab === "layouts" ? (
+            <div className="min-h-full">
+              {selectedLayoutApp && layouts?.apps[selectedLayoutApp] && overrides ? (
+                <AppShellPreview
+                  layout={layouts.apps[selectedLayoutApp]}
+                  appId={selectedLayoutApp}
+                  colors={{
+                    primary: (overrides.apps[selectedLayoutApp]?.primary as string) ?? overrides.defaults.primary,
+                    accent: (overrides.apps[selectedLayoutApp]?.accent as string) ?? overrides.defaults.accent,
+                    pageBackground: (overrides.apps[selectedLayoutApp]?.pageBackground as string) ?? overrides.defaults.pageBackground,
+                    cardBackground: (overrides.apps[selectedLayoutApp]?.cardBackground as string) ?? overrides.defaults.cardBackground,
+                    cardBorder: (overrides.apps[selectedLayoutApp]?.cardBorder as string) ?? overrides.defaults.cardBorder,
+                    primaryText: (overrides.apps[selectedLayoutApp]?.primaryText as string) ?? overrides.defaults.primaryText,
+                    secondaryText: (overrides.apps[selectedLayoutApp]?.secondaryText as string) ?? overrides.defaults.secondaryText,
+                    tertiaryText: (overrides.apps[selectedLayoutApp]?.tertiaryText as string) ?? overrides.defaults.tertiaryText,
+                    heroCardBackground: (overrides.apps[selectedLayoutApp]?.heroCardBackground as string) ?? overrides.defaults.heroCardBackground,
+                    heroCardBorder: (overrides.apps[selectedLayoutApp]?.heroCardBorder as string) ?? overrides.defaults.heroCardBorder,
+                    heroCardTitle: (overrides.apps[selectedLayoutApp]?.heroCardTitle as string) ?? overrides.defaults.heroCardTitle,
+                    heroCardBodyText: (overrides.apps[selectedLayoutApp]?.heroCardBodyText as string) ?? overrides.defaults.heroCardBodyText,
+                  }}
+                />
+              ) : (
+                <div className="bg-white rounded-xl shadow-lg min-h-full flex items-center justify-center py-16">
+                  <div className="text-center">
+                    <p className="text-lg font-semibold text-[var(--neutral-700)] mb-1">Select an app</p>
+                    <p className="text-sm text-[var(--neutral-400)]">Click an app in the sidebar to preview its layout</p>
+                  </div>
                 </div>
               )}
             </div>

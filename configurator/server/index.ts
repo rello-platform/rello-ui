@@ -6,6 +6,7 @@ import { tokenRoutes } from "./routes/tokens.js";
 import { specRoutes } from "./routes/specs.js";
 import { appOverrideRoutes } from "./routes/app-overrides.js";
 import { assetRoutes } from "./routes/assets.js";
+import { appLayoutRoutes } from "./routes/app-layouts.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -18,6 +19,7 @@ app.use("/api", tokenRoutes);
 app.use("/api", specRoutes);
 app.use("/api", appOverrideRoutes);
 app.use("/api", assetRoutes);
+app.use("/api", appLayoutRoutes);
 
 // In production, serve the Vite-built frontend
 if (process.env.NODE_ENV === "production") {

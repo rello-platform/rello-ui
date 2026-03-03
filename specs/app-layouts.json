@@ -1,0 +1,246 @@
+{
+  "description": "Per-app layout configuration. Defines the sidebar navigation, hero area, and card arrangement for each app's dashboard shell.",
+  "shellSpec": {
+    "topLeft": "App logo + name (heading font, bold) + subtitle + highlight stats paragraph",
+    "topRight": "User avatar + name + search bar",
+    "sidebar": "Fixed left sidebar. Collapses to icons on smaller screens, expands on hover to drawer, hamburger on mobile. Grouped nav items with section labels.",
+    "heroArea": "Below the title block. Can be transparent (matches page bg) or dark standout card. Contains key stats, latest activity, or call-to-action.",
+    "rightCard": "Optional card pinned to the right of the hero area. Quick take, summary, or spotlight content.",
+    "cardGrid": "Below the hero. 2-3 column responsive grid of Feature Cards and Stat Pills following the Card Visual Hierarchy system."
+  },
+  "apps": {
+    "rello": {
+      "name": "Rello",
+      "subtitle": "Your real estate command center",
+      "highlightText": "You have 12 hot leads and 3 pending closings this week.",
+      "sidebarGroups": [
+        {
+          "label": null,
+          "items": [
+            { "icon": "dashboard", "label": "Dashboard" },
+            { "icon": "pipeline", "label": "Pipeline" },
+            { "icon": "contacts", "label": "Contacts" },
+            { "icon": "calendar", "label": "Calendar" }
+          ]
+        },
+        {
+          "label": "Tools",
+          "items": [
+            { "icon": "campaigns", "label": "Campaigns" },
+            { "icon": "reports", "label": "Reports" },
+            { "icon": "settings", "label": "Settings" }
+          ]
+        }
+      ],
+      "heroStyle": "transparent",
+      "rightCard": true,
+      "rightCardTitle": "Milo's Daily Brief",
+      "rightCardContent": "3 leads need follow-up today. Your pipeline is 12% ahead of last month."
+    },
+    "the-drumbeat": {
+      "name": "The Drumbeat",
+      "subtitle": "Your daily action plan",
+      "highlightText": "You've completed 4 of 9 daily actions. Keep the rhythm going!",
+      "sidebarGroups": [
+        {
+          "label": null,
+          "items": [
+            { "icon": "dashboard", "label": "Today" },
+            { "icon": "calls", "label": "Calls" },
+            { "icon": "tasks", "label": "Tasks" },
+            { "icon": "habits", "label": "Habits" }
+          ]
+        },
+        {
+          "label": "History",
+          "items": [
+            { "icon": "calendar", "label": "Weekly View" },
+            { "icon": "reports", "label": "Streaks" }
+          ]
+        }
+      ],
+      "heroStyle": "dark",
+      "rightCard": true,
+      "rightCardTitle": "Today's Focus",
+      "rightCardContent": "Five Before 9: 3 calls remaining. The Pulse: 2 deals need attention."
+    },
+    "conversations": {
+      "name": "Conversations",
+      "subtitle": "All your communications in one place",
+      "highlightText": "You have 5 unread messages and 2 missed calls.",
+      "sidebarGroups": [
+        {
+          "label": null,
+          "items": [
+            { "icon": "inbox", "label": "Inbox" },
+            { "icon": "phone", "label": "Calls" },
+            { "icon": "sms", "label": "Text" },
+            { "icon": "email", "label": "Email" }
+          ]
+        },
+        {
+          "label": "Manage",
+          "items": [
+            { "icon": "contacts", "label": "Contacts" },
+            { "icon": "templates", "label": "Templates" },
+            { "icon": "settings", "label": "Settings" }
+          ]
+        }
+      ],
+      "heroStyle": "transparent",
+      "rightCard": false,
+      "rightCardTitle": "",
+      "rightCardContent": ""
+    },
+    "home-ready": {
+      "name": "Home Ready",
+      "subtitle": "How ready are you to buy a home?",
+      "highlightText": "1,247 buyers have taken the assessment. 342 qualified this month.",
+      "sidebarGroups": [
+        {
+          "label": null,
+          "items": [
+            { "icon": "dashboard", "label": "Dashboard" },
+            { "icon": "leads", "label": "Leads" },
+            { "icon": "assessments", "label": "Assessments" },
+            { "icon": "programs", "label": "Programs" }
+          ]
+        },
+        {
+          "label": "Settings",
+          "items": [
+            { "icon": "branding", "label": "Branding" },
+            { "icon": "settings", "label": "Settings" }
+          ]
+        }
+      ],
+      "heroStyle": "dark",
+      "rightCard": true,
+      "rightCardTitle": "Top Performers",
+      "rightCardContent": "South Jordan leads with 89 qualified buyers this month."
+    },
+    "the-homestretch": {
+      "name": "The HomeStretch",
+      "subtitle": "Education meets closing confidence",
+      "highlightText": "127 active journeys. Average completion rate: 73%.",
+      "sidebarGroups": [
+        {
+          "label": null,
+          "items": [
+            { "icon": "dashboard", "label": "Dashboard" },
+            { "icon": "journeys", "label": "Journeys" },
+            { "icon": "content", "label": "Content" },
+            { "icon": "analytics", "label": "Analytics" }
+          ]
+        }
+      ],
+      "heroStyle": "transparent",
+      "rightCard": true,
+      "rightCardTitle": "Journey Spotlight",
+      "rightCardContent": "Sarah Johnson is 85% through her buyer journey."
+    },
+    "open-house-hub": {
+      "name": "Open House Hub",
+      "subtitle": "Capture every visitor",
+      "highlightText": "Last open house: 23 sign-ins, 8 qualified leads.",
+      "sidebarGroups": [
+        {
+          "label": null,
+          "items": [
+            { "icon": "dashboard", "label": "Dashboard" },
+            { "icon": "events", "label": "Events" },
+            { "icon": "leads", "label": "Leads" },
+            { "icon": "forms", "label": "Sign-In Forms" }
+          ]
+        }
+      ],
+      "heroStyle": "dark",
+      "rightCard": false,
+      "rightCardTitle": "",
+      "rightCardContent": ""
+    },
+    "newsletter-studio": {
+      "name": "Newsletter Studio",
+      "subtitle": "Build newsletters that get read",
+      "highlightText": "Your last newsletter had an open rate of 34.7% — above industry average.",
+      "sidebarGroups": [
+        {
+          "label": null,
+          "items": [
+            { "icon": "dashboard", "label": "Dashboard" },
+            { "icon": "digests", "label": "Digests" },
+            { "icon": "subscribers", "label": "Subscribers" },
+            { "icon": "analytics", "label": "Analytics" }
+          ]
+        },
+        {
+          "label": "Tools",
+          "items": [
+            { "icon": "templates", "label": "Templates" },
+            { "icon": "content", "label": "Content Library" },
+            { "icon": "settings", "label": "Settings" }
+          ]
+        }
+      ],
+      "heroStyle": "transparent",
+      "rightCard": true,
+      "rightCardTitle": "Latest Issue",
+      "rightCardContent": "The Market Update — sent Monday. 423 delivered, 35% open rate."
+    },
+    "market-intel": {
+      "name": "Market Intel",
+      "subtitle": "Broadcast the info that matters",
+      "highlightText": "Your last Intel had an open rate of 65% and a 75% listen rate.",
+      "sidebarGroups": [
+        {
+          "label": null,
+          "items": [
+            { "icon": "dashboard", "label": "Dashboard" },
+            { "icon": "digests", "label": "Digests" },
+            { "icon": "listeners", "label": "Listeners" },
+            { "icon": "podcast", "label": "Podcast" }
+          ]
+        },
+        {
+          "label": "Tools",
+          "items": [
+            { "icon": "content", "label": "Content Queue" },
+            { "icon": "sources", "label": "Content Sources" },
+            { "icon": "settings", "label": "Settings" }
+          ]
+        }
+      ],
+      "heroStyle": "transparent",
+      "rightCard": true,
+      "rightCardTitle": "Today's Quick Take",
+      "rightCardContent": "TL;DR: Here are the latest hot stories of the day."
+    },
+    "harvest-home": {
+      "name": "Harvest Home",
+      "subtitle": "Find leads before anyone else",
+      "highlightText": "47 new expired listings found this week. 12 matched your criteria.",
+      "sidebarGroups": [
+        {
+          "label": null,
+          "items": [
+            { "icon": "dashboard", "label": "Dashboard" },
+            { "icon": "expired", "label": "Expired" },
+            { "icon": "fsbo", "label": "FSBO" },
+            { "icon": "prospects", "label": "Prospects" }
+          ]
+        },
+        {
+          "label": "Settings",
+          "items": [
+            { "icon": "filters", "label": "Search Filters" },
+            { "icon": "settings", "label": "Settings" }
+          ]
+        }
+      ],
+      "heroStyle": "dark",
+      "rightCard": true,
+      "rightCardTitle": "Hot Finds",
+      "rightCardContent": "3 new expired listings in South Jordan match your buyer Sarah's criteria."
+    }
+  }
+}
