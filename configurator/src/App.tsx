@@ -432,7 +432,7 @@ export function App() {
               )}
             </div>
           ) : tab === "layouts" ? (
-            <div className="min-h-full">
+            <div className="min-h-full" style={previewStyle}>
               {selectedLayoutApp && layouts?.apps[selectedLayoutApp] && overrides ? (
                 <AppShellPreview
                   layout={layouts.apps[selectedLayoutApp]}
