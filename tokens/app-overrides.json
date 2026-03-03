@@ -1,0 +1,63 @@
+{
+  "description": "Per-app color overrides. Each app inherits the default design tokens unless overridden here. Set a value to null to inherit the default.",
+  "defaults": {
+    "primary": "#3B5998",
+    "accent": "#C9785D"
+  },
+  "apps": {
+    "rello": {
+      "name": "Rello",
+      "primary": null,
+      "accent": null,
+      "notes": "Back-office CRM — uses default brand colors"
+    },
+    "the-drumbeat": {
+      "name": "The Drumbeat",
+      "primary": null,
+      "accent": null,
+      "notes": "Daily action dashboard"
+    },
+    "conversations": {
+      "name": "Conversations",
+      "primary": null,
+      "accent": null,
+      "notes": "Phone, SMS, email communication hub"
+    },
+    "home-ready": {
+      "name": "Home Ready",
+      "primary": null,
+      "accent": null,
+      "notes": "Consumer-facing buyer qualification — homeready.app"
+    },
+    "the-homestretch": {
+      "name": "The HomeStretch",
+      "primary": null,
+      "accent": null,
+      "notes": "Consumer-facing education & closing — thehomestretch.ai"
+    },
+    "open-house-hub": {
+      "name": "Open House Hub",
+      "primary": null,
+      "accent": null,
+      "notes": "Open house lead capture — openhousehub.app"
+    },
+    "newsletter-studio": {
+      "name": "Newsletter Studio",
+      "primary": null,
+      "accent": null,
+      "notes": "Email newsletter builder — newsletterstudio.app"
+    },
+    "market-intel": {
+      "name": "Market Intel",
+      "primary": null,
+      "accent": null,
+      "notes": "Market data & neighborhood insights — market-intel.app"
+    },
+    "harvest-home": {
+      "name": "Harvest Home",
+      "primary": null,
+      "accent": null,
+      "notes": "Lead discovery & enrichment"
+    }
+  }
+}

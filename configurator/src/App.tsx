@@ -7,14 +7,17 @@ import { SpacingEditor } from "./components/editors/SpacingEditor";
 import { RadiusEditor } from "./components/editors/RadiusEditor";
 import { FontFamilyEditor } from "./components/editors/FontFamilyEditor";
 import { SpecSection } from "./components/editors/SpecEditor";
+import { AppOverridesEditor } from "./components/editors/AppOverridesEditor";
 import { ComponentShowcase } from "./components/preview/ComponentShowcase";
 import { DemoRouter } from "./components/preview/demos/DemoRouter";
+import { useAppOverrides } from "./hooks/useAppOverrides";
 
-type Tab = "tokens" | "specs";
+type Tab = "tokens" | "specs" | "apps";
 
 export function App() {
   const { tokens, loading, error, updateToken, resetTokens, isDirty: tokensDirty, submitTokens, submitting: tokensSubmitting } = useTokens();
   const { specs, loading: specsLoading, updateSpec, updateParam, isDirty: specsDirty, submitSpecs, submitting: specsSubmitting, makeDefault: specsMakeDefault, resetToDefault: specsResetToDefault } = useSpecs();
+  const { overrides, loading: overridesLoading, updateApp, isDirty: overridesDirty, submitOverrides, submitting: overridesSubmitting, resetToDefault: overridesResetToDefault } = useAppOverrides();
   const previewStyle = usePreview(tokens);
   const [tab, setTab] = useState<Tab>("tokens");
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
@@ -23,10 +26,10 @@ export function App() {
   // Preview state: when true, the preview shows current edits. When false, shows the "default" (last saved state)
   const [previewing, setPreviewing] = useState(false);
 
-  const isDirty = tab === "tokens" ? tokensDirty : specsDirty;
-  const submitting = tab === "tokens" ? tokensSubmitting : specsSubmitting;
+  const isDirty = tab === "tokens" ? tokensDirty : tab === "specs" ? specsDirty : overridesDirty;
+  const submitting = tab === "tokens" ? tokensSubmitting : tab === "specs" ? specsSubmitting : overridesSubmitting;
 
-  if (loading || specsLoading) {
+  if (loading || specsLoading || overridesLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -57,7 +60,9 @@ export function App() {
     const msg = submitMessage || undefined;
     const result = tab === "tokens"
       ? await submitTokens(msg)
-      : await submitSpecs(msg);
+      : tab === "specs"
+      ? await submitSpecs(msg)
+      : await submitOverrides(msg);
     setSubmitResult({ ...result, action: "committed" });
     setSubmitMessage("");
     setPreviewing(false);
@@ -66,8 +71,10 @@ export function App() {
   const handleResetToDefault = () => {
     if (tab === "tokens") {
       resetTokens();
-    } else {
+    } else if (tab === "specs") {
       specsResetToDefault();
+    } else {
+      overridesResetToDefault();
     }
     setPreviewing(false);
     setSubmitResult({ success: true, action: "reset" });
@@ -106,6 +113,13 @@ export function App() {
             >
               Component Specs
               {specsDirty && <span className="ml-1.5 size-1.5 inline-block rounded-full bg-[var(--warning)]" />}
+            </button>
+            <button
+              onClick={() => setTab("apps")}
+              className={`px-3 py-1 text-sm rounded-md transition-colors ${tab === "apps" ? "bg-white text-[var(--neutral-900)] font-medium shadow-xs" : "text-[var(--neutral-500)] hover:text-[var(--neutral-700)]"}`}
+            >
+              App Colors
+              {overridesDirty && <span className="ml-1.5 size-1.5 inline-block rounded-full bg-[var(--warning)]" />}
             </button>
           </div>
         </div>
@@ -244,6 +258,10 @@ export function App() {
             {tab === "specs" && specs && (
               <SpecSection specs={specs.components} onUpdate={updateSpec} onUpdateParam={updateParam} selectedId={selectedComponent} onSelect={setSelectedComponent} />
             )}
+
+            {tab === "apps" && overrides && (
+              <AppOverridesEditor defaults={overrides.defaults} apps={overrides.apps} onUpdate={updateApp} />
+            )}
           </div>
         </aside>
 
@@ -283,12 +301,70 @@ export function App() {
             <div style={previewStyle} className="bg-[var(--background)] rounded-xl shadow-lg min-h-full">
               <ComponentShowcase />
             </div>
-          ) : (
+          ) : tab === "specs" ? (
             <div className="bg-white rounded-xl shadow-lg min-h-full p-8">
               <DemoRouter
                 componentId={selectedComponent}
                 spec={selectedComponent && specs?.components[selectedComponent] ? specs.components[selectedComponent] : null}
               />
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl shadow-lg min-h-full p-8">
+              <h2 className="text-xl font-semibold text-[var(--foreground)] mb-2" style={{ fontFamily: "var(--font-heading)" }}>App Color Preview</h2>
+              <p className="text-sm text-[var(--neutral-500)] mb-6">See how each app looks with its colors applied. Apps with no overrides use the default palette.</p>
+              {overrides && (
+                <div className="grid grid-cols-3 gap-4">
+                  {Object.entries(overrides.apps).map(([appId, app]) => {
+                    const primary = app.primary ?? overrides.defaults.primary;
+                    const accent = app.accent ?? overrides.defaults.accent;
+                    const primaryLight = primary + "26";
+                    return (
+                      <div key={appId} className="rounded-xl border border-[var(--neutral-100)] overflow-hidden">
+                        {/* App header bar */}
+                        <div className="px-4 py-3 flex items-center justify-between" style={{ backgroundColor: primary }}>
+                          <span className="text-white text-sm font-semibold">{app.name}</span>
+                          <div className="size-6 rounded-full bg-white/20" />
+                        </div>
+                        {/* Mini mockup */}
+                        <div className="p-4 bg-[var(--neutral-50)]">
+                          <div className="bg-white rounded-lg p-3 border border-[var(--neutral-100)] mb-2">
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className="size-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: primaryLight }}>
+                                <div className="size-4 rounded" style={{ backgroundColor: primary, opacity: 0.5 }} />
+                              </div>
+                              <div>
+                                <p className="text-xs font-semibold text-[var(--foreground)]">Dashboard</p>
+                                <p className="text-[9px] text-[var(--neutral-400)]">Welcome back</p>
+                              </div>
+                            </div>
+                            <div className="flex gap-1.5">
+                              <button className="px-2 py-1 text-[9px] font-medium text-white rounded" style={{ backgroundColor: primary }}>Primary</button>
+                              <button className="px-2 py-1 text-[9px] font-medium text-white rounded" style={{ backgroundColor: accent }}>Accent</button>
+                              <a className="px-2 py-1 text-[9px] font-medium" style={{ color: primary }}>Link</a>
+                            </div>
+                          </div>
+                          <div className="flex gap-1.5">
+                            <div className="flex-1 rounded p-2" style={{ backgroundColor: primaryLight }}>
+                              <p className="text-[9px] font-bold" style={{ color: primary }}>47</p>
+                              <p className="text-[7px] text-[var(--neutral-500)]">Active</p>
+                            </div>
+                            <div className="flex-1 rounded p-2" style={{ backgroundColor: accent + "26" }}>
+                              <p className="text-[9px] font-bold" style={{ color: accent }}>12</p>
+                              <p className="text-[7px] text-[var(--neutral-500)]">New</p>
+                            </div>
+                          </div>
+                        </div>
+                        {/* Override indicator */}
+                        <div className="px-4 py-2 border-t border-[var(--neutral-100)] text-center">
+                          <span className="text-[9px] text-[var(--neutral-400)]">
+                            {app.primary !== null || app.accent !== null ? "Custom colors" : "Using defaults"}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
         </main>
