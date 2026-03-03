@@ -49,10 +49,10 @@ assetRoutes.get("/assets", async (_req, res) => {
 });
 
 // Proxy individual asset files from private repo
-assetRoutes.get("/assets/file/:path(*)", async (req, res) => {
+assetRoutes.get("/assets/file/*", async (req, res) => {
   try {
     const octokit = getOctokit();
-    const filePath = req.params.path;
+    const filePath = req.params[0] as string;
 
     const { data } = await octokit.rest.repos.getContent({ owner, repo, path: filePath, ref: branch });
 
