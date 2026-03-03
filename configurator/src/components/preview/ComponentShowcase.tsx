@@ -148,7 +148,7 @@ export function ComponentShowcase() {
                 <div className="size-8 rounded-xl bg-[var(--brand-accent)] opacity-50" />
               </div>
               <div>
-                <p className="text-3xl font-bold tracking-tight leading-tight text-[var(--foreground)]" style={{ fontFamily: "var(--font-app-title)" }}>APP TITLE FONT</p>
+                <p className="text-3xl font-bold tracking-tight leading-tight text-[var(--foreground)]" style={{ fontFamily: "var(--font-app-title)" }}>App Title Font</p>
                 <p className="text-base text-[var(--neutral-500)]" style={{ fontFamily: "var(--font-app-subtitle)" }}>App subtitle font — this is the tagline under the app name</p>
                 <p className="text-sm text-[var(--neutral-400)] mt-1" style={{ fontFamily: "var(--font-app-subtitle)" }}>Welcome to the app! You have 12 hot leads and 3 pending closings.</p>
               </div>

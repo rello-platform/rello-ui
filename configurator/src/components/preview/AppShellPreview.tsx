@@ -30,7 +30,7 @@ export function AppShellPreview({ layout, colors }: AppShellPreviewProps) {
             <div className="size-9 rounded-xl" style={{ backgroundColor: colors.accent, opacity: 0.5 }} />
           </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight leading-tight" style={{ color: titleColor, fontFamily: "var(--font-app-title)" }}>{layout.name.toUpperCase()}</h1>
+            <h1 className="text-3xl font-bold tracking-tight leading-tight" style={{ color: titleColor, fontFamily: "var(--font-app-title)" }}>{layout.name}</h1>
             <p className="text-base" style={{ color: subtitleColor, fontFamily: "var(--font-app-subtitle)" }}>{layout.subtitle}</p>
             {/* Welcome/highlight message — aligned with subtitle, not under logo */}
             <p className="text-sm leading-relaxed mt-1.5" style={{ color: colors.secondaryText }}>
