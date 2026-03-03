@@ -1,5 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 
+export interface ParamDef {
+  value: number | string;
+  min?: number;
+  max?: number;
+  unit?: string;
+  label: string;
+  options?: string[];
+}
+
 export interface ComponentSpec {
   name: string;
   category: string;
@@ -8,6 +17,7 @@ export interface ComponentSpec {
   appearance: string;
   doUse: string;
   dontUse: string;
+  parameters?: Record<string, ParamDef>;
 }
 
 export interface SpecsState {
@@ -37,6 +47,18 @@ export function useSpecs() {
       const next = structuredClone(prev);
       if (next.components[componentId]) {
         next.components[componentId][field] = value;
+      }
+      return next;
+    });
+  }, []);
+
+  const updateParam = useCallback((componentId: string, paramKey: string, value: number | string) => {
+    setSpecs((prev) => {
+      if (!prev) return prev;
+      const next = structuredClone(prev);
+      const comp = next.components[componentId];
+      if (comp?.parameters?.[paramKey]) {
+        comp.parameters[paramKey].value = value;
       }
       return next;
     });
@@ -73,5 +95,5 @@ export function useSpecs() {
     if (specs) setOriginal(structuredClone(specs));
   }, [specs]);
 
-  return { specs, loading, updateSpec, isDirty, submitSpecs, submitting, resetToDefault, makeDefault };
+  return { specs, loading, updateSpec, updateParam, isDirty, submitSpecs, submitting, resetToDefault, makeDefault };
 }

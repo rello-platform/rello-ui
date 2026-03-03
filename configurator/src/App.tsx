@@ -14,7 +14,7 @@ type Tab = "tokens" | "specs";
 
 export function App() {
   const { tokens, loading, error, updateToken, resetTokens, isDirty: tokensDirty, submitTokens, submitting: tokensSubmitting } = useTokens();
-  const { specs, loading: specsLoading, updateSpec, isDirty: specsDirty, submitSpecs, submitting: specsSubmitting, makeDefault: specsMakeDefault, resetToDefault: specsResetToDefault } = useSpecs();
+  const { specs, loading: specsLoading, updateSpec, updateParam, isDirty: specsDirty, submitSpecs, submitting: specsSubmitting, makeDefault: specsMakeDefault, resetToDefault: specsResetToDefault } = useSpecs();
   const previewStyle = usePreview(tokens);
   const [tab, setTab] = useState<Tab>("tokens");
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
@@ -242,7 +242,7 @@ export function App() {
             )}
 
             {tab === "specs" && specs && (
-              <SpecSection specs={specs.components} onUpdate={updateSpec} selectedId={selectedComponent} onSelect={setSelectedComponent} />
+              <SpecSection specs={specs.components} onUpdate={updateSpec} onUpdateParam={updateParam} selectedId={selectedComponent} onSelect={setSelectedComponent} />
             )}
           </div>
         </aside>

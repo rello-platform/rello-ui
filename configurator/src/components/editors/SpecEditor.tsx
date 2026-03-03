@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ComponentSpec } from "../../hooks/useSpecs";
+import type { ComponentSpec, ParamDef } from "../../hooks/useSpecs";
 
 const FIELD_CONFIG: Array<{ key: keyof ComponentSpec; label: string; placeholder: string; rows: number }> = [
   { key: "description", label: "What is it?", placeholder: "A brief description of what this component is and its purpose in the platform...", rows: 2 },
@@ -26,13 +26,52 @@ interface SpecEditorProps {
   componentId: string;
   spec: ComponentSpec;
   onUpdate: (componentId: string, field: keyof ComponentSpec, value: string) => void;
+  onUpdateParam?: (componentId: string, paramKey: string, value: number | string) => void;
   isSelected?: boolean;
   onSelect?: (id: string) => void;
 }
 
-function SpecCard({ componentId, spec, onUpdate, isSelected, onSelect }: SpecEditorProps) {
+function ParamControl({ componentId, paramKey, param, onUpdate }: { componentId: string; paramKey: string; param: ParamDef; onUpdate: (id: string, key: string, val: number | string) => void }) {
+  if (param.options) {
+    return (
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-[var(--neutral-600)]">{param.label}</span>
+        <select
+          value={String(param.value)}
+          onChange={(e) => onUpdate(componentId, paramKey, e.target.value)}
+          className="px-2 py-1 text-xs border border-[var(--neutral-200)] rounded bg-white outline-none focus:border-[var(--brand-primary)]"
+        >
+          {param.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+        </select>
+      </div>
+    );
+  }
+  if (typeof param.value === "number" && param.min !== undefined && param.max !== undefined) {
+    return (
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-[var(--neutral-600)] w-24 shrink-0">{param.label}</span>
+        <input
+          type="range"
+          min={param.min}
+          max={param.max}
+          step={param.max <= 1 ? 0.05 : 1}
+          value={param.value}
+          onChange={(e) => onUpdate(componentId, paramKey, parseFloat(e.target.value))}
+          className="flex-1 h-1.5 accent-[var(--brand-primary)]"
+        />
+        <span className="text-xs text-[var(--neutral-600)] font-mono w-14 text-right">
+          {typeof param.value === "number" && param.value < 1 ? param.value.toFixed(2) : param.value}{param.unit || ""}
+        </span>
+      </div>
+    );
+  }
+  return null;
+}
+
+function SpecCard({ componentId, spec, onUpdate, onUpdateParam, isSelected, onSelect }: SpecEditorProps) {
   const [open, setOpen] = useState(false);
   const hasContent = FIELD_CONFIG.some((f) => spec[f.key]?.trim());
+  const hasParams = spec.parameters && Object.keys(spec.parameters).length > 0;
 
   return (
     <div className={`border rounded-lg bg-white overflow-hidden transition-colors ${isSelected ? "border-[var(--brand-primary)] ring-1 ring-[var(--brand-primary)]/20" : "border-[var(--neutral-200)]"}`}>
@@ -46,11 +85,22 @@ function SpecCard({ componentId, spec, onUpdate, isSelected, onSelect }: SpecEdi
             {spec.category}
           </span>
           {hasContent && <span className="size-1.5 rounded-full bg-[var(--success)]" />}
+          {hasParams && <span className="text-[9px] text-[var(--neutral-400)]">⚙</span>}
         </div>
         <span className="text-[var(--neutral-400)] text-xs">{open ? "−" : "+"}</span>
       </button>
       {open && (
-        <div className="px-4 pb-4 flex flex-col gap-3 border-t border-[var(--neutral-100)]  pt-3">
+        <div className="px-4 pb-4 flex flex-col gap-3 border-t border-[var(--neutral-100)] pt-3">
+          {/* Parameters — sliders and dropdowns */}
+          {hasParams && onUpdateParam && (
+            <div className="bg-[var(--neutral-50)] rounded-lg p-3 flex flex-col gap-2.5">
+              <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider">Adjustable Parameters</p>
+              {Object.entries(spec.parameters!).map(([key, param]) => (
+                <ParamControl key={key} componentId={componentId} paramKey={key} param={param} onUpdate={onUpdateParam} />
+              ))}
+            </div>
+          )}
+          {/* Text fields */}
           {FIELD_CONFIG.map((field) => (
             <div key={field.key}>
               <label className="block text-xs font-medium text-[var(--neutral-600)] mb-1">
@@ -74,11 +124,12 @@ function SpecCard({ componentId, spec, onUpdate, isSelected, onSelect }: SpecEdi
 interface SpecSectionProps {
   specs: Record<string, ComponentSpec>;
   onUpdate: (componentId: string, field: keyof ComponentSpec, value: string) => void;
+  onUpdateParam?: (componentId: string, paramKey: string, value: number | string) => void;
   selectedId: string | null;
   onSelect: (id: string) => void;
 }
 
-export function SpecSection({ specs, onUpdate, selectedId, onSelect }: SpecSectionProps) {
+export function SpecSection({ specs, onUpdate, onUpdateParam, selectedId, onSelect }: SpecSectionProps) {
   const categories = [
     { id: "overlay", label: "Overlays" },
     { id: "feedback", label: "Feedback & Loading" },
@@ -108,7 +159,7 @@ export function SpecSection({ specs, onUpdate, selectedId, onSelect }: SpecSecti
             <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-1.5">{cat.label}</p>
             <div className="flex flex-col gap-2">
               {items.map(([id, spec]) => (
-                <SpecCard key={id} componentId={id} spec={spec} onUpdate={onUpdate} isSelected={selectedId === id} onSelect={onSelect} />
+                <SpecCard key={id} componentId={id} spec={spec} onUpdate={onUpdate} onUpdateParam={onUpdateParam} isSelected={selectedId === id} onSelect={onSelect} />
               ))}
             </div>
           </div>
