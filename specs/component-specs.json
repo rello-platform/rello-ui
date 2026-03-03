@@ -4,55 +4,133 @@
     "principles": [
       "Every card earns its space. If a card does not contain content the user needs on this page, remove it. Visual interest comes from the quality and variety of a few well-designed cards, not from filling every pixel.",
       "Illustrations create identity. A user should identify which section they are looking at by the illustration alone, without reading the title.",
-      "Color communicates, not decorates. Every use of color carries meaning — status, category, or hierarchy. Color is never applied purely for visual variety.",
+      "Color communicates, not decorates. Every use of color carries meaning \u2014 status, category, or hierarchy. Color is never applied purely for visual variety.",
       "Motion should feel natural, not performative. Animations exist to orient the user, provide feedback, and create continuity. If an animation does not serve one of those purposes, remove it.",
-      "Fast over slow. Most transitions land in the 200–400ms range. Anything over 500ms feels sluggish. Users should never wait for an animation to finish.",
+      "Fast over slow. Most transitions land in the 200\u2013400ms range. Anything over 500ms feels sluggish. Users should never wait for an animation to finish.",
       "Content should never jump or reflow unexpectedly. Use drawers over inline panels, stacked carousels over expanding rows. The user's spatial map of the page must remain stable.",
       "Avoid the trending default. If a pattern is in every SaaS template and dashboard kit, evaluate whether it serves our users or just follows convention."
     ]
   },
   "iconCatalog": {
     "description": "Master registry of all branded card illustrations. Each is permanently assigned, never swapped or reused. Full spec: specs/BRANDED-CARD-ILLUSTRATION-REGISTRY.md",
-    "guidelines": "Assignments are permanent. No duplicates. Pattern family enforcement by lifecycle phase. No two adjacent cards share accent color. Every illustration gets a creative codename. Dark mode required from day one. SVGs only — clean, no embedded rasters, viewBox set.",
+    "guidelines": "Assignments are permanent. No duplicates. Pattern family enforcement by lifecycle phase. No two adjacent cards share accent color. Every illustration gets a creative codename. Dark mode required from day one. SVGs only \u2014 clean, no embedded rasters, viewBox set.",
     "constructionReference": {
-      "layer1": "Tinted Container: 80–96px, border-radius 16–20px, accent color at 6–10% opacity",
-      "layer2": "Decorative Pattern: 3–12% opacity geometric texture (circles, dots, hexagons, orbits, waves)",
+      "layer1": "Tinted Container: 80\u201396px, border-radius 16\u201320px, accent color at 6\u201310% opacity",
+      "layer2": "Decorative Pattern: 3\u201312% opacity geometric texture (circles, dots, hexagons, orbits, waves)",
       "layer3": "Primary Icon: Custom SVG, accent color at varied opacities, minimum one micro-detail",
       "darkAdaptation": {
-        "container": "White at 5–8% opacity (instead of accent tint)",
-        "pattern": "Accent color at 10–20% opacity",
-        "icon": "Stroke-only outline at 40–60% opacity"
+        "container": "White at 5\u20138% opacity (instead of accent tint)",
+        "pattern": "Accent color at 10\u201320% opacity",
+        "icon": "Stroke-only outline at 40\u201360% opacity"
       }
     },
     "patternFamilies": {
-      "discovery-leadgen": { "pattern": "Orbital rings / dashed orbits", "rationale": "Outward expansion, finding leads" },
-      "capture-engagement": { "pattern": "Dot grids", "rationale": "Connection points, data collection" },
-      "nurture-education": { "pattern": "Concentric circles", "rationale": "Deepening relationship, growing inward" },
-      "transaction-closing": { "pattern": "Hexagons", "rationale": "Structure, precision, interlocking steps" },
-      "post-close-retention": { "pattern": "Wave lines", "rationale": "Long-term flow, ongoing relationship" },
-      "intelligence-tools": { "pattern": "Concentric circles", "rationale": "Central knowledge, radiating insight" }
+      "discovery-leadgen": {
+        "pattern": "Orbital rings / dashed orbits",
+        "rationale": "Outward expansion, finding leads"
+      },
+      "capture-engagement": {
+        "pattern": "Dot grids",
+        "rationale": "Connection points, data collection"
+      },
+      "nurture-education": {
+        "pattern": "Concentric circles",
+        "rationale": "Deepening relationship, growing inward"
+      },
+      "transaction-closing": {
+        "pattern": "Hexagons",
+        "rationale": "Structure, precision, interlocking steps"
+      },
+      "post-close-retention": {
+        "pattern": "Wave lines",
+        "rationale": "Long-term flow, ongoing relationship"
+      },
+      "intelligence-tools": {
+        "pattern": "Concentric circles",
+        "rationale": "Central knowledge, radiating insight"
+      }
     },
     "accentPalette": {
-      "coral-rose": { "hex": "#C9785D", "phase": "Discovery / Lead Gen" },
-      "burnt-sienna": { "hex": "#B85C38", "phase": "Discovery / Lead Gen" },
-      "amber-gold": { "hex": "#D4943A", "phase": "Discovery / Lead Gen" },
-      "dusty-mauve": { "hex": "#A67B8A", "phase": "Discovery / Lead Gen" },
-      "terracotta": { "hex": "#C27052", "phase": "Discovery / Lead Gen" },
-      "periwinkle": { "hex": "#7B8EC2", "phase": "Capture / Engagement" },
-      "slate-blue": { "hex": "#5A7EB5", "phase": "Capture / Engagement" },
-      "soft-indigo": { "hex": "#6E6EA8", "phase": "Capture / Engagement" },
-      "lavender": { "hex": "#8E7CC3", "phase": "Capture / Engagement" },
-      "teal": { "hex": "#5B9EA6", "phase": "Nurture / Education" },
-      "sage-green": { "hex": "#7A9E7E", "phase": "Nurture / Education" },
-      "forest": { "hex": "#5E8C6A", "phase": "Nurture / Education" },
-      "deep-teal": { "hex": "#3D7A80", "phase": "Transaction / Closing" },
-      "steel-blue": { "hex": "#4A7B94", "phase": "Transaction / Closing" },
-      "plum": { "hex": "#8B5E83", "phase": "Transaction / Closing" },
-      "warm-taupe": { "hex": "#9E8B7E", "phase": "Post-Close / Retention" },
-      "dusty-rose": { "hex": "#B07A7A", "phase": "Post-Close / Retention" },
-      "copper": { "hex": "#B07850", "phase": "Post-Close / Retention" },
-      "soft-navy": { "hex": "#5B6B8A", "phase": "Intelligence / Tools" },
-      "cool-gray": { "hex": "#7A8A95", "phase": "Intelligence / Tools" }
+      "coral-rose": {
+        "hex": "#C9785D",
+        "phase": "Discovery / Lead Gen"
+      },
+      "burnt-sienna": {
+        "hex": "#B85C38",
+        "phase": "Discovery / Lead Gen"
+      },
+      "amber-gold": {
+        "hex": "#D4943A",
+        "phase": "Discovery / Lead Gen"
+      },
+      "dusty-mauve": {
+        "hex": "#A67B8A",
+        "phase": "Discovery / Lead Gen"
+      },
+      "terracotta": {
+        "hex": "#C27052",
+        "phase": "Discovery / Lead Gen"
+      },
+      "periwinkle": {
+        "hex": "#7B8EC2",
+        "phase": "Capture / Engagement"
+      },
+      "slate-blue": {
+        "hex": "#5A7EB5",
+        "phase": "Capture / Engagement"
+      },
+      "soft-indigo": {
+        "hex": "#6E6EA8",
+        "phase": "Capture / Engagement"
+      },
+      "lavender": {
+        "hex": "#8E7CC3",
+        "phase": "Capture / Engagement"
+      },
+      "teal": {
+        "hex": "#5B9EA6",
+        "phase": "Nurture / Education"
+      },
+      "sage-green": {
+        "hex": "#7A9E7E",
+        "phase": "Nurture / Education"
+      },
+      "forest": {
+        "hex": "#5E8C6A",
+        "phase": "Nurture / Education"
+      },
+      "deep-teal": {
+        "hex": "#3D7A80",
+        "phase": "Transaction / Closing"
+      },
+      "steel-blue": {
+        "hex": "#4A7B94",
+        "phase": "Transaction / Closing"
+      },
+      "plum": {
+        "hex": "#8B5E83",
+        "phase": "Transaction / Closing"
+      },
+      "warm-taupe": {
+        "hex": "#9E8B7E",
+        "phase": "Post-Close / Retention"
+      },
+      "dusty-rose": {
+        "hex": "#B07A7A",
+        "phase": "Post-Close / Retention"
+      },
+      "copper": {
+        "hex": "#B07850",
+        "phase": "Post-Close / Retention"
+      },
+      "soft-navy": {
+        "hex": "#5B6B8A",
+        "phase": "Intelligence / Tools"
+      },
+      "cool-gray": {
+        "hex": "#7A8A95",
+        "phase": "Intelligence / Tools"
+      }
     },
     "buildPriority": {
       "phase1": "Dashboard Essentials: The Launchpad, The Thermometer, The Radar, The Agenda",
@@ -77,45 +155,45 @@
       },
       "the-pulse": {
         "name": "The Pulse (Active Deals)",
-        "assignedCard": "The Pulse — active deal tracking",
+        "assignedCard": "The Pulse \u2014 active deal tracking",
         "iconDescription": "EKG heartbeat line with an alert badge, suggesting activity and vitality in the pipeline",
-        "backgroundPattern": "Wave pattern — flowing sine-wave lines behind the heartbeat",
+        "backgroundPattern": "Wave pattern \u2014 flowing sine-wave lines behind the heartbeat",
         "accentColor": "Brand primary blue",
         "size": "large",
         "notes": ""
       },
       "morning-brew": {
         "name": "Morning Brew (Market Intel)",
-        "assignedCard": "Morning Brew — daily market intelligence update",
+        "assignedCard": "Morning Brew \u2014 daily market intelligence update",
         "iconDescription": "Coffee cup with steam wisps rising, warm and inviting. Cup has a two-tone fill (cream top, warm base) with a rounded handle",
-        "backgroundPattern": "Dot cluster — small evenly-spaced dots in a soft grid behind the cup, with steam wisps as accent marks",
+        "backgroundPattern": "Dot cluster \u2014 small evenly-spaced dots in a soft grid behind the cup, with steam wisps as accent marks",
         "accentColor": "Warm brown / terracotta accent",
         "size": "large",
         "notes": "The coffee cup is the most recognizable icon in the system. Steam wisps give it personality."
       },
       "the-vault": {
         "name": "The Vault (Contacts)",
-        "assignedCard": "The Vault — contact database and management",
-        "iconDescription": "Target with crosshairs — concentric rings with a center dot, suggesting precision and targeting",
-        "backgroundPattern": "Concentric ring pattern — rings radiating outward from the crosshair center",
+        "assignedCard": "The Vault \u2014 contact database and management",
+        "iconDescription": "Target with crosshairs \u2014 concentric rings with a center dot, suggesting precision and targeting",
+        "backgroundPattern": "Concentric ring pattern \u2014 rings radiating outward from the crosshair center",
         "accentColor": "Success green",
         "size": "large",
         "notes": ""
       },
       "todays-agenda": {
         "name": "Today's Agenda",
-        "assignedCard": "Today's Agenda — daily schedule and tasks",
+        "assignedCard": "Today's Agenda \u2014 daily schedule and tasks",
         "iconDescription": "Calendar with date dots and clip bindings at top. Interior shows a grid of dots representing scheduled items, with one dot highlighted",
-        "backgroundPattern": "Grid pattern — evenly spaced small dots in a calendar grid formation",
+        "backgroundPattern": "Grid pattern \u2014 evenly spaced small dots in a calendar grid formation",
         "accentColor": "Brand primary blue / purple",
         "size": "large",
         "notes": "The purple accent distinguishes it from other blue-toned icons"
       },
       "the-scoreboard": {
         "name": "The Scoreboard",
-        "assignedCard": "The Scoreboard — performance metrics and GCI",
-        "iconDescription": "Star with orbital sparkles — a five-pointed star outline with small orbital dots and a dashed circular orbit ring",
-        "backgroundPattern": "Dashed orbit lines — circular dashed strokes creating an orbital feel around the star",
+        "assignedCard": "The Scoreboard \u2014 performance metrics and GCI",
+        "iconDescription": "Star with orbital sparkles \u2014 a five-pointed star outline with small orbital dots and a dashed circular orbit ring",
+        "backgroundPattern": "Dashed orbit lines \u2014 circular dashed strokes creating an orbital feel around the star",
         "accentColor": "Warm brown / gold accent",
         "size": "large",
         "notes": ""
@@ -123,8 +201,8 @@
       "compliance-shield": {
         "name": "Compliance / Shield",
         "assignedCard": "Compliance tracking and verification",
-        "iconDescription": "Shield with checkmark — a rounded shield outline containing a check mark, suggesting trust and verification",
-        "backgroundPattern": "Hexagonal tessellation — small hexagon shapes in a honeycomb arrangement",
+        "iconDescription": "Shield with checkmark \u2014 a rounded shield outline containing a check mark, suggesting trust and verification",
+        "backgroundPattern": "Hexagonal tessellation \u2014 small hexagon shapes in a honeycomb arrangement",
         "accentColor": "Success green",
         "size": "large",
         "notes": ""
@@ -133,17 +211,23 @@
         "name": "Pipeline / Discovery",
         "assignedCard": "Pipeline discovery and lead intake",
         "iconDescription": "Rocket with a pointed nose and small exhaust detail, suggesting forward momentum and discovery",
-        "backgroundPattern": "Dot-grid field — matrix of evenly-spaced dots creating a starfield or grid behind the rocket",
+        "backgroundPattern": "Dot-grid field \u2014 matrix of evenly-spaced dots creating a starfield or grid behind the rocket",
         "accentColor": "Brand primary blue / purple",
         "size": "large",
         "notes": ""
       },
-
-      "__section_lead_generation": { "name": "— LEAD GENERATION —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
-
+      "__section_lead_generation": {
+        "name": "\u2014 LEAD GENERATION \u2014",
+        "assignedCard": "",
+        "iconDescription": "",
+        "backgroundPattern": "",
+        "accentColor": "",
+        "size": "",
+        "notes": "Section divider"
+      },
       "accountability-coach": {
         "name": "Accountability Coach",
-        "assignedCard": "Accountability Coach — daily habit tracking and goal accountability",
+        "assignedCard": "Accountability Coach \u2014 daily habit tracking and goal accountability",
         "iconDescription": "Clipboard with checkmarks and a sparkle accent, suggesting structured tracking with a motivational finish",
         "backgroundPattern": "Stacked horizontal lines (checklist rows) with a sparkle cluster in the upper-right corner",
         "accentColor": "Success green",
@@ -152,55 +236,61 @@
       },
       "social-media-engine": {
         "name": "Social Media Engine",
-        "assignedCard": "Social Media Engine — automated social content distribution",
+        "assignedCard": "Social Media Engine \u2014 automated social content distribution",
         "iconDescription": "Connected nodes in a network pattern with a central share icon, surrounded by a subtle pulse ring",
-        "backgroundPattern": "Connected dot network — nodes with thin connecting lines radiating outward",
+        "backgroundPattern": "Connected dot network \u2014 nodes with thin connecting lines radiating outward",
         "accentColor": "Info blue",
         "size": "large",
         "notes": ""
       },
       "video-marketing": {
         "name": "Video Marketing",
-        "assignedCard": "Video Marketing — video content creation and distribution",
+        "assignedCard": "Video Marketing \u2014 video content creation and distribution",
         "iconDescription": "Play button triangle inside a camera/film shape with light rays emanating outward",
-        "backgroundPattern": "Radiating light rays — thin lines fanning outward from behind the play button",
+        "backgroundPattern": "Radiating light rays \u2014 thin lines fanning outward from behind the play button",
         "accentColor": "Hot red / brand accent",
         "size": "large",
         "notes": ""
       },
       "expired-fsbo-finder": {
         "name": "Expired / FSBO Finder",
-        "assignedCard": "Expired & FSBO Finder — sourcing off-market listing opportunities",
+        "assignedCard": "Expired & FSBO Finder \u2014 sourcing off-market listing opportunities",
         "iconDescription": "Magnifying glass overlapping a small house silhouette, with radar/scanner rings sweeping around it",
-        "backgroundPattern": "Radar sweep — concentric quarter-circle arcs suggesting a scanning pattern",
+        "backgroundPattern": "Radar sweep \u2014 concentric quarter-circle arcs suggesting a scanning pattern",
         "accentColor": "Qualified orange",
         "size": "large",
         "notes": ""
       },
       "campaign-manager": {
         "name": "Campaign Manager",
-        "assignedCard": "Campaign Manager — multi-channel marketing campaign orchestration",
+        "assignedCard": "Campaign Manager \u2014 multi-channel marketing campaign orchestration",
         "iconDescription": "Megaphone or small rocket with a trajectory arc curving upward, suggesting launch and reach",
-        "backgroundPattern": "Trajectory arc — a dotted curved line arcing from lower-left to upper-right with small burst dots at the end",
+        "backgroundPattern": "Trajectory arc \u2014 a dotted curved line arcing from lower-left to upper-right with small burst dots at the end",
         "accentColor": "Brand primary blue",
         "size": "large",
         "notes": ""
       },
       "quick-send": {
         "name": "Quick Send",
-        "assignedCard": "Quick Send — instant one-off messages to leads and contacts",
+        "assignedCard": "Quick Send \u2014 instant one-off messages to leads and contacts",
         "iconDescription": "Paper airplane at a slight upward angle with speed lines trailing behind it",
-        "backgroundPattern": "Speed lines — parallel diagonal dashes behind the airplane suggesting motion",
+        "backgroundPattern": "Speed lines \u2014 parallel diagonal dashes behind the airplane suggesting motion",
         "accentColor": "Info blue",
         "size": "large",
         "notes": ""
       },
-
-      "__section_lead_capture": { "name": "— LEAD CAPTURE —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
-
+      "__section_lead_capture": {
+        "name": "\u2014 LEAD CAPTURE \u2014",
+        "assignedCard": "",
+        "iconDescription": "",
+        "backgroundPattern": "",
+        "accentColor": "",
+        "size": "",
+        "notes": "Section divider"
+      },
       "landing-pages": {
         "name": "Landing Pages",
-        "assignedCard": "Landing Pages — custom lead capture pages",
+        "assignedCard": "Landing Pages \u2014 custom lead capture pages",
         "iconDescription": "Browser window frame with a cursor arrow clicking, plus a sparkle suggesting conversion magic",
         "backgroundPattern": "Grid of small rectangles (page layout blocks) at low opacity",
         "accentColor": "Brand primary blue",
@@ -209,243 +299,279 @@
       },
       "open-house-copilot": {
         "name": "Open House Copilot",
-        "assignedCard": "Open House Copilot — open house management and lead capture",
+        "assignedCard": "Open House Copilot \u2014 open house management and lead capture",
         "iconDescription": "Open door on a house outline with welcome wave lines emanating from the doorway",
-        "backgroundPattern": "Concentric semicircle arcs radiating outward from the door — welcoming wave effect",
+        "backgroundPattern": "Concentric semicircle arcs radiating outward from the door \u2014 welcoming wave effect",
         "accentColor": "Brand accent terracotta",
         "size": "large",
         "notes": ""
       },
       "cma-generator": {
         "name": "CMA Generator",
-        "assignedCard": "CMA Generator — comparative market analysis builder",
+        "assignedCard": "CMA Generator \u2014 comparative market analysis builder",
         "iconDescription": "Bar chart with a small house silhouette overlaid and thin comparison/arrow lines between bars",
-        "backgroundPattern": "Vertical bar grid — evenly-spaced thin vertical lines suggesting data columns",
+        "backgroundPattern": "Vertical bar grid \u2014 evenly-spaced thin vertical lines suggesting data columns",
         "accentColor": "Brand primary blue",
         "size": "large",
         "notes": ""
       },
       "homeready": {
         "name": "HomeReady",
-        "assignedCard": "HomeReady — consumer readiness assessment and intake",
+        "assignedCard": "HomeReady \u2014 consumer readiness assessment and intake",
         "iconDescription": "Gauge or thermometer with a rising arrow pointing upward, suggesting readiness scoring",
-        "backgroundPattern": "Curved gauge arc — a semicircle arc with tick marks like a speedometer",
+        "backgroundPattern": "Curved gauge arc \u2014 a semicircle arc with tick marks like a speedometer",
         "accentColor": "Success green / brand primary blue",
         "size": "large",
         "notes": ""
       },
       "newsletter-studio": {
         "name": "Newsletter Studio",
-        "assignedCard": "Newsletter Studio — email newsletter builder and distribution",
+        "assignedCard": "Newsletter Studio \u2014 email newsletter builder and distribution",
         "iconDescription": "Envelope with a newspaper/content block layout peeking out of the top, suggesting rich email content",
-        "backgroundPattern": "Content block grid — small rectangles of varying widths stacked like a newsletter layout",
+        "backgroundPattern": "Content block grid \u2014 small rectangles of varying widths stacked like a newsletter layout",
         "accentColor": "Brand accent terracotta",
         "size": "large",
-        "notes": "Related to Morning Brew but distinct — Newsletter Studio is the builder tool, Morning Brew is the daily market intel card"
+        "notes": "Related to Morning Brew but distinct \u2014 Newsletter Studio is the builder tool, Morning Brew is the daily market intel card"
       },
       "social-capture": {
         "name": "Social Capture",
-        "assignedCard": "Social Capture — lead capture from social media channels",
+        "assignedCard": "Social Capture \u2014 lead capture from social media channels",
         "iconDescription": "Magnet with small social media-style icons (circles, squares) being pulled toward it",
-        "backgroundPattern": "Curved attraction lines — thin curved dashes arcing toward the magnet center",
+        "backgroundPattern": "Curved attraction lines \u2014 thin curved dashes arcing toward the magnet center",
         "accentColor": "Info blue / brand primary",
         "size": "large",
         "notes": ""
       },
-
-      "__section_lead_nurture": { "name": "— LEAD NURTURE —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
-
+      "__section_lead_nurture": {
+        "name": "\u2014 LEAD NURTURE \u2014",
+        "assignedCard": "",
+        "iconDescription": "",
+        "backgroundPattern": "",
+        "accentColor": "",
+        "size": "",
+        "notes": "Section divider"
+      },
       "journey-engine": {
         "name": "Journey Engine",
-        "assignedCard": "Journey Engine — automated lead nurture journey builder",
+        "assignedCard": "Journey Engine \u2014 automated lead nurture journey builder",
         "iconDescription": "Winding path or road that curves through milestone dots, suggesting a journey with checkpoints",
-        "backgroundPattern": "Milestone dots along a curved path — dots of increasing size along a winding line",
+        "backgroundPattern": "Milestone dots along a curved path \u2014 dots of increasing size along a winding line",
         "accentColor": "Engaged gold / brand primary",
         "size": "large",
         "notes": ""
       },
       "neighborhood-intel": {
         "name": "Neighborhood Intel",
-        "assignedCard": "Neighborhood Intel — local market data and neighborhood insights",
+        "assignedCard": "Neighborhood Intel \u2014 local market data and neighborhood insights",
         "iconDescription": "Map pin with small community house silhouettes clustered nearby, surrounded by thin data rings",
-        "backgroundPattern": "Data rings — concentric circles around the map pin with small data dots scattered along the rings",
+        "backgroundPattern": "Data rings \u2014 concentric circles around the map pin with small data dots scattered along the rings",
         "accentColor": "Success green / info blue",
         "size": "large",
         "notes": ""
       },
       "price-alerts": {
         "name": "Price Alerts",
-        "assignedCard": "Price Alerts — automated price change notifications",
+        "assignedCard": "Price Alerts \u2014 automated price change notifications",
         "iconDescription": "Bell with a dollar sign inside and a pulse ring emanating outward, suggesting an active price notification",
-        "backgroundPattern": "Pulse rings — concentric circles radiating outward from the bell",
+        "backgroundPattern": "Pulse rings \u2014 concentric circles radiating outward from the bell",
         "accentColor": "Warning gold / qualified orange",
         "size": "large",
         "notes": ""
       },
-
-      "__section_listing_help": { "name": "— LISTING HELP —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
-
+      "__section_listing_help": {
+        "name": "\u2014 LISTING HELP \u2014",
+        "assignedCard": "",
+        "iconDescription": "",
+        "backgroundPattern": "",
+        "accentColor": "",
+        "size": "",
+        "notes": "Section divider"
+      },
       "pre-listing-prep": {
         "name": "Pre-Listing Prep",
-        "assignedCard": "Pre-Listing Prep — seller preparation checklist and tasks",
+        "assignedCard": "Pre-Listing Prep \u2014 seller preparation checklist and tasks",
         "iconDescription": "Checklist with a small house and a sparkle accent, suggesting organized preparation with a polished finish",
-        "backgroundPattern": "Checklist lines — horizontal dashes with small check circles at the left edge",
+        "backgroundPattern": "Checklist lines \u2014 horizontal dashes with small check circles at the left edge",
         "accentColor": "Success green",
         "size": "large",
         "notes": ""
       },
       "launch-system": {
         "name": "Launch System",
-        "assignedCard": "Launch System — listing launch and marketing activation",
+        "assignedCard": "Launch System \u2014 listing launch and marketing activation",
         "iconDescription": "Rocket with a house silhouette on its body and a trajectory arc curving upward",
-        "backgroundPattern": "Trajectory arc with burst — a curved dotted line ending in a small starburst",
+        "backgroundPattern": "Trajectory arc with burst \u2014 a curved dotted line ending in a small starburst",
         "accentColor": "Hot red / brand primary",
         "size": "large",
-        "notes": "Distinct from Pipeline Rocket — this one has a house on the rocket body and a more aggressive upward trajectory"
+        "notes": "Distinct from Pipeline Rocket \u2014 this one has a house on the rocket body and a more aggressive upward trajectory"
       },
       "showing-feedback": {
         "name": "Showing Feedback",
-        "assignedCard": "Showing Feedback — post-showing buyer feedback collection",
+        "assignedCard": "Showing Feedback \u2014 post-showing buyer feedback collection",
         "iconDescription": "Two overlapping speech bubbles with a star inside one, plus a small house accent",
-        "backgroundPattern": "Chat bubble cluster — small rounded rectangles scattered at low opacity",
+        "backgroundPattern": "Chat bubble cluster \u2014 small rounded rectangles scattered at low opacity",
         "accentColor": "Info blue / brand accent",
         "size": "large",
         "notes": ""
       },
-
-      "__section_client_retention": { "name": "— CLIENT RETENTION —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
-
+      "__section_client_retention": {
+        "name": "\u2014 CLIENT RETENTION \u2014",
+        "assignedCard": "",
+        "iconDescription": "",
+        "backgroundPattern": "",
+        "accentColor": "",
+        "size": "",
+        "notes": "Section divider"
+      },
       "homeowner-portal": {
         "name": "Homeowner Portal",
-        "assignedCard": "Homeowner Portal — post-close client engagement hub",
+        "assignedCard": "Homeowner Portal \u2014 post-close client engagement hub",
         "iconDescription": "House with a heart inside and a subtle shield outline behind, suggesting home + care + protection",
-        "backgroundPattern": "Concentric house outlines — nested house silhouettes at decreasing sizes and opacity",
+        "backgroundPattern": "Concentric house outlines \u2014 nested house silhouettes at decreasing sizes and opacity",
         "accentColor": "Brand accent terracotta / success green",
         "size": "large",
         "notes": ""
       },
       "anniversary-tracker": {
         "name": "Anniversary Tracker",
-        "assignedCard": "Anniversary Tracker — home purchase anniversary and milestone reminders",
+        "assignedCard": "Anniversary Tracker \u2014 home purchase anniversary and milestone reminders",
         "iconDescription": "Calendar with a gift box and celebration sparkle accents, suggesting milestone celebrations",
-        "backgroundPattern": "Confetti scatter — small dots and short lines scattered at varied angles",
+        "backgroundPattern": "Confetti scatter \u2014 small dots and short lines scattered at varied angles",
         "accentColor": "Engaged gold / brand accent",
         "size": "large",
         "notes": ""
       },
       "referral-engine": {
         "name": "Referral Engine",
-        "assignedCard": "Referral Engine — referral generation and tracking system",
+        "assignedCard": "Referral Engine \u2014 referral generation and tracking system",
         "iconDescription": "Two or three connected person silhouettes with directional arrows between them, suggesting referral flow",
-        "backgroundPattern": "Connection lines — thin lines connecting scattered dots in a network pattern",
+        "backgroundPattern": "Connection lines \u2014 thin lines connecting scattered dots in a network pattern",
         "accentColor": "Brand primary blue",
         "size": "large",
         "notes": ""
       },
       "review-generator": {
         "name": "Review Generator",
-        "assignedCard": "Review Generator — automated review request and collection",
+        "assignedCard": "Review Generator \u2014 automated review request and collection",
         "iconDescription": "Five-star rating with a quote/speech bubble behind it, suggesting testimonials and reviews",
-        "backgroundPattern": "Star scatter — small stars at varied sizes and opacity scattered behind the main stars",
+        "backgroundPattern": "Star scatter \u2014 small stars at varied sizes and opacity scattered behind the main stars",
         "accentColor": "Warning gold / engaged gold",
         "size": "large",
         "notes": ""
       },
-
-      "__section_broker": { "name": "— BROKER MANAGEMENT —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
-
+      "__section_broker": {
+        "name": "\u2014 BROKER MANAGEMENT \u2014",
+        "assignedCard": "",
+        "iconDescription": "",
+        "backgroundPattern": "",
+        "accentColor": "",
+        "size": "",
+        "notes": "Section divider"
+      },
       "team-performance-hub": {
         "name": "Team Performance Hub",
-        "assignedCard": "Team Performance Hub — broker team analytics and leaderboards",
+        "assignedCard": "Team Performance Hub \u2014 broker team analytics and leaderboards",
         "iconDescription": "Group of person silhouettes with a bar chart rising behind them and a small trophy accent",
-        "backgroundPattern": "Rising bar chart lines — vertical bars of increasing height at low opacity",
+        "backgroundPattern": "Rising bar chart lines \u2014 vertical bars of increasing height at low opacity",
         "accentColor": "Brand primary blue / success green",
         "size": "large",
         "notes": ""
       },
       "mlo-partner-manager": {
         "name": "MLO Partner Manager",
-        "assignedCard": "MLO Partner Manager — lender partnership and co-marketing tools",
+        "assignedCard": "MLO Partner Manager \u2014 lender partnership and co-marketing tools",
         "iconDescription": "Handshake with connection lines extending outward, suggesting partnership and collaboration",
-        "backgroundPattern": "Connection web — thin lines radiating from the handshake center to scattered dots",
+        "backgroundPattern": "Connection web \u2014 thin lines radiating from the handshake center to scattered dots",
         "accentColor": "Brand accent terracotta",
         "size": "large",
         "notes": ""
       },
-
-      "__section_engines": { "name": "— ENGINES & CORE —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
-
+      "__section_engines": {
+        "name": "\u2014 ENGINES & CORE \u2014",
+        "assignedCard": "",
+        "iconDescription": "",
+        "backgroundPattern": "",
+        "accentColor": "",
+        "size": "",
+        "notes": "Section divider"
+      },
       "milo-assistant": {
         "name": "Milo Smart Assistant",
-        "assignedCard": "Milo — platform-wide Smart Assistant chat and insights",
+        "assignedCard": "Milo \u2014 platform-wide Smart Assistant chat and insights",
         "iconDescription": "Milo's character avatar (the existing milo-circle.svg) or a chat bubble with a brain/lightbulb inside and sparkle accents",
-        "backgroundPattern": "Thought bubbles — small circles in a thought-bubble trail pattern",
+        "backgroundPattern": "Thought bubbles \u2014 small circles in a thought-bubble trail pattern",
         "accentColor": "Brand primary blue",
         "size": "large",
-        "notes": "Uses the existing Milo character asset from assets/milo/. Never refer to as AI — always Smart Assistant."
+        "notes": "Uses the existing Milo character asset from assets/milo/. Never refer to as AI \u2014 always Smart Assistant."
       },
       "content-engine": {
         "name": "Content Engine",
-        "assignedCard": "Content Engine — content creation and library management",
+        "assignedCard": "Content Engine \u2014 content creation and library management",
         "iconDescription": "Pencil or pen with content block shapes and a sparkle, suggesting creative content production",
-        "backgroundPattern": "Content blocks — small rectangles of varied widths stacked with slight rotation for dynamism",
+        "backgroundPattern": "Content blocks \u2014 small rectangles of varied widths stacked with slight rotation for dynamism",
         "accentColor": "Brand accent terracotta",
         "size": "large",
         "notes": ""
       },
       "market-intel": {
         "name": "Market Intel",
-        "assignedCard": "Market Intel — real-time market data and trend analysis",
+        "assignedCard": "Market Intel \u2014 real-time market data and trend analysis",
         "iconDescription": "Line graph with a trending upward arrow and a small globe accent, suggesting data and market scope",
-        "backgroundPattern": "Graph grid — thin horizontal and vertical lines forming a chart grid",
+        "backgroundPattern": "Graph grid \u2014 thin horizontal and vertical lines forming a chart grid",
         "accentColor": "Info blue / success green",
         "size": "large",
-        "notes": "Related to Morning Brew but distinct — Market Intel is the data engine, Morning Brew is the daily summary card"
+        "notes": "Related to Morning Brew but distinct \u2014 Market Intel is the data engine, Morning Brew is the daily summary card"
       },
       "property-engine": {
         "name": "Property Engine",
-        "assignedCard": "Property Engine — property data aggregation and matching",
+        "assignedCard": "Property Engine \u2014 property data aggregation and matching",
         "iconDescription": "House with layered data sheets behind it, suggesting multiple data layers stacked on a property",
-        "backgroundPattern": "Stacked layers — offset rectangles at decreasing opacity behind the house",
+        "backgroundPattern": "Stacked layers \u2014 offset rectangles at decreasing opacity behind the house",
         "accentColor": "Brand primary blue",
         "size": "large",
         "notes": ""
       },
       "pipeline-thermometer-icon": {
         "name": "Pipeline Thermometer",
-        "assignedCard": "Pipeline Thermometer — lead temperature visualization",
+        "assignedCard": "Pipeline Thermometer \u2014 lead temperature visualization",
         "iconDescription": "Thermometer with a heat gradient fill (cold blue at bottom to hot red at top) and small heat waves at the top",
-        "backgroundPattern": "Heat gradient bands — horizontal bands transitioning from cool to warm colors at low opacity",
+        "backgroundPattern": "Heat gradient bands \u2014 horizontal bands transitioning from cool to warm colors at low opacity",
         "accentColor": "Gradient from cold (blue/gray) through warming to hot (red)",
         "size": "large",
-        "notes": "This icon represents the Pipeline Thermometer component — the core visualization of the platform"
+        "notes": "This icon represents the Pipeline Thermometer component \u2014 the core visualization of the platform"
       },
-
-      "__section_dashboard": { "name": "— DASHBOARD SECTIONS —", "assignedCard": "", "iconDescription": "", "backgroundPattern": "", "accentColor": "", "size": "", "notes": "Section divider" },
-
+      "__section_dashboard": {
+        "name": "\u2014 DASHBOARD SECTIONS \u2014",
+        "assignedCard": "",
+        "iconDescription": "",
+        "backgroundPattern": "",
+        "accentColor": "",
+        "size": "",
+        "notes": "Section divider"
+      },
       "todays-schedule": {
         "name": "Today's Schedule",
-        "assignedCard": "Today's Schedule — daily time-blocked schedule view",
+        "assignedCard": "Today's Schedule \u2014 daily time-blocked schedule view",
         "iconDescription": "Clock face with a small calendar icon overlapping, suggesting time + date awareness",
-        "backgroundPattern": "Clock tick marks — short lines radiating from center at 12 positions like a clock face",
+        "backgroundPattern": "Clock tick marks \u2014 short lines radiating from center at 12 positions like a clock face",
         "accentColor": "Brand primary blue / info blue",
         "size": "large",
-        "notes": "Distinct from Today's Agenda — Schedule is time-blocked, Agenda is task-based"
+        "notes": "Distinct from Today's Agenda \u2014 Schedule is time-blocked, Agenda is task-based"
       },
       "hot-leads-alert": {
         "name": "Hot Leads Alert",
-        "assignedCard": "Hot Leads Alert — urgent hot lead notification card",
+        "assignedCard": "Hot Leads Alert \u2014 urgent hot lead notification card",
         "iconDescription": "Flame with a notification bell overlapping, suggesting urgency and active alerts",
-        "backgroundPattern": "Heat waves — curved lines rising upward like heat distortion",
+        "backgroundPattern": "Heat waves \u2014 curved lines rising upward like heat distortion",
         "accentColor": "Hot red",
         "size": "large",
         "notes": ""
       },
       "agent-partners": {
         "name": "Agent Partners",
-        "assignedCard": "Agent Partners — partner agent network and collaboration",
+        "assignedCard": "Agent Partners \u2014 partner agent network and collaboration",
         "iconDescription": "Two person silhouettes connected by a line with a building/office icon between them",
-        "backgroundPattern": "Network nodes — scattered dots connected by thin lines in a loose network",
+        "backgroundPattern": "Network nodes \u2014 scattered dots connected by thin lines in a loose network",
         "accentColor": "Brand primary blue / brand accent",
         "size": "large",
         "notes": ""
@@ -454,7 +580,7 @@
   },
   "antiPatterns": [
     "No colored side borders on cards. Use dot indicators, tinted backgrounds, branded illustrations, or status badges instead.",
-    "No generic icon library icons as primary card visuals. Library icons are fine for navigation, buttons, and inline indicators — but card-level identity requires custom SVG illustrations.",
+    "No generic icon library icons as primary card visuals. Library icons are fine for navigation, buttons, and inline indicators \u2014 but card-level identity requires custom SVG illustrations.",
     "No inline detail panels that push or compress content. Always use overlay drawers.",
     "No uniform card sizing. Every dashboard page uses at least two different card tiers.",
     "No emoji as icons. Emoji render differently across OS, cannot be color-controlled, and don't support decorative backgrounds."
@@ -464,29 +590,77 @@
       "name": "Drawer (Side Panel)",
       "category": "overlay",
       "description": "A right-anchored overlay panel that slides in from the right edge of the viewport to show detail views. Overlays the main content without displacing it. A scrim dims the underlying content to signal focus.",
-      "behavior": "Slides in from right (translateX: 100% to 0). Duration: 250–350ms. Easing: ease-in-out or cubic-bezier(0.4, 0.0, 0.2, 1). Scrim fades to 30–40% black. Closes via X button, scrim click, or Escape key. Closing reverses the animation. Main content beneath remains exactly as the user left it — no shifting, no resizing.",
-      "appearance": "Width: 400–520px (or ~35–40% of viewport). Background: card-background color. Border-left with card-border color. Shadow-xl on the left edge. Z-index above all main content but below system modals. Scrim is semi-transparent black overlay covering the full viewport.",
+      "behavior": "Slides in from right (translateX: 100% to 0). Duration: 250\u2013350ms. Easing: ease-in-out or cubic-bezier(0.4, 0.0, 0.2, 1). Scrim fades to 30\u201340% black. Closes via X button, scrim click, or Escape key. Closing reverses the animation. Main content beneath remains exactly as the user left it \u2014 no shifting, no resizing.",
+      "appearance": "Width: 400\u2013520px (or ~35\u201340% of viewport). Background: card-background color. Border-left with card-border color. Shadow-xl on the left edge. Z-index above all main content but below system modals. Scrim is semi-transparent black overlay covering the full viewport.",
       "doUse": "Lead detail views from any list, table, or card. File/document preview. Notification detail. Any item-level drill-down where the user clicks to see more about a specific item in a list.",
-      "dontUse": "Full-page forms with significant data entry — use a full-page view or centered modal instead. Multi-step wizards or step-by-step flows — these should live in their own full-screen view, not stacked inside a drawer.",
+      "dontUse": "Full-page forms with significant data entry \u2014 use a full-page view or centered modal instead. Multi-step wizards or step-by-step flows \u2014 these should live in their own full-screen view, not stacked inside a drawer.",
       "parameters": {
-        "duration": { "value": 300, "min": 150, "max": 500, "unit": "ms", "label": "Slide duration" },
-        "width": { "value": 480, "min": 320, "max": 640, "unit": "px", "label": "Drawer width" },
-        "scrimOpacity": { "value": 0.35, "min": 0.1, "max": 0.6, "unit": "", "label": "Scrim opacity" },
-        "easing": { "value": "cubic-bezier(0.4, 0.0, 0.2, 1)", "options": ["ease-in-out", "ease-out", "cubic-bezier(0.4, 0.0, 0.2, 1)", "cubic-bezier(0.0, 0.0, 0.2, 1)"], "label": "Easing curve" }
+        "duration": {
+          "value": 500,
+          "min": 150,
+          "max": 500,
+          "unit": "ms",
+          "label": "Slide duration"
+        },
+        "width": {
+          "value": 480,
+          "min": 320,
+          "max": 640,
+          "unit": "px",
+          "label": "Drawer width"
+        },
+        "scrimOpacity": {
+          "value": 0.15,
+          "min": 0.1,
+          "max": 0.6,
+          "unit": "",
+          "label": "Scrim opacity"
+        },
+        "easing": {
+          "value": "cubic-bezier(0.4, 0.0, 0.2, 1)",
+          "options": [
+            "ease-in-out",
+            "ease-out",
+            "cubic-bezier(0.4, 0.0, 0.2, 1)",
+            "cubic-bezier(0.0, 0.0, 0.2, 1)"
+          ],
+          "label": "Easing curve"
+        }
       }
     },
     "toast": {
       "name": "Toast Notification",
       "category": "feedback",
       "description": "A small, non-blocking message that appears briefly to confirm an action or surface a notification, then auto-dismisses. Does not require user interaction to close.",
-      "behavior": "Slides in from the top-right or bottom-right. Auto-dismisses after 4–5 seconds. Can be manually dismissed by clicking an X or swiping. Multiple toasts stack vertically with 8px gap. New toasts push older ones down. Duration: 200–300ms for enter/exit animation.",
+      "behavior": "Slides in from the top-right or bottom-right. Auto-dismisses after 4\u20135 seconds. Can be manually dismissed by clicking an X or swiping. Multiple toasts stack vertically with 8px gap. New toasts push older ones down. Duration: 200\u2013300ms for enter/exit animation.",
       "appearance": "Background: card-background with shadow-lg. Border-radius: radius-lg. Padding: 12px 16px. Max-width: 400px. Includes an icon (success/warning/error/info), a title, and optional description text. Status color accent on the left icon.",
       "doUse": "Action confirmations (saved, deleted, sent). Background process completions. Non-critical notifications that don't need immediate attention.",
-      "dontUse": "Critical errors that require user action — use a dialog instead. Long messages or complex content. Anything that needs the user to make a decision.",
+      "dontUse": "Critical errors that require user action \u2014 use a dialog instead. Long messages or complex content. Anything that needs the user to make a decision.",
       "parameters": {
-        "duration": { "value": 250, "min": 100, "max": 500, "unit": "ms", "label": "Animation duration" },
-        "autoDismiss": { "value": 4000, "min": 2000, "max": 8000, "unit": "ms", "label": "Auto-dismiss after" },
-        "position": { "value": "top-right", "options": ["top-right", "top-center", "bottom-right", "bottom-center"], "label": "Position" }
+        "duration": {
+          "value": 500,
+          "min": 100,
+          "max": 500,
+          "unit": "ms",
+          "label": "Animation duration"
+        },
+        "autoDismiss": {
+          "value": 4000,
+          "min": 2000,
+          "max": 8000,
+          "unit": "ms",
+          "label": "Auto-dismiss after"
+        },
+        "position": {
+          "value": "top-right",
+          "options": [
+            "top-right",
+            "top-center",
+            "bottom-right",
+            "bottom-center"
+          ],
+          "label": "Position"
+        }
       }
     },
     "skeleton": {
@@ -494,13 +668,25 @@
       "category": "feedback",
       "description": "Placeholder shapes with a shimmer animation shown while real content loads. Preserves the layout structure so the page doesn't jump when content arrives.",
       "behavior": "Renders immediately on mount, before data loads. A subtle shimmer (light gradient) sweeps left-to-right across the skeleton shapes on a loop. When data arrives, skeleton fades out and real content fades in (200ms crossfade). Skeleton shapes match the approximate size and position of the real content they replace.",
-      "appearance": "Shapes use neutral-100 as the base fill. Shimmer highlight is neutral-50 at 60% opacity, sweeping across. Border-radius matches the real content (rounded rectangles for text lines, circles for avatars). Animate shimmer with 1.5–2s duration, infinite loop.",
+      "appearance": "Shapes use neutral-100 as the base fill. Shimmer highlight is neutral-50 at 60% opacity, sweeping across. Border-radius matches the real content (rounded rectangles for text lines, circles for avatars). Animate shimmer with 1.5\u20132s duration, infinite loop.",
       "doUse": "Initial page loads. Tab switches where new data is being fetched. Any component that has a loading state longer than 300ms. Card content, table rows, profile sections, stat values.",
       "dontUse": "Instant state changes (optimistic updates). Content that is already cached/available. Interactive elements that should be disabled instead of replaced.",
       "parameters": {
-        "shimmerDuration": { "value": 1800, "min": 1000, "max": 3000, "unit": "ms", "label": "Shimmer speed" },
-        "baseColor": { "value": "#E1E4E8", "label": "Base color" },
-        "highlightColor": { "value": "#FAFBFC", "label": "Highlight color" }
+        "shimmerDuration": {
+          "value": 2800,
+          "min": 1000,
+          "max": 3000,
+          "unit": "ms",
+          "label": "Shimmer speed"
+        },
+        "baseColor": {
+          "value": "#E1E4E8",
+          "label": "Base color"
+        },
+        "highlightColor": {
+          "value": "#FAFBFC",
+          "label": "Highlight color"
+        }
       }
     },
     "card": {
@@ -508,21 +694,45 @@
       "category": "layout",
       "description": "The primary content container in the Rello platform. Cards come in four tiers of visual hierarchy: Hero (Tier 1), Feature (Tier 2), Stat Pill (Tier 3), and Utility (Tier 4). Every dashboard uses a mix of tiers to create a natural reading order.",
       "behavior": "Cards mount with staggered entrance animation (see Staggered Entrance). Hoverable cards transition shadow on hover (200ms). Clickable cards show pointer cursor and open detail drawers. Feature Cards include Branded Card Illustrations in the header area.",
-      "appearance": "Tier 1 Hero: Full-width or two-thirds, dark gradient or bold color background, large branded illustration, primary metric, call-to-action. One per view. Tier 2 Feature: White background with subtle border, branded illustration in top-right header, section title and subtitle, primary content area. Two-column layout typical. Tier 3 Stat Pill: Compact single-metric card with small icon in 36–40px tinted container. Rows of 4–6. White background, subtle border. Tier 4 Utility: Smallest cards in 5-column grid. Large branded illustration filling top third, title and tagline below.",
+      "appearance": "Tier 1 Hero: Full-width or two-thirds, dark gradient or bold color background, large branded illustration, primary metric, call-to-action. One per view. Tier 2 Feature: White background with subtle border, branded illustration in top-right header, section title and subtitle, primary content area. Two-column layout typical. Tier 3 Stat Pill: Compact single-metric card with small icon in 36\u201340px tinted container. Rows of 4\u20136. White background, subtle border. Tier 4 Utility: Smallest cards in 5-column grid. Large branded illustration filling top third, title and tagline below.",
       "doUse": "Every dashboard page should use at least two card tiers. Start with one Hero Card at top, follow with Stat Pills for context, then Feature Cards for main content, optionally Utility Cards for hub navigation.",
-      "dontUse": "Never use a grid of identically-sized cards — this creates a flat layout with no hierarchy. Never use colored side borders on cards — use dot indicators, tinted backgrounds, or branded illustrations instead.",
+      "dontUse": "Never use a grid of identically-sized cards \u2014 this creates a flat layout with no hierarchy. Never use colored side borders on cards \u2014 use dot indicators, tinted backgrounds, or branded illustrations instead.",
       "parameters": {
-        "borderRadius": { "value": 12, "min": 4, "max": 24, "unit": "px", "label": "Corner radius" },
-        "shadowLevel": { "value": "sm", "options": ["xs", "sm", "md", "lg"], "label": "Default shadow" },
-        "hoverShadow": { "value": "md", "options": ["sm", "md", "lg", "xl"], "label": "Hover shadow" }
+        "borderRadius": {
+          "value": 12,
+          "min": 4,
+          "max": 24,
+          "unit": "px",
+          "label": "Corner radius"
+        },
+        "shadowLevel": {
+          "value": "sm",
+          "options": [
+            "xs",
+            "sm",
+            "md",
+            "lg"
+          ],
+          "label": "Default shadow"
+        },
+        "hoverShadow": {
+          "value": "md",
+          "options": [
+            "sm",
+            "md",
+            "lg",
+            "xl"
+          ],
+          "label": "Hover shadow"
+        }
       }
     },
     "icon-catalog": {
       "name": "Icon Catalog",
       "category": "layout",
-      "description": "The complete catalog of branded card illustrations used across the Rello platform. Each icon is a custom-drawn SVG (72–100px) with a unique decorative background pattern, permanently assigned to a specific section. These are the visual identity of each card — a user should recognize the section by the icon alone.",
-      "behavior": "Icons are static — no animation on the icons themselves. The card's staggered entrance handles motion. On dark backgrounds, icons adapt to stroke-only outlines at reduced opacity. Each icon is permanently assigned and never swapped between sections.",
-      "appearance": "3-layer system: Layer 1 is a tinted container (rounded rectangle, 80–96px, accent color at 6–10% opacity). Layer 2 is a decorative background pattern (concentric circles, dot grids, hexagons, orbits, or waves at 3–12% opacity). Layer 3 is the primary custom SVG icon using the section's accent color at varied opacities for depth, with at least one micro-detail (sparkle, steam wisp, pulse ring).",
+      "description": "The complete catalog of branded card illustrations used across the Rello platform. Each icon is a custom-drawn SVG (72\u2013100px) with a unique decorative background pattern, permanently assigned to a specific section. These are the visual identity of each card \u2014 a user should recognize the section by the icon alone.",
+      "behavior": "Icons are static \u2014 no animation on the icons themselves. The card's staggered entrance handles motion. On dark backgrounds, icons adapt to stroke-only outlines at reduced opacity. Each icon is permanently assigned and never swapped between sections.",
+      "appearance": "3-layer system: Layer 1 is a tinted container (rounded rectangle, 80\u201396px, accent color at 6\u201310% opacity). Layer 2 is a decorative background pattern (concentric circles, dot grids, hexagons, orbits, or waves at 3\u201312% opacity). Layer 3 is the primary custom SVG icon using the section's accent color at varied opacities for depth, with at least one micro-detail (sparkle, steam wisp, pulse ring).",
       "doUse": "Every Tier 2 Feature Card header. Tier 4 Utility Cards (large, filling top third). Tier 1 Hero Cards (adapted for dark backgrounds). Anywhere a section needs visual identification at a glance.",
       "dontUse": "Never substitute with generic icon library icons for card-level identity. Never reuse across sections. Never swap assigned illustrations. Toolbar icons and inline UI indicators should use Iconoir, not these.",
       "parameters": {}
@@ -530,32 +740,86 @@
     "branded-card-illustration": {
       "name": "Branded Card Illustration",
       "category": "layout",
-      "description": "A large (72–100px) custom-drawn SVG illustration with three visual layers that serves as the primary visual identifier on a content card. Every major section of the platform is assigned a permanent illustration.",
-      "behavior": "Static on mount — no animation on the illustration itself (the card's staggered entrance handles motion). On dark card backgrounds, the illustration adapts: tinted container becomes very subtle white at 5–8% opacity, decorative pattern renders in accent color at 10–20%, primary icon renders as stroke-only outline at 40–60% opacity.",
-      "appearance": "Layer 1 — Tinted Container: Rounded rectangle (border-radius 16–20px, 80–96px size), filled with card accent color at 6–10% opacity. Positioned top-right of card header, vertically aligned with title block. Layer 2 — Decorative Background: Low-opacity (3–12%) geometric pattern inside the container — concentric circles, dot grids, hexagons, orbital rings, or dashed orbits. Reads as texture, not noise. Layer 3 — Primary Icon: Custom SVG using the card's accent color at varied opacities for depth. Includes at least one micro-detail (sparkle, wave, wisp, ring). Feels illustrative, not utilitarian.",
+      "description": "A large (72\u2013100px) custom-drawn SVG illustration with three visual layers that serves as the primary visual identifier on a content card. Every major section of the platform is assigned a permanent illustration.",
+      "behavior": "Static on mount \u2014 no animation on the illustration itself (the card's staggered entrance handles motion). On dark card backgrounds, the illustration adapts: tinted container becomes very subtle white at 5\u20138% opacity, decorative pattern renders in accent color at 10\u201320%, primary icon renders as stroke-only outline at 40\u201360% opacity.",
+      "appearance": "Layer 1 \u2014 Tinted Container: Rounded rectangle (border-radius 16\u201320px, 80\u201396px size), filled with card accent color at 6\u201310% opacity. Positioned top-right of card header, vertically aligned with title block. Layer 2 \u2014 Decorative Background: Low-opacity (3\u201312%) geometric pattern inside the container \u2014 concentric circles, dot grids, hexagons, orbital rings, or dashed orbits. Reads as texture, not noise. Layer 3 \u2014 Primary Icon: Custom SVG using the card's accent color at varied opacities for depth. Includes at least one micro-detail (sparkle, wave, wisp, ring). Feels illustrative, not utilitarian.",
       "doUse": "Every Tier 2 Feature Card must include a Branded Card Illustration in its header. Tier 4 Utility Cards use a large illustration filling the top third. Tier 1 Hero Cards include a branded illustration adapted for dark backgrounds.",
       "dontUse": "Never substitute with generic icon library icons (Lucide, Heroicons, etc.) for card-level identity. Never reuse the same illustration across different sections. Never swap assigned illustrations between cards.",
       "parameters": {
-        "iconSize": { "value": 84, "min": 64, "max": 120, "unit": "px", "label": "Illustration size" },
-        "containerSize": { "value": 88, "min": 72, "max": 112, "unit": "px", "label": "Container size" },
-        "containerOpacity": { "value": 0.08, "min": 0.04, "max": 0.15, "unit": "", "label": "Container fill opacity" },
-        "patternOpacity": { "value": 0.07, "min": 0.03, "max": 0.15, "unit": "", "label": "Pattern opacity" }
+        "iconSize": {
+          "value": 84,
+          "min": 64,
+          "max": 120,
+          "unit": "px",
+          "label": "Illustration size"
+        },
+        "containerSize": {
+          "value": 88,
+          "min": 72,
+          "max": 112,
+          "unit": "px",
+          "label": "Container size"
+        },
+        "containerOpacity": {
+          "value": 0.08,
+          "min": 0.04,
+          "max": 0.15,
+          "unit": "",
+          "label": "Container fill opacity"
+        },
+        "patternOpacity": {
+          "value": 0.07,
+          "min": 0.03,
+          "max": 0.15,
+          "unit": "",
+          "label": "Pattern opacity"
+        }
       }
     },
     "stacked-carousel": {
       "name": "Stacked Carousel",
       "category": "layout",
-      "description": "A browsable stack of cards showing one item at a time with visible depth cues — like a stack of papers on a desk. Shadow cards peek out behind the active card to communicate that more items exist.",
-      "behavior": "Active card is fully visible in foreground. Two shadow cards peek out behind, each offset and smaller. User navigates with arrow buttons (bottom-right) and dot indicators (bottom-left). Card counter shows position (e.g., '2/4') in top-right. Advancing to next card: current card animates out, next card animates in. Transition: crossfade or slide, 250–300ms, ease-in-out.",
-      "appearance": "Active card: full size, border-radius 20–22px, z-index top. Shadow card 1: offset 4px inward from each edge, 2px down, 80% opacity. Shadow card 2: offset 8px inward, 4px down, 50% opacity. Shadow card colors: neutral warm tones (bone, light warm gray). Navigation arrows: 32px, rounded, bordered. Dot indicators: active dot is wider (20px) with accent color, inactive dots are default size. Card counter: muted text.",
-      "doUse": "Browsing 2–6 items of the same type without leaving the current view. Active deals, lead batches, reports, pipeline sessions.",
-      "dontUse": "Mixed content types — never stack cards of different types. Single items — show a regular card, not a stack. More than 6 items — use a scrollable list with detail drawer instead. The stack metaphor breaks down when users can't gauge depth.",
+      "description": "A browsable stack of cards showing one item at a time with visible depth cues \u2014 like a stack of papers on a desk. Shadow cards peek out behind the active card to communicate that more items exist.",
+      "behavior": "Active card is fully visible in foreground. Two shadow cards peek out behind, each offset and smaller. User navigates with arrow buttons (bottom-right) and dot indicators (bottom-left). Card counter shows position (e.g., '2/4') in top-right. Advancing to next card: current card animates out, next card animates in. Transition: crossfade or slide, 250\u2013300ms, ease-in-out.",
+      "appearance": "Active card: full size, border-radius 20\u201322px, z-index top. Shadow card 1: offset 4px inward from each edge, 2px down, 80% opacity. Shadow card 2: offset 8px inward, 4px down, 50% opacity. Shadow card colors: neutral warm tones (bone, light warm gray). Navigation arrows: 32px, rounded, bordered. Dot indicators: active dot is wider (20px) with accent color, inactive dots are default size. Card counter: muted text.",
+      "doUse": "Browsing 2\u20136 items of the same type without leaving the current view. Active deals, lead batches, reports, pipeline sessions.",
+      "dontUse": "Mixed content types \u2014 never stack cards of different types. Single items \u2014 show a regular card, not a stack. More than 6 items \u2014 use a scrollable list with detail drawer instead. The stack metaphor breaks down when users can't gauge depth.",
       "parameters": {
-        "transitionDuration": { "value": 275, "min": 150, "max": 500, "unit": "ms", "label": "Card transition" },
-        "shadowOffset1": { "value": 4, "min": 2, "max": 8, "unit": "px", "label": "Shadow card 1 offset" },
-        "shadowOffset2": { "value": 8, "min": 4, "max": 16, "unit": "px", "label": "Shadow card 2 offset" },
-        "shadowOpacity1": { "value": 0.8, "min": 0.5, "max": 1, "unit": "", "label": "Shadow card 1 opacity" },
-        "shadowOpacity2": { "value": 0.5, "min": 0.2, "max": 0.8, "unit": "", "label": "Shadow card 2 opacity" }
+        "transitionDuration": {
+          "value": 500,
+          "min": 150,
+          "max": 500,
+          "unit": "ms",
+          "label": "Card transition"
+        },
+        "shadowOffset1": {
+          "value": 4,
+          "min": 2,
+          "max": 8,
+          "unit": "px",
+          "label": "Shadow card 1 offset"
+        },
+        "shadowOffset2": {
+          "value": 8,
+          "min": 4,
+          "max": 16,
+          "unit": "px",
+          "label": "Shadow card 2 offset"
+        },
+        "shadowOpacity1": {
+          "value": 0.8,
+          "min": 0.5,
+          "max": 1,
+          "unit": "",
+          "label": "Shadow card 1 opacity"
+        },
+        "shadowOpacity2": {
+          "value": 0.5,
+          "min": 0.2,
+          "max": 0.8,
+          "unit": "",
+          "label": "Shadow card 2 opacity"
+        }
       }
     },
     "button": {
@@ -567,19 +831,37 @@
       "doUse": "Form submissions, dialog confirmations, navigation triggers, calls-to-action. Use primary for the main action, secondary or ghost for supporting actions, danger for destructive actions.",
       "dontUse": "Navigation that should be a link. Toggles that should be switches. Status indicators that should be badges.",
       "parameters": {
-        "borderRadius": { "value": 8, "min": 4, "max": 16, "unit": "px", "label": "Corner radius" },
-        "hoverOpacity": { "value": 0.9, "min": 0.7, "max": 1, "unit": "", "label": "Hover opacity" },
-        "transitionDuration": { "value": 150, "min": 50, "max": 300, "unit": "ms", "label": "Transition speed" }
+        "borderRadius": {
+          "value": 8,
+          "min": 4,
+          "max": 16,
+          "unit": "px",
+          "label": "Corner radius"
+        },
+        "hoverOpacity": {
+          "value": 0.9,
+          "min": 0.7,
+          "max": 1,
+          "unit": "",
+          "label": "Hover opacity"
+        },
+        "transitionDuration": {
+          "value": 300,
+          "min": 50,
+          "max": 300,
+          "unit": "ms",
+          "label": "Transition speed"
+        }
       }
     },
     "badge": {
       "name": "Badge",
       "category": "data-display",
       "description": "Small pill-shaped labels that communicate status, category, or pipeline stage. Available in 12 variants including 5 pipeline stages (hot, qualified, engaged, warming, cold) and 4 status types (success, warning, error, info).",
-      "behavior": "Static — no animation on mount or interaction. Optional dot indicator pulses subtly for active statuses. Pipeline badges use their assigned colors consistently across all views.",
+      "behavior": "Static \u2014 no animation on mount or interaction. Optional dot indicator pulses subtly for active statuses. Pipeline badges use their assigned colors consistently across all views.",
       "appearance": "Pill-shaped (rounded-full). Light tinted background with solid text in the variant color. Sizes: xs (10px text), sm (12px), md (12px, more padding), lg (14px). Optional leading dot indicator (1.5px circle in current color). Optional leading icon (12px). Font-ui family, medium weight.",
       "doUse": "Pipeline stage indicators on lead cards and tables. Status labels (active, pending, overdue). Category tags. Counts or quantities. Use dot indicators for statuses that represent live/active state.",
-      "dontUse": "Long text content — keep to 1–2 words. Navigation or clickable elements — badges are display only. Colored side borders on cards — use badges inline instead.",
+      "dontUse": "Long text content \u2014 keep to 1\u20132 words. Navigation or clickable elements \u2014 badges are display only. Colored side borders on cards \u2014 use badges inline instead.",
       "parameters": {}
     },
     "input": {
@@ -589,7 +871,7 @@
       "behavior": "Focus: border transitions to brand-primary, ring-2 appears at 20% opacity. Error state: border and ring switch to error color. Disabled: 50% opacity, neutral-50 background, no pointer events. Labels sit above the field with 6px gap. Hint text appears below in neutral-500. Error text replaces hint text in error color.",
       "appearance": "Height: 36px (h-9). White background, neutral-200 border, rounded-md corners. Text: 14px in foreground color. Placeholder: neutral-400. Shadow-xs. Icons (optional): positioned absolutely at 12px from left or right edge, neutral-400 color. When icon is present, input padding adjusts to 40px on that side.",
       "doUse": "All single-line text entry. Email, phone, name, search, URL fields. Always include a label for accessibility unless the context is unambiguous (e.g., a lone search field with an icon).",
-      "dontUse": "Multi-line content — use Textarea instead. Selection from a fixed set — use Select instead. Binary choices — use Checkbox or Toggle instead.",
+      "dontUse": "Multi-line content \u2014 use Textarea instead. Selection from a fixed set \u2014 use Select instead. Binary choices \u2014 use Checkbox or Toggle instead.",
       "parameters": {}
     },
     "dialog": {
@@ -598,11 +880,23 @@
       "description": "A centered overlay that demands user attention for confirmations, short forms, or critical decisions. Blocks interaction with the underlying page until dismissed.",
       "behavior": "Opens with fade-in (opacity 0 to 1) and subtle zoom (scale 0.95 to 1), 200ms. Overlay scrim fades to 50% black. Closes via X button (top-right), clicking scrim, or Escape key. Closing reverses animations. Focus is trapped inside the dialog while open.",
       "appearance": "Max-width: 32rem (lg). Centered vertically and horizontally. White background, card-border, rounded-lg corners, shadow-lg. Padding: 24px. Header: title (18px semibold) + description (14px neutral-500). Footer: buttons right-aligned, gap-2. On mobile: max-width is viewport minus 32px.",
-      "doUse": "Delete confirmations. Critical decisions that require explicit user choice. Short forms (1–3 fields) that should feel modal. Alerts that require acknowledgment.",
-      "dontUse": "Detail views — use a Drawer instead. Long forms or multi-step flows — use a full page. Non-critical information — use a Toast instead. Content browsing — dialogs block the page, which frustrates exploration.",
+      "doUse": "Delete confirmations. Critical decisions that require explicit user choice. Short forms (1\u20133 fields) that should feel modal. Alerts that require acknowledgment.",
+      "dontUse": "Detail views \u2014 use a Drawer instead. Long forms or multi-step flows \u2014 use a full page. Non-critical information \u2014 use a Toast instead. Content browsing \u2014 dialogs block the page, which frustrates exploration.",
       "parameters": {
-        "duration": { "value": 200, "min": 100, "max": 400, "unit": "ms", "label": "Animation duration" },
-        "scrimOpacity": { "value": 0.5, "min": 0.2, "max": 0.7, "unit": "", "label": "Scrim opacity" }
+        "duration": {
+          "value": 400,
+          "min": 100,
+          "max": 400,
+          "unit": "ms",
+          "label": "Animation duration"
+        },
+        "scrimOpacity": {
+          "value": 0.15,
+          "min": 0.2,
+          "max": 0.7,
+          "unit": "",
+          "label": "Scrim opacity"
+        }
       }
     },
     "table": {
@@ -610,9 +904,9 @@
       "category": "data-display",
       "description": "A structured data display for lists of leads, contacts, deals, or any homogeneous data set. Supports sorting, row click for detail drill-down, loading skeleton, and empty states.",
       "behavior": "Header cells with sortable columns show a sort indicator (arrow) in brand-primary on the active sort column. Clicking a sortable header toggles asc/desc. Rows highlight on hover (neutral-50 background, 150ms transition). Clickable rows show pointer cursor and open a Drawer on click. Loading state shows skeleton rows with shimmer. Empty state shows centered message.",
-      "appearance": "White background with rounded-xl corners and neutral-100 border. Header row: neutral-50 background, neutral-600 text, 12px uppercase tracking-wider. Body rows: 14px text in foreground color, divided by neutral-100 borders. Cell padding: 12px horizontal, 12px vertical. No outer border between header and body — just the background color difference.",
+      "appearance": "White background with rounded-xl corners and neutral-100 border. Header row: neutral-50 background, neutral-600 text, 12px uppercase tracking-wider. Body rows: 14px text in foreground color, divided by neutral-100 borders. Cell padding: 12px horizontal, 12px vertical. No outer border between header and body \u2014 just the background color difference.",
       "doUse": "Any list of 5+ homogeneous items. Lead lists, contact directories, deal pipelines, activity logs, transaction histories.",
-      "dontUse": "Heterogeneous content — use cards instead. Fewer than 5 items — a simple list or card layout is better. Highly visual data — use cards with branded illustrations.",
+      "dontUse": "Heterogeneous content \u2014 use cards instead. Fewer than 5 items \u2014 a simple list or card layout is better. Highly visual data \u2014 use cards with branded illustrations.",
       "parameters": {}
     },
     "empty-state": {
@@ -622,7 +916,7 @@
       "behavior": "Mounts with a subtle fade-in (200ms). If the empty state includes an action button, the button uses the primary variant. The icon (if provided) sits in a large neutral-100 circle for visual weight.",
       "appearance": "Centered vertically and horizontally within its container. Icon container: 64px circle with neutral-100 background, icon in neutral-400. Title: 18px semibold. Description: 14px neutral-500, max-width 24rem. Action button below with 16px gap. Generous vertical padding (48px top and bottom).",
       "doUse": "Empty tables, empty search results, first-time views with no data yet, empty inboxes or notification lists.",
-      "dontUse": "Error states — use an error message or dialog instead. Loading states — use skeleton loaders. Partially loaded content — show what you have.",
+      "dontUse": "Error states \u2014 use an error message or dialog instead. Loading states \u2014 use skeleton loaders. Partially loaded content \u2014 show what you have.",
       "parameters": {}
     },
     "pagination": {
@@ -632,22 +926,48 @@
       "behavior": "Previous/next arrows are disabled at the boundaries (page 1 and last page). Current page button uses brand-primary background with white text. Ellipsis appears when there are gaps in the page range. Clicking a page number triggers immediate navigation. Shows 'Showing page X of Y (Z total)' text.",
       "appearance": "White background, border-top with neutral-100. Buttons: 32px min-width, 32px height, rounded-lg. Active page: brand-primary background, white text. Inactive pages: neutral-600 text, hover shows neutral-100 background. Arrows: 16px icons in neutral-600, disabled state is neutral-300. Total text: 14px neutral-500.",
       "doUse": "Tables and lists with more than 20 items. Any paginated API response. Search results.",
-      "dontUse": "Short lists — show all items. Infinite scroll contexts. Carousel navigation — use carousel dots instead.",
+      "dontUse": "Short lists \u2014 show all items. Infinite scroll contexts. Carousel navigation \u2014 use carousel dots instead.",
       "parameters": {}
     },
     "staggered-entrance": {
       "name": "Staggered Entrance Animation",
       "category": "motion",
       "description": "A choreographed mount animation where cards and content blocks fade in and slide upward sequentially, creating a cascading waterfall effect that gives the interface spatial awareness and rhythm.",
-      "behavior": "Each card begins invisible (opacity: 0) and positioned 16–24px below its final resting place. On mount, cards simultaneously fade in and slide upward. Multiple cards stagger their start times with 50–100ms delay between each. The first card anchors attention, subsequent cards flow in naturally. Total stagger time for a group should stay under 800ms (e.g., 6 cards at 100ms = last card starts at 500ms, finishes around 800–900ms).",
-      "appearance": "Starting state: opacity: 0, translateY: 16–24px. Ending state: opacity: 1, translateY: 0. Duration per card: 300–400ms. Easing: ease-out or cubic-bezier(0.0, 0.0, 0.2, 1). The animation should feel like cards are rising gently into place, not snapping or bouncing.",
+      "behavior": "Each card begins invisible (opacity: 0) and positioned 16\u201324px below its final resting place. On mount, cards simultaneously fade in and slide upward. Multiple cards stagger their start times with 50\u2013100ms delay between each. The first card anchors attention, subsequent cards flow in naturally. Total stagger time for a group should stay under 800ms (e.g., 6 cards at 100ms = last card starts at 500ms, finishes around 800\u2013900ms).",
+      "appearance": "Starting state: opacity: 0, translateY: 16\u201324px. Ending state: opacity: 1, translateY: 0. Duration per card: 300\u2013400ms. Easing: ease-out or cubic-bezier(0.0, 0.0, 0.2, 1). The animation should feel like cards are rising gently into place, not snapping or bouncing.",
       "doUse": "Page/view transitions when navigating via sidebar or primary navigation. Dashboard initial loads. Tab switches within the same view. Any time new card-level content replaces existing content.",
       "dontUse": "Inline data updates within already-visible cards (e.g., a score updating). Micro-interactions on small elements (buttons, toggles). Content that is being added incrementally to an existing list (e.g., infinite scroll new items).",
       "parameters": {
-        "duration": { "value": 350, "min": 200, "max": 500, "unit": "ms", "label": "Duration per card" },
-        "staggerDelay": { "value": 75, "min": 30, "max": 150, "unit": "ms", "label": "Stagger delay" },
-        "distance": { "value": 20, "min": 8, "max": 40, "unit": "px", "label": "Slide distance" },
-        "easing": { "value": "cubic-bezier(0.0, 0.0, 0.2, 1)", "options": ["ease-out", "cubic-bezier(0.0, 0.0, 0.2, 1)", "cubic-bezier(0.25, 0.1, 0.25, 1)"], "label": "Easing curve" }
+        "duration": {
+          "value": 500,
+          "min": 200,
+          "max": 500,
+          "unit": "ms",
+          "label": "Duration per card"
+        },
+        "staggerDelay": {
+          "value": 150,
+          "min": 30,
+          "max": 150,
+          "unit": "ms",
+          "label": "Stagger delay"
+        },
+        "distance": {
+          "value": 20,
+          "min": 8,
+          "max": 40,
+          "unit": "px",
+          "label": "Slide distance"
+        },
+        "easing": {
+          "value": "cubic-bezier(0.0, 0.0, 0.2, 1)",
+          "options": [
+            "ease-out",
+            "cubic-bezier(0.0, 0.0, 0.2, 1)",
+            "cubic-bezier(0.25, 0.1, 0.25, 1)"
+          ],
+          "label": "Easing curve"
+        }
       }
     },
     "page-transition": {
@@ -655,27 +975,63 @@
       "category": "motion",
       "description": "The overall animation pattern when navigating between top-level views or routes. Provides continuity and spatial context as the user moves through the application.",
       "behavior": "Outgoing view fades out (opacity 1 to 0, 150ms). Brief pause (50ms). Incoming view content uses staggered entrance animation. The transition should feel like turning a page, not teleporting. Route changes in the sidebar trigger this pattern. Back navigation reverses the direction hint if applicable.",
-      "appearance": "Outgoing: opacity fades to 0 over 150ms with ease-in. Incoming: handled by staggered entrance animation on the new view's cards. No horizontal sliding of the entire page — individual cards handle their own entrance. The sidebar and header remain static during transitions.",
+      "appearance": "Outgoing: opacity fades to 0 over 150ms with ease-in. Incoming: handled by staggered entrance animation on the new view's cards. No horizontal sliding of the entire page \u2014 individual cards handle their own entrance. The sidebar and header remain static during transitions.",
       "doUse": "All top-level route changes triggered by sidebar navigation. Switching between major sections of the app.",
       "dontUse": "Tab switches within the same view (those use staggered entrance only, no fade-out). Drawer open/close. Dialog open/close. In-page filtering or sorting.",
       "parameters": {
-        "fadeOutDuration": { "value": 150, "min": 50, "max": 300, "unit": "ms", "label": "Fade-out duration" },
-        "pauseDuration": { "value": 50, "min": 0, "max": 150, "unit": "ms", "label": "Pause between" }
+        "fadeOutDuration": {
+          "value": 300,
+          "min": 50,
+          "max": 300,
+          "unit": "ms",
+          "label": "Fade-out duration"
+        },
+        "pauseDuration": {
+          "value": 150,
+          "min": 0,
+          "max": 150,
+          "unit": "ms",
+          "label": "Pause between"
+        }
       }
     },
     "survey-step": {
       "name": "Survey Step Card",
       "category": "form",
       "description": "A step-by-step questionnaire card used in consumer-facing intake flows (Home Ready, Home Stretch). Shows one question at a time with a progress bar, topic icon, question heading, helper text, a selection grid, and a live score/feedback footer.",
-      "behavior": "Each question is a full card that transitions to the next on selection. Progress bar animates smoothly as user advances. Selecting an option highlights it with brand-primary border and light background, then auto-advances to the next question after 300–400ms. Back navigation supported. Score/feedback footer updates in real-time as answers are collected. The card body transitions with a subtle fade + slide (similar to page transition).",
-      "appearance": "Card: white background, rounded-2xl (20px), shadow-md, centered on page with max-width ~448px. Progress bar: 8px height, rounded-full, brand-primary fill, neutral-100 track. Icon: 48px container with neutral-50 background, centered above question. Question: heading font, 20–24px, bold, centered. Helper text: 14px, neutral-500, centered. Option grid: 2-column layout, 10px gap. Option buttons: rounded-xl (12px), border-2, py-12px px-16px, 14px medium text. Selected state: brand-primary border, brand-primary-light background, brand-primary text. Footer: rounded-xl border, centered text in brand-primary, 14px medium.",
+      "behavior": "Each question is a full card that transitions to the next on selection. Progress bar animates smoothly as user advances. Selecting an option highlights it with brand-primary border and light background, then auto-advances to the next question after 300\u2013400ms. Back navigation supported. Score/feedback footer updates in real-time as answers are collected. The card body transitions with a subtle fade + slide (similar to page transition).",
+      "appearance": "Card: white background, rounded-2xl (20px), shadow-md, centered on page with max-width ~448px. Progress bar: 8px height, rounded-full, brand-primary fill, neutral-100 track. Icon: 48px container with neutral-50 background, centered above question. Question: heading font, 20\u201324px, bold, centered. Helper text: 14px, neutral-500, centered. Option grid: 2-column layout, 10px gap. Option buttons: rounded-xl (12px), border-2, py-12px px-16px, 14px medium text. Selected state: brand-primary border, brand-primary-light background, brand-primary text. Footer: rounded-xl border, centered text in brand-primary, 14px medium.",
       "doUse": "Home Ready intake questionnaire. Home Stretch qualification flow. Any consumer-facing multi-step survey or assessment. Lead scoring questionnaires. Pre-approval intake forms.",
-      "dontUse": "Back-office forms (Rello admin) — use standard form fields instead. Single-question forms — use a simple input or select. Complex forms with many fields per step — use a full-page form layout.",
+      "dontUse": "Back-office forms (Rello admin) \u2014 use standard form fields instead. Single-question forms \u2014 use a simple input or select. Complex forms with many fields per step \u2014 use a full-page form layout.",
       "parameters": {
-        "transitionDuration": { "value": 300, "min": 150, "max": 500, "unit": "ms", "label": "Step transition" },
-        "optionColumns": { "value": 2, "min": 1, "max": 3, "unit": "", "label": "Option columns" },
-        "borderRadius": { "value": 20, "min": 8, "max": 28, "unit": "px", "label": "Card radius" },
-        "optionRadius": { "value": 12, "min": 4, "max": 20, "unit": "px", "label": "Option radius" }
+        "transitionDuration": {
+          "value": 500,
+          "min": 150,
+          "max": 500,
+          "unit": "ms",
+          "label": "Step transition"
+        },
+        "optionColumns": {
+          "value": 2,
+          "min": 1,
+          "max": 3,
+          "unit": "",
+          "label": "Option columns"
+        },
+        "borderRadius": {
+          "value": 20,
+          "min": 8,
+          "max": 28,
+          "unit": "px",
+          "label": "Card radius"
+        },
+        "optionRadius": {
+          "value": 12,
+          "min": 4,
+          "max": 20,
+          "unit": "px",
+          "label": "Option radius"
+        }
       }
     },
     "select": {
@@ -684,18 +1040,18 @@
       "description": "A dropdown selector built on Radix UI for choosing from a list of options. Used for pipeline stage selectors, audience pickers, assignee selectors, and any fixed-option selection.",
       "behavior": "Click trigger to open dropdown. Content appears below with fade-in + zoom animation. Selected item shows a check indicator. Supports groups with labels and separators. Keyboard navigation (arrow keys, enter, escape). Focus ring on trigger matches brand-primary.",
       "appearance": "Trigger: same height and styling as Input (h-9, border, rounded-md). Down arrow icon at right edge, 50% opacity. Dropdown content: white background, shadow-md, rounded-md, neutral-200 border. Items: 14px text, py-6px px-8px, hover shows neutral-100 background. Group labels: 12px neutral-500 uppercase. Two sizes: sm (h-8, 12px text) and md (h-9, 14px text).",
-      "doUse": "Pipeline stage filters. Agent assignment. Status selection. Any choice from 3–15 options. Anywhere a native <select> would be used.",
-      "dontUse": "Fewer than 3 options — use radio buttons. More than 15 options — use a searchable combobox. Multi-select — use checkboxes or a tag input.",
+      "doUse": "Pipeline stage filters. Agent assignment. Status selection. Any choice from 3\u201315 options. Anywhere a native <select> would be used.",
+      "dontUse": "Fewer than 3 options \u2014 use radio buttons. More than 15 options \u2014 use a searchable combobox. Multi-select \u2014 use checkboxes or a tag input.",
       "parameters": {}
     },
     "textarea": {
       "name": "Textarea",
       "category": "form",
-      "description": "Multi-line text input for longer content — contact notes, email bodies, property descriptions, feedback.",
+      "description": "Multi-line text input for longer content \u2014 contact notes, email bodies, property descriptions, feedback.",
       "behavior": "Same focus, error, disabled states as Input. Resizable vertically (resize-y). Min-height: 80px. Labels, hints, and error messages follow the same pattern as Input.",
       "appearance": "White background, neutral-200 border, rounded-md, shadow-xs. Padding: 8px 12px. Text: 14px body font. Placeholder: neutral-400. Focus: brand-primary border + ring. Error: error color border + ring.",
       "doUse": "Contact notes. Email/SMS message bodies. Property descriptions. Any text longer than one line. Feedback forms.",
-      "dontUse": "Single-line input — use Input. Structured data — use specific form fields. Rich text — use a rich text editor component.",
+      "dontUse": "Single-line input \u2014 use Input. Structured data \u2014 use specific form fields. Rich text \u2014 use a rich text editor component.",
       "parameters": {}
     },
     "checkbox-radio": {
@@ -705,27 +1061,27 @@
       "behavior": "Checkbox: toggles between checked/unchecked. Checked state fills with brand-primary and shows a white check icon. Radio: selecting one deselects others in the group. Both support disabled state (50% opacity). Focus ring in brand-primary. Groups use fieldset/legend for accessibility.",
       "appearance": "Checkbox: 16px square, rounded-[4px], neutral-300 border, white background. Checked: brand-primary fill, white check icon. Radio: 16px circle, neutral-300 border, white background. Selected: brand-primary fill with white inner dot. Labels: 14px medium text, 8px gap from control. Group spacing: 12px between items.",
       "doUse": "Settings and preferences (checkbox). Notification preferences (checkbox). Multi-select filters (checkbox). Single-choice questions (radio). Pipeline stage selection (radio).",
-      "dontUse": "Binary on/off — use Toggle instead. Large option lists (>8) — use Select. Single-line inline toggles — use Toggle.",
+      "dontUse": "Binary on/off \u2014 use Toggle instead. Large option lists (>8) \u2014 use Select. Single-line inline toggles \u2014 use Toggle.",
       "parameters": {}
     },
     "toggle-switch": {
       "name": "Toggle / Switch",
       "category": "form",
-      "description": "An on/off switch for binary settings. More visually immediate than a checkbox — the user can see the current state at a glance.",
+      "description": "An on/off switch for binary settings. More visually immediate than a checkbox \u2014 the user can see the current state at a glance.",
       "behavior": "Click or keyboard to toggle between on and off. Transition: thumb slides left/right over 150ms with ease. On state: track fills with brand-primary. Off state: track is neutral-200. Disabled: 50% opacity. Can include an inline label describing the setting.",
       "appearance": "Track: 36px wide, 20px tall, rounded-full. Thumb: 16px circle, white, shadow-xs. On: brand-primary track, thumb right. Off: neutral-200 track, thumb left. Label: 14px text to the right, 8px gap.",
       "doUse": "Feature enable/disable. Notification preferences. Visibility toggles. Settings that take effect immediately. Dark mode toggle.",
-      "dontUse": "Multi-option choices — use checkbox or radio. Form fields that require a submit — use checkbox. Anything that isn't a clear binary.",
+      "dontUse": "Multi-option choices \u2014 use checkbox or radio. Form fields that require a submit \u2014 use checkbox. Anything that isn't a clear binary.",
       "parameters": {}
     },
     "date-picker": {
       "name": "Date Picker",
       "category": "form",
-      "description": "Calendar-based date selection critical for real estate — closing dates, follow-up scheduling, showing times, listing expirations. Can be single date, date range, or date+time.",
+      "description": "Calendar-based date selection critical for real estate \u2014 closing dates, follow-up scheduling, showing times, listing expirations. Can be single date, date range, or date+time.",
       "behavior": "Click input to open calendar popover. Calendar shows month grid with today highlighted. Navigate months with arrows. Click a date to select and close. Date range mode: click start, then end. Selected dates show brand-primary background. Today shows a dot indicator. Keyboard navigable.",
       "appearance": "Input trigger: same styling as Select trigger (h-9, border, calendar icon right). Calendar popover: white background, shadow-lg, rounded-lg. Month header: heading font, 14px, with left/right arrows. Day cells: 32px squares, 14px text. Selected: brand-primary background, white text. Today: small dot below date. Range: brand-primary-light fill between start and end.",
       "doUse": "Closing dates. Follow-up scheduling. Showing date/time selection. Listing expiration dates. Contract deadlines. Any date input in the platform.",
-      "dontUse": "Dates that are far in the past (birth dates) — use a text input with format hint. Relative dates ('in 3 days') — use a select with preset options.",
+      "dontUse": "Dates that are far in the past (birth dates) \u2014 use a text input with format hint. Relative dates ('in 3 days') \u2014 use a select with preset options.",
       "parameters": {}
     },
     "file-upload": {
@@ -735,7 +1091,7 @@
       "behavior": "Drag files over the zone to see a highlighted drop state. Click to open file browser. Files show upload progress (progress bar). Completed files show a thumbnail preview (images) or file icon (documents). Multiple files supported. Remove individual files with an X button. Validates file type and size.",
       "appearance": "Drop zone: dashed border (neutral-300), rounded-lg, 120px min-height. Center: upload icon (neutral-400) + 'Drag files here or click to browse' text. Active drag: brand-primary dashed border, brand-primary-light background. File list: below drop zone, each file shows icon/thumbnail + name + size + progress bar + remove button.",
       "doUse": "Listing photo uploads. Document uploads (pre-approval letters, contracts). Profile photo. Logo upload for white-label branding.",
-      "dontUse": "Single small files where a simple file input suffices. Avatar upload — use a dedicated avatar upload component. URLs — use a text input.",
+      "dontUse": "Single small files where a simple file input suffices. Avatar upload \u2014 use a dedicated avatar upload component. URLs \u2014 use a text input.",
       "parameters": {}
     },
     "search-input": {
@@ -745,7 +1101,7 @@
       "behavior": "Typing filters results immediately (debounced 200ms). Shows a loading spinner while searching. Clear button (X) appears when text is present. Escape clears input. Optional autocomplete dropdown shows matching results below. Enter or clicking a result navigates.",
       "appearance": "Same base styling as Input with left search icon (neutral-400). Optional autocomplete dropdown: white background, shadow-md, rounded-md below the input. Result items: 14px text, py-8px px-12px, hover neutral-100 background. Highlighted match text in brand-primary.",
       "doUse": "Contact search. Property search. Content library search. Any list filtering. Command palette / quick-find.",
-      "dontUse": "Exact value entry (like entering an address) — use Input. Selection from a known fixed list — use Select.",
+      "dontUse": "Exact value entry (like entering an address) \u2014 use Input. Selection from a known fixed list \u2014 use Select.",
       "parameters": {}
     },
     "color-picker": {
@@ -755,27 +1111,27 @@
       "behavior": "Click the color swatch to open the picker popover. Drag the picker to select hue and saturation. Type a hex value directly in the input. Clicking outside closes the picker. Changes apply in real-time to the preview. Supports copy/paste of hex values.",
       "appearance": "Swatch trigger: 32px square, rounded-md, bordered, filled with current color. Popover: white background, shadow-lg, rounded-lg, 12px padding. Picker: react-colorful default (200px wide). Hex input below picker: monospace font, centered, 12px text. Label to the right of swatch: 12px text + hex value.",
       "doUse": "White-label brand color settings. Theme customization. Newsletter template color overrides. Any place users choose a color.",
-      "dontUse": "Preset color selection (pipeline stages, status) — use Select with color swatches instead.",
+      "dontUse": "Preset color selection (pipeline stages, status) \u2014 use Select with color swatches instead.",
       "parameters": {}
     },
     "stat-card": {
       "name": "Stat Card / KPI Card",
       "category": "data-display",
-      "description": "Compact metric display card (Tier 3 Stat Pill) showing a single KPI with icon, value, label, and optional trend indicator. Used on every dashboard for at-a-glance metrics — Total Contacts, Active Flows, GCI, Avg Open Rate.",
-      "behavior": "Static display — no interaction. Optional trend indicator (up/down arrow with percentage) animates in with the staggered entrance. Value can use the stat font (Mina) for emphasis. Hoverable variant shows shadow transition.",
-      "appearance": "Compact card: white background, neutral-100 border, rounded corners (radius-lg). Icon: 36–40px tinted container (accent color at 8% opacity) with small icon inside. Value: stat font (Mina), 20–24px bold, accent color. Label: 11–12px, neutral-500. Trend: 11px, success (up) or error (down) colored, with arrow. Arranged in rows of 4–6 across.",
+      "description": "Compact metric display card (Tier 3 Stat Pill) showing a single KPI with icon, value, label, and optional trend indicator. Used on every dashboard for at-a-glance metrics \u2014 Total Contacts, Active Flows, GCI, Avg Open Rate.",
+      "behavior": "Static display \u2014 no interaction. Optional trend indicator (up/down arrow with percentage) animates in with the staggered entrance. Value can use the stat font (Mina) for emphasis. Hoverable variant shows shadow transition.",
+      "appearance": "Compact card: white background, neutral-100 border, rounded corners (radius-lg). Icon: 36\u201340px tinted container (accent color at 8% opacity) with small icon inside. Value: stat font (Mina), 20\u201324px bold, accent color. Label: 11\u201312px, neutral-500. Trend: 11px, success (up) or error (down) colored, with arrow. Arranged in rows of 4\u20136 across.",
       "doUse": "Dashboard KPI rows. Pipeline summary stats. Campaign performance metrics. Agent scoreboard numbers. Any single-number metric that needs quick visibility.",
-      "dontUse": "Complex data — use a Feature Card or Table. Actionable content — use a regular Card with buttons. Long text — stat cards are numbers only.",
+      "dontUse": "Complex data \u2014 use a Feature Card or Table. Actionable content \u2014 use a regular Card with buttons. Long text \u2014 stat cards are numbers only.",
       "parameters": {}
     },
     "tag-chip": {
       "name": "Tag / Chip",
       "category": "data-display",
-      "description": "Small removable labels used for contact tags, journey tags, filter selections, and any multi-value display. Distinct from Badge — tags can be added and removed by the user.",
+      "description": "Small removable labels used for contact tags, journey tags, filter selections, and any multi-value display. Distinct from Badge \u2014 tags can be added and removed by the user.",
       "behavior": "Click the X button to remove a tag. Adding a tag animates it in (scale from 0.8 to 1, 150ms). Removing fades out (150ms). Tags can be clickable (navigates to filtered view) or static (display only). Optional: tag input field for adding new tags with autocomplete.",
-      "appearance": "Pill-shaped (rounded-full). Smaller than Badge — height 24px, 11–12px text, px-8px. Neutral variant: neutral-100 background, neutral-600 text. Colored variant: light tinted background matching tag category. Remove button: X icon at right edge, 50% opacity, hover full opacity. Tag group: flex-wrap with 4px gap.",
+      "appearance": "Pill-shaped (rounded-full). Smaller than Badge \u2014 height 24px, 11\u201312px text, px-8px. Neutral variant: neutral-100 background, neutral-600 text. Colored variant: light tinted background matching tag category. Remove button: X icon at right edge, 50% opacity, hover full opacity. Tag group: flex-wrap with 4px gap.",
       "doUse": "Contact tags (buyer, seller, VIP, referral). Journey/flow tags. Active filter indicators. Selected items in a multi-select. Email recipient chips.",
-      "dontUse": "Status indicators — use Badge. Single-select options — use radio or select. Navigation — use tabs or links.",
+      "dontUse": "Status indicators \u2014 use Badge. Single-select options \u2014 use radio or select. Navigation \u2014 use tabs or links.",
       "parameters": {}
     },
     "avatar-user": {
@@ -785,17 +1141,17 @@
       "behavior": "Displays image if available, otherwise renders initials in a colored circle. Image loads with a brief fade-in. Fallback shows two-letter initials centered. Avatar groups overlap with -space-x-2 and ring-2 ring-white borders.",
       "appearance": "Circular (rounded-full). 5 sizes: xs (24px), sm (32px), md (40px), lg (48px), xl (64px). Fallback: neutral-100 background, neutral-600 text, 14px font-medium. Group: stacked with 2px white ring, overflow shows +N counter. Image: aspect-square, object-cover.",
       "doUse": "Contact list rows. Chat message bubbles. Team member displays. Activity feed entries. Card headers showing assignee. Anywhere a person needs visual representation.",
-      "dontUse": "Non-person entities (companies, properties) — use an icon or thumbnail. Very large displays — use a full profile photo component.",
+      "dontUse": "Non-person entities (companies, properties) \u2014 use an icon or thumbnail. Very large displays \u2014 use a full profile photo component.",
       "parameters": {}
     },
     "progress-bar": {
       "name": "Progress Bar",
       "category": "data-display",
-      "description": "Horizontal bar indicating completion, score, or progress. Supports multiple color variants for different contexts — pipeline stages, success/warning/error states.",
-      "behavior": "Value animates from 0 to target on mount (300ms ease-in-out). Updates transition smoothly when value changes. No interaction — display only.",
+      "description": "Horizontal bar indicating completion, score, or progress. Supports multiple color variants for different contexts \u2014 pipeline stages, success/warning/error states.",
+      "behavior": "Value animates from 0 to target on mount (300ms ease-in-out). Updates transition smoothly when value changes. No interaction \u2014 display only.",
       "appearance": "Track: neutral-100, rounded-full. Fill: variant color, rounded-full. 3 sizes: sm (6px), md (8px), lg (12px). 6 variants: default (brand-primary), success, warning, error, hot, cold. Value can optionally be shown as text above or beside the bar.",
       "doUse": "Lead score visualization. Upload progress. Journey completion percentage. Campaign performance. Pipeline thermometer segments.",
-      "dontUse": "Loading states — use Spinner or Skeleton. Binary states — use a toggle or badge. Indeterminate progress — use Spinner.",
+      "dontUse": "Loading states \u2014 use Spinner or Skeleton. Binary states \u2014 use a toggle or badge. Indeterminate progress \u2014 use Spinner.",
       "parameters": {}
     },
     "timeline": {
@@ -805,7 +1161,7 @@
       "behavior": "Entries mount with staggered entrance (subtle, 50ms stagger). Most recent at top. Optionally loadable (show more button or infinite scroll). Clicking an entry can open a detail drawer. Timestamps use relative time ('2h ago') with full datetime on hover.",
       "appearance": "Vertical line (neutral-200, 2px) runs down the left side. Each entry: icon circle (32px) sitting on the line, content to the right. Icon circle: tinted background matching event type (success for completed, info for note, warning for alert). Title: 14px medium text. Description: 13px neutral-500. Timestamp: 12px neutral-400. Entries separated by 16px gap.",
       "doUse": "Contact activity history. Lead journey visualization. Deal progress log. Email/call log. Notification history.",
-      "dontUse": "Structured data — use Table. Real-time feeds — use a live-updating list. Non-chronological content — use Cards.",
+      "dontUse": "Structured data \u2014 use Table. Real-time feeds \u2014 use a live-updating list. Non-chronological content \u2014 use Cards.",
       "parameters": {}
     },
     "list-item": {
@@ -815,17 +1171,17 @@
       "behavior": "Hover: neutral-50 background, 150ms transition. Click: opens detail drawer. Shows pointer cursor. Optional: swipe actions on mobile. Each row can include avatar, title, subtitle, badges, timestamp, and action buttons.",
       "appearance": "Full-width, white background, divided by neutral-100 borders. Padding: 12px 16px. Title: 14px medium foreground. Subtitle: 13px neutral-500. Right side: badges, timestamps, or action icons. Avatar (if present): 36px on the left. Action buttons: ghost variant, appear on hover.",
       "doUse": "Contact lists. Property listings. Task lists. Notification items. Search results. Any homogeneous list of clickable items.",
-      "dontUse": "Complex multi-column data — use Table. Visual/card-heavy displays — use Card grid. Fewer than 3 items — use Cards.",
+      "dontUse": "Complex multi-column data \u2014 use Table. Visual/card-heavy displays \u2014 use Card grid. Fewer than 3 items \u2014 use Cards.",
       "parameters": {}
     },
     "tab-navigation": {
       "name": "Tab Navigation",
       "category": "navigation",
-      "description": "Horizontal tab bar for switching between sections within the same view. Used everywhere — settings pages, detail views, dashboard sub-sections.",
+      "description": "Horizontal tab bar for switching between sections within the same view. Used everywhere \u2014 settings pages, detail views, dashboard sub-sections.",
       "behavior": "Click a tab to switch content. Active tab shows brand-primary underline or background treatment. Content transitions with staggered entrance (no page fade-out since we're staying in the same view). Keyboard navigable with arrow keys. Badge count can appear on tabs to show pending items.",
       "appearance": "Tab bar: bottom border neutral-200. Tabs: 14px medium text, px-16px py-8px. Active tab: brand-primary text, 2px brand-primary bottom border. Inactive: neutral-500 text, hover neutral-700. Optional badge: small rounded count in brand-primary or error color. Tab bar sticks below the page header.",
-      "doUse": "Settings sub-sections. Detail view sections (overview, activity, files). Dashboard category switching. Any view with 2–7 parallel sections.",
-      "dontUse": "More than 7 tabs — use a sidebar or dropdown. Page-level navigation — use sidebar. Single-section views. Deep navigation — use breadcrumbs.",
+      "doUse": "Settings sub-sections. Detail view sections (overview, activity, files). Dashboard category switching. Any view with 2\u20137 parallel sections.",
+      "dontUse": "More than 7 tabs \u2014 use a sidebar or dropdown. Page-level navigation \u2014 use sidebar. Single-section views. Deep navigation \u2014 use breadcrumbs.",
       "parameters": {}
     },
     "breadcrumbs": {
@@ -833,19 +1189,19 @@
       "category": "navigation",
       "description": "Horizontal trail showing the user's current position in a deep navigation hierarchy. Helps users understand where they are and navigate back to parent views.",
       "behavior": "Each segment is a clickable link except the last (current page). Separator between segments (/ or >). Truncates long paths with ellipsis. Clicking a breadcrumb navigates to that level.",
-      "appearance": "12–13px text. Links: neutral-500, hover brand-primary. Current: neutral-700, not clickable. Separator: neutral-400, 4px horizontal gap. Positioned below the page header, above the page title.",
+      "appearance": "12\u201313px text. Links: neutral-500, hover brand-primary. Current: neutral-700, not clickable. Separator: neutral-400, 4px horizontal gap. Positioned below the page header, above the page title.",
       "doUse": "Settings pages (Settings > Branding > Colors). Nested detail views. Multi-level navigation paths. Any page more than 2 levels deep.",
-      "dontUse": "Top-level pages (Dashboard, Pipeline). Single-level views. Mobile views — use a back button instead.",
+      "dontUse": "Top-level pages (Dashboard, Pipeline). Single-level views. Mobile views \u2014 use a back button instead.",
       "parameters": {}
     },
     "sidebar-app-shell": {
       "name": "Sidebar / App Shell",
       "category": "navigation",
-      "description": "The main application frame — sidebar navigation on the left, header at top, content area filling the rest. This is the skeleton every Rello app is built on.",
+      "description": "The main application frame \u2014 sidebar navigation on the left, header at top, content area filling the rest. This is the skeleton every Rello app is built on.",
       "behavior": "Sidebar is fixed/sticky. Clicking a nav item triggers page transition animation. Active item shows brand-primary background tint. Sidebar can collapse to icon-only mode on smaller screens. Header shows app title, user avatar, and global actions. Content area scrolls independently.",
       "appearance": "Sidebar: 240px width (64px collapsed), white background, border-right neutral-200. Nav items: 14px text, py-8px px-12px, rounded-lg. Active: brand-primary-light background, brand-primary text. Inactive: neutral-600, hover neutral-50 background. Header: 56px height, white background, border-bottom neutral-200, sticky. Content: neutral-50 background, scrollable.",
       "doUse": "Every back-office app (Rello, The Oven). Any admin panel. Multi-section applications with persistent navigation.",
-      "dontUse": "Consumer-facing flows (Home Ready, Home Stretch) — use a simpler header-only layout. Single-page tools. Landing pages.",
+      "dontUse": "Consumer-facing flows (Home Ready, Home Stretch) \u2014 use a simpler header-only layout. Single-page tools. Landing pages.",
       "parameters": {}
     },
     "dropdown-menu": {
@@ -855,7 +1211,7 @@
       "behavior": "Click trigger (three-dot icon or button) to open menu. Menu appears below/beside trigger with fade-in + slight slide. Click an item to execute action and close. Click outside or Escape to dismiss. Supports icons, separators, and destructive items (red text). Keyboard navigable.",
       "appearance": "Trigger: ghost button with three-dot icon (neutral-500). Menu: white background, shadow-lg, rounded-md, neutral-200 border, min-width 160px. Items: 14px text, py-6px px-12px. Hover: neutral-100 background. Destructive items: error color text. Separators: neutral-100 horizontal line. Icons: 16px, neutral-500, left of label.",
       "doUse": "Card overflow actions (edit, archive, delete). Table row actions. Anywhere you have 3+ actions that don't fit as visible buttons. Right-click context menus.",
-      "dontUse": "Primary actions — use visible buttons. Navigation — use links or tabs. Forms — use select or radio.",
+      "dontUse": "Primary actions \u2014 use visible buttons. Navigation \u2014 use links or tabs. Forms \u2014 use select or radio.",
       "parameters": {}
     },
     "stepper-wizard": {
@@ -864,18 +1220,18 @@
       "description": "Multi-step flow indicator showing numbered or named steps, current position, and completion state. Used for onboarding, listing launch, survey builders, and any multi-page process.",
       "behavior": "Steps show numbered circles connected by lines. Completed steps show a check icon and filled circle. Current step is highlighted. Future steps are dimmed. Clicking a completed step navigates back to it. Step content transitions with fade + slide.",
       "appearance": "Horizontal layout: circles (32px) connected by lines (neutral-200). Completed circle: brand-primary fill, white check. Current circle: brand-primary border, brand-primary text. Future circle: neutral-200 border, neutral-400 text. Connecting line: brand-primary for completed segments, neutral-200 for future. Step labels: 12px text below circles.",
-      "doUse": "Agent onboarding. Listing launch wizard. Newsletter builder steps. Any process with 3–7 distinct stages that must be completed in order.",
-      "dontUse": "Non-linear processes. Fewer than 3 steps — just use sequential views. More than 7 steps — break into grouped sections.",
+      "doUse": "Agent onboarding. Listing launch wizard. Newsletter builder steps. Any process with 3\u20137 distinct stages that must be completed in order.",
+      "dontUse": "Non-linear processes. Fewer than 3 steps \u2014 just use sequential views. More than 7 steps \u2014 break into grouped sections.",
       "parameters": {}
     },
     "spinner": {
       "name": "Spinner",
       "category": "feedback",
-      "description": "Inline loading indicator for small async operations — button loading states, saving indicators, and brief wait moments. Different use case from Skeleton (which preserves layout).",
+      "description": "Inline loading indicator for small async operations \u2014 button loading states, saving indicators, and brief wait moments. Different use case from Skeleton (which preserves layout).",
       "behavior": "Continuous rotation animation (CSS animate-spin). Appears instantly when loading begins, disappears when complete. Can be used inside buttons (ButtonSpinner variant) or standalone. Multiple sizes for different contexts.",
       "appearance": "Circular border with one segment in brand-primary (the rest neutral-300). Sizes: xs (12px), sm (16px), md (24px), lg (32px), xl (48px). Border width scales with size. ButtonSpinner variant: sm size with white border (for use inside colored buttons). PageLoader: centered lg spinner with message text below.",
       "doUse": "Button loading states. Small inline async operations. Brief waits (< 2 seconds). API call indicators.",
-      "dontUse": "Long loading times — use Skeleton instead. Page-level loading — use PageLoader or Skeleton. Content that has a known layout — use Skeleton.",
+      "dontUse": "Long loading times \u2014 use Skeleton instead. Page-level loading \u2014 use PageLoader or Skeleton. Content that has a known layout \u2014 use Skeleton.",
       "parameters": {}
     },
     "alert-banner": {
@@ -885,37 +1241,37 @@
       "behavior": "Mounts with fade-in (200ms). Stays visible until user dismisses (X button) or the condition resolves. Can include an action button (e.g., 'Retry', 'Update'). Does not auto-dismiss. Multiple alerts stack vertically.",
       "appearance": "Full-width bar, 12px vertical padding, 16px horizontal. 4 variants: info (info-light background, info border), success (success-light, success border), warning (warning-light, warning border), error (error-light, error border). Left icon matching variant color. Text: 14px, variant color. Dismiss X button at right edge. Optional action button.",
       "doUse": "Sync errors that persist. Subscription expiration warnings. System maintenance notices. Required action alerts. Feature announcements.",
-      "dontUse": "Transient confirmations — use Toast. Inline field errors — use Input error state. Critical blocking issues — use Dialog.",
+      "dontUse": "Transient confirmations \u2014 use Toast. Inline field errors \u2014 use Input error state. Critical blocking issues \u2014 use Dialog.",
       "parameters": {}
     },
     "confirmation-dialog": {
       "name": "Confirmation Dialog",
       "category": "feedback",
-      "description": "Specialized modal for destructive or irreversible actions — delete, archive, cancel subscription. A focused version of Dialog with specific UX patterns for confirmation flows.",
+      "description": "Specialized modal for destructive or irreversible actions \u2014 delete, archive, cancel subscription. A focused version of Dialog with specific UX patterns for confirmation flows.",
       "behavior": "Same animation as Dialog (fade + zoom, 200ms). Title clearly states the action. Description explains consequences. Two buttons: cancel (ghost) and confirm (danger or primary). Confirm button text describes the action ('Delete Lead', not 'OK'). Focus lands on the cancel button by default (safe default).",
       "appearance": "Same as Dialog but narrower (max-width 28rem). Icon at top: large warning or error icon in tinted circle. Title: 18px semibold. Description: 14px neutral-600. Button row: cancel on left, destructive action on right in error color.",
       "doUse": "Delete confirmations. Archive/remove actions. Subscription cancellations. Any action that cannot be undone. Bulk operations affecting multiple items.",
-      "dontUse": "Informational messages — use Alert or Toast. Routine saves — just save. Reversible actions — skip the confirmation.",
+      "dontUse": "Informational messages \u2014 use Alert or Toast. Routine saves \u2014 just save. Reversible actions \u2014 skip the confirmation.",
       "parameters": {}
     },
     "tooltip": {
       "name": "Tooltip",
       "category": "feedback",
       "description": "Small hover hint that appears near an element to explain its purpose. Used for icon-only buttons, truncated text, and feature explanations.",
-      "behavior": "Appears on hover after a 300ms delay (prevents flickering). Disappears when mouse leaves. Positioned above the element by default, flips if near viewport edge. No interaction — purely informational. Touch devices: appears on long-press.",
+      "behavior": "Appears on hover after a 300ms delay (prevents flickering). Disappears when mouse leaves. Positioned above the element by default, flips if near viewport edge. No interaction \u2014 purely informational. Touch devices: appears on long-press.",
       "appearance": "Dark background (neutral-800), white text, 12px. Padding: 4px 8px. Rounded-md. Small arrow/caret pointing toward the trigger element. Shadow-sm. Max-width: 200px for longer tooltips. Z-index above most content (70).",
       "doUse": "Icon-only buttons that need labels. Truncated text that has a full version. Feature explanations for new users. Data points that need additional context.",
-      "dontUse": "Rich content (images, buttons) — use a Popover. Required information — tooltips are easily missed. Mobile-primary interfaces — tooltips require hover.",
+      "dontUse": "Rich content (images, buttons) \u2014 use a Popover. Required information \u2014 tooltips are easily missed. Mobile-primary interfaces \u2014 tooltips require hover.",
       "parameters": {}
     },
     "divider": {
       "name": "Divider / Separator",
       "category": "layout",
       "description": "Simple horizontal rule that separates content sections. Used within cards, between form groups, and in sidebars.",
-      "behavior": "Static — no interaction or animation.",
-      "appearance": "1px height, neutral-100 color, full width. Can have vertical margin (8–16px). Optional label variant: centered text ('or', 'Section Name') with lines on either side, 12px neutral-400 text.",
+      "behavior": "Static \u2014 no interaction or animation.",
+      "appearance": "1px height, neutral-100 color, full width. Can have vertical margin (8\u201316px). Optional label variant: centered text ('or', 'Section Name') with lines on either side, 12px neutral-400 text.",
       "doUse": "Between form field groups. Between card content sections. In dropdown menus between action groups. In sidebars between navigation groups.",
-      "dontUse": "Between every item in a list — use subtle border-bottom on rows instead. As a design element — dividers should be nearly invisible.",
+      "dontUse": "Between every item in a list \u2014 use subtle border-bottom on rows instead. As a design element \u2014 dividers should be nearly invisible.",
       "parameters": {}
     },
     "accordion": {
@@ -923,29 +1279,29 @@
       "category": "layout",
       "description": "Expandable content sections that show/hide detail on click. Used for FAQ pages, settings groups, and any content that benefits from progressive disclosure.",
       "behavior": "Click header to expand/collapse. Content slides down (200ms ease-out) on expand, slides up on collapse. Chevron icon rotates to indicate state. Only one section open at a time (accordion mode) or multiple can be open (collapsible mode). Keyboard accessible.",
-      "appearance": "Header: full-width, py-12px px-16px. Title: 14px semibold text. Chevron: right-aligned, neutral-400, rotates 180° when open. Content area: px-16px pb-16px. Borders: neutral-100 between items. Active header: slightly darker background or brand-primary text.",
+      "appearance": "Header: full-width, py-12px px-16px. Title: 14px semibold text. Chevron: right-aligned, neutral-400, rotates 180\u00b0 when open. Content area: px-16px pb-16px. Borders: neutral-100 between items. Active header: slightly darker background or brand-primary text.",
       "doUse": "FAQ sections. Settings groups. Long forms broken into sections. Feature explanations. Any content where showing everything at once is overwhelming.",
-      "dontUse": "Navigation — use tabs or sidebar. Two or fewer sections — just show all content. Critical information that users must see — don't hide it.",
+      "dontUse": "Navigation \u2014 use tabs or sidebar. Two or fewer sections \u2014 just show all content. Critical information that users must see \u2014 don't hide it.",
       "parameters": {}
     },
     "pipeline-thermometer": {
       "name": "Pipeline Thermometer",
       "category": "rello",
-      "description": "THE core visual of the Rello platform. A horizontal segmented bar showing lead temperature from Cold → Warming → Engaged → Qualified → Hot. Each segment fills with its pipeline color based on the lead's current stage. This is the single most important visualization in the system.",
+      "description": "THE core visual of the Rello platform. A horizontal segmented bar showing lead temperature from Cold \u2192 Warming \u2192 Engaged \u2192 Qualified \u2192 Hot. Each segment fills with its pipeline color based on the lead's current stage. This is the single most important visualization in the system.",
       "behavior": "Segments fill progressively from left to right based on lead stage. Transition: fill animates with ease-in-out over 400ms when stage changes. Current stage segment pulses subtly to draw attention. Hovering a segment shows a tooltip with the stage name and criteria. Can be used at multiple sizes.",
       "appearance": "Segmented horizontal bar, rounded-full. 5 segments: Cold (gray), Warming (blue), Engaged (gold), Qualified (orange), Hot (red). Active segments fill solid, inactive segments use the light variant. Current stage segment uses the full color. A small dot or glow marks the current position. Size variants: compact (8px height for list rows), standard (12px for cards), large (20px for detail views).",
       "doUse": "Lead detail views. Pipeline overview cards. Lead list rows. Contact cards. Any view where lead temperature is relevant. Dashboard summary stats.",
-      "dontUse": "Non-lead data. Binary states — use a toggle or badge. Arbitrary percentages — use Progress Bar.",
+      "dontUse": "Non-lead data. Binary states \u2014 use a toggle or badge. Arbitrary percentages \u2014 use Progress Bar.",
       "parameters": {}
     },
     "app-card": {
       "name": "App Card",
       "category": "rello",
       "description": "The specific card variant used on MLO and Broker dashboards showing app stats, status badges, descriptions, and quick actions. A specialized Tier 2/3 hybrid used for showing the status of platform applications.",
-      "behavior": "Clickable — navigates to the app. Hover: shadow transition. Shows app icon (branded illustration), app name, status badge (active/inactive/pending), key metric, and description. Optional quick-action buttons in footer.",
+      "behavior": "Clickable \u2014 navigates to the app. Hover: shadow transition. Shows app icon (branded illustration), app name, status badge (active/inactive/pending), key metric, and description. Optional quick-action buttons in footer.",
       "appearance": "White background, neutral-100 border, rounded-xl. Branded Card Illustration in header. App name: heading font, 16px semibold. Status badge: small colored badge (success for active, warning for pending, neutral for inactive). Metric: stat font, 20px. Description: 13px neutral-500. Footer: ghost action buttons.",
       "doUse": "MLO dashboard showing their apps (Home Ready, Home Stretch, Newsletter Studio). Broker dashboard showing team app status. Admin views listing platform applications.",
-      "dontUse": "Generic content cards — use Card. Non-app entities. Lists with more than 8 items — use a table.",
+      "dontUse": "Generic content cards \u2014 use Card. Non-app entities. Lists with more than 8 items \u2014 use a table.",
       "parameters": {}
     },
     "white-label-preview": {
@@ -953,19 +1309,19 @@
       "category": "rello",
       "description": "A live preview component that shows how the current white-label branding (primary color, accent color) looks applied to a miniature app mockup. Used in the branding settings screen so agents can see changes in real-time before saving.",
       "behavior": "Updates in real-time as the user changes brand colors via the Color Picker. Shows a miniature mockup of a consumer-facing page (e.g., Home Ready landing) with the selected colors applied to buttons, links, headers, and accents. Can toggle between light and dark mockup views.",
-      "appearance": "Card container with a scaled-down app mockup inside (60–70% scale). Shows: a header with the primary color, a button in primary, a link in primary, an accent-colored section, and text in foreground. Border: neutral-200 dashed to indicate it's a preview. Label: 'Preview' in neutral-400 above the mockup.",
+      "appearance": "Card container with a scaled-down app mockup inside (60\u201370% scale). Shows: a header with the primary color, a button in primary, a link in primary, an accent-colored section, and text in foreground. Border: neutral-200 dashed to indicate it's a preview. Label: 'Preview' in neutral-400 above the mockup.",
       "doUse": "White-label branding settings page. Color picker confirmation. Onboarding brand setup. Any place where brand colors are being configured.",
-      "dontUse": "Actual app rendering — this is a mockup only. Non-branding settings.",
+      "dontUse": "Actual app rendering \u2014 this is a mockup only. Non-branding settings.",
       "parameters": {}
     },
     "milo-chat": {
       "name": "Milo Smart Assistant Chat",
       "category": "feature",
-      "description": "Milo is Rello's Smart Assistant — a conversational interface that helps agents with market data, lead insights, daily planning, and property information. Milo is always referred to as a 'Smart Assistant', never as 'AI'.",
+      "description": "Milo is Rello's Smart Assistant \u2014 a conversational interface that helps agents with market data, lead insights, daily planning, and property information. Milo is always referred to as a 'Smart Assistant', never as 'AI'.",
       "behavior": "Milo chat opens as a right-side panel (similar to drawer behavior) or as an expandable FAB (floating action button) in the bottom-right. Messages stream in with a typing indicator. Milo's responses use a subtle staggered entrance for multi-part answers. The chat maintains conversation context within the session. Quick-action chips appear below Milo's responses for common follow-ups.",
-      "appearance": "Milo's avatar: the milo-circle.svg or milo-head.svg image. Message bubbles: Milo's messages use a light brand-primary-light background, user messages use neutral-100. Font: body font (Open Sans) at 14px. Chat panel width matches drawer width (400–520px). Input area at bottom with send button in brand-primary.",
+      "appearance": "Milo's avatar: the milo-circle.svg or milo-head.svg image. Message bubbles: Milo's messages use a light brand-primary-light background, user messages use neutral-100. Font: body font (Open Sans) at 14px. Chat panel width matches drawer width (400\u2013520px). Input area at bottom with send button in brand-primary.",
       "doUse": "Contextual help and data retrieval. Market data queries. Lead scoring explanations. Daily planning assistance. Property comparisons and insights.",
-      "dontUse": "Critical actions that require explicit confirmation — use a dialog. Bulk operations. Anything that modifies data without the user's explicit instruction.",
+      "dontUse": "Critical actions that require explicit confirmation \u2014 use a dialog. Bulk operations. Anything that modifies data without the user's explicit instruction.",
       "parameters": {}
     }
   }
