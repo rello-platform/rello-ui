@@ -76,7 +76,17 @@ export function BrandAssetsViewer({ files, selectedAsset, onSelect, onRefresh }:
     <div className="flex flex-col gap-4">
       <div className="border-b border-[var(--neutral-200)] pb-2">
         <h3 className="text-sm font-semibold text-[var(--neutral-800)]">Brand Assets</h3>
-        <p className="text-[10px] text-[var(--neutral-400)]">Logos and images. Accepts SVG, PNG, WebP.</p>
+        <p className="text-[10px] text-[var(--neutral-400)]">Logos, icons, and Milo images for all apps.</p>
+      </div>
+
+      <div className="bg-[var(--neutral-50)] rounded-lg p-3 text-[9px] text-[var(--neutral-500)] space-y-1">
+        <p className="font-semibold text-[var(--neutral-700)] text-[10px]">Naming Convention</p>
+        <p><span className="font-mono bg-white px-1 rounded">{'app-name'}-logo.svg</span> — Primary logo (SVG preferred)</p>
+        <p><span className="font-mono bg-white px-1 rounded">{'app-name'}-logo-white.svg</span> — White/light variant for dark backgrounds</p>
+        <p><span className="font-mono bg-white px-1 rounded">{'app-name'}-icon.svg</span> — Square icon (favicons, app icons)</p>
+        <p><span className="font-mono bg-white px-1 rounded">{'app-name'}-og.png</span> — Social sharing image (1200x630 PNG)</p>
+        <p className="pt-1 border-t border-[var(--neutral-200)]"><span className="font-semibold">Formats:</span> SVG for logos and icons (scales perfectly). PNG for social/email images. WebP for photos.</p>
+        <p><span className="font-semibold">Names:</span> lowercase, hyphens, no spaces. Example: <span className="font-mono bg-white px-1 rounded">home-ready-logo.svg</span></p>
       </div>
 
       {APP_FOLDERS.map(({ key, label, folder }) => {

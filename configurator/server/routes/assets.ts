@@ -35,7 +35,7 @@ assetRoutes.get("/assets", async (_req, res) => {
           ext,
           isImage,
           // Proxy through our server instead of raw GitHub (private repo)
-          rawUrl: `/api/assets/file/${encodeURIComponent(path)}`,
+          rawUrl: `/api/assets/file/${path}`,
           category: parts[1] || "unknown",
           subcategory: parts.length > 3 ? parts[2] : null,
         };
