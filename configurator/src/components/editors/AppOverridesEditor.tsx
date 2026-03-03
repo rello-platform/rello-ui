@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { HexColorPicker } from "react-colorful";
 import { COLOR_FIELDS, type AppOverride } from "../../hooks/useAppOverrides";
 
@@ -10,19 +10,32 @@ interface AppOverridesEditorProps {
 
 function ColorField({ label, value, defaultValue, onChange }: { label: string; value: string | null; defaultValue: string; onChange: (v: string | null) => void }) {
   const [pickerOpen, setPickerOpen] = useState(false);
+  const pendingOpen = useRef(false);
   const isInherited = value === null;
   const displayColor = value ?? defaultValue;
+
+  // After a re-render from onChange, check if we should open the picker
+  useEffect(() => {
+    if (pendingOpen.current && value !== null) {
+      setPickerOpen(true);
+      pendingOpen.current = false;
+    }
+  }, [value]);
+
+  const openPicker = () => {
+    if (isInherited) {
+      pendingOpen.current = true;
+      onChange(defaultValue);
+    } else {
+      setPickerOpen(!pickerOpen);
+    }
+  };
 
   return (
     <div className="flex items-center gap-2">
       <div className="relative">
         <button
-          onClick={() => {
-            if (isInherited) {
-              onChange(defaultValue);
-            }
-            setPickerOpen(!pickerOpen);
-          }}
+          onClick={openPicker}
           className="size-6 rounded border border-[var(--neutral-200)] shadow-xs shrink-0 cursor-pointer"
           style={{ backgroundColor: displayColor, opacity: isInherited ? 0.4 : 1 }}
         />
@@ -46,8 +59,8 @@ function ColorField({ label, value, defaultValue, onChange }: { label: string; v
       <button
         onClick={() => {
           if (isInherited) {
+            pendingOpen.current = true;
             onChange(defaultValue);
-            setPickerOpen(true);
           } else {
             onChange(null);
             setPickerOpen(false);
