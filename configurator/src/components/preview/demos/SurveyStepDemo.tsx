@@ -126,19 +126,15 @@ export function SurveyStepDemo() {
     <div className="bg-[var(--neutral-50)] rounded-xl overflow-hidden border border-[var(--neutral-200)]">
       <div className="p-4 border-b border-[var(--neutral-100)] flex items-center justify-between">
         <span className="text-sm font-medium text-[var(--neutral-700)]">Survey Step Card — Click options to advance</span>
-        <div className="flex gap-2">
-          {step > 0 && (
-            <button onClick={goBack} className="px-3 py-1.5 text-xs rounded-md border border-[var(--neutral-200)] text-[var(--neutral-600)] hover:bg-[var(--neutral-50)] transition-colors">
-              Back
-            </button>
-          )}
-          <button onClick={reset} className="px-3 py-1.5 text-xs rounded-md bg-[var(--brand-primary)] text-white font-medium hover:opacity-90 transition-opacity">
-            Reset
-          </button>
-        </div>
+        <button onClick={reset} className="px-3 py-1.5 text-xs rounded-md bg-[var(--brand-primary)] text-white font-medium hover:opacity-90 transition-opacity">
+          Reset
+        </button>
       </div>
 
-      <div className="flex justify-center p-6">
+      <div className="flex flex-col items-center p-6">
+        {/* App name — background context above the card */}
+        <p className="text-lg font-bold text-[var(--neutral-300)] mb-4" style={{ fontFamily: "var(--font-heading)" }}>Home Ready</p>
+
         <div
           className="w-full max-w-lg bg-white rounded-2xl shadow-md border border-[var(--neutral-100)] overflow-hidden"
           style={{
@@ -147,8 +143,14 @@ export function SurveyStepDemo() {
             transition: "all 300ms ease-out",
           }}
         >
-          {/* Progress bar */}
+          {/* Back chevron + Progress bar */}
           <div className="px-6 pt-5">
+            {step > 0 && (
+              <button onClick={goBack} className="flex items-center gap-1 text-xs text-[var(--neutral-400)] hover:text-[var(--neutral-600)] transition-colors mb-3 -ml-0.5">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+                <span>Back</span>
+              </button>
+            )}
             <div className="h-2 bg-[var(--neutral-100)] rounded-full overflow-hidden mb-2">
               <div
                 className="h-full rounded-full transition-all duration-500 ease-out"
