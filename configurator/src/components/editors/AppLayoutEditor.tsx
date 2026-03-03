@@ -57,17 +57,9 @@ function LayoutFields({ layout, appId, onUpdate }: { layout: AppLayout; appId: s
         <textarea value={layout.highlightText} onChange={(e) => onUpdate(appId, "highlightText", e.target.value)} rows={2} className="w-full px-2 py-1.5 text-xs border border-[var(--neutral-200)] rounded-md outline-none resize-y focus:border-[var(--brand-primary)]" />
       </div>
 
-      {/* Hero style */}
-      <div>
-        <label className="block text-[10px] font-medium text-[var(--neutral-600)] mb-1">Hero Area Style</label>
-        <div className="flex gap-2">
-          {(["transparent", "dark"] as const).map((style) => (
-            <button key={style} onClick={() => onUpdate(appId, "heroStyle", style)}
-              className={`flex-1 px-3 py-1.5 text-xs rounded-md border ${layout.heroStyle === style ? "border-[var(--brand-primary)] bg-[var(--brand-primary-light)] text-[var(--brand-primary)] font-medium" : "border-[var(--neutral-200)] text-[var(--neutral-600)]"}`}>
-              {style === "transparent" ? "Transparent" : "Dark Standout"}
-            </button>
-          ))}
-        </div>
+      {/* Info note */}
+      <div className="bg-[var(--neutral-50)] rounded-lg p-2.5">
+        <p className="text-[9px] text-[var(--neutral-500)]">Hero area colors are set in the App Colors tab. The layout is always 50/50 split — hero left, right card right. Cards below are determined when the app is built.</p>
       </div>
 
       {/* Right card */}
