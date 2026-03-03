@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
 export const COLOR_FIELDS = [
   { key: "primary", label: "Primary Brand" },
@@ -52,16 +52,21 @@ export function useAppOverrides() {
 
   const updateApp = useCallback((appId: string, field: string, value: string | null) => {
     setOverrides((prev) => {
-      if (!prev) return prev;
-      const next = structuredClone(prev);
-      if (next.apps[appId]) {
-        next.apps[appId][field] = value;
-      }
-      return next;
+      if (!prev || !prev.apps[appId]) return prev;
+      return {
+        ...prev,
+        apps: {
+          ...prev.apps,
+          [appId]: { ...prev.apps[appId], [field]: value },
+        },
+      };
     });
   }, []);
 
-  const isDirty = overrides && original ? JSON.stringify(overrides) !== JSON.stringify(original) : false;
+  const isDirty = useMemo(
+    () => (overrides && original ? JSON.stringify(overrides) !== JSON.stringify(original) : false),
+    [overrides, original],
+  );
 
   const submitOverrides = useCallback(async (message?: string) => {
     if (!overrides) return;
