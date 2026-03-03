@@ -21,6 +21,14 @@ import { PipelineThermometerDemo } from "./PipelineThermometerDemo";
 import { StatCardDemo } from "./StatCardDemo";
 import { TimelineDemo } from "./TimelineDemo";
 import { StepperDemo } from "./StepperDemo";
+import { SelectDemo } from "./SelectDemo";
+import { CheckboxRadioDemo, ToggleSwitchDemo, TextareaDemo } from "./FormControlsDemo";
+import { DatePickerDemo } from "./DatePickerDemo";
+import { FileUploadDemo } from "./FileUploadDemo";
+import { SearchInputDemo, TagChipDemo, AvatarDemo, ProgressBarDemo } from "./SearchTagAvatarDemo";
+import { TabNavigationDemo, BreadcrumbsDemo, SidebarAppShellDemo, DropdownMenuDemo } from "./NavigationDemos";
+import { SpinnerDemo, AlertBannerDemo, ConfirmationDialogDemo, TooltipDemo } from "./FeedbackDemos";
+import { DividerDemo, AccordionDemo, ListItemDemo, AppCardDemo, WhiteLabelPreviewDemo } from "./LayoutDemos";
 
 interface DemoRouterProps {
   componentId: string | null;
@@ -55,26 +63,50 @@ export function DemoRouter({ componentId, spec }: DemoRouterProps) {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const demos: Record<string, () => React.ReactNode> = {
     "drawer": () => <DrawerDemo params={params as any} />,
-    "toast": () => <ToastDemo params={params as any} />,
-    "staggered-entrance": () => <StaggerDemo params={params as any} />,
-    "skeleton": () => <SkeletonDemo params={params as any} />,
-    "stacked-carousel": () => <StackedCarouselDemo params={params as any} />,
     "dialog": () => <DialogDemo params={params as any} />,
+    "toast": () => <ToastDemo params={params as any} />,
+    "skeleton": () => <SkeletonDemo params={params as any} />,
     "empty-state": () => <EmptyStateDemo />,
+    "spinner": () => <SpinnerDemo />,
+    "alert-banner": () => <AlertBannerDemo />,
+    "confirmation-dialog": () => <ConfirmationDialogDemo />,
+    "tooltip": () => <TooltipDemo />,
     "card": () => <CardTiersDemo params={params as any} />,
     "branded-card-illustration": () => <BrandedIllustrationDemo params={params as any} />,
+    "icon-catalog": () => <IconCatalogDemo />,
+    "stacked-carousel": () => <StackedCarouselDemo params={params as any} />,
+    "divider": () => <DividerDemo />,
+    "accordion": () => <AccordionDemo />,
     "button": () => <ButtonDemo params={params as any} />,
     "badge": () => <BadgeDemo />,
     "table": () => <TableDemo />,
-    "input": () => <InputDemo />,
-    "pagination": () => <PaginationDemo />,
-    "page-transition": () => <PageTransitionDemo params={params as any} />,
-    "survey-step": () => <SurveyStepDemo />,
-    "icon-catalog": () => <IconCatalogDemo />,
-    "pipeline-thermometer": () => <PipelineThermometerDemo />,
     "stat-card": () => <StatCardDemo />,
+    "tag-chip": () => <TagChipDemo />,
+    "avatar-user": () => <AvatarDemo />,
+    "progress-bar": () => <ProgressBarDemo />,
     "timeline": () => <TimelineDemo />,
+    "list-item": () => <ListItemDemo />,
+    "input": () => <InputDemo />,
+    "select": () => <SelectDemo />,
+    "textarea": () => <TextareaDemo />,
+    "checkbox-radio": () => <CheckboxRadioDemo />,
+    "toggle-switch": () => <ToggleSwitchDemo />,
+    "date-picker": () => <DatePickerDemo />,
+    "file-upload": () => <FileUploadDemo />,
+    "search-input": () => <SearchInputDemo />,
+    "color-picker": () => <InputDemo />,
+    "survey-step": () => <SurveyStepDemo />,
+    "pagination": () => <PaginationDemo />,
+    "tab-navigation": () => <TabNavigationDemo />,
+    "breadcrumbs": () => <BreadcrumbsDemo />,
+    "sidebar-app-shell": () => <SidebarAppShellDemo />,
+    "dropdown-menu": () => <DropdownMenuDemo />,
     "stepper-wizard": () => <StepperDemo />,
+    "staggered-entrance": () => <StaggerDemo params={params as any} />,
+    "page-transition": () => <PageTransitionDemo params={params as any} />,
+    "pipeline-thermometer": () => <PipelineThermometerDemo />,
+    "app-card": () => <AppCardDemo />,
+    "white-label-preview": () => <WhiteLabelPreviewDemo />,
     "milo-chat": () => <MiloChatDemo />,
   };
   /* eslint-enable @typescript-eslint/no-explicit-any */
@@ -83,7 +115,6 @@ export function DemoRouter({ componentId, spec }: DemoRouterProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Spec summary */}
       {spec && (
         <div className="bg-[var(--neutral-50)] rounded-lg p-4 border border-[var(--neutral-100)]">
           <h3 className="font-heading text-base font-semibold text-[var(--foreground)] mb-1">{spec.name}</h3>
@@ -91,14 +122,12 @@ export function DemoRouter({ componentId, spec }: DemoRouterProps) {
         </div>
       )}
 
-      {/* Live demo */}
       {demoRenderer ? demoRenderer() : (
         <div className="bg-[var(--neutral-50)] rounded-xl border border-[var(--neutral-200)] p-8 text-center">
           <p className="text-sm text-[var(--neutral-500)]">No interactive demo available for this component yet.</p>
         </div>
       )}
 
-      {/* Spec details */}
       {spec && (spec.behavior || spec.appearance || spec.doUse || spec.dontUse) && (
         <div className="grid grid-cols-2 gap-4">
           {spec.behavior && (
