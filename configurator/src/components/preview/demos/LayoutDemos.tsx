@@ -103,34 +103,206 @@ export function ListItemDemo() {
   );
 }
 
-export function AppCardDemo() {
-  const apps = [
-    { name: "Home Ready", status: "Active", metric: "1,247", metricLabel: "Leads", color: "var(--success)" },
-    { name: "Newsletter Studio", status: "Active", metric: "34", metricLabel: "Active Flows", color: "var(--success)" },
-    { name: "Open House Hub", status: "Pending", metric: "0", metricLabel: "Events", color: "var(--warning)" },
-  ];
+// === Branded illustration patterns (from branded card illustration system) ===
+function ConcentricCircles({ accent }: { accent: string }) {
+  return <>{[14, 24, 34].map(r => <circle key={r} cx="50%" cy="50%" r={r} fill="none" stroke={accent} strokeWidth="0.8" />)}</>;
+}
+function DotGrid({ accent }: { accent: string }) {
+  return <>{Array.from({ length: 25 }).map((_, i) => <circle key={i} cx={14 + (i % 5) * 16} cy={14 + Math.floor(i / 5) * 16} r="1.8" fill={accent} />)}</>;
+}
+function OrbitalRings({ accent }: { accent: string }) {
+  return <><circle cx="50%" cy="50%" r="20" fill="none" stroke={accent} strokeWidth="0.7" strokeDasharray="4 5" /><circle cx="50%" cy="50%" r="30" fill="none" stroke={accent} strokeWidth="0.7" strokeDasharray="3 6" /><circle cx="68" cy="22" r="2" fill={accent} opacity="0.4" /></>;
+}
+function DashedOrbits({ accent }: { accent: string }) {
+  return <><ellipse cx="44" cy="44" rx="25" ry="18" fill="none" stroke={accent} strokeWidth="0.7" strokeDasharray="3 4" /><ellipse cx="44" cy="44" rx="18" ry="28" fill="none" stroke={accent} strokeWidth="0.7" strokeDasharray="3 4" /><circle cx="60" cy="24" r="2" fill={accent} opacity="0.3" /></>;
+}
 
+const CARD_PATTERNS: Record<string, ({ accent }: { accent: string }) => React.ReactNode> = {
+  "concentric-circles": ConcentricCircles, "dot-grid": DotGrid, "orbital-rings": OrbitalRings, "dashed-orbits": DashedOrbits,
+};
+
+// === Metric visual helpers ===
+function ProgressRing({ value, accent, size = 32 }: { value: number; accent: string; size?: number }) {
+  const r = (size - 4) / 2;
+  const circ = 2 * Math.PI * r;
+  return (
+    <svg width={size} height={size} className="shrink-0">
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={`${accent}20`} strokeWidth="3" />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={accent} strokeWidth="3" strokeDasharray={`${circ * value / 100} ${circ}`} strokeLinecap="round" transform={`rotate(-90 ${size / 2} ${size / 2})`} />
+    </svg>
+  );
+}
+
+function MiniBar({ value, max, accent }: { value: number; max: number; accent: string }) {
+  return (
+    <div className="h-1.5 rounded-full w-full" style={{ backgroundColor: `${accent}15` }}>
+      <div className="h-full rounded-full" style={{ width: `${(value / max) * 100}%`, backgroundColor: accent }} />
+    </div>
+  );
+}
+
+function TrendArrow({ up }: { up: boolean }) {
+  return <span className="text-[9px]" style={{ color: up ? "var(--success)" : "var(--error)" }}>{up ? "↑" : "↓"}</span>;
+}
+
+// === App definitions ===
+interface AppCardDef {
+  name: string;
+  subtitle: string;
+  accent: string;
+  pattern: string;
+  status: "Active" | "Pending" | "Inactive";
+  icon: (s: number) => React.ReactNode;
+  metrics: (accent: string) => React.ReactNode;
+}
+
+const APP_CARDS: AppCardDef[] = [
+  {
+    name: "Rello", subtitle: "Command Center", accent: "#7B8EC2", pattern: "orbital-rings", status: "Active",
+    icon: (s) => <svg width={s} height={s} viewBox="0 0 48 48" fill="none"><path d="M6 26h8l4-14 6 28 5-14h8" stroke="#7B8EC2" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /><circle cx="37" cy="14" r="3" fill="#7B8EC2" opacity="0.5" /><circle cx="37" cy="14" r="1.5" fill="#7B8EC2" /></svg>,
+    metrics: (a) => (
+      <div className="flex items-center gap-3 mt-3">
+        <div className="flex-1"><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>12</p><p className="text-[9px] text-[var(--neutral-500)]">Hot Leads <TrendArrow up /></p></div>
+        <div className="flex-1"><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>3</p><p className="text-[9px] text-[var(--neutral-500)]">Pending Close</p></div>
+        <div className="flex-1 flex flex-col items-center gap-1"><ProgressRing value={87} accent={a} /><p className="text-[8px] text-[var(--neutral-500)]">Pipeline</p></div>
+      </div>
+    ),
+  },
+  {
+    name: "The Drumbeat", subtitle: "Daily Action Plan", accent: "#D4943A", pattern: "orbital-rings", status: "Active",
+    icon: (s) => <svg width={s} height={s} viewBox="0 0 48 48" fill="none"><path d="M24 8c0 0-8 8-8 20l8 8 8-8c0-12-8-20-8-20z" stroke="#D4943A" strokeWidth="2.5" /><circle cx="24" cy="22" r="3" stroke="#D4943A" strokeWidth="1.5" opacity="0.5" /><path d="M16 28l-4 4 4-1" stroke="#D4943A" strokeWidth="1.5" opacity="0.4" /><path d="M32 28l4 4-4-1" stroke="#D4943A" strokeWidth="1.5" opacity="0.4" /><circle cx="24" cy="40" r="1.5" fill="#D4943A" opacity="0.3" /></svg>,
+    metrics: (a) => (
+      <div className="mt-3 space-y-2">
+        <div className="flex items-center justify-between"><span className="text-[10px] text-[var(--neutral-500)]">4 of 9 actions</span><span className="text-xs font-bold" style={{ color: a }}>44%</span></div>
+        <MiniBar value={4} max={9} accent={a} />
+        <div className="flex gap-3 pt-1">
+          <div><p className="text-sm font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>6</p><p className="text-[8px] text-[var(--neutral-500)]">Day Streak</p></div>
+          <div><p className="text-sm font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>78%</p><p className="text-[8px] text-[var(--neutral-500)]">Consistency</p></div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    name: "Conversations", subtitle: "Unified Comms", accent: "#D4943A", pattern: "orbital-rings", status: "Active",
+    icon: (s) => <svg width={s} height={s} viewBox="0 0 48 48" fill="none"><rect x="16" y="8" width="16" height="32" rx="4" stroke="#D4943A" strokeWidth="2" /><rect x="20" y="14" width="8" height="14" rx="1" fill="#D4943A" opacity="0.1" /><circle cx="24" cy="36" r="2" stroke="#D4943A" strokeWidth="1.5" opacity="0.3" /><path d="M34 18 Q38 18 38 22" stroke="#D4943A" strokeWidth="1.5" opacity="0.3" /><path d="M34 14 Q42 14 42 22" stroke="#D4943A" strokeWidth="1.5" opacity="0.2" /></svg>,
+    metrics: (a) => (
+      <div className="flex items-center gap-3 mt-3">
+        <div className="flex-1 rounded-lg p-2 text-center" style={{ backgroundColor: `${a}12` }}><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>5</p><p className="text-[8px] text-[var(--neutral-500)]">Unread</p></div>
+        <div className="flex-1 rounded-lg p-2 text-center" style={{ backgroundColor: `${a}12` }}><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>2</p><p className="text-[8px] text-[var(--neutral-500)]">Missed</p></div>
+        <div className="flex-1 flex flex-col items-center gap-1"><ProgressRing value={94} accent={a} /><p className="text-[8px] text-[var(--neutral-500)]">Response</p></div>
+      </div>
+    ),
+  },
+  {
+    name: "Home Ready", subtitle: "Buyer Qualification", accent: "#5B9EA6", pattern: "concentric-circles", status: "Active",
+    icon: (s) => <svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="16" stroke="#5B9EA6" strokeWidth="2" /><circle cx="24" cy="24" r="12" stroke="#5B9EA6" strokeWidth="1" opacity="0.3" /><polygon points="24,10 28,22 24,26 20,22" fill="#5B9EA6" opacity="0.3" /><polygon points="24,38 20,26 24,22 28,26" fill="#5B9EA6" opacity="0.15" /><circle cx="24" cy="24" r="2" fill="#5B9EA6" /></svg>,
+    metrics: (a) => (
+      <div className="mt-3 space-y-2">
+        <div className="flex gap-3">
+          <div><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>1,247</p><p className="text-[8px] text-[var(--neutral-500)]">Assessments <TrendArrow up /></p></div>
+          <div><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>342</p><p className="text-[8px] text-[var(--neutral-500)]">Qualified</p></div>
+        </div>
+        <div className="flex items-center justify-between"><span className="text-[9px] text-[var(--neutral-500)]">Conversion</span><span className="text-[10px] font-bold" style={{ color: a }}>27%</span></div>
+        <MiniBar value={27} max={100} accent={a} />
+      </div>
+    ),
+  },
+  {
+    name: "The HomeStretch", subtitle: "Education & Closing", accent: "#5E8C6A", pattern: "concentric-circles", status: "Active",
+    icon: (s) => <svg width={s} height={s} viewBox="0 0 48 48" fill="none"><path d="M10 38 Q16 28 20 30 Q24 32 28 24 Q32 16 38 12" stroke="#5E8C6A" strokeWidth="2.5" fill="none" strokeLinecap="round" /><circle cx="16" cy="32" r="2" fill="#5E8C6A" opacity="0.2" /><circle cx="24" cy="26" r="2" fill="#5E8C6A" opacity="0.3" /><circle cx="32" cy="18" r="2" fill="#5E8C6A" opacity="0.4" /><path d="M38 8v8h-4" stroke="#5E8C6A" strokeWidth="2" fill="none" /></svg>,
+    metrics: (a) => (
+      <div className="flex items-center gap-3 mt-3">
+        <div className="flex-1"><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>127</p><p className="text-[8px] text-[var(--neutral-500)]">Active Journeys</p></div>
+        <div className="flex-1 flex flex-col items-center gap-1"><ProgressRing value={73} accent={a} /><p className="text-[8px] text-[var(--neutral-500)]">Completion</p></div>
+        <div className="flex-1"><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>89</p><p className="text-[8px] text-[var(--neutral-500)]">Graduated <TrendArrow up /></p></div>
+      </div>
+    ),
+  },
+  {
+    name: "Open House Hub", subtitle: "Capture Every Visitor", accent: "#A67B8A", pattern: "orbital-rings", status: "Pending",
+    icon: (s) => <svg width={s} height={s} viewBox="0 0 48 48" fill="none"><rect x="14" y="12" width="16" height="26" rx="2" stroke="#A67B8A" strokeWidth="2" /><path d="M14 24h16" stroke="#A67B8A" strokeWidth="1" opacity="0.2" /><rect x="22" y="24" width="3" height="10" rx="1.5" fill="#A67B8A" opacity="0.3" /><path d="M14 18 Q6 24 14 30" stroke="#A67B8A" strokeWidth="1.2" opacity="0.3" /><path d="M14 20 Q8 24 14 28" stroke="#A67B8A" strokeWidth="1.2" opacity="0.2" /></svg>,
+    metrics: (a) => (
+      <div className="mt-3 space-y-2">
+        <div className="flex gap-3">
+          <div className="flex-1 rounded-lg p-2 text-center" style={{ backgroundColor: `${a}12` }}><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>23</p><p className="text-[8px] text-[var(--neutral-500)]">Sign-ins</p></div>
+          <div className="flex-1 rounded-lg p-2 text-center" style={{ backgroundColor: `${a}12` }}><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>8</p><p className="text-[8px] text-[var(--neutral-500)]">Qualified</p></div>
+        </div>
+        <div className="flex items-center gap-1.5"><span className="size-1.5 rounded-full bg-[var(--warning)]" /><span className="text-[9px] text-[var(--neutral-500)]">3 upcoming events</span></div>
+      </div>
+    ),
+  },
+  {
+    name: "Newsletter Studio", subtitle: "Build Newsletters", accent: "#6E6EA8", pattern: "dot-grid", status: "Active",
+    icon: (s) => <svg width={s} height={s} viewBox="0 0 48 48" fill="none"><path d="M8 16l16 10 16-10" stroke="#6E6EA8" strokeWidth="2" /><rect x="8" y="16" width="32" height="22" rx="3" stroke="#6E6EA8" strokeWidth="2" /><rect x="14" y="10" width="20" height="8" rx="2" stroke="#6E6EA8" strokeWidth="1.5" opacity="0.3" /></svg>,
+    metrics: (a) => (
+      <div className="flex items-center gap-3 mt-3">
+        <div className="flex-1 flex flex-col items-center gap-1"><ProgressRing value={34.7} accent={a} size={36} /><p className="text-[8px] text-[var(--neutral-500)]">Open Rate</p></div>
+        <div className="flex-1"><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>423</p><p className="text-[8px] text-[var(--neutral-500)]">Subscribers <TrendArrow up /></p></div>
+        <div className="flex-1"><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>12</p><p className="text-[8px] text-[var(--neutral-500)]">Sent</p></div>
+      </div>
+    ),
+  },
+  {
+    name: "Market Intel", subtitle: "Broadcast What Matters", accent: "#4A7B94", pattern: "dot-grid", status: "Active",
+    icon: (s) => <svg width={s} height={s} viewBox="0 0 48 48" fill="none"><path d="M8 38l8-12 6 6 8-14 10 8" stroke="#4A7B94" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /><circle cx="40" cy="26" r="3" stroke="#4A7B94" strokeWidth="1.5" opacity="0.4" /><line x1="8" y1="38" x2="40" y2="38" stroke="#4A7B94" strokeWidth="1" opacity="0.2" /></svg>,
+    metrics: (a) => (
+      <div className="mt-3 space-y-2">
+        <div className="flex gap-3">
+          <div className="flex-1 flex flex-col items-center gap-1"><ProgressRing value={65} accent={a} /><p className="text-[8px] text-[var(--neutral-500)]">Open Rate</p></div>
+          <div className="flex-1 flex flex-col items-center gap-1"><ProgressRing value={75} accent={a} /><p className="text-[8px] text-[var(--neutral-500)]">Listen Rate</p></div>
+        </div>
+        <div className="flex items-center justify-between"><span className="text-[9px] text-[var(--neutral-500)]">8 broadcasts sent</span><TrendArrow up /></div>
+      </div>
+    ),
+  },
+  {
+    name: "Harvest Home", subtitle: "Find Leads First", accent: "#C27052", pattern: "dashed-orbits", status: "Active",
+    icon: (s) => <svg width={s} height={s} viewBox="0 0 48 48" fill="none"><circle cx="20" cy="20" r="10" stroke="#C27052" strokeWidth="2" /><line x1="27" y1="27" x2="38" y2="38" stroke="#C27052" strokeWidth="2.5" strokeLinecap="round" /><circle cx="18" cy="18" r="2" fill="#C27052" opacity="0.4" /><circle cx="24" cy="16" r="1.5" fill="#C27052" opacity="0.3" /><circle cx="16" cy="22" r="1.5" fill="#C27052" opacity="0.3" /></svg>,
+    metrics: (a) => (
+      <div className="flex items-center gap-3 mt-3">
+        <div className="flex-1"><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>47</p><p className="text-[8px] text-[var(--neutral-500)]">New Expired <TrendArrow up /></p></div>
+        <div className="flex-1"><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>12</p><p className="text-[8px] text-[var(--neutral-500)]">Matched</p></div>
+        <div className="flex-1"><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>5</p><p className="text-[8px] text-[var(--neutral-500)]">Contacted</p></div>
+      </div>
+    ),
+  },
+];
+
+const STATUS_COLORS: Record<string, string> = { Active: "var(--success)", Pending: "var(--warning)", Inactive: "var(--neutral-400)" };
+
+export function AppCardDemo() {
   return (
     <div className="bg-[var(--neutral-50)] rounded-xl overflow-hidden border border-[var(--neutral-200)]">
       <div className="p-4 border-b border-[var(--neutral-100)]">
-        <span className="text-sm font-medium text-[var(--neutral-700)]">App Card — Platform application cards</span>
+        <span className="text-sm font-medium text-[var(--neutral-700)]">App Card — Platform application cards (click to open dashboard)</span>
       </div>
       <div className="p-4 grid grid-cols-3 gap-3">
-        {apps.map(app => (
-          <div key={app.name} className="bg-white rounded-xl border border-[var(--neutral-100)] p-4 cursor-pointer hover:shadow-sm transition-shadow">
-            <div className="flex items-start justify-between mb-3">
-              <div className="size-10 rounded-lg bg-[var(--brand-primary-light)] flex items-center justify-center">
-                <div className="size-5 rounded bg-[var(--brand-primary)] opacity-40" />
+        {APP_CARDS.map(app => {
+          const PatternComp = CARD_PATTERNS[app.pattern];
+          const statusColor = STATUS_COLORS[app.status];
+          return (
+            <div key={app.name} className="bg-white rounded-xl border border-[var(--neutral-100)] overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+              {/* Branded illustration header */}
+              <div className="relative flex items-center justify-center overflow-hidden" style={{ height: 72, backgroundColor: `${app.accent}0A` }}>
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 88 88" preserveAspectRatio="xMidYMid slice" style={{ opacity: 0.05 }}>
+                  {PatternComp && <PatternComp accent={app.accent} />}
+                </svg>
+                <div className="relative">{app.icon(40)}</div>
               </div>
-              <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-medium rounded-full" style={{ backgroundColor: `color-mix(in srgb, ${app.color} 15%, transparent)`, color: app.color }}>
-                {app.status}
-              </span>
+              {/* Card body */}
+              <div className="px-4 pb-4 pt-3">
+                <div className="flex items-start justify-between mb-0.5">
+                  <p className="text-sm font-semibold text-[var(--foreground)]" style={{ fontFamily: "var(--font-heading)" }}>{app.name}</p>
+                  <span className="inline-flex items-center px-2 py-0.5 text-[9px] font-medium rounded-full shrink-0" style={{ backgroundColor: `color-mix(in srgb, ${statusColor} 15%, transparent)`, color: statusColor }}>
+                    {app.status}
+                  </span>
+                </div>
+                <p className="text-[10px] text-[var(--neutral-400)]">{app.subtitle}</p>
+                {app.metrics(app.accent)}
+              </div>
             </div>
-            <p className="text-sm font-semibold text-[var(--foreground)]">{app.name}</p>
-            <p className="font-stat text-lg font-bold text-[var(--brand-primary)] mt-1">{app.metric}</p>
-            <p className="text-[10px] text-[var(--neutral-500)]">{app.metricLabel}</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
