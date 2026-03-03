@@ -44,7 +44,15 @@ function ColorField({ label, value, defaultValue, onChange }: { label: string; v
       </div>
       <span className="text-[10px] text-[var(--neutral-600)] flex-1 truncate">{label}</span>
       <button
-        onClick={() => onChange(isInherited ? defaultValue : null)}
+        onClick={() => {
+          if (isInherited) {
+            onChange(defaultValue);
+            setPickerOpen(true);
+          } else {
+            onChange(null);
+            setPickerOpen(false);
+          }
+        }}
         className={`px-1.5 py-0.5 text-[8px] rounded font-medium shrink-0 ${isInherited ? "bg-[var(--neutral-100)] text-[var(--neutral-400)]" : "bg-[var(--brand-primary-light)] text-[var(--brand-primary)]"}`}
       >
         {isInherited ? "Default" : "Custom"}
