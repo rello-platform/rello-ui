@@ -88,28 +88,10 @@ export function useAppOverrides() {
   }, [overrides]);
 
   const makeDefault = useCallback(() => {
-    setOverrides((prev) => {
-      if (!prev) return prev;
-      const newDefaults = { ...prev.defaults };
-      const newApps: Record<string, AppOverride> = {};
-      // Promote every custom override into defaults, then clear overrides
-      for (const [appId, app] of Object.entries(prev.apps)) {
-        for (const f of COLOR_FIELDS) {
-          const val = app[f.key];
-          if (val != null) {
-            newDefaults[f.key] = val;
-          }
-        }
-        // Clear all color overrides, keep name/notes
-        const cleaned: AppOverride = { name: app.name, notes: app.notes };
-        for (const f of COLOR_FIELDS) {
-          cleaned[f.key] = null;
-        }
-        newApps[appId] = cleaned;
-      }
-      return { ...prev, defaults: newDefaults, apps: newApps };
-    });
-  }, []);
+    // Lock the current state as the new baseline — preserves all per-app
+    // overrides exactly as they are, just resets "dirty" tracking
+    if (overrides) setOriginal(structuredClone(overrides));
+  }, [overrides]);
 
   const resetToDefault = useCallback(() => {
     if (original) setOverrides(structuredClone(original));

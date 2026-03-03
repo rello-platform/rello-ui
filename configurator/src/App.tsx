@@ -82,6 +82,7 @@ export function App() {
   };
 
   const handleResetToDefault = () => {
+    if (!confirm("Reset all changes back to the last saved state? Any unsaved edits will be lost.")) return;
     if (tab === "tokens") {
       resetTokens();
     } else if (tab === "specs") {
@@ -96,6 +97,7 @@ export function App() {
   };
 
   const handleMakeDefault = () => {
+    if (!confirm("Lock the current state as the new baseline? \"Reset to Default\" will revert to this point going forward.")) return;
     if (tab === "specs") {
       specsMakeDefault();
     } else if (tab === "apps") {
