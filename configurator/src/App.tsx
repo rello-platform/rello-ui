@@ -24,7 +24,7 @@ export function App() {
   const { specs, loading: specsLoading, updateSpec, updateParam, isDirty: specsDirty, submitSpecs, submitting: specsSubmitting, makeDefault: specsMakeDefault, resetToDefault: specsResetToDefault } = useSpecs();
   const { overrides, loading: overridesLoading, updateApp, isDirty: overridesDirty, submitOverrides, submitting: overridesSubmitting, resetToDefault: overridesResetToDefault, makeDefault: overridesMakeDefault, hasCustomOverrides } = useAppOverrides();
   const { files: assetFiles, loading: assetsLoading, refresh: refreshAssets } = useAssets();
-  const { layouts, loading: layoutsLoading, updateLayout, isDirty: layoutsDirty, submitLayouts, submitting: layoutsSubmitting, resetToDefault: layoutsResetToDefault } = useAppLayouts();
+  const { layouts, loading: layoutsLoading, updateLayout, updateShellSpec, isDirty: layoutsDirty, submitLayouts, submitting: layoutsSubmitting, resetToDefault: layoutsResetToDefault } = useAppLayouts();
   const previewStyle = usePreview(tokens);
   const [tab, setTab] = useState<Tab>("tokens");
   const [selectedAsset, setSelectedAsset] = useState<AssetFile | null>(null);
@@ -294,7 +294,7 @@ export function App() {
             )}
 
             {tab === "layouts" && layouts && (
-              <AppLayoutEditor apps={layouts.apps} selectedApp={selectedLayoutApp} onSelect={setSelectedLayoutApp} onUpdate={updateLayout} />
+              <AppLayoutEditor apps={layouts.apps} shellSpec={layouts.shellSpec} selectedApp={selectedLayoutApp} onSelect={setSelectedLayoutApp} onUpdate={updateLayout} onUpdateShellSpec={updateShellSpec} />
             )}
 
             {tab === "assets" && (

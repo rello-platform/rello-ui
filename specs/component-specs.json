@@ -1194,16 +1194,6 @@
       "dontUse": "Top-level pages (Dashboard, Pipeline). Single-level views. Mobile views \u2014 use a back button instead.",
       "parameters": {}
     },
-    "sidebar-app-shell": {
-      "name": "Sidebar / App Shell",
-      "category": "navigation",
-      "description": "The main application frame \u2014 sidebar navigation on the left, header at top, content area filling the rest. This is the skeleton every Rello app is built on.",
-      "behavior": "Sidebar is fixed/sticky. Clicking a nav item triggers page transition animation. Active item shows brand-primary background tint. Sidebar can collapse to icon-only mode on smaller screens. Header shows app title, user avatar, and global actions. Content area scrolls independently.",
-      "appearance": "Sidebar: 240px width (64px collapsed), white background, border-right neutral-200. Nav items: 14px text, py-8px px-12px, rounded-lg. Active: brand-primary-light background, brand-primary text. Inactive: neutral-600, hover neutral-50 background. Header: 56px height, white background, border-bottom neutral-200, sticky. Content: neutral-50 background, scrollable.",
-      "doUse": "Every back-office app (Rello, The Oven). Any admin panel. Multi-section applications with persistent navigation.",
-      "dontUse": "Consumer-facing flows (Home Ready, Home Stretch) \u2014 use a simpler header-only layout. Single-page tools. Landing pages.",
-      "parameters": {}
-    },
     "dropdown-menu": {
       "name": "Dropdown Menu / Context Menu",
       "category": "navigation",

@@ -1,12 +1,11 @@
 {
   "description": "Per-app layout configuration. Defines the sidebar navigation, hero area, and card arrangement for each app's dashboard shell.",
   "shellSpec": {
-    "topLeft": "App logo + name (heading font, bold) + subtitle + highlight stats paragraph",
-    "topRight": "User avatar + name + search bar",
-    "sidebar": "Fixed left sidebar. Collapses to icons on smaller screens, expands on hover to drawer, hamburger on mobile. Grouped nav items with section labels.",
-    "heroArea": "Below the title block. Can be transparent (matches page bg) or dark standout card. Contains key stats, latest activity, or call-to-action.",
-    "rightCard": "Optional card pinned to the right of the hero area. Quick take, summary, or spotlight content.",
-    "cardGrid": "Below the hero. 2-3 column responsive grid of Feature Cards and Stat Pills following the Card Visual Hierarchy system."
+    "behavior": "Sidebar collapses to icon-only (60px) and expands to a drawer on hover (190px). On mobile, it becomes a hamburger menu. Clicking a nav item loads that page; the active item gets brand-primary background with white text (rounded, inset). Content area scrolls independently of the sidebar. Top row stays fixed: logo + app title + subtitle on the left, agent card on the right.",
+    "appearance": "Sidebar: 60px collapsed / 190px expanded, carded (card background, card border, rounded-xl). Nav items: 12px text, py-10px, icon placeholders 20px. Active: brand-primary solid background, white text, rounded-lg with 6px inset margin. Inactive: secondary text, hover highlight. Top row: app title 30px bold (heading font), subtitle 16px (subtitle font), highlight paragraph 14px secondary text with bold brand-primary numbers. Agent card: card background, rounded-xl, avatar 36px with brand-primary-light tint.",
+    "doUse": "Every back-office app (Rello, The Oven). Any admin panel. Multi-section applications with persistent navigation.",
+    "dontUse": "Consumer-facing flows (Home Ready, Home Stretch) — use a simpler header-only layout. Single-page tools. Landing pages.",
+    "otherPages": "Non-dashboard pages use the same shell layout. When a user clicks a nav item, the app title changes to the page name, the subtitle changes to a short description of what that page does, and the highlight paragraph changes to describe what the specific settings or features on that page control. The sidebar, agent card, and overall structure remain identical to the dashboard."
   },
   "apps": {
     "rello": {

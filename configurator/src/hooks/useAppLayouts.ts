@@ -64,7 +64,14 @@ export function useAppLayouts() {
     } finally { setSubmitting(false); }
   }, [layouts]);
 
+  const updateShellSpec = useCallback((field: string, value: string) => {
+    setLayouts((prev) => {
+      if (!prev) return prev;
+      return { ...prev, shellSpec: { ...prev.shellSpec, [field]: value } };
+    });
+  }, []);
+
   const resetToDefault = useCallback(() => { if (original) setLayouts(structuredClone(original)); }, [original]);
 
-  return { layouts, loading, updateLayout, isDirty, submitLayouts, submitting, resetToDefault };
+  return { layouts, loading, updateLayout, updateShellSpec, isDirty, submitLayouts, submitting, resetToDefault };
 }
