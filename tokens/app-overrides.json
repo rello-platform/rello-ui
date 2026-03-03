@@ -13,7 +13,8 @@
     "heroCardBorder": "#434B52",
     "heroCardTitle": "#FFFFFF",
     "rowBackground": "#FFFFFF",
-    "rowBorder": "#D1D5DB"
+    "rowBorder": "#D1D5DB",
+    "heroCardBodyText": "#C8CED3"
   },
   "apps": {
     "rello": {
@@ -31,7 +32,8 @@
       "heroCardTitle": null,
       "rowBackground": null,
       "rowBorder": null,
-      "notes": "Back-office CRM — uses default brand colors"
+      "notes": "Back-office CRM \u2014 uses default brand colors",
+      "heroCardBodyText": null
     },
     "the-drumbeat": {
       "name": "The Drumbeat",
@@ -48,7 +50,8 @@
       "heroCardTitle": null,
       "rowBackground": null,
       "rowBorder": null,
-      "notes": "Daily action dashboard"
+      "notes": "Daily action dashboard",
+      "heroCardBodyText": null
     },
     "conversations": {
       "name": "Conversations",
@@ -65,7 +68,8 @@
       "heroCardTitle": null,
       "rowBackground": null,
       "rowBorder": null,
-      "notes": "Phone, SMS, email communication hub"
+      "notes": "Phone, SMS, email communication hub",
+      "heroCardBodyText": null
     },
     "home-ready": {
       "name": "Home Ready",
@@ -82,7 +86,8 @@
       "heroCardTitle": null,
       "rowBackground": null,
       "rowBorder": null,
-      "notes": "Consumer-facing buyer qualification — homeready.app"
+      "notes": "Consumer-facing buyer qualification \u2014 homeready.app",
+      "heroCardBodyText": null
     },
     "the-homestretch": {
       "name": "The HomeStretch",
@@ -99,7 +104,8 @@
       "heroCardTitle": null,
       "rowBackground": null,
       "rowBorder": null,
-      "notes": "Consumer-facing education & closing — thehomestretch.ai"
+      "notes": "Consumer-facing education & closing \u2014 thehomestretch.ai",
+      "heroCardBodyText": null
     },
     "open-house-hub": {
       "name": "Open House Hub",
@@ -116,7 +122,8 @@
       "heroCardTitle": null,
       "rowBackground": null,
       "rowBorder": null,
-      "notes": "Open house lead capture — openhousehub.app"
+      "notes": "Open house lead capture \u2014 openhousehub.app",
+      "heroCardBodyText": null
     },
     "newsletter-studio": {
       "name": "Newsletter Studio",
@@ -133,7 +140,8 @@
       "heroCardTitle": null,
       "rowBackground": null,
       "rowBorder": null,
-      "notes": "Email newsletter builder — newsletterstudio.app"
+      "notes": "Email newsletter builder \u2014 newsletterstudio.app",
+      "heroCardBodyText": null
     },
     "market-intel": {
       "name": "Market Intel",
@@ -150,7 +158,8 @@
       "heroCardTitle": null,
       "rowBackground": null,
       "rowBorder": null,
-      "notes": "Market data & neighborhood insights — market-intel.app"
+      "notes": "Market data & neighborhood insights \u2014 market-intel.app",
+      "heroCardBodyText": null
     },
     "harvest-home": {
       "name": "Harvest Home",
@@ -167,7 +176,8 @@
       "heroCardTitle": null,
       "rowBackground": null,
       "rowBorder": null,
-      "notes": "Lead discovery & enrichment"
+      "notes": "Lead discovery & enrichment",
+      "heroCardBodyText": null
     }
   }
 }

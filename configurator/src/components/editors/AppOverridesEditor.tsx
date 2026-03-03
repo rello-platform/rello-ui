@@ -24,13 +24,15 @@ function ColorField({ label, value, defaultValue, onChange }: { label: string; v
         {pickerOpen && !isInherited && (
           <>
             <div className="fixed inset-0 z-20" onClick={() => setPickerOpen(false)} />
-            <div className="absolute top-8 left-0 z-30 bg-white rounded-lg shadow-lg p-3 border border-[var(--neutral-200)]">
+            <div className="fixed z-30 bg-white rounded-lg shadow-xl p-3 border border-[var(--neutral-200)]" style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+              <p className="text-xs font-medium text-[var(--neutral-700)] mb-2">{label}</p>
               <HexColorPicker color={displayColor} onChange={onChange} />
               <input
                 value={displayColor}
                 onChange={(e) => /^#[0-9a-fA-F]{0,6}$/.test(e.target.value) && onChange(e.target.value)}
                 className="mt-2 w-full px-2 py-1 text-xs font-mono border border-[var(--neutral-200)] rounded text-center"
               />
+              <button onClick={() => setPickerOpen(false)} className="mt-2 w-full px-2 py-1.5 text-xs font-medium rounded bg-[var(--brand-primary)] text-white">Done</button>
             </div>
           </>
         )}
@@ -50,7 +52,7 @@ const GROUPS = [
   { label: "Brand", keys: ["primary", "accent"] },
   { label: "Page & Cards", keys: ["pageBackground", "cardBackground", "cardBorder"] },
   { label: "Text", keys: ["primaryText", "secondaryText", "tertiaryText"] },
-  { label: "Hero / Spotlight", keys: ["heroCardBackground", "heroCardBorder", "heroCardTitle"] },
+  { label: "Hero / Spotlight", keys: ["heroCardBackground", "heroCardBorder", "heroCardTitle", "heroCardBodyText"] },
   { label: "Rows", keys: ["rowBackground", "rowBorder"] },
 ];
 

@@ -328,6 +328,7 @@ export function App() {
                     const heroBg = v("heroCardBackground");
                     const heroBorder = v("heroCardBorder");
                     const heroTitle = v("heroCardTitle");
+                    const heroBody = v("heroCardBodyText");
                     const rowBg = v("rowBackground");
                     const rowBorder = v("rowBorder");
                     const customCount = COLOR_FIELDS.filter(f => app[f.key] !== null && app[f.key] !== undefined).length;
@@ -337,7 +338,7 @@ export function App() {
                         <div className="px-4 py-3 flex items-center justify-between" style={{ backgroundColor: heroBg, borderBottom: `1px solid ${heroBorder}` }}>
                           <div>
                             <span className="text-sm font-bold" style={{ color: heroTitle }}>{app.name}</span>
-                            <p className="text-[9px]" style={{ color: heroTitle, opacity: 0.6 }}>Hero Card Title</p>
+                            <p className="text-[9px]" style={{ color: heroBody }}>Hero card body text</p>
                           </div>
                           <div className="size-6 rounded-full" style={{ backgroundColor: heroTitle, opacity: 0.15 }} />
                         </div>

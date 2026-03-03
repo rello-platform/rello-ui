@@ -12,6 +12,7 @@ export const COLOR_FIELDS = [
   { key: "heroCardBackground", label: "Hero Card Background" },
   { key: "heroCardBorder", label: "Hero Card Border" },
   { key: "heroCardTitle", label: "Hero Card Title" },
+  { key: "heroCardBodyText", label: "Hero Card Body Text" },
   { key: "rowBackground", label: "Row Background" },
   { key: "rowBorder", label: "Row Border" },
 ] as const;
