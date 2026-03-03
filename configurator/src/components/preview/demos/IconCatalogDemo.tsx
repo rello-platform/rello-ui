@@ -1,218 +1,145 @@
-const ICONS = [
-  {
-    id: "morning-brew",
-    name: "Morning Brew",
-    card: "Market Intel",
-    accent: "#C9785D",
-    bgPattern: "dots",
-    render: (size: number) => (
-      <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
-        {/* Cup body */}
-        <rect x="14" y="24" width="28" height="24" rx="4" stroke="#C9785D" strokeWidth="2.5" fill="none" />
-        {/* Cup fill - cream top */}
-        <rect x="16" y="26" width="24" height="10" rx="2" fill="#C9785D" opacity="0.12" />
-        {/* Cup fill - warm bottom */}
-        <rect x="16" y="36" width="24" height="10" rx="2" fill="#C9785D" opacity="0.25" />
-        {/* Handle */}
-        <path d="M42 30 C50 30 50 42 42 42" stroke="#C9785D" strokeWidth="2.5" fill="none" />
-        {/* Steam */}
-        <path d="M22 20 C22 16 26 16 26 12" stroke="#C9785D" strokeWidth="1.5" opacity="0.4" strokeLinecap="round" />
-        <path d="M28 18 C28 14 32 14 32 10" stroke="#C9785D" strokeWidth="1.5" opacity="0.3" strokeLinecap="round" />
-        <path d="M34 20 C34 16 38 16 38 12" stroke="#C9785D" strokeWidth="1.5" opacity="0.2" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
-    id: "todays-agenda",
-    name: "Today's Agenda",
-    card: "Schedule",
-    accent: "#6C5CE7",
-    bgPattern: "grid",
-    render: (size: number) => (
-      <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
-        {/* Calendar body */}
-        <rect x="12" y="16" width="40" height="36" rx="4" stroke="#6C5CE7" strokeWidth="2.5" />
-        {/* Top clips */}
-        <line x1="24" y1="10" x2="24" y2="22" stroke="#6C5CE7" strokeWidth="2.5" strokeLinecap="round" />
-        <line x1="40" y1="10" x2="40" y2="22" stroke="#6C5CE7" strokeWidth="2.5" strokeLinecap="round" />
-        {/* Date dots */}
-        {[0,1,2,3,4].map(row => [0,1,2,3,4].map(col => (
-          <circle key={`${row}-${col}`} cx={20 + col * 6} cy={30 + row * 5} r="1.5" fill="#6C5CE7" opacity={row === 2 && col === 2 ? 0.8 : 0.15} />
-        )))}
-      </svg>
-    ),
-  },
-  {
-    id: "the-scoreboard",
-    name: "The Scoreboard",
-    card: "Performance",
-    accent: "#C9785D",
-    bgPattern: "orbits",
-    render: (size: number) => (
-      <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
-        {/* Star */}
-        <path d="M32 12 L36.5 24.5 L50 25.5 L39.5 34 L42.5 47 L32 40 L21.5 47 L24.5 34 L14 25.5 L27.5 24.5 Z" stroke="#C9785D" strokeWidth="2.5" fill="none" />
-        {/* Orbital sparkles */}
-        <circle cx="32" cy="32" r="22" stroke="#C9785D" strokeWidth="0.75" strokeDasharray="3 5" opacity="0.25" />
-        <circle cx="48" cy="18" r="2" fill="#C9785D" opacity="0.3" />
-        <circle cx="18" cy="44" r="1.5" fill="#C9785D" opacity="0.2" />
-        <circle cx="32" cy="32" r="2.5" fill="#C9785D" opacity="0.15" />
-      </svg>
-    ),
-  },
-  {
-    id: "pipeline-rocket",
-    name: "Pipeline",
-    card: "Discovery",
-    accent: "#6C5CE7",
-    bgPattern: "matrix",
-    render: (size: number) => (
-      <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
-        {/* Rocket body */}
-        <path d="M32 12 C32 12 24 24 24 38 L32 44 L40 38 C40 24 32 12 32 12Z" stroke="#6C5CE7" strokeWidth="2.5" fill="none" />
-        {/* Window */}
-        <circle cx="32" cy="28" r="4" stroke="#6C5CE7" strokeWidth="1.5" opacity="0.5" />
-        {/* Fins */}
-        <path d="M24 38 L18 44 L24 42" stroke="#6C5CE7" strokeWidth="1.5" opacity="0.4" />
-        <path d="M40 38 L46 44 L40 42" stroke="#6C5CE7" strokeWidth="1.5" opacity="0.4" />
-        {/* Exhaust */}
-        <circle cx="32" cy="48" r="2" fill="#6C5CE7" opacity="0.2" />
-        <circle cx="32" cy="52" r="1" fill="#6C5CE7" opacity="0.1" />
-      </svg>
-    ),
-  },
-  {
-    id: "five-before-9",
-    name: "Five Before 9",
-    card: "Calls",
-    accent: "#D9534F",
-    bgPattern: "circles",
-    render: (size: number) => (
-      <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
-        {/* Phone body */}
-        <rect x="22" y="14" width="20" height="36" rx="4" stroke="#D9534F" strokeWidth="2.5" />
-        {/* Screen */}
-        <rect x="26" y="20" width="12" height="18" rx="1" fill="#D9534F" opacity="0.1" />
-        {/* Pulse rings */}
-        <circle cx="32" cy="29" r="10" stroke="#D9534F" strokeWidth="1" opacity="0.15" />
-        <circle cx="32" cy="29" r="16" stroke="#D9534F" strokeWidth="0.75" opacity="0.08" />
-        {/* Home button */}
-        <circle cx="32" cy="44" r="2" stroke="#D9534F" strokeWidth="1.5" opacity="0.3" />
-      </svg>
-    ),
-  },
-  {
-    id: "the-vault",
-    name: "The Vault",
-    card: "Contacts",
-    accent: "#6B9080",
-    bgPattern: "rings",
-    render: (size: number) => (
-      <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
-        {/* Target rings */}
-        <circle cx="32" cy="32" r="20" stroke="#6B9080" strokeWidth="2" opacity="0.3" />
-        <circle cx="32" cy="32" r="13" stroke="#6B9080" strokeWidth="2" opacity="0.5" />
-        <circle cx="32" cy="32" r="6" stroke="#6B9080" strokeWidth="2" opacity="0.7" />
-        {/* Center dot */}
-        <circle cx="32" cy="32" r="2" fill="#6B9080" />
-        {/* Crosshairs */}
-        <line x1="32" y1="8" x2="32" y2="18" stroke="#6B9080" strokeWidth="1.5" opacity="0.3" />
-        <line x1="32" y1="46" x2="32" y2="56" stroke="#6B9080" strokeWidth="1.5" opacity="0.3" />
-        <line x1="8" y1="32" x2="18" y2="32" stroke="#6B9080" strokeWidth="1.5" opacity="0.3" />
-        <line x1="46" y1="32" x2="56" y2="32" stroke="#6B9080" strokeWidth="1.5" opacity="0.3" />
-      </svg>
-    ),
-  },
+import { useState } from "react";
+
+interface IconDef {
+  id: string;
+  name: string;
+  category: string;
+  render: (size: number, color: string) => React.ReactNode;
+}
+
+const ICONS: IconDef[] = [
+  // === LEAD GENERATION ===
+  { id: "accountability-coach", name: "Accountability Coach", category: "Lead Generation",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M9 8l2 2 4-4" /><line x1="9" y1="14" x2="15" y2="14" /><line x1="9" y1="17" x2="13" y2="17" /><circle cx="17" cy="5" r="1.5" fill={c} opacity="0.4" /></svg> },
+  { id: "social-media-engine", name: "Social Media Engine", category: "Lead Generation",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><circle cx="5" cy="6" r="2" /><circle cx="19" cy="6" r="2" /><circle cx="5" cy="18" r="2" /><circle cx="19" cy="18" r="2" /><line x1="10" y1="10" x2="6.5" y2="7.5" /><line x1="14" y1="10" x2="17.5" y2="7.5" /><line x1="10" y1="14" x2="6.5" y2="16.5" /><line x1="14" y1="14" x2="17.5" y2="16.5" /><circle cx="12" cy="12" r="6" opacity="0.15" /></svg> },
+  { id: "video-marketing", name: "Video Marketing", category: "Lead Generation",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><polygon points="10,8 16,12 10,16" fill={c} opacity="0.2" stroke={c} /><path d="M17 3l2-1" opacity="0.4" /><circle cx="20" cy="2" r="1" fill={c} opacity="0.3" /></svg> },
+  { id: "expired-fsbo-finder", name: "Expired/FSBO Finder", category: "Lead Generation",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="10" cy="10" r="6" /><line x1="14.5" y1="14.5" x2="20" y2="20" strokeWidth="2" /><path d="M8 10l2-3 2 3" opacity="0.5" /><line x1="7" y1="12" x2="13" y2="12" opacity="0.3" /><circle cx="10" cy="10" r="3" opacity="0.15" strokeDasharray="2 2" /></svg> },
+  { id: "campaign-manager", name: "Campaign Manager", category: "Lead Generation",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15l4-3V8l8-4v4" /><path d="M8 12l12-6" opacity="0.3" /><circle cx="20" cy="6" r="2" fill={c} opacity="0.3" /><path d="M16 6l2-3" opacity="0.4" /><path d="M4 15v4h4l-4-4z" fill={c} opacity="0.15" /></svg> },
+  { id: "quick-send", name: "Quick Send", category: "Lead Generation",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12l18-8-8 18-2-8z" /><line x1="11" y1="14" x2="21" y2="4" opacity="0.3" /><line x1="2" y1="8" x2="6" y2="9" opacity="0.3" /><line x1="2" y1="11" x2="5" y2="11" opacity="0.2" /></svg> },
+
+  // === LEAD CAPTURE ===
+  { id: "landing-pages", name: "Landing Pages", category: "Lead Capture",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="8" x2="21" y2="8" /><circle cx="6" cy="5.5" r="1" fill={c} opacity="0.3" /><circle cx="9" cy="5.5" r="1" fill={c} opacity="0.3" /><rect x="6" y="11" width="12" height="3" rx="1" fill={c} opacity="0.1" /><path d="M16 16l2-1" opacity="0.4" /><circle cx="19" cy="14.5" r="1" fill={c} opacity="0.4" /></svg> },
+  { id: "open-house-copilot", name: "Open House Copilot", category: "Lead Capture",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10l9-7 9 7" /><rect x="5" y="10" width="14" height="11" /><rect x="10" y="14" width="4" height="7" fill={c} opacity="0.1" /><path d="M5 14 Q1 16 5 18" opacity="0.25" /><path d="M5 15 Q2 16 5 17" opacity="0.15" /></svg> },
+  { id: "cma-generator", name: "CMA Generator", category: "Lead Capture",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="14" width="4" height="6" rx="0.5" fill={c} opacity="0.15" /><rect x="11" y="10" width="4" height="10" rx="0.5" fill={c} opacity="0.2" /><rect x="16" y="6" width="4" height="14" rx="0.5" fill={c} opacity="0.25" /><path d="M3 8l5-4 5 3 5-4" opacity="0.4" /><line x1="3" y1="20" x2="21" y2="20" opacity="0.3" /></svg> },
+  { id: "homeready-icon", name: "HomeReady", category: "Lead Capture",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20 A8 8 0 0 1 20 20" /><path d="M12 12V6" strokeWidth="2" /><path d="M12 6l3 3" /><circle cx="12" cy="20" r="2" fill={c} opacity="0.2" /><line x1="6" y1="18" x2="4" y2="20" opacity="0.3" /><line x1="18" y1="18" x2="20" y2="20" opacity="0.3" /><line x1="8" y1="14" x2="6" y2="16" opacity="0.3" /></svg> },
+  { id: "newsletter-studio", name: "Newsletter Studio", category: "Lead Capture",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8l9 6 9-6" /><rect x="3" y="8" width="18" height="13" rx="2" /><rect x="7" y="4" width="10" height="5" rx="1" opacity="0.3" /><line x1="9" y1="6" x2="15" y2="6" opacity="0.2" /><line x1="9" y1="8" x2="13" y2="8" opacity="0.2" /></svg> },
+  { id: "social-capture", name: "Social Capture", category: "Lead Capture",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 8C8 3 16 3 16 8" strokeWidth="2" /><line x1="8" y1="8" x2="8" y2="16" strokeWidth="2" /><line x1="16" y1="8" x2="16" y2="16" strokeWidth="2" /><path d="M8 16C8 21 16 21 16 16" strokeWidth="2" /><circle cx="4" cy="10" r="2" opacity="0.3" /><circle cx="20" cy="10" r="2" opacity="0.3" /><path d="M6 10Q7 12 8 12" opacity="0.3" /><path d="M18 10Q17 12 16 12" opacity="0.3" /></svg> },
+
+  // === LEAD NURTURE ===
+  { id: "journey-engine", name: "Journey Engine", category: "Lead Nurture",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 20 Q8 14 10 16 Q12 18 14 12 Q16 6 21 4" strokeWidth="2" /><circle cx="7" cy="17" r="2" fill={c} opacity="0.15" stroke={c} /><circle cx="12" cy="14" r="2" fill={c} opacity="0.2" stroke={c} /><circle cx="17" cy="8" r="2" fill={c} opacity="0.25" stroke={c} /><circle cx="21" cy="4" r="1.5" fill={c} opacity="0.4" /></svg> },
+  { id: "neighborhood-intel", name: "Neighborhood Intel", category: "Lead Nurture",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C8 2 5 5.5 5 10c0 5 7 12 7 12s7-7 7-12c0-4.5-3-8-7-8z" /><circle cx="12" cy="10" r="3" /><circle cx="12" cy="10" r="7" opacity="0.1" strokeDasharray="2 3" /><path d="M8 7l-1-2" opacity="0.3" /><path d="M16 7l1-2" opacity="0.3" /></svg> },
+  { id: "price-alerts", name: "Price Alerts", category: "Lead Nurture",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /><text x="10.5" y="13" fontSize="7" fill={c} fontWeight="600" opacity="0.6">$</text><circle cx="18" cy="4" r="3" fill={c} opacity="0.2" /><circle cx="18" cy="4" r="1.5" fill={c} opacity="0.4" /></svg> },
+
+  // === LISTING HELP ===
+  { id: "pre-listing-prep", name: "Pre-Listing Prep", category: "Listing Help",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8l2 2 4-4" /><path d="M8 13l2 2 4-4" /><line x1="8" y1="18" x2="16" y2="18" opacity="0.3" /><path d="M17 2l2-1" opacity="0.4" /><circle cx="20" cy="1" r="1" fill={c} opacity="0.4" /></svg> },
+  { id: "launch-system", name: "Launch System", category: "Listing Help",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2c0 0-6 6-6 16l6 4 6-4c0-10-6-16-6-16z" /><path d="M10 12l2-2 2 2" opacity="0.4" /><line x1="12" y1="10" x2="12" y2="14" opacity="0.4" /><circle cx="12" cy="16" r="1" fill={c} opacity="0.2" /><path d="M6 18l-3 2 3-1" opacity="0.3" /><path d="M18 18l3 2-3-1" opacity="0.3" /></svg> },
+  { id: "showing-feedback", name: "Showing Feedback", category: "Listing Help",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12c0-3 3-6 7-6h1c4 0 7 3 7 6v1c0 3-3 4-5 4H9c-2 0-5-1-5-4v-1z" /><path d="M8 18v3l3-2" /><path d="M11 10l1-1 1 1" opacity="0.5" /><circle cx="9" cy="11" r="0.5" fill={c} /><circle cx="15" cy="11" r="0.5" fill={c} /></svg> },
+
+  // === CLIENT RETENTION ===
+  { id: "homeowner-portal", name: "Homeowner Portal", category: "Client Retention",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10l9-7 9 7" /><rect x="5" y="10" width="14" height="11" /><path d="M12 14c-1.5 0-3 1-3 2.5S10.5 19 12 19s3-1 3-2.5S13.5 14 12 14z" fill={c} opacity="0.15" /><path d="M12 14v-1.5" opacity="0.4" /></svg> },
+  { id: "anniversary-tracker", name: "Anniversary Tracker", category: "Client Retention",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="6" width="16" height="14" rx="2" /><line x1="8" y1="3" x2="8" y2="8" /><line x1="16" y1="3" x2="16" y2="8" /><rect x="9" y="11" width="6" height="6" rx="1" fill={c} opacity="0.15" /><path d="M12 11v-1" opacity="0.4" /><path d="M10 11l2-2 2 2" opacity="0.3" /><circle cx="18" cy="5" r="1" fill={c} opacity="0.4" /></svg> },
+  { id: "referral-engine", name: "Referral Engine", category: "Client Retention",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="3" /><circle cx="16" cy="8" r="3" /><circle cx="12" cy="18" r="3" /><path d="M10 10l1 6" opacity="0.3" /><path d="M14 10l-1 6" opacity="0.3" /><line x1="11" y1="8" x2="13" y2="8" opacity="0.3" /><path d="M9 10l-2 3" opacity="0.2" /><path d="M15 10l2 3" opacity="0.2" /></svg> },
+  { id: "review-generator", name: "Review Generator", category: "Client Retention",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12,2 15,9 22,9 16.5,13.5 18.5,21 12,16.5 5.5,21 7.5,13.5 2,9 9,9" fill={c} opacity="0.1" /><polygon points="12,2 15,9 22,9 16.5,13.5 18.5,21 12,16.5 5.5,21 7.5,13.5 2,9 9,9" /><path d="M4 4 Q7 6 6 3" opacity="0.3" /><path d="M20 4 Q17 6 18 3" opacity="0.3" /></svg> },
+
+  // === BROKER MANAGEMENT ===
+  { id: "team-performance", name: "Team Performance", category: "Broker Management",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="14" width="5" height="7" rx="0.5" fill={c} opacity="0.15" /><rect x="9.5" y="8" width="5" height="13" rx="0.5" fill={c} opacity="0.2" /><rect x="16" y="11" width="5" height="10" rx="0.5" fill={c} opacity="0.15" /><circle cx="5.5" cy="11" r="2.5" opacity="0.4" /><circle cx="12" cy="5" r="2.5" opacity="0.5" /><circle cx="18.5" cy="8" r="2.5" opacity="0.4" /><path d="M11 3l1-2 1 2" opacity="0.4" /></svg> },
+  { id: "mlo-partner", name: "MLO Partner Manager", category: "Broker Management",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 12 Q12 6 16 12" strokeWidth="2" /><rect x="3" y="12" width="6" height="8" rx="1" opacity="0.3" /><rect x="15" y="12" width="6" height="8" rx="1" opacity="0.3" /><circle cx="12" cy="9" r="2" fill={c} opacity="0.2" /><circle cx="10" cy="16" r="1" fill={c} opacity="0.15" /><circle cx="14" cy="16" r="1" fill={c} opacity="0.15" /></svg> },
+
+  // === ENGINES & CORE ===
+  { id: "milo-assistant", name: "Milo Smart Assistant", category: "Engines & Core",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="10" r="7" /><path d="M9 14v4l3-2 3 2v-4" /><circle cx="10" cy="9" r="1" fill={c} /><circle cx="14" cy="9" r="1" fill={c} /><path d="M10 12 Q12 14 14 12" /><circle cx="12" cy="10" r="4" opacity="0.1" /></svg> },
+  { id: "content-engine", name: "Content Engine", category: "Engines & Core",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3l4 4-10 10H5v-4L15 3z" /><line x1="12" y1="6" x2="16" y2="10" opacity="0.3" /><rect x="14" y="16" width="7" height="2" rx="0.5" fill={c} opacity="0.15" /><rect x="14" y="19" width="5" height="2" rx="0.5" fill={c} opacity="0.15" /><circle cx="20" cy="4" r="1" fill={c} opacity="0.3" /></svg> },
+  { id: "market-intel", name: "Market Intel", category: "Engines & Core",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 20l5-8 4 4 5-10 4 6" strokeWidth="2" /><line x1="3" y1="20" x2="21" y2="20" opacity="0.3" /><circle cx="21" cy="12" r="2" opacity="0.3" /><path d="M18 6l2-3" opacity="0.4" /><circle cx="20" cy="3" r="1.5" fill={c} opacity="0.3" /></svg> },
+  { id: "property-engine", name: "Property Engine", category: "Engines & Core",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l9 7v11H3V10z" /><rect x="8" y="12" width="8" height="9" rx="1" opacity="0.3" /><rect x="6" y="16" width="12" height="2" rx="0.5" fill={c} opacity="0.06" /><rect x="6" y="18" width="12" height="2" rx="0.5" fill={c} opacity="0.1" /><circle cx="12" cy="8" r="1.5" fill={c} opacity="0.3" /></svg> },
+
+  // === DASHBOARD SECTIONS ===
+  { id: "todays-schedule", name: "Today's Schedule", category: "Dashboard",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><line x1="12" y1="6" x2="12" y2="12" strokeWidth="2" /><line x1="12" y1="12" x2="16" y2="14" strokeWidth="2" /><rect x="2" y="2" width="6" height="6" rx="1" opacity="0.2" /><line x1="4" y1="1" x2="4" y2="3" opacity="0.3" /><line x1="6" y1="1" x2="6" y2="3" opacity="0.3" /></svg> },
+  { id: "hot-leads-alert", name: "Hot Leads Alert", category: "Dashboard",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c-1 0-2-.5-2-2h4c0 1.5-1 2-2 2z" /><path d="M18 8c0-3.3-2.7-6-6-6S6 4.7 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M12 3c-1 0-2 1-2 3 0 2 1 4 2 5s2-3 2-5c0-2-1-3-2-3z" fill={c} opacity="0.2" /><circle cx="17" cy="4" r="2" fill={c} opacity="0.3" /></svg> },
+  { id: "agent-partners", name: "Agent Partners", category: "Dashboard",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="7" r="3" /><circle cx="16" cy="7" r="3" /><path d="M2 20c0-4 3-7 6-7" /><path d="M22 20c0-4-3-7-6-7" /><line x1="11" y1="13" x2="13" y2="13" opacity="0.3" /><rect x="9" y="16" width="6" height="4" rx="1" opacity="0.15" /></svg> },
 ];
 
-const PATTERNS: Record<string, (accent: string, opacity: number) => React.ReactNode> = {
-  dots: (accent, op) => (
-    <>{Array.from({ length: 36 }).map((_, i) => (
-      <circle key={i} cx={12 + (i % 6) * 16} cy={12 + Math.floor(i / 6) * 16} r="1.5" fill={accent} opacity={op} />
-    ))}</>
-  ),
-  grid: (accent, op) => (
-    <>{Array.from({ length: 36 }).map((_, i) => (
-      <circle key={i} cx={12 + (i % 6) * 16} cy={12 + Math.floor(i / 6) * 16} r="2" fill={accent} opacity={op * 0.6} />
-    ))}</>
-  ),
-  circles: (accent, op) => (
-    <>{[15, 25, 35].map(r => <circle key={r} cx="50" cy="50" r={r} fill="none" stroke={accent} strokeWidth="1" opacity={op} />)}</>
-  ),
-  orbits: (accent, op) => (
-    <>{[20, 30].map(r => <circle key={r} cx="50" cy="50" r={r} fill="none" stroke={accent} strokeWidth="0.75" strokeDasharray="4 6" opacity={op} />)}
-    <circle cx="70" cy="25" r="2" fill={accent} opacity={op * 2} />
-    <circle cx="25" cy="70" r="1.5" fill={accent} opacity={op * 1.5} /></>
-  ),
-  matrix: (accent, op) => (
-    <>{Array.from({ length: 49 }).map((_, i) => (
-      <circle key={i} cx={8 + (i % 7) * 14} cy={8 + Math.floor(i / 7) * 14} r="1.5" fill={accent} opacity={i === 24 ? op * 3 : op} />
-    ))}</>
-  ),
-  rings: (accent, op) => (
-    <><ellipse cx="50" cy="50" rx="25" ry="35" fill="none" stroke={accent} strokeWidth="0.75" opacity={op} />
-    <ellipse cx="50" cy="50" rx="35" ry="25" fill="none" stroke={accent} strokeWidth="0.75" opacity={op} /></>
-  ),
-};
+const CATEGORIES = ["Lead Generation", "Lead Capture", "Lead Nurture", "Listing Help", "Client Retention", "Broker Management", "Engines & Core", "Dashboard"];
 
 export function IconCatalogDemo() {
+  const [size, setSize] = useState(24);
+  const [color, setColor] = useState("var(--neutral-700)");
+
   return (
     <div className="bg-[var(--neutral-50)] rounded-xl overflow-hidden border border-[var(--neutral-200)]">
-      <div className="p-4 border-b border-[var(--neutral-100)]">
-        <span className="text-sm font-medium text-[var(--neutral-700)]">Branded Card Illustration Catalog</span>
-        <p className="text-xs text-[var(--neutral-400)] mt-0.5">Each icon is permanently assigned to its section. 3 layers: tinted container + decorative pattern + custom icon.</p>
-      </div>
-      <div className="p-4 grid grid-cols-3 gap-4">
-        {ICONS.map((icon) => (
-          <div key={icon.id} className="bg-white rounded-xl border border-[var(--neutral-100)] p-4 flex flex-col items-center">
-            {/* 3-layer illustration */}
-            <div
-              className="relative flex items-center justify-center mb-3 overflow-hidden"
-              style={{
-                width: 96,
-                height: 96,
-                borderRadius: 18,
-                backgroundColor: `${icon.accent}10`,
-              }}
-            >
-              {/* Layer 2: Pattern */}
-              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 96 96">
-                {PATTERNS[icon.bgPattern]?.(icon.accent, 0.07)}
-              </svg>
-              {/* Layer 3: Icon */}
-              <div className="relative">
-                {icon.render(56)}
-              </div>
-            </div>
-            <p className="text-xs font-semibold text-[var(--foreground)] text-center">{icon.name}</p>
-            <p className="text-[10px] text-[var(--neutral-500)] text-center">{icon.card}</p>
-            <div className="flex items-center gap-1.5 mt-2">
-              <div className="size-3 rounded-full" style={{ backgroundColor: icon.accent }} />
-              <span className="text-[9px] text-[var(--neutral-400)] font-mono">{icon.accent}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Dark variant row */}
-      <div className="px-4 pb-4">
-        <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2">Dark Background Variant</p>
-        <div className="bg-gradient-to-br from-[var(--neutral-800)] to-[var(--neutral-900)] rounded-xl p-4 flex gap-4 justify-center">
-          {ICONS.slice(0, 4).map((icon) => (
-            <div
-              key={icon.id}
-              className="relative flex items-center justify-center overflow-hidden"
-              style={{ width: 72, height: 72, borderRadius: 16, backgroundColor: "rgba(255,255,255,0.05)" }}
-            >
-              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 72 72" opacity="0.12">
-                {PATTERNS[icon.bgPattern]?.(icon.accent, 0.3)}
-              </svg>
-              <div className="relative" style={{ opacity: 0.5 }}>
-                {icon.render(40)}
-              </div>
-            </div>
-          ))}
+      <div className="p-4 border-b border-[var(--neutral-100)] flex items-center justify-between">
+        <div>
+          <span className="text-sm font-medium text-[var(--neutral-700)]">Custom Icon Library — {ICONS.length} Icons</span>
+          <p className="text-[10px] text-[var(--neutral-400)]">Replaces Iconoir for platform-specific icons</p>
         </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] text-[var(--neutral-500)]">Size:</span>
+            {[16, 20, 24, 32].map(s => (
+              <button key={s} onClick={() => setSize(s)} className={`px-1.5 py-0.5 text-[10px] rounded ${size === s ? "bg-[var(--brand-primary)] text-white" : "bg-[var(--neutral-100)] text-[var(--neutral-600)]"}`}>{s}</button>
+            ))}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] text-[var(--neutral-500)]">Color:</span>
+            {[
+              { c: "var(--neutral-700)", l: "Default" },
+              { c: "var(--brand-primary)", l: "Primary" },
+              { c: "var(--brand-accent)", l: "Accent" },
+              { c: "var(--neutral-400)", l: "Muted" },
+            ].map(({ c, l }) => (
+              <button key={l} onClick={() => setColor(c)} className={`px-1.5 py-0.5 text-[10px] rounded ${color === c ? "bg-[var(--brand-primary)] text-white" : "bg-[var(--neutral-100)] text-[var(--neutral-600)]"}`}>{l}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="p-4 space-y-5">
+        {CATEGORIES.map(cat => {
+          const catIcons = ICONS.filter(i => i.category === cat);
+          if (catIcons.length === 0) return null;
+          return (
+            <div key={cat}>
+              <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2">{cat}</p>
+              <div className="grid grid-cols-6 gap-2">
+                {catIcons.map(icon => (
+                  <div key={icon.id} className="bg-white rounded-lg border border-[var(--neutral-100)] p-3 flex flex-col items-center gap-2 hover:shadow-xs transition-shadow">
+                    <div className="flex items-center justify-center" style={{ width: 40, height: 40 }}>
+                      {icon.render(size, color)}
+                    </div>
+                    <span className="text-[9px] text-[var(--neutral-500)] text-center leading-tight">{icon.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
