@@ -22,19 +22,19 @@ export function TimelineDemo() {
       </div>
       <div className="p-4">
         <div className="relative">
-          {/* Vertical line */}
-          <div className="absolute left-4 top-6 bottom-6 w-0.5 bg-[var(--neutral-200)]" />
+          {/* Vertical line — positioned to align with circle centers */}
+          <div className="absolute left-[19px] top-4 bottom-4 w-0.5 bg-[var(--neutral-200)]" />
 
           <div className="space-y-4">
             {EVENTS.map((event, i) => (
               <div
                 key={i}
-                className="relative flex gap-3 pl-1"
+                className="relative flex items-start gap-3 pl-1"
                 style={{ animation: `timeline-in 300ms ease-out ${i * 60}ms both` }}
               >
                 <style>{`@keyframes timeline-in { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }`}</style>
-                {/* Icon circle */}
-                <div className={`relative z-10 size-8 rounded-full flex items-center justify-center text-xs shrink-0 ${TYPE_STYLES[event.type]}`}>
+                {/* Icon circle — always aligned to top of content card */}
+                <div className={`relative z-10 size-8 rounded-full flex items-center justify-center text-xs shrink-0 mt-2.5 ${TYPE_STYLES[event.type]}`}>
                   {event.icon}
                 </div>
                 {/* Content */}

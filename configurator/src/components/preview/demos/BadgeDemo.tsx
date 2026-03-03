@@ -2,7 +2,7 @@ export function BadgeDemo() {
   // Shared chip/badge style — thinner, tight bottom shadow, centered text
   const chipBase = "inline-flex items-center justify-center px-3.5 py-[5px] text-[13px] font-semibold font-ui leading-none";
   const chipRounded = "rounded-lg";
-  const chipShadow = "shadow-[0_2px_4px_-1px_rgba(0,0,0,0.15)]";
+  const chipShadow = "shadow-[0_1.5px_3px_-0.5px_rgba(0,0,0,0.25)]";
 
   return (
     <div className="bg-[var(--neutral-50)] rounded-xl overflow-hidden border border-[var(--neutral-200)]">

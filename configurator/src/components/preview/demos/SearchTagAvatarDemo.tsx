@@ -42,7 +42,7 @@ export function TagChipDemo() {
         <p className="text-xs font-medium text-[var(--neutral-600)] mb-2">Contact Tags</p>
         <div className="flex flex-wrap gap-2">
           {tags.map(tag => (
-            <span key={tag} className="inline-flex items-center justify-center gap-1.5 px-3 py-[5px] text-[13px] font-semibold font-ui leading-none rounded-lg shadow-[0_2px_4px_-1px_rgba(0,0,0,0.15)] bg-[var(--neutral-100)] text-[var(--neutral-600)]" style={{ animation: "tag-in 150ms ease-out" }}>
+            <span key={tag} className="inline-flex items-center justify-center gap-1.5 px-3 py-[5px] text-[13px] font-semibold font-ui leading-none rounded-lg shadow-[0_1.5px_3px_-0.5px_rgba(0,0,0,0.25)] bg-[var(--neutral-100)] text-[var(--neutral-600)]" style={{ animation: "tag-in 150ms ease-out" }}>
               <style>{`@keyframes tag-in { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }`}</style>
               {tag}
               <button onClick={() => setTags(prev => prev.filter(t => t !== tag))} className="text-[var(--neutral-400)] hover:text-[var(--error)]">
@@ -59,7 +59,7 @@ export function TagChipDemo() {
             { label: "Active Flow", bg: "var(--success-light)", text: "var(--success)" },
             { label: "Needs Review", bg: "var(--warning-light)", text: "var(--warning)" },
           ].map(t => (
-            <span key={t.label} className="inline-flex items-center justify-center gap-1.5 px-3 py-[5px] text-[13px] font-semibold font-ui leading-none rounded-lg shadow-[0_2px_4px_-1px_rgba(0,0,0,0.15)]" style={{ backgroundColor: t.bg, color: t.text }}>
+            <span key={t.label} className="inline-flex items-center justify-center gap-1.5 px-3 py-[5px] text-[13px] font-semibold font-ui leading-none rounded-lg shadow-[0_1.5px_3px_-0.5px_rgba(0,0,0,0.25)]" style={{ backgroundColor: t.bg, color: t.text }}>
               {t.label}
               <button className="opacity-40 hover:opacity-100">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
@@ -120,31 +120,31 @@ export function ProgressBarDemo() {
         <span className="text-sm font-medium text-[var(--neutral-700)]">Progress Bar — Variants & Sizes</span>
       </div>
       <div className="p-4 space-y-4">
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {[
-            { label: "Default", value: 65, color: "var(--brand-primary)" },
-            { label: "Success", value: 85, color: "var(--success)" },
-            { label: "Warning", value: 45, color: "var(--warning)" },
-            { label: "Hot", value: 92, color: "var(--hot)" },
-            { label: "Cold", value: 20, color: "var(--cold)" },
+            { label: "Default", value: 65, color: "var(--brand-primary)", colorLight: "var(--brand-primary-light)" },
+            { label: "Success", value: 85, color: "var(--success)", colorLight: "var(--success-light)" },
+            { label: "Warning", value: 45, color: "var(--warning)", colorLight: "var(--warning-light)" },
+            { label: "Hot", value: 92, color: "var(--hot)", colorLight: "var(--hot-light)" },
+            { label: "Cold", value: 20, color: "var(--cold)", colorLight: "var(--cold-light)" },
           ].map(p => (
             <div key={p.label} className="flex items-center gap-3">
               <span className="text-xs text-[var(--neutral-500)] w-14">{p.label}</span>
-              <div className="flex-1 h-2 bg-[var(--neutral-100)] rounded-full overflow-hidden">
-                <div className="h-full rounded-full transition-all duration-500" style={{ width: `${p.value}%`, backgroundColor: p.color }} />
+              <div className="flex-1 h-2.5 bg-[var(--neutral-100)] rounded-full overflow-hidden">
+                <div className="h-full rounded-full transition-all duration-500" style={{ width: `${p.value}%`, background: `linear-gradient(90deg, ${p.colorLight} 0%, ${p.color} 100%)` }} />
               </div>
-              <span className="text-xs text-[var(--neutral-600)] font-mono w-8 text-right">{p.value}%</span>
+              <span className="text-xs font-bold font-mono w-8 text-right" style={{ color: p.color }}>{p.value}%</span>
             </div>
           ))}
         </div>
         <div>
           <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2">Sizes</p>
           <div className="space-y-2">
-            {[{ h: 6, label: "sm" }, { h: 8, label: "md" }, { h: 12, label: "lg" }].map(s => (
+            {[{ h: 6, label: "sm" }, { h: 10, label: "md" }, { h: 14, label: "lg" }].map(s => (
               <div key={s.label} className="flex items-center gap-3">
                 <span className="text-xs text-[var(--neutral-500)] w-6">{s.label}</span>
                 <div className="flex-1 bg-[var(--neutral-100)] rounded-full overflow-hidden" style={{ height: s.h }}>
-                  <div className="h-full rounded-full bg-[var(--brand-primary)]" style={{ width: "60%" }} />
+                  <div className="h-full rounded-full" style={{ width: "60%", background: "linear-gradient(90deg, var(--brand-primary-light) 0%, var(--brand-primary) 100%)" }} />
                 </div>
               </div>
             ))}
