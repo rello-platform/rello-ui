@@ -54,7 +54,7 @@ export function AccordionDemo() {
           {items.map(item => (
             <div key={item.id}>
               <button onClick={() => toggle(item.id)} className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-[var(--neutral-50)] transition-colors">
-                <span className={`text-sm font-medium ${openItems.includes(item.id) ? "text-[var(--brand-primary)]" : "text-[var(--foreground)]"}`}>{item.title}</span>
+                <span className={`text-sm ${openItems.includes(item.id) ? "text-[var(--brand-primary)] font-bold" : "text-[var(--foreground)] font-medium"}`}>{item.title}</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--neutral-400)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-200 shrink-0" style={{ transform: openItems.includes(item.id) ? "rotate(180deg)" : "rotate(0)" }}><path d="M6 9l6 6 6-6" /></svg>
               </button>
               <div style={{ maxHeight: openItems.includes(item.id) ? 200 : 0, overflow: "hidden", transition: "max-height 200ms ease-out" }}>

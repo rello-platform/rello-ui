@@ -15,7 +15,6 @@
     "$value": "#C9785D26",
     "$type": "color"
   },
-
   "pipeline/hot": {
     "$value": "#D9534F",
     "$type": "color"
@@ -56,7 +55,6 @@
     "$value": "#939CA326",
     "$type": "color"
   },
-
   "status/success": {
     "$value": "#6B9080",
     "$type": "color"
@@ -89,17 +87,16 @@
     "$value": "#3298DC26",
     "$type": "color"
   },
-
   "neutral/50": {
     "$value": "#FAFBFC",
     "$type": "color"
   },
   "neutral/100": {
-    "$value": "#E1E4E8",
+    "$value": "#D1D5DB",
     "$type": "color"
   },
   "neutral/200": {
-    "$value": "#C8CED3",
+    "$value": "#BCC3CA",
     "$type": "color"
   },
   "neutral/300": {
@@ -130,7 +127,6 @@
     "$value": "#2D3339",
     "$type": "color"
   },
-
   "semantic/background": {
     "$value": "#FAFBFC",
     "$type": "color"
@@ -144,18 +140,17 @@
     "$type": "color"
   },
   "semantic/card-border": {
-    "$value": "#E1E4E8",
+    "$value": "#D1D5DB",
     "$type": "color"
   },
   "semantic/muted": {
-    "$value": "#E1E4E8",
+    "$value": "#D1D5DB",
     "$type": "color"
   },
   "semantic/muted-foreground": {
     "$value": "#646F77",
     "$type": "color"
   },
-
   "spacing/1": {
     "$value": 4,
     "$type": "number"
@@ -192,7 +187,6 @@
     "$value": 48,
     "$type": "number"
   },
-
   "radius/xs": {
     "$value": 4,
     "$type": "number"
