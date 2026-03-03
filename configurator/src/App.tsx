@@ -322,7 +322,7 @@ export function App() {
                 spec={selectedComponent && specs?.components[selectedComponent] ? specs.components[selectedComponent] : null}
               />
             </div>
-          ) : (
+          ) : tab === "apps" ? (
             <div className="bg-white rounded-xl shadow-lg min-h-full p-8">
               <h2 className="text-xl font-semibold text-[var(--foreground)] mb-2" style={{ fontFamily: "var(--font-heading)" }}>App Color Preview</h2>
               <p className="text-sm text-[var(--neutral-500)] mb-6">Each app mockup uses its own color overrides. Apps with no overrides use the default palette.</p>
