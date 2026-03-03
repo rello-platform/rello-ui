@@ -22,7 +22,7 @@ type Tab = "tokens" | "specs" | "apps" | "assets" | "layouts";
 export function App() {
   const { tokens, loading, error, updateToken, resetTokens, isDirty: tokensDirty, submitTokens, submitting: tokensSubmitting } = useTokens();
   const { specs, loading: specsLoading, updateSpec, updateParam, isDirty: specsDirty, submitSpecs, submitting: specsSubmitting, makeDefault: specsMakeDefault, resetToDefault: specsResetToDefault } = useSpecs();
-  const { overrides, loading: overridesLoading, updateApp, isDirty: overridesDirty, submitOverrides, submitting: overridesSubmitting, resetToDefault: overridesResetToDefault, makeDefault: overridesMakeDefault } = useAppOverrides();
+  const { overrides, loading: overridesLoading, updateApp, isDirty: overridesDirty, submitOverrides, submitting: overridesSubmitting, resetToDefault: overridesResetToDefault, makeDefault: overridesMakeDefault, hasCustomOverrides } = useAppOverrides();
   const { files: assetFiles, loading: assetsLoading, refresh: refreshAssets } = useAssets();
   const { layouts, loading: layoutsLoading, updateLayout, isDirty: layoutsDirty, submitLayouts, submitting: layoutsSubmitting, resetToDefault: layoutsResetToDefault } = useAppLayouts();
   const previewStyle = usePreview(tokens);
@@ -325,7 +325,7 @@ export function App() {
               {/* Make Default — locks current edits as the new baseline */}
               <button
                 onClick={handleMakeDefault}
-                disabled={!isDirty}
+                disabled={tab === "apps" ? !hasCustomOverrides : !isDirty}
                 className="px-3 py-1.5 text-xs rounded-md border border-[var(--success)] text-[var(--success)] hover:bg-[var(--success-light)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Make Default

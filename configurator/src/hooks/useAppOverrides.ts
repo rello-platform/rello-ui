@@ -115,5 +115,12 @@ export function useAppOverrides() {
     if (original) setOverrides(structuredClone(original));
   }, [original]);
 
-  return { overrides, loading, updateApp, isDirty, submitOverrides, submitting, resetToDefault, makeDefault };
+  const hasCustomOverrides = useMemo(() => {
+    if (!overrides) return false;
+    return Object.values(overrides.apps).some(app =>
+      COLOR_FIELDS.some(f => app[f.key] != null),
+    );
+  }, [overrides]);
+
+  return { overrides, loading, updateApp, isDirty, submitOverrides, submitting, resetToDefault, makeDefault, hasCustomOverrides };
 }
