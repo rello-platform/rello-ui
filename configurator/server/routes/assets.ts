@@ -13,15 +13,13 @@ function getOctokit() {
 
 export const assetRoutes = Router();
 
+// List all assets
 assetRoutes.get("/assets", async (_req, res) => {
   try {
     const octokit = getOctokit();
-
-    // Get the full tree recursively
     const { data: ref } = await octokit.rest.git.getRef({ owner, repo, ref: `heads/${branch}` });
     const { data: tree } = await octokit.rest.git.getTree({ owner, repo, tree_sha: ref.object.sha, recursive: "true" });
 
-    // Filter to assets/ directory, only files
     const assetFiles = tree.tree
       .filter((f) => f.path?.startsWith("assets/") && f.type === "blob")
       .map((f) => {
@@ -31,17 +29,15 @@ assetRoutes.get("/assets", async (_req, res) => {
         const ext = fileName.split(".").pop()?.toLowerCase() || "";
         const isImage = ["svg", "png", "webp", "jpg", "jpeg", "ico"].includes(ext);
 
-        // Build raw GitHub URL for images
-        const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
-
         return {
           path,
           fileName,
           ext,
           isImage,
-          rawUrl,
-          category: parts[1] || "unknown", // logos or milo
-          subcategory: parts.length > 3 ? parts[2] : null, // rello, home-ready, etc.
+          // Proxy through our server instead of raw GitHub (private repo)
+          rawUrl: `/api/assets/file/${encodeURIComponent(path)}`,
+          category: parts[1] || "unknown",
+          subcategory: parts.length > 3 ? parts[2] : null,
         };
       });
 
@@ -49,5 +45,39 @@ assetRoutes.get("/assets", async (_req, res) => {
   } catch (err) {
     console.error("Failed to fetch assets:", err);
     res.status(500).json({ error: "Failed to fetch assets" });
+  }
+});
+
+// Proxy individual asset files from private repo
+assetRoutes.get("/assets/file/:path(*)", async (req, res) => {
+  try {
+    const octokit = getOctokit();
+    const filePath = req.params.path;
+
+    const { data } = await octokit.rest.repos.getContent({ owner, repo, path: filePath, ref: branch });
+
+    if (!("content" in data) || !data.encoding) {
+      res.status(404).json({ error: "File not found" });
+      return;
+    }
+
+    const buffer = Buffer.from(data.content, "base64");
+    const ext = filePath.split(".").pop()?.toLowerCase() || "";
+
+    const mimeTypes: Record<string, string> = {
+      svg: "image/svg+xml",
+      png: "image/png",
+      webp: "image/webp",
+      jpg: "image/jpeg",
+      jpeg: "image/jpeg",
+      ico: "image/x-icon",
+    };
+
+    res.setHeader("Content-Type", mimeTypes[ext] || "application/octet-stream");
+    res.setHeader("Cache-Control", "public, max-age=3600");
+    res.send(buffer);
+  } catch (err) {
+    console.error("Failed to fetch asset file:", err);
+    res.status(500).json({ error: "Failed to fetch asset" });
   }
 });
