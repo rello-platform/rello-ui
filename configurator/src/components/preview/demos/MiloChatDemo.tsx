@@ -30,12 +30,10 @@ export function MiloChatDemo() {
   return (
     <div className="bg-[var(--neutral-50)] rounded-xl overflow-hidden border border-[var(--neutral-200)]">
       <div className="p-4 border-b border-[var(--neutral-100)] flex items-center gap-3">
-        <div className="size-8 rounded-full bg-[var(--brand-primary-light)] flex items-center justify-center">
-          <span className="text-xs font-bold text-[var(--brand-primary)]">M</span>
-        </div>
+        <img src="/api/assets/file/assets/milo/milo-small.svg" alt="Milo" className="size-8 rounded-full object-cover" />
         <div>
           <span className="text-sm font-medium text-[var(--neutral-700)]">Milo</span>
-          <span className="text-[10px] text-[var(--neutral-400)] ml-1.5">Smart Assistant</span>
+          <span className="text-[10px] text-[var(--neutral-400)] ml-1.5">Your Smart Assistant</span>
         </div>
       </div>
 
@@ -44,9 +42,7 @@ export function MiloChatDemo() {
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.from === "user" ? "justify-end" : "justify-start"}`}>
             {msg.from === "milo" && (
-              <div className="size-6 rounded-full bg-[var(--brand-primary-light)] flex items-center justify-center mr-2 mt-1 shrink-0">
-                <span className="text-[9px] font-bold text-[var(--brand-primary)]">M</span>
-              </div>
+              <img src="/api/assets/file/assets/milo/milo-head.svg" alt="Milo" className="size-6 rounded-full object-cover mr-2 mt-1 shrink-0" />
             )}
             <div
               className={`max-w-[75%] px-3 py-2 rounded-lg text-sm ${msg.from === "user" ? "bg-[var(--neutral-100)] text-[var(--foreground)]" : "bg-[var(--brand-primary-light)] text-[var(--foreground)]"}`}
@@ -59,9 +55,7 @@ export function MiloChatDemo() {
         ))}
         {typing && (
           <div className="flex items-center gap-2">
-            <div className="size-6 rounded-full bg-[var(--brand-primary-light)] flex items-center justify-center shrink-0">
-              <span className="text-[9px] font-bold text-[var(--brand-primary)]">M</span>
-            </div>
+            <img src="/api/assets/file/assets/milo/milo-head.svg" alt="Milo" className="size-6 rounded-full object-cover shrink-0" />
             <div className="bg-[var(--brand-primary-light)] px-4 py-2 rounded-lg flex gap-1">
               <span className="size-1.5 rounded-full bg-[var(--brand-primary)] animate-bounce" style={{ animationDelay: "0ms" }} />
               <span className="size-1.5 rounded-full bg-[var(--brand-primary)] animate-bounce" style={{ animationDelay: "150ms" }} />
