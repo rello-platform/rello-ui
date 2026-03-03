@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 export function TabNavigationDemo() {
   const [active, setActive] = useState("overview");
+  const tabsRef = useRef<Record<string, HTMLButtonElement | null>>({});
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+
   const tabs = [
     { id: "overview", label: "Overview" },
     { id: "activity", label: "Activity", badge: 3 },
@@ -9,20 +13,41 @@ export function TabNavigationDemo() {
     { id: "notes", label: "Notes", badge: 1 },
   ];
 
+  const updateIndicator = useCallback(() => {
+    const el = tabsRef.current[active];
+    const container = containerRef.current;
+    if (el && container) {
+      const containerRect = container.getBoundingClientRect();
+      const tabRect = el.getBoundingClientRect();
+      setIndicator({ left: tabRect.left - containerRect.left, width: tabRect.width });
+    }
+  }, [active]);
+
+  useEffect(() => { updateIndicator(); }, [updateIndicator]);
+
   return (
     <div className="bg-[var(--neutral-50)] rounded-xl overflow-hidden border border-[var(--neutral-200)]">
       <div className="p-4 border-b border-[var(--neutral-100)]">
         <span className="text-sm font-medium text-[var(--neutral-700)]">Tab Navigation — Click tabs to switch</span>
       </div>
       <div className="bg-white">
-        <div className="flex border-b border-[var(--neutral-200)]">
+        <div ref={containerRef} className="relative flex border-b border-[var(--neutral-200)]">
           {tabs.map(tab => (
-            <button key={tab.id} onClick={() => setActive(tab.id)}
-              className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${active === tab.id ? "text-[var(--brand-primary)] border-[var(--brand-primary)]" : "text-[var(--neutral-500)] border-transparent hover:text-[var(--neutral-700)]"}`}>
+            <button
+              key={tab.id}
+              ref={(el) => { tabsRef.current[tab.id] = el; }}
+              onClick={() => setActive(tab.id)}
+              className={`px-4 py-2.5 text-sm font-medium transition-colors ${active === tab.id ? "text-[var(--brand-primary)]" : "text-[var(--neutral-500)] hover:text-[var(--neutral-700)]"}`}
+            >
               {tab.label}
               {tab.badge && <span className={`ml-1.5 inline-flex items-center justify-center size-4 text-[10px] font-bold rounded-full ${active === tab.id ? "bg-[var(--brand-primary)] text-white" : "bg-[var(--neutral-200)] text-[var(--neutral-600)]"}`}>{tab.badge}</span>}
             </button>
           ))}
+          {/* Sliding underline */}
+          <div
+            className="absolute bottom-0 h-0.5 bg-[var(--brand-primary)] rounded-full"
+            style={{ left: indicator.left, width: indicator.width, transition: "left 300ms ease-in-out, width 300ms ease-in-out" }}
+          />
         </div>
         <div className="p-4" key={active} style={{ animation: "tab-in 200ms ease-out" }}>
           <style>{`@keyframes tab-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }`}</style>
