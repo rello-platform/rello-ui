@@ -202,8 +202,8 @@ const APP_CARDS: AppCardDef[] = [
           <div><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>1,247</p><p className="text-[8px] text-[var(--neutral-500)]">Assessments <TrendArrow up /></p></div>
           <div><p className="text-lg font-bold" style={{ color: a, fontFamily: "var(--font-stat)" }}>342</p><p className="text-[8px] text-[var(--neutral-500)]">Qualified</p></div>
         </div>
-        <div className="h-2 rounded-full overflow-hidden" style={{ background: "linear-gradient(to right, #93c5fd, #06b6d4, #22d3ee, #facc15, #fb923c, #ef4444)" }} />
-        <p className="text-[8px] text-[var(--neutral-500)]">Pipeline Temperature</p>
+        <div className="flex items-center justify-between"><span className="text-[9px] text-[var(--neutral-500)]">Conversion</span><span className="text-[10px] font-bold" style={{ color: a }}>27%</span></div>
+        <MiniBar value={27} max={100} accent={a} />
       </div>
     ),
   },
