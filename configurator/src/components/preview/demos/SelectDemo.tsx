@@ -10,11 +10,11 @@ export function SelectDemo() {
   const agents = [{ group: "Team A", items: ["Sarah Johnson", "Mike Chen"] }, { group: "Team B", items: ["Emily Davis", "David Wilson"] }];
 
   return (
-    <div className="bg-[var(--neutral-50)] rounded-xl overflow-hidden border border-[var(--neutral-200)]">
+    <div className="bg-[var(--neutral-50)] rounded-xl border border-[var(--neutral-200)]">
       <div className="p-4 border-b border-[var(--neutral-100)]">
         <span className="text-sm font-medium text-[var(--neutral-700)]">Select / Dropdown — Click to open</span>
       </div>
-      <div className="p-4 grid grid-cols-2 gap-6">
+      <div className="p-4 grid grid-cols-2 gap-6" style={{ minHeight: 300 }}>
         {/* Simple select */}
         <div>
           <label className="block text-sm font-medium text-[var(--neutral-700)] mb-1.5">Pipeline Stage</label>

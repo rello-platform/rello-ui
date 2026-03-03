@@ -112,11 +112,11 @@ export function DropdownMenuDemo() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="bg-[var(--neutral-50)] rounded-xl overflow-hidden border border-[var(--neutral-200)]">
+    <div className="bg-[var(--neutral-50)] rounded-xl border border-[var(--neutral-200)]">
       <div className="p-4 border-b border-[var(--neutral-100)]">
         <span className="text-sm font-medium text-[var(--neutral-700)]">Dropdown / Context Menu — Click the dots</span>
       </div>
-      <div className="p-4">
+      <div className="p-4" style={{ minHeight: 220 }}>
         <div className="bg-white rounded-lg border border-[var(--neutral-100)] p-4 flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-[var(--foreground)]">Sarah Johnson</p>
