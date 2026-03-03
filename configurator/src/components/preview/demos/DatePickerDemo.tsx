@@ -4,8 +4,8 @@ const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 export function DatePickerDemo() {
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [open, setOpen] = useState(true);
+  const [selected, setSelected] = useState<number | null>(15);
   const [month] = useState(2); // March
   const [year] = useState(2026);
   const today = 2;
@@ -44,7 +44,7 @@ export function DatePickerDemo() {
                   <button
                     key={i}
                     disabled={!day}
-                    onClick={() => { if (day) { setSelected(day); setOpen(false); } }}
+                    onClick={() => { if (day) { setSelected(day); } }}
                     className={`h-8 rounded-md text-sm transition-colors ${!day ? "" : day === selected ? "bg-[var(--brand-primary)] text-white font-medium" : day === today ? "text-[var(--brand-primary)] font-medium hover:bg-[var(--neutral-100)]" : "text-[var(--foreground)] hover:bg-[var(--neutral-100)]"}`}
                   >
                     {day || ""}

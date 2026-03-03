@@ -106,8 +106,8 @@ export function SurveyStepDemo() {
           <div className="px-6 pt-5">
             <div className="h-2 bg-[var(--neutral-100)] rounded-full overflow-hidden mb-2">
               <div
-                className="h-full bg-[var(--brand-primary)] rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${progress}%` }}
+                className="h-full rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${progress}%`, background: "linear-gradient(90deg, var(--brand-primary-light) 0%, var(--brand-primary) 100%)" }}
               />
             </div>
             <p className="text-xs text-[var(--neutral-400)] text-center">{Math.round(progress)}% complete</p>

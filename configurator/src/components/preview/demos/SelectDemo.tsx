@@ -21,7 +21,7 @@ export function SelectDemo() {
           <div className="relative">
             <button onClick={() => { setOpen1(!open1); setOpen2(false); }} className="flex w-full items-center justify-between h-9 rounded-md border border-[var(--neutral-200)] bg-white px-3 text-sm shadow-xs focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20 outline-none">
               <span className={value1 ? "text-[var(--foreground)]" : "text-[var(--neutral-400)]"}>{value1 || "Select stage..."}</span>
-              <span className="text-[var(--neutral-400)] text-xs">▼</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--neutral-400)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
             </button>
             {open1 && (
               <div className="absolute top-full mt-1 w-full bg-white border border-[var(--neutral-200)] rounded-md shadow-md z-10 py-1" style={{ animation: "dropdown-in 150ms ease-out" }}>
@@ -42,7 +42,7 @@ export function SelectDemo() {
           <div className="relative">
             <button onClick={() => { setOpen2(!open2); setOpen1(false); }} className="flex w-full items-center justify-between h-9 rounded-md border border-[var(--neutral-200)] bg-white px-3 text-sm shadow-xs focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20 outline-none">
               <span className={value2 ? "text-[var(--foreground)]" : "text-[var(--neutral-400)]"}>{value2 || "Select agent..."}</span>
-              <span className="text-[var(--neutral-400)] text-xs">▼</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--neutral-400)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
             </button>
             {open2 && (
               <div className="absolute top-full mt-1 w-full bg-white border border-[var(--neutral-200)] rounded-md shadow-md z-10 py-1" style={{ animation: "dropdown-in 150ms ease-out" }}>
@@ -74,7 +74,7 @@ export function SelectDemo() {
           <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-1.5">Size: md (default)</p>
           <div className="flex w-full items-center justify-between h-9 rounded-md border border-[var(--neutral-200)] bg-white px-3 text-sm shadow-xs">
             <span className="text-[var(--neutral-400)]">Medium trigger</span>
-            <span className="text-[var(--neutral-400)] text-xs">▼</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--neutral-400)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
           </div>
         </div>
       </div>
