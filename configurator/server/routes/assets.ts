@@ -52,7 +52,7 @@ assetRoutes.get("/assets", async (_req, res) => {
 assetRoutes.get("/assets/file/*", async (req, res) => {
   try {
     const octokit = getOctokit();
-    const filePath = req.params[0] as string;
+    const filePath = (req.params as Record<string, string>)["0"];
 
     const { data } = await octokit.rest.repos.getContent({ owner, repo, path: filePath, ref: branch });
 
