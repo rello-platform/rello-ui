@@ -91,7 +91,7 @@ export function ListItemDemo() {
               <p className="text-sm font-medium text-[var(--foreground)]">{item.name}</p>
               <p className="text-xs text-[var(--neutral-500)] truncate">{item.sub}</p>
             </div>
-            <span className="inline-flex items-center justify-center px-2.5 py-[4px] text-[11px] font-semibold font-ui leading-none rounded-lg shadow-[0_1.5px_3px_-0.5px_rgba(0,0,0,0.25)] capitalize" style={{ backgroundColor: `var(--${item.stage}-light)`, color: `var(--${item.stage})` }}>
+            <span className="inline-flex items-center justify-center px-2.5 py-[4px] text-[11px] font-semibold font-ui leading-none rounded-lg shadow-[0_1px_1px_0.5px_rgba(0,0,0,0.6)] capitalize" style={{ backgroundColor: `var(--${item.stage}-light)`, color: `var(--${item.stage})` }}>
               {item.stage}
             </span>
             <span className="text-[10px] text-[var(--neutral-400)]">{item.time}</span>
