@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { HexColorPicker } from "react-colorful";
 import { COLOR_FIELDS, type AppOverride } from "../../hooks/useAppOverrides";
 
@@ -27,6 +28,7 @@ export function AppOverridesEditor({ defaults, apps, onUpdate }: AppOverridesEdi
   const [pickerFieldKey, setPickerFieldKey] = useState<string>("");
 
   const fieldMap = Object.fromEntries(COLOR_FIELDS.map(f => [f.key, f.label]));
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const openPicker = (appId: string, fieldKey: string, color: string, label: string) => {
     setPickerAppId(appId);
@@ -37,13 +39,23 @@ export function AppOverridesEditor({ defaults, apps, onUpdate }: AppOverridesEdi
   };
 
   const closePicker = () => {
+    // Flush any pending debounced update before closing
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+      debounceRef.current = undefined;
+    }
+    onUpdate(pickerAppId, pickerFieldKey, pickerColor);
     setActivePicker(null);
   };
 
-  const handlePickerChange = (color: string) => {
+  const handlePickerChange = useCallback((color: string) => {
     setPickerColor(color);
-    onUpdate(pickerAppId, pickerFieldKey, color);
-  };
+    // Debounce the expensive state update (structuredClone + JSON.stringify)
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      onUpdate(pickerAppId, pickerFieldKey, color);
+    }, 150);
+  }, [onUpdate, pickerAppId, pickerFieldKey]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -139,11 +151,11 @@ export function AppOverridesEditor({ defaults, apps, onUpdate }: AppOverridesEdi
         );
       })}
 
-      {/* Color picker modal — lifted to parent so it survives child re-renders */}
-      {activePicker && (
+      {/* Color picker modal — rendered via portal to escape sidebar stacking context */}
+      {activePicker && createPortal(
         <>
-          <div className="fixed inset-0 z-20" onClick={closePicker} />
-          <div className="fixed z-30 bg-white rounded-lg shadow-xl p-4 border border-[var(--neutral-200)]" style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+          <div className="fixed inset-0" style={{ zIndex: 9998 }} onClick={closePicker} />
+          <div className="fixed bg-white rounded-lg shadow-xl p-4 border border-[var(--neutral-200)]" style={{ zIndex: 9999, top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
             <p className="text-xs font-medium text-[var(--neutral-700)] mb-2">{pickerLabel}</p>
             <HexColorPicker color={pickerColor} onChange={handlePickerChange} />
             <input
@@ -151,14 +163,18 @@ export function AppOverridesEditor({ defaults, apps, onUpdate }: AppOverridesEdi
               onChange={(e) => {
                 if (/^#[0-9a-fA-F]{0,6}$/.test(e.target.value)) {
                   setPickerColor(e.target.value);
-                  if (e.target.value.length === 7) onUpdate(pickerAppId, pickerFieldKey, e.target.value);
+                  if (e.target.value.length === 7) {
+                    clearTimeout(debounceRef.current);
+                    onUpdate(pickerAppId, pickerFieldKey, e.target.value);
+                  }
                 }
               }}
               className="mt-2 w-full px-2 py-1 text-xs font-mono border border-[var(--neutral-200)] rounded text-center"
             />
             <button onClick={closePicker} className="mt-2 w-full px-2 py-1.5 text-xs font-medium rounded bg-[var(--brand-primary)] text-white">Done</button>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   );
