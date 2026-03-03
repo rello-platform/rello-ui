@@ -3,6 +3,8 @@ import { useState, useEffect, useCallback } from "react";
 export const COLOR_FIELDS = [
   { key: "primary", label: "Primary Brand" },
   { key: "accent", label: "Accent Brand" },
+  { key: "appTitleColor", label: "App Title Color" },
+  { key: "appSubtitleColor", label: "App Subtitle Color" },
   { key: "pageBackground", label: "Page Background" },
   { key: "cardBackground", label: "Card Background" },
   { key: "cardBorder", label: "Card Border" },

@@ -14,7 +14,9 @@
     "heroCardTitle": "#FFFFFF",
     "rowBackground": "#FFFFFF",
     "rowBorder": "#D1D5DB",
-    "heroCardBodyText": "#C8CED3"
+    "heroCardBodyText": "#C8CED3",
+    "appTitleColor": "#2D3339",
+    "appSubtitleColor": "#646F77"
   },
   "apps": {
     "rello": {
@@ -33,7 +35,9 @@
       "rowBackground": null,
       "rowBorder": null,
       "notes": "Back-office CRM \u2014 uses default brand colors",
-      "heroCardBodyText": null
+      "heroCardBodyText": null,
+      "appTitleColor": null,
+      "appSubtitleColor": null
     },
     "the-drumbeat": {
       "name": "The Drumbeat",
@@ -51,7 +55,9 @@
       "rowBackground": null,
       "rowBorder": null,
       "notes": "Daily action dashboard",
-      "heroCardBodyText": null
+      "heroCardBodyText": null,
+      "appTitleColor": null,
+      "appSubtitleColor": null
     },
     "conversations": {
       "name": "Conversations",
@@ -69,7 +75,9 @@
       "rowBackground": null,
       "rowBorder": null,
       "notes": "Phone, SMS, email communication hub",
-      "heroCardBodyText": null
+      "heroCardBodyText": null,
+      "appTitleColor": null,
+      "appSubtitleColor": null
     },
     "home-ready": {
       "name": "Home Ready",
@@ -87,7 +95,9 @@
       "rowBackground": null,
       "rowBorder": null,
       "notes": "Consumer-facing buyer qualification \u2014 homeready.app",
-      "heroCardBodyText": null
+      "heroCardBodyText": null,
+      "appTitleColor": null,
+      "appSubtitleColor": null
     },
     "the-homestretch": {
       "name": "The HomeStretch",
@@ -105,7 +115,9 @@
       "rowBackground": null,
       "rowBorder": null,
       "notes": "Consumer-facing education & closing \u2014 thehomestretch.ai",
-      "heroCardBodyText": null
+      "heroCardBodyText": null,
+      "appTitleColor": null,
+      "appSubtitleColor": null
     },
     "open-house-hub": {
       "name": "Open House Hub",
@@ -123,7 +135,9 @@
       "rowBackground": null,
       "rowBorder": null,
       "notes": "Open house lead capture \u2014 openhousehub.app",
-      "heroCardBodyText": null
+      "heroCardBodyText": null,
+      "appTitleColor": null,
+      "appSubtitleColor": null
     },
     "newsletter-studio": {
       "name": "Newsletter Studio",
@@ -141,7 +155,9 @@
       "rowBackground": null,
       "rowBorder": null,
       "notes": "Email newsletter builder \u2014 newsletterstudio.app",
-      "heroCardBodyText": null
+      "heroCardBodyText": null,
+      "appTitleColor": null,
+      "appSubtitleColor": null
     },
     "market-intel": {
       "name": "Market Intel",
@@ -159,7 +175,9 @@
       "rowBackground": null,
       "rowBorder": null,
       "notes": "Market data & neighborhood insights \u2014 market-intel.app",
-      "heroCardBodyText": null
+      "heroCardBodyText": null,
+      "appTitleColor": null,
+      "appSubtitleColor": null
     },
     "harvest-home": {
       "name": "Harvest Home",
@@ -177,7 +195,9 @@
       "rowBackground": null,
       "rowBorder": null,
       "notes": "Lead discovery & enrichment",
-      "heroCardBodyText": null
+      "heroCardBodyText": null,
+      "appTitleColor": null,
+      "appSubtitleColor": null
     }
   }
 }

@@ -85,6 +85,8 @@
   --font-body: Open Sans;
   --font-ui: Hind;
   --font-stat: Mina;
+  --font-app-title: Montserrat;
+  --font-app-subtitle: Open Sans;
 
   /* Transitions */
   --transition-fast: 150ms ease;

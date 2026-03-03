@@ -450,6 +450,8 @@ export function App() {
                     heroCardBorder: (overrides.apps[selectedLayoutApp]?.heroCardBorder as string) ?? overrides.defaults.heroCardBorder,
                     heroCardTitle: (overrides.apps[selectedLayoutApp]?.heroCardTitle as string) ?? overrides.defaults.heroCardTitle,
                     heroCardBodyText: (overrides.apps[selectedLayoutApp]?.heroCardBodyText as string) ?? overrides.defaults.heroCardBodyText,
+                    appTitleColor: (overrides.apps[selectedLayoutApp]?.appTitleColor as string) ?? overrides.defaults.appTitleColor,
+                    appSubtitleColor: (overrides.apps[selectedLayoutApp]?.appSubtitleColor as string) ?? overrides.defaults.appSubtitleColor,
                   }}
                 />
               ) : (

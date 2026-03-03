@@ -50,6 +50,7 @@ function ColorField({ label, value, defaultValue, onChange }: { label: string; v
 
 const GROUPS = [
   { label: "Brand", keys: ["primary", "accent"] },
+  { label: "App Title & Subtitle", keys: ["appTitleColor", "appSubtitleColor"] },
   { label: "Page & Cards", keys: ["pageBackground", "cardBackground", "cardBorder"] },
   { label: "Text", keys: ["primaryText", "secondaryText", "tertiaryText"] },
   { label: "Hero / Spotlight", keys: ["heroCardBackground", "heroCardBorder", "heroCardTitle", "heroCardBodyText"] },

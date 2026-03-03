@@ -88,6 +88,8 @@ export function generateCss(t: TokenState): string {
   --font-body: ${t.fontFamily.body};
   --font-ui: ${t.fontFamily.ui};
   --font-stat: ${t.fontFamily.stat};
+  --font-app-title: ${t.fontFamily.appTitle};
+  --font-app-subtitle: ${t.fontFamily.appSubtitle};
 
   /* Transitions */
   --transition-fast: 150ms ease;

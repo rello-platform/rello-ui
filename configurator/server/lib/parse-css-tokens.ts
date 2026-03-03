@@ -80,6 +80,8 @@ export function parseCssTokens(css: string): TokenState {
       body: vars["font-body"] || "Open Sans",
       ui: vars["font-ui"] || "Hind",
       stat: vars["font-stat"] || "Mina",
+      appTitle: vars["font-app-title"] || "Montserrat",
+      appSubtitle: vars["font-app-subtitle"] || "Open Sans",
     },
     typography: {
       h1: { fontFamily: "heading", fontWeight: "700", fontSize: "32px", lineHeight: "1.2" },

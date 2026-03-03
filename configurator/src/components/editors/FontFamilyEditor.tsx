@@ -5,6 +5,8 @@ const FONT_OPTIONS: Record<string, string[]> = {
   body: ["Open Sans", "Inter", "Roboto", "Lato", "Source Sans 3", "Nunito Sans", "DM Sans", "Work Sans", "IBM Plex Sans", "Noto Sans"],
   ui: ["Hind", "Inter", "Roboto", "DM Sans", "Source Sans 3", "Nunito", "Open Sans", "Work Sans", "IBM Plex Sans", "Outfit"],
   stat: ["Mina", "Roboto Mono", "JetBrains Mono", "Space Mono", "Fira Code", "IBM Plex Mono", "DM Mono", "Inter", "Outfit", "Poppins"],
+  appTitle: ["Montserrat", "Poppins", "Inter", "Raleway", "Playfair Display", "DM Sans", "Outfit", "Plus Jakarta Sans", "Bebas Neue", "Oswald"],
+  appSubtitle: ["Open Sans", "Inter", "Roboto", "Lato", "Source Sans 3", "Nunito Sans", "DM Sans", "Work Sans", "Raleway", "Poppins"],
 };
 
 const ROLE_LABELS: Record<string, string> = {
@@ -12,6 +14,8 @@ const ROLE_LABELS: Record<string, string> = {
   body: "Body Text",
   ui: "UI / Buttons",
   stat: "Stats / Numbers",
+  appTitle: "App Title",
+  appSubtitle: "App Subtitle",
 };
 
 interface FontFamilyEditorProps {

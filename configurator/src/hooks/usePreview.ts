@@ -67,6 +67,8 @@ export function usePreview(tokens: TokenState | null): React.CSSProperties {
       "--font-body": `"${tokens.fontFamily.body}", sans-serif`,
       "--font-ui": `"${tokens.fontFamily.ui}", sans-serif`,
       "--font-stat": `"${tokens.fontFamily.stat}", sans-serif`,
+      "--font-app-title": `"${tokens.fontFamily.appTitle}", sans-serif`,
+      "--font-app-subtitle": `"${tokens.fontFamily.appSubtitle}", sans-serif`,
     } as React.CSSProperties;
   }, [tokens]);
 }
