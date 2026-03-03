@@ -12,29 +12,50 @@ export function CheckboxRadioDemo() {
       <div className="p-4 grid grid-cols-2 gap-6">
         <div>
           <p className="text-xs font-medium text-[var(--neutral-600)] mb-3">Notification Preferences (Checkbox)</p>
+          <style>{`
+            @keyframes check-fill { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+            @keyframes check-unfill { from { transform: scale(1); opacity: 1; } to { transform: scale(0); opacity: 0; } }
+          `}</style>
           {(["email", "sms", "push"] as const).map(key => (
             <label key={key} className="flex items-center gap-2.5 mb-2.5 cursor-pointer">
               <button onClick={() => setChecks(p => ({ ...p, [key]: !p[key] }))}
-                className="size-4 rounded-[4px] border-2 flex items-center justify-center transition-colors shrink-0"
-                style={{ borderColor: checks[key] ? "var(--brand-primary)" : "var(--neutral-300)", backgroundColor: checks[key] ? "var(--brand-primary)" : "white" }}>
-                {checks[key] && <span className="text-white text-[10px] font-bold">✓</span>}
+                className="size-5 rounded-[5px] border-2 flex items-center justify-center shrink-0 overflow-hidden"
+                style={{
+                  borderColor: checks[key] ? "var(--brand-primary)" : "var(--neutral-300)",
+                  backgroundColor: "white",
+                  transition: "border-color 400ms ease",
+                }}>
+                <div
+                  className="size-full rounded-[3px] flex items-center justify-center"
+                  style={{
+                    backgroundColor: "var(--brand-primary)",
+                    animation: checks[key] ? "check-fill 400ms ease forwards" : "check-unfill 300ms ease forwards",
+                  }}
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+                </div>
               </button>
               <span className="text-sm text-[var(--neutral-700)]">{key === "email" ? "Email notifications" : key === "sms" ? "SMS notifications" : "Push notifications"}</span>
             </label>
           ))}
           <label className="flex items-center gap-2.5 opacity-50 cursor-not-allowed">
-            <div className="size-4 rounded-[4px] border-2 border-[var(--neutral-300)]" />
+            <div className="size-5 rounded-[5px] border-2 border-[var(--neutral-300)]" />
             <span className="text-sm text-[var(--neutral-700)]">Disabled option</span>
           </label>
         </div>
         <div>
           <p className="text-xs font-medium text-[var(--neutral-600)] mb-3">Pipeline Stage (Radio)</p>
+          <style>{`
+            @keyframes radio-fill { from { transform: scale(0); } to { transform: scale(1); } }
+          `}</style>
           {["hot", "qualified", "engaged", "warming", "cold"].map(stage => (
             <label key={stage} className="flex items-center gap-2.5 mb-2.5 cursor-pointer">
               <button onClick={() => setRadio(stage)}
-                className="size-4 rounded-full border-2 flex items-center justify-center transition-colors shrink-0"
-                style={{ borderColor: radio === stage ? "var(--brand-primary)" : "var(--neutral-300)" }}>
-                {radio === stage && <div className="size-2 rounded-full bg-[var(--brand-primary)]" />}
+                className="size-5 rounded-full border-2 flex items-center justify-center shrink-0 overflow-hidden"
+                style={{ borderColor: radio === stage ? "var(--brand-primary)" : "var(--neutral-300)", transition: "border-color 400ms ease" }}>
+                {radio === stage && (
+                  <div className="size-2.5 rounded-full bg-[var(--brand-primary)]" style={{ animation: "radio-fill 400ms ease forwards" }} />
+                )}
               </button>
               <span className="text-sm text-[var(--neutral-700)] capitalize">{stage}</span>
             </label>
