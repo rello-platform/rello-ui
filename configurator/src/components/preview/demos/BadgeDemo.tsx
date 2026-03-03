@@ -1,57 +1,86 @@
 export function BadgeDemo() {
+  // Shared chip/badge style — rounded-lg (not full), bold font, strong color, no icons
+  const chipBase = "inline-flex items-center px-3.5 py-1.5 text-sm font-semibold font-ui";
+  const chipRounded = "rounded-lg"; // Less rounded than full pill
+
   return (
     <div className="bg-[var(--neutral-50)] rounded-xl overflow-hidden border border-[var(--neutral-200)]">
       <div className="p-4 border-b border-[var(--neutral-100)]">
-        <span className="text-sm font-medium text-[var(--neutral-700)]">Badge Variants & Pipeline Stages</span>
+        <span className="text-sm font-medium text-[var(--neutral-700)]">Badges & Chips — Filled + Outlined</span>
       </div>
-      <div className="p-4 space-y-4">
+      <div className="p-4 space-y-5">
+        {/* Filled variant — tinted background, strong text */}
         <div>
-          <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2">Pipeline Stages</p>
-          <div className="flex flex-wrap gap-2">
+          <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2.5">Status — Filled</p>
+          <div className="flex flex-wrap gap-2.5">
             {[
-              { label: "Hot", color: "var(--hot)", lightColor: "var(--hot-light)" },
-              { label: "Qualified", color: "var(--qualified)", lightColor: "var(--qualified-light)" },
-              { label: "Engaged", color: "var(--engaged)", lightColor: "var(--engaged-light)" },
-              { label: "Warming", color: "var(--warming)", lightColor: "var(--warming-light)" },
-              { label: "Cold", color: "var(--cold)", lightColor: "var(--cold-light)" },
+              { label: "Success", color: "var(--success)", bg: "var(--success-light)" },
+              { label: "Review", color: "var(--info)", bg: "var(--info-light)" },
+              { label: "Pending", color: "var(--warning)", bg: "var(--warning-light)" },
+              { label: "Failed", color: "var(--error)", bg: "var(--error-light)" },
+              { label: "Expired", color: "var(--neutral-500)", bg: "var(--neutral-100)" },
             ].map((badge) => (
-              <span key={badge.label} className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full" style={{ backgroundColor: badge.lightColor, color: badge.color }}>
-                <span className="size-1.5 rounded-full" style={{ backgroundColor: badge.color }} />
+              <span key={badge.label} className={`${chipBase} ${chipRounded}`} style={{ backgroundColor: badge.bg, color: badge.color }}>
                 {badge.label}
               </span>
             ))}
           </div>
         </div>
+
+        {/* Outlined variant — white bg, colored border, strong text */}
         <div>
-          <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2">Status</p>
-          <div className="flex flex-wrap gap-2">
+          <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2.5">Status — Outlined</p>
+          <div className="flex flex-wrap gap-2.5">
             {[
-              { label: "Active", color: "var(--success)", lightColor: "var(--success-light)" },
-              { label: "Pending", color: "var(--warning)", lightColor: "var(--warning-light)" },
-              { label: "Overdue", color: "var(--error)", lightColor: "var(--error-light)" },
-              { label: "New", color: "var(--info)", lightColor: "var(--info-light)" },
+              { label: "Success", color: "var(--success)" },
+              { label: "Review", color: "var(--info)" },
+              { label: "Pending", color: "var(--warning)" },
+              { label: "Failed", color: "var(--error)" },
+              { label: "Expired", color: "var(--neutral-500)" },
             ].map((badge) => (
-              <span key={badge.label} className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full" style={{ backgroundColor: badge.lightColor, color: badge.color }}>
+              <span key={badge.label} className={`${chipBase} ${chipRounded} border bg-white`} style={{ color: badge.color, borderColor: "var(--neutral-200)" }}>
                 {badge.label}
               </span>
             ))}
           </div>
         </div>
+
+        {/* Pipeline stages — filled */}
         <div>
-          <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2">Brand & Default</p>
-          <div className="flex flex-wrap gap-2">
-            <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-[var(--brand-primary-light)] text-[var(--brand-primary)]">Primary</span>
-            <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-[var(--brand-accent-light)] text-[var(--brand-accent)]">Accent</span>
-            <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-[var(--neutral-100)] text-[var(--neutral-600)]">Default</span>
+          <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2.5">Pipeline Stages</p>
+          <div className="flex flex-wrap gap-2.5">
+            {[
+              { label: "Hot", color: "var(--hot)", bg: "var(--hot-light)" },
+              { label: "Qualified", color: "var(--qualified)", bg: "var(--qualified-light)" },
+              { label: "Engaged", color: "var(--engaged)", bg: "var(--engaged-light)" },
+              { label: "Warming", color: "var(--warming)", bg: "var(--warming-light)" },
+              { label: "Cold", color: "var(--cold)", bg: "var(--cold-light)" },
+            ].map((badge) => (
+              <span key={badge.label} className={`${chipBase} ${chipRounded}`} style={{ backgroundColor: badge.bg, color: badge.color }}>
+                {badge.label}
+              </span>
+            ))}
           </div>
         </div>
+
+        {/* Brand */}
         <div>
-          <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2">Sizes</p>
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded-full bg-[var(--brand-primary-light)] text-[var(--brand-primary)]">XS</span>
-            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full bg-[var(--brand-primary-light)] text-[var(--brand-primary)]">SM</span>
-            <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-[var(--brand-primary-light)] text-[var(--brand-primary)]">MD</span>
-            <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full bg-[var(--brand-primary-light)] text-[var(--brand-primary)]">LG</span>
+          <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2.5">Brand</p>
+          <div className="flex flex-wrap gap-2.5">
+            <span className={`${chipBase} ${chipRounded} bg-[var(--brand-primary-light)] text-[var(--brand-primary)]`}>Primary</span>
+            <span className={`${chipBase} ${chipRounded} bg-[var(--brand-accent-light)] text-[var(--brand-accent)]`}>Accent</span>
+            <span className={`${chipBase} ${chipRounded} bg-[var(--neutral-100)] text-[var(--neutral-600)]`}>Default</span>
+          </div>
+        </div>
+
+        {/* Sizes */}
+        <div>
+          <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2.5">Sizes</p>
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex items-center px-2 py-0.5 text-[11px] font-semibold font-ui rounded-md bg-[var(--brand-primary-light)] text-[var(--brand-primary)]">XS</span>
+            <span className="inline-flex items-center px-2.5 py-1 text-xs font-semibold font-ui rounded-md bg-[var(--brand-primary-light)] text-[var(--brand-primary)]">SM</span>
+            <span className={`${chipBase} ${chipRounded} bg-[var(--brand-primary-light)] text-[var(--brand-primary)]`}>MD</span>
+            <span className="inline-flex items-center px-4 py-2 text-sm font-semibold font-ui rounded-lg bg-[var(--brand-primary-light)] text-[var(--brand-primary)]">LG</span>
           </div>
         </div>
       </div>

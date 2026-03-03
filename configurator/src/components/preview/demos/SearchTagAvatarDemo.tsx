@@ -40,25 +40,30 @@ export function TagChipDemo() {
       </div>
       <div className="p-4">
         <p className="text-xs font-medium text-[var(--neutral-600)] mb-2">Contact Tags</p>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-2">
           {tags.map(tag => (
-            <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-[var(--neutral-100)] text-[var(--neutral-600)]" style={{ animation: "tag-in 150ms ease-out" }}>
+            <span key={tag} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold font-ui rounded-lg bg-[var(--neutral-100)] text-[var(--neutral-600)]" style={{ animation: "tag-in 150ms ease-out" }}>
               <style>{`@keyframes tag-in { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }`}</style>
               {tag}
-              <button onClick={() => setTags(prev => prev.filter(t => t !== tag))} className="text-[var(--neutral-400)] hover:text-[var(--error)] ml-0.5">&times;</button>
+              <button onClick={() => setTags(prev => prev.filter(t => t !== tag))} className="text-[var(--neutral-400)] hover:text-[var(--error)]">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+              </button>
             </span>
           ))}
-          <button onClick={() => setTags(prev => [...prev, `Tag ${prev.length + 1}`])} className="inline-flex items-center px-2 py-1 text-xs rounded-full border border-dashed border-[var(--neutral-300)] text-[var(--neutral-500)] hover:bg-[var(--neutral-100)]">+ Add</button>
+          <button onClick={() => setTags(prev => [...prev, `Tag ${prev.length + 1}`])} className="inline-flex items-center px-3 py-1.5 text-sm font-semibold font-ui rounded-lg border border-dashed border-[var(--neutral-300)] text-[var(--neutral-500)] hover:bg-[var(--neutral-100)]">+ Add</button>
         </div>
         <p className="text-xs font-medium text-[var(--neutral-600)] mt-4 mb-2">Colored Tags</p>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-2">
           {[
             { label: "Hot Lead", bg: "var(--hot-light)", text: "var(--hot)" },
             { label: "Active Flow", bg: "var(--success-light)", text: "var(--success)" },
             { label: "Needs Review", bg: "var(--warning-light)", text: "var(--warning)" },
           ].map(t => (
-            <span key={t.label} className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full font-medium" style={{ backgroundColor: t.bg, color: t.text }}>
-              {t.label} <button className="opacity-50 hover:opacity-100">&times;</button>
+            <span key={t.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold font-ui rounded-lg" style={{ backgroundColor: t.bg, color: t.text }}>
+              {t.label}
+              <button className="opacity-40 hover:opacity-100">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+              </button>
             </span>
           ))}
         </div>
