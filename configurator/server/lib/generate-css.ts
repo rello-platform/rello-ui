@@ -83,6 +83,12 @@ export function generateCss(t: TokenState): string {
   --shadow-lg: ${t.shadow.lg};
   --shadow-xl: ${t.shadow.xl};
 
+  /* Font Families */
+  --font-heading: ${t.fontFamily.heading};
+  --font-body: ${t.fontFamily.body};
+  --font-ui: ${t.fontFamily.ui};
+  --font-stat: ${t.fontFamily.stat};
+
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-normal: 200ms ease;
