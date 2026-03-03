@@ -85,9 +85,43 @@ const ICONS: IconDef[] = [
     render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c-1 0-2-.5-2-2h4c0 1.5-1 2-2 2z" /><path d="M18 8c0-3.3-2.7-6-6-6S6 4.7 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M12 3c-1 0-2 1-2 3 0 2 1 4 2 5s2-3 2-5c0-2-1-3-2-3z" fill={c} opacity="0.2" /><circle cx="17" cy="4" r="2" fill={c} opacity="0.3" /></svg> },
   { id: "agent-partners", name: "Agent Partners", category: "Dashboard",
     render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="7" r="3" /><circle cx="16" cy="7" r="3" /><path d="M2 20c0-4 3-7 6-7" /><path d="M22 20c0-4-3-7-6-7" /><line x1="11" y1="13" x2="13" y2="13" opacity="0.3" /><rect x="9" y="16" width="6" height="4" rx="1" opacity="0.15" /></svg> },
+
+  // === SYSTEM / UNIVERSAL ===
+  { id: "close", name: "Close (X)", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg> },
+  { id: "chevron-down", name: "Chevron Down", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg> },
+  { id: "chevron-right", name: "Chevron Right", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg> },
+  { id: "chevron-left", name: "Chevron Left", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 6l-6 6 6 6" /></svg> },
+  { id: "search", name: "Search", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7" /><line x1="16.5" y1="16.5" x2="21" y2="21" /></svg> },
+  { id: "plus", name: "Plus / Add", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg> },
+  { id: "check", name: "Check", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg> },
+  { id: "more-dots", name: "More (Dots)", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5"><circle cx="12" cy="6" r="1.5" fill={c} /><circle cx="12" cy="12" r="1.5" fill={c} /><circle cx="12" cy="18" r="1.5" fill={c} /></svg> },
+  { id: "arrow-right", name: "Arrow Right", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><path d="M14 7l5 5-5 5" /></svg> },
+  { id: "edit-pencil", name: "Edit / Pencil", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3l4 4-10 10H5v-4L15 3z" /><line x1="12" y1="6" x2="16" y2="10" opacity="0.3" /></svg> },
+  { id: "trash", name: "Delete / Trash", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16" /><path d="M6 7v12a2 2 0 002 2h8a2 2 0 002-2V7" /><path d="M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3" /><line x1="10" y1="11" x2="10" y2="17" opacity="0.4" /><line x1="14" y1="11" x2="14" y2="17" opacity="0.4" /></svg> },
+  { id: "mail", name: "Mail / Email", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg> },
+  { id: "phone", name: "Phone / Call", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 4h4l2 5-2.5 1.5A11 11 0 0013.5 15L15 12.5l5 2v4a2 2 0 01-2 2A16 16 0 013 4.5 2 2 0 015 4z" /></svg> },
+  { id: "settings-gear", name: "Settings / Gear", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" /></svg> },
+  { id: "filter", name: "Filter", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 4h18l-7 8.5V18l-4 2V12.5z" /></svg> },
+  { id: "sort", name: "Sort", category: "System",
+    render: (s, c) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="6" x2="16" y2="6" /><line x1="4" y1="12" x2="12" y2="12" /><line x1="4" y1="18" x2="8" y2="18" /><path d="M18 14l2 4-2 4" opacity="0.4" /></svg> },
 ];
 
-const CATEGORIES = ["Lead Generation", "Lead Capture", "Lead Nurture", "Listing Help", "Client Retention", "Broker Management", "Engines & Core", "Dashboard"];
+const CATEGORIES = ["System", "Lead Generation", "Lead Capture", "Lead Nurture", "Listing Help", "Client Retention", "Broker Management", "Engines & Core", "Dashboard"];
 
 export function IconCatalogDemo() {
   const [size, setSize] = useState(24);
