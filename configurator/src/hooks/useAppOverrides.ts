@@ -1,15 +1,32 @@
 import { useState, useEffect, useCallback } from "react";
 
+export const COLOR_FIELDS = [
+  { key: "primary", label: "Primary Brand" },
+  { key: "accent", label: "Accent Brand" },
+  { key: "pageBackground", label: "Page Background" },
+  { key: "cardBackground", label: "Card Background" },
+  { key: "cardBorder", label: "Card Border" },
+  { key: "primaryText", label: "Primary Text" },
+  { key: "secondaryText", label: "Secondary Text" },
+  { key: "tertiaryText", label: "Tertiary (Ghost) Text" },
+  { key: "heroCardBackground", label: "Hero Card Background" },
+  { key: "heroCardBorder", label: "Hero Card Border" },
+  { key: "heroCardTitle", label: "Hero Card Title" },
+  { key: "rowBackground", label: "Row Background" },
+  { key: "rowBorder", label: "Row Border" },
+] as const;
+
+export type ColorFieldKey = typeof COLOR_FIELDS[number]["key"];
+
 export interface AppOverride {
   name: string;
-  primary: string | null;
-  accent: string | null;
   notes: string;
+  [key: string]: string | null;
 }
 
 export interface AppOverridesState {
   description: string;
-  defaults: { primary: string; accent: string };
+  defaults: Record<string, string>;
   apps: Record<string, AppOverride>;
 }
 
@@ -30,7 +47,7 @@ export function useAppOverrides() {
       .catch(() => setLoading(false));
   }, []);
 
-  const updateApp = useCallback((appId: string, field: "primary" | "accent" | "notes", value: string | null) => {
+  const updateApp = useCallback((appId: string, field: string, value: string | null) => {
     setOverrides((prev) => {
       if (!prev) return prev;
       const next = structuredClone(prev);
