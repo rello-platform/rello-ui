@@ -1228,7 +1228,7 @@
       "name": "Alert / Banner",
       "category": "feedback",
       "description": "Persistent info, warning, or error message displayed at the top of a page or section. Unlike Toast (which auto-dismisses), alerts stay visible until dismissed or the condition is resolved.",
-      "behavior": "Mounts with fade-in (200ms). Stays visible until user dismisses (X button) or the condition resolves. Can include an action button (e.g., 'Retry', 'Update'). Does not auto-dismiss. Multiple alerts stack vertically.",
+      "behavior": "Mounts with fade-in (200ms). Stays visible until user dismisses (X button) or the condition resolves. Dismissing animates out with fade + collapse (200ms ease-out) so remaining alerts slide up smoothly. Can include an action button (e.g., 'Retry', 'Update'). Does not auto-dismiss. Multiple alerts stack vertically.",
       "appearance": "Full-width bar, 12px vertical padding, 16px horizontal. 4 variants: info (info-light background, info border), success (success-light, success border), warning (warning-light, warning border), error (error-light, error border). Left icon matching variant color. Text: 14px, variant color. Dismiss X button at right edge. Optional action button.",
       "doUse": "Sync errors that persist. Subscription expiration warnings. System maintenance notices. Required action alerts. Feature announcements.",
       "dontUse": "Transient confirmations \u2014 use Toast. Inline field errors \u2014 use Input error state. Critical blocking issues \u2014 use Dialog.",

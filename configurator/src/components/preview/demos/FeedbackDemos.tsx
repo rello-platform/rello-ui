@@ -43,6 +43,7 @@ export function SpinnerDemo() {
 
 export function AlertBannerDemo() {
   const [dismissed, setDismissed] = useState<string[]>([]);
+  const [dismissing, setDismissing] = useState<string | null>(null);
   const alerts = [
     { id: "info", type: "info", title: "New feature available", desc: "Newsletter Studio now supports A/B testing.", color: "var(--info)", bg: "var(--info-light)" },
     { id: "success", type: "success", title: "Contacts synced", desc: "127 contacts imported from your CRM.", color: "var(--success)", bg: "var(--success-light)" },
@@ -50,15 +51,35 @@ export function AlertBannerDemo() {
     { id: "error", type: "error", title: "Sync failed", desc: "Unable to connect to MLS. Please check your credentials.", color: "var(--error)", bg: "var(--error-light)" },
   ];
 
+  const dismiss = (id: string) => {
+    setDismissing(id);
+    setTimeout(() => {
+      setDismissed(p => [...p, id]);
+      setDismissing(null);
+    }, 200);
+  };
+
   return (
     <div className="bg-[var(--neutral-50)] rounded-xl overflow-hidden border border-[var(--neutral-200)]">
       <div className="p-4 border-b border-[var(--neutral-100)] flex items-center justify-between">
         <span className="text-sm font-medium text-[var(--neutral-700)]">Alert / Banner — Click X to dismiss</span>
-        {dismissed.length > 0 && <button onClick={() => setDismissed([])} className="text-xs text-[var(--brand-primary)]">Reset all</button>}
+        {dismissed.length > 0 && <button onClick={() => { setDismissed([]); setDismissing(null); }} className="text-xs text-[var(--brand-primary)]">Reset all</button>}
       </div>
       <div className="p-4 space-y-2">
         {alerts.filter(a => !dismissed.includes(a.id)).map(alert => (
-          <div key={alert.id} className="flex items-start gap-3 px-4 py-3 rounded-lg border" style={{ backgroundColor: alert.bg, borderColor: alert.color + "40" }}>
+          <div
+            key={alert.id}
+            className="flex items-start gap-3 px-4 rounded-lg border overflow-hidden"
+            style={{
+              backgroundColor: alert.bg,
+              borderColor: alert.color + "40",
+              opacity: dismissing === alert.id ? 0 : 1,
+              maxHeight: dismissing === alert.id ? 0 : 80,
+              paddingTop: dismissing === alert.id ? 0 : 12,
+              paddingBottom: dismissing === alert.id ? 0 : 12,
+              transition: "opacity 200ms ease-out, max-height 200ms ease-out, padding 200ms ease-out",
+            }}
+          >
             <div className="size-5 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 shrink-0" style={{ backgroundColor: alert.color, color: "white" }}>
               {alert.type === "success" ? "✓" : alert.type === "error" ? "✕" : alert.type === "warning" ? "!" : "i"}
             </div>
@@ -66,7 +87,7 @@ export function AlertBannerDemo() {
               <p className="text-sm font-medium" style={{ color: alert.color }}>{alert.title}</p>
               <p className="text-xs mt-0.5" style={{ color: alert.color, opacity: 0.8 }}>{alert.desc}</p>
             </div>
-            <button onClick={() => setDismissed(p => [...p, alert.id])} className="size-7 rounded-md flex items-center justify-center hover:bg-black/5 transition-colors shrink-0" style={{ color: alert.color }}>
+            <button onClick={() => dismiss(alert.id)} className="size-7 rounded-md flex items-center justify-center hover:bg-black/5 transition-colors shrink-0" style={{ color: alert.color }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
             </button>
           </div>
