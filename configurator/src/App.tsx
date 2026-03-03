@@ -11,15 +11,19 @@ import { AppOverridesEditor } from "./components/editors/AppOverridesEditor";
 import { ComponentShowcase } from "./components/preview/ComponentShowcase";
 import { DemoRouter } from "./components/preview/demos/DemoRouter";
 import { useAppOverrides, COLOR_FIELDS } from "./hooks/useAppOverrides";
+import { useAssets, type AssetFile } from "./hooks/useAssets";
+import { BrandAssetsViewer } from "./components/editors/BrandAssetsViewer";
 
-type Tab = "tokens" | "specs" | "apps";
+type Tab = "tokens" | "specs" | "apps" | "assets";
 
 export function App() {
   const { tokens, loading, error, updateToken, resetTokens, isDirty: tokensDirty, submitTokens, submitting: tokensSubmitting } = useTokens();
   const { specs, loading: specsLoading, updateSpec, updateParam, isDirty: specsDirty, submitSpecs, submitting: specsSubmitting, makeDefault: specsMakeDefault, resetToDefault: specsResetToDefault } = useSpecs();
   const { overrides, loading: overridesLoading, updateApp, isDirty: overridesDirty, submitOverrides, submitting: overridesSubmitting, resetToDefault: overridesResetToDefault } = useAppOverrides();
+  const { files: assetFiles, loading: assetsLoading } = useAssets();
   const previewStyle = usePreview(tokens);
   const [tab, setTab] = useState<Tab>("tokens");
+  const [selectedAsset, setSelectedAsset] = useState<AssetFile | null>(null);
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [submitMessage, setSubmitMessage] = useState("");
   const [submitResult, setSubmitResult] = useState<{ success: boolean; sha?: string; action?: string } | null>(null);
@@ -29,7 +33,7 @@ export function App() {
   const isDirty = tab === "tokens" ? tokensDirty : tab === "specs" ? specsDirty : overridesDirty;
   const submitting = tab === "tokens" ? tokensSubmitting : tab === "specs" ? specsSubmitting : overridesSubmitting;
 
-  if (loading || specsLoading || overridesLoading) {
+  if (loading || specsLoading || overridesLoading || assetsLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -120,6 +124,12 @@ export function App() {
             >
               App Colors
               {overridesDirty && <span className="ml-1.5 size-1.5 inline-block rounded-full bg-[var(--warning)]" />}
+            </button>
+            <button
+              onClick={() => setTab("assets")}
+              className={`px-3 py-1 text-sm rounded-md transition-colors ${tab === "assets" ? "bg-white text-[var(--neutral-900)] font-medium shadow-xs" : "text-[var(--neutral-500)] hover:text-[var(--neutral-700)]"}`}
+            >
+              Brand Assets
             </button>
           </div>
         </div>
@@ -262,6 +272,10 @@ export function App() {
             {tab === "apps" && overrides && (
               <AppOverridesEditor defaults={overrides.defaults} apps={overrides.apps} onUpdate={updateApp} />
             )}
+
+            {tab === "assets" && (
+              <BrandAssetsViewer files={assetFiles} selectedAsset={selectedAsset} onSelect={setSelectedAsset} />
+            )}
           </div>
         </aside>
 
@@ -392,6 +406,81 @@ export function App() {
                       </div>
                     );
                   })}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl shadow-lg min-h-full p-8">
+              <h2 className="text-xl font-semibold text-[var(--foreground)] mb-2" style={{ fontFamily: "var(--font-heading)" }}>Brand Assets</h2>
+              <p className="text-sm text-[var(--neutral-500)] mb-6">Select an asset in the sidebar to preview it here.</p>
+              {selectedAsset ? (
+                <div className="flex flex-col items-center gap-6">
+                  {/* Large preview */}
+                  <div className="w-full max-w-lg">
+                    {/* Light background */}
+                    <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2">Light Background</p>
+                    <div className="bg-white border border-[var(--neutral-200)] rounded-xl p-8 flex items-center justify-center mb-4" style={{ minHeight: 200 }}>
+                      <img src={selectedAsset.rawUrl} alt={selectedAsset.fileName} className="max-w-full max-h-48 object-contain" />
+                    </div>
+                    {/* Dark background */}
+                    <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2">Dark Background</p>
+                    <div className="bg-[var(--neutral-800)] border border-[var(--neutral-700)] rounded-xl p-8 flex items-center justify-center mb-4" style={{ minHeight: 200 }}>
+                      <img src={selectedAsset.rawUrl} alt={selectedAsset.fileName} className="max-w-full max-h-48 object-contain" />
+                    </div>
+                    {/* Size variants */}
+                    <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2">Size Variants</p>
+                    <div className="bg-[var(--neutral-50)] border border-[var(--neutral-200)] rounded-xl p-6 flex items-end justify-center gap-6">
+                      <div className="flex flex-col items-center gap-1">
+                        <img src={selectedAsset.rawUrl} alt="" className="object-contain" style={{ width: 24, height: 24 }} />
+                        <span className="text-[9px] text-[var(--neutral-400)]">24px</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-1">
+                        <img src={selectedAsset.rawUrl} alt="" className="object-contain" style={{ width: 40, height: 40 }} />
+                        <span className="text-[9px] text-[var(--neutral-400)]">40px</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-1">
+                        <img src={selectedAsset.rawUrl} alt="" className="object-contain" style={{ width: 64, height: 64 }} />
+                        <span className="text-[9px] text-[var(--neutral-400)]">64px</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-1">
+                        <img src={selectedAsset.rawUrl} alt="" className="object-contain" style={{ width: 96, height: 96 }} />
+                        <span className="text-[9px] text-[var(--neutral-400)]">96px</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-1">
+                        <img src={selectedAsset.rawUrl} alt="" className="object-contain" style={{ width: 128, height: 128 }} />
+                        <span className="text-[9px] text-[var(--neutral-400)]">128px</span>
+                      </div>
+                    </div>
+                  </div>
+                  {/* File details */}
+                  <div className="w-full max-w-lg bg-[var(--neutral-50)] rounded-lg p-4">
+                    <div className="grid grid-cols-2 gap-3 text-xs">
+                      <div>
+                        <p className="text-[var(--neutral-400)] text-[10px]">File Name</p>
+                        <p className="font-medium text-[var(--foreground)] font-mono">{selectedAsset.fileName}</p>
+                      </div>
+                      <div>
+                        <p className="text-[var(--neutral-400)] text-[10px]">Format</p>
+                        <p className="font-medium text-[var(--foreground)]">{selectedAsset.ext.toUpperCase()}</p>
+                      </div>
+                      <div>
+                        <p className="text-[var(--neutral-400)] text-[10px]">Path</p>
+                        <p className="font-medium text-[var(--foreground)] font-mono text-[10px]">{selectedAsset.path}</p>
+                      </div>
+                      <div>
+                        <p className="text-[var(--neutral-400)] text-[10px]">Usage</p>
+                        <p className="font-medium text-[var(--foreground)] font-mono text-[10px] break-all">{selectedAsset.rawUrl}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="size-16 rounded-full bg-[var(--neutral-100)] flex items-center justify-center mb-4">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--neutral-400)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="M21 15l-5-5L5 21" /></svg>
+                  </div>
+                  <p className="text-lg font-semibold text-[var(--neutral-700)] mb-1">Select an asset</p>
+                  <p className="text-sm text-[var(--neutral-400)]">Click a logo or Milo image in the sidebar to see it here</p>
                 </div>
               )}
             </div>
