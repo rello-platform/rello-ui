@@ -1,7 +1,8 @@
 export function BadgeDemo() {
-  // Shared chip/badge style — rounded-lg (not full), bold font, strong color, no icons
-  const chipBase = "inline-flex items-center px-3.5 py-1.5 text-sm font-semibold font-ui";
-  const chipRounded = "rounded-lg"; // Less rounded than full pill
+  // Shared chip/badge style — thinner, tight bottom shadow, centered text
+  const chipBase = "inline-flex items-center justify-center px-3.5 py-[5px] text-[13px] font-semibold font-ui leading-none";
+  const chipRounded = "rounded-lg";
+  const chipShadow = "shadow-[0_2px_4px_-1px_rgba(0,0,0,0.15)]";
 
   return (
     <div className="bg-[var(--neutral-50)] rounded-xl overflow-hidden border border-[var(--neutral-200)]">
@@ -20,7 +21,7 @@ export function BadgeDemo() {
               { label: "Failed", color: "var(--error)", bg: "var(--error-light)" },
               { label: "Expired", color: "var(--neutral-500)", bg: "var(--neutral-100)" },
             ].map((badge) => (
-              <span key={badge.label} className={`${chipBase} ${chipRounded}`} style={{ backgroundColor: badge.bg, color: badge.color }}>
+              <span key={badge.label} className={`${chipBase} ${chipRounded} ${chipShadow}`} style={{ backgroundColor: badge.bg, color: badge.color }}>
                 {badge.label}
               </span>
             ))}
@@ -38,7 +39,7 @@ export function BadgeDemo() {
               { label: "Failed", color: "var(--error)" },
               { label: "Expired", color: "var(--neutral-500)" },
             ].map((badge) => (
-              <span key={badge.label} className={`${chipBase} ${chipRounded} border bg-white`} style={{ color: badge.color, borderColor: "var(--neutral-200)" }}>
+              <span key={badge.label} className={`${chipBase} ${chipRounded} ${chipShadow} border bg-white`} style={{ color: badge.color, borderColor: "var(--neutral-200)" }}>
                 {badge.label}
               </span>
             ))}
@@ -56,7 +57,7 @@ export function BadgeDemo() {
               { label: "Warming", color: "var(--warming)", bg: "var(--warming-light)" },
               { label: "Cold", color: "var(--cold)", bg: "var(--cold-light)" },
             ].map((badge) => (
-              <span key={badge.label} className={`${chipBase} ${chipRounded}`} style={{ backgroundColor: badge.bg, color: badge.color }}>
+              <span key={badge.label} className={`${chipBase} ${chipRounded} ${chipShadow}`} style={{ backgroundColor: badge.bg, color: badge.color }}>
                 {badge.label}
               </span>
             ))}
@@ -67,9 +68,9 @@ export function BadgeDemo() {
         <div>
           <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2.5">Brand</p>
           <div className="flex flex-wrap gap-2.5">
-            <span className={`${chipBase} ${chipRounded} bg-[var(--brand-primary-light)] text-[var(--brand-primary)]`}>Primary</span>
-            <span className={`${chipBase} ${chipRounded} bg-[var(--brand-accent-light)] text-[var(--brand-accent)]`}>Accent</span>
-            <span className={`${chipBase} ${chipRounded} bg-[var(--neutral-100)] text-[var(--neutral-600)]`}>Default</span>
+            <span className={`${chipBase} ${chipRounded} ${chipShadow} bg-[var(--brand-primary-light)] text-[var(--brand-primary)]`}>Primary</span>
+            <span className={`${chipBase} ${chipRounded} ${chipShadow} bg-[var(--brand-accent-light)] text-[var(--brand-accent)]`}>Accent</span>
+            <span className={`${chipBase} ${chipRounded} ${chipShadow} bg-[var(--neutral-100)] text-[var(--neutral-600)]`}>Default</span>
           </div>
         </div>
 
@@ -77,10 +78,10 @@ export function BadgeDemo() {
         <div>
           <p className="text-[10px] font-medium text-[var(--neutral-500)] uppercase tracking-wider mb-2.5">Sizes</p>
           <div className="flex items-center gap-2.5">
-            <span className="inline-flex items-center px-2 py-0.5 text-[11px] font-semibold font-ui rounded-md bg-[var(--brand-primary-light)] text-[var(--brand-primary)]">XS</span>
-            <span className="inline-flex items-center px-2.5 py-1 text-xs font-semibold font-ui rounded-md bg-[var(--brand-primary-light)] text-[var(--brand-primary)]">SM</span>
-            <span className={`${chipBase} ${chipRounded} bg-[var(--brand-primary-light)] text-[var(--brand-primary)]`}>MD</span>
-            <span className="inline-flex items-center px-4 py-2 text-sm font-semibold font-ui rounded-lg bg-[var(--brand-primary-light)] text-[var(--brand-primary)]">LG</span>
+            <span className={`inline-flex items-center justify-center px-2 py-[3px] text-[10px] font-semibold font-ui leading-none rounded-md ${chipShadow} bg-[var(--brand-primary-light)] text-[var(--brand-primary)]`}>XS</span>
+            <span className={`inline-flex items-center justify-center px-2.5 py-[4px] text-[11px] font-semibold font-ui leading-none rounded-md ${chipShadow} bg-[var(--brand-primary-light)] text-[var(--brand-primary)]`}>SM</span>
+            <span className={`${chipBase} ${chipRounded} ${chipShadow} bg-[var(--brand-primary-light)] text-[var(--brand-primary)]`}>MD</span>
+            <span className={`inline-flex items-center justify-center px-4 py-[6px] text-sm font-semibold font-ui leading-none rounded-lg ${chipShadow} bg-[var(--brand-primary-light)] text-[var(--brand-primary)]`}>LG</span>
           </div>
         </div>
       </div>
