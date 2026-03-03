@@ -63,6 +63,10 @@ export function usePreview(tokens: TokenState | null): React.CSSProperties {
       "--shadow-md": tokens.shadow.md,
       "--shadow-lg": tokens.shadow.lg,
       "--shadow-xl": tokens.shadow.xl,
+      "--font-heading": `"${tokens.fontFamily.heading}", sans-serif`,
+      "--font-body": `"${tokens.fontFamily.body}", sans-serif`,
+      "--font-ui": `"${tokens.fontFamily.ui}", sans-serif`,
+      "--font-stat": `"${tokens.fontFamily.stat}", sans-serif`,
     } as React.CSSProperties;
   }, [tokens]);
 }

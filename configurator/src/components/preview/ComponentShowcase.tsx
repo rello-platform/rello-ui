@@ -11,7 +11,7 @@ export function ComponentShowcase() {
     <div className="p-8 flex flex-col gap-8">
       {/* Section: Buttons */}
       <section>
-        <h2 className="font-heading text-lg font-semibold text-[var(--foreground)] mb-3">Buttons</h2>
+        <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3" style={{ fontFamily: "var(--font-heading)" }}>Buttons</h2>
         <div className="flex flex-wrap items-center gap-3">
           <Button variant="primary">Primary</Button>
           <Button variant="secondary">Secondary</Button>
@@ -33,7 +33,7 @@ export function ComponentShowcase() {
 
       {/* Section: Cards */}
       <section>
-        <h2 className="font-heading text-lg font-semibold text-[var(--foreground)] mb-3">Cards</h2>
+        <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3" style={{ fontFamily: "var(--font-heading)" }}>Cards</h2>
         <div className="grid grid-cols-2 gap-4">
           <Card>
             <CardHeader>
@@ -43,15 +43,15 @@ export function ComponentShowcase() {
             <CardContent>
               <div className="flex items-center gap-4">
                 <div className="text-center">
-                  <p className="font-stat text-2xl font-bold text-[var(--brand-primary)]">47</p>
+                  <p className="text-2xl font-bold text-[var(--brand-primary)]" style={{ fontFamily: "var(--font-stat)" }}>47</p>
                   <p className="text-xs text-[var(--neutral-500)]">Active</p>
                 </div>
                 <div className="text-center">
-                  <p className="font-stat text-2xl font-bold text-[var(--hot)]">12</p>
+                  <p className="text-2xl font-bold text-[var(--hot)]" style={{ fontFamily: "var(--font-stat)" }}>12</p>
                   <p className="text-xs text-[var(--neutral-500)]">Hot</p>
                 </div>
                 <div className="text-center">
-                  <p className="font-stat text-2xl font-bold text-[var(--success)]">8</p>
+                  <p className="text-2xl font-bold text-[var(--success)]" style={{ fontFamily: "var(--font-stat)" }}>8</p>
                   <p className="text-xs text-[var(--neutral-500)]">Closed</p>
                 </div>
               </div>
@@ -84,7 +84,7 @@ export function ComponentShowcase() {
 
       {/* Section: Badges */}
       <section>
-        <h2 className="font-heading text-lg font-semibold text-[var(--foreground)] mb-3">Pipeline Badges</h2>
+        <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3" style={{ fontFamily: "var(--font-heading)" }}>Pipeline Badges</h2>
         <div className="flex flex-wrap gap-2">
           <Badge variant="hot" dot>Hot</Badge>
           <Badge variant="qualified" dot>Qualified</Badge>
@@ -106,7 +106,7 @@ export function ComponentShowcase() {
 
       {/* Section: Inputs */}
       <section>
-        <h2 className="font-heading text-lg font-semibold text-[var(--foreground)] mb-3">Form Elements</h2>
+        <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3" style={{ fontFamily: "var(--font-heading)" }}>Form Elements</h2>
         <div className="grid grid-cols-2 gap-4 max-w-2xl">
           <Input label="Search" placeholder="Search leads..." leftIcon={<Search width={16} height={16} />} />
           <Input label="Email" placeholder="you@example.com" hint="We'll never share your email" />
@@ -117,7 +117,7 @@ export function ComponentShowcase() {
 
       {/* Section: Progress */}
       <section>
-        <h2 className="font-heading text-lg font-semibold text-[var(--foreground)] mb-3">Progress</h2>
+        <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3" style={{ fontFamily: "var(--font-heading)" }}>Progress</h2>
         <div className="flex flex-col gap-3 max-w-md">
           <div className="flex items-center gap-3">
             <span className="text-xs text-[var(--neutral-500)] w-16">Default</span>
@@ -138,19 +138,49 @@ export function ComponentShowcase() {
         </div>
       </section>
 
-      {/* Section: Typography Preview */}
+      {/* Section: Typography Preview — uses CSS variable fonts so changes are live */}
       <section>
-        <h2 className="font-heading text-lg font-semibold text-[var(--foreground)] mb-3">Typography</h2>
+        <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3" style={{ fontFamily: "var(--font-heading)" }}>Typography</h2>
         <Card>
           <CardContent>
-            <div className="flex flex-col gap-2">
-              <p className="font-heading text-3xl font-bold text-[var(--foreground)]">Heading 1 — Montserrat</p>
-              <p className="font-heading text-2xl font-semibold text-[var(--foreground)]">Heading 2 — Montserrat</p>
-              <p className="font-heading text-xl font-semibold text-[var(--foreground)]">Heading 3 — Montserrat</p>
-              <p className="font-body text-sm text-[var(--neutral-600)]">Body text — Open Sans. The quick brown fox jumps over the lazy dog. This is what most of your app content looks like.</p>
-              <p className="font-ui text-xs font-medium text-[var(--neutral-500)]">UI LABEL — Hind — Used for buttons, badges, and small interface elements</p>
-              <p className="font-stat text-4xl font-bold text-[var(--brand-primary)]">$425,000</p>
-              <p className="text-xs text-[var(--neutral-400)]">Stat font — Mina — Used for numbers, scores, and metrics</p>
+            <div className="flex flex-col gap-3">
+              <div className="pb-3 border-b border-[var(--neutral-100)]">
+                <p className="text-[10px] text-[var(--neutral-400)] uppercase tracking-wider mb-1">Heading Font</p>
+                <p className="text-3xl font-bold text-[var(--foreground)]" style={{ fontFamily: "var(--font-heading)" }}>The quick brown fox jumps</p>
+                <p className="text-2xl font-semibold text-[var(--foreground)]" style={{ fontFamily: "var(--font-heading)" }}>over the lazy dog — H2</p>
+                <p className="text-xl font-semibold text-[var(--foreground)]" style={{ fontFamily: "var(--font-heading)" }}>Heading 3 — Section titles</p>
+                <p className="text-base font-semibold text-[var(--foreground)]" style={{ fontFamily: "var(--font-heading)" }}>Heading 4 — Card titles</p>
+              </div>
+              <div className="pb-3 border-b border-[var(--neutral-100)]">
+                <p className="text-[10px] text-[var(--neutral-400)] uppercase tracking-wider mb-1">Body Font</p>
+                <p className="text-sm text-[var(--neutral-700)]" style={{ fontFamily: "var(--font-body)" }}>Body text is used for descriptions, paragraphs, and general content throughout the application. It should be highly readable at 14px with a comfortable 1.5 line height.</p>
+                <p className="text-xs text-[var(--neutral-500)] mt-1" style={{ fontFamily: "var(--font-body)" }}>Small text — helper text, hints, timestamps, and secondary information at 12px.</p>
+              </div>
+              <div className="pb-3 border-b border-[var(--neutral-100)]">
+                <p className="text-[10px] text-[var(--neutral-400)] uppercase tracking-wider mb-1">UI Font</p>
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex items-center justify-center px-3.5 py-[5px] text-[13px] font-semibold leading-none rounded-lg bg-[var(--brand-primary)] text-white" style={{ fontFamily: "var(--font-ui)" }}>Button Label</span>
+                  <span className="inline-flex items-center justify-center px-3.5 py-[5px] text-[13px] font-semibold leading-none rounded-lg bg-[var(--success-light)] text-[var(--success)]" style={{ fontFamily: "var(--font-ui)" }}>Badge Text</span>
+                  <span className="text-xs font-medium text-[var(--neutral-500)] uppercase tracking-wider" style={{ fontFamily: "var(--font-ui)" }}>LABEL / NAV ITEM</span>
+                </div>
+              </div>
+              <div>
+                <p className="text-[10px] text-[var(--neutral-400)] uppercase tracking-wider mb-1">Stat Font</p>
+                <div className="flex items-center gap-6">
+                  <div>
+                    <p className="text-4xl font-bold text-[var(--brand-primary)]" style={{ fontFamily: "var(--font-stat)" }}>$425,000</p>
+                    <p className="text-xs text-[var(--neutral-400)]">Price / large metric</p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-[var(--hot)]" style={{ fontFamily: "var(--font-stat)" }}>92</p>
+                    <p className="text-xs text-[var(--neutral-400)]">Lead score</p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-[var(--success)]" style={{ fontFamily: "var(--font-stat)" }}>1,247</p>
+                    <p className="text-xs text-[var(--neutral-400)]">Contact count</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -158,7 +188,7 @@ export function ComponentShowcase() {
 
       {/* Section: Color Palette */}
       <section>
-        <h2 className="font-heading text-lg font-semibold text-[var(--foreground)] mb-3">Color Palette</h2>
+        <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3" style={{ fontFamily: "var(--font-heading)" }}>Color Palette</h2>
         <div className="grid grid-cols-10 gap-1">
           {["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"].map((n) => (
             <div key={n} className="flex flex-col items-center">
@@ -171,7 +201,7 @@ export function ComponentShowcase() {
 
       {/* Section: Spinners */}
       <section>
-        <h2 className="font-heading text-lg font-semibold text-[var(--foreground)] mb-3">Loading</h2>
+        <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3" style={{ fontFamily: "var(--font-heading)" }}>Loading</h2>
         <div className="flex items-center gap-4">
           <Spinner size="xs" />
           <Spinner size="sm" />
