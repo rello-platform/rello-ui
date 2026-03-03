@@ -44,7 +44,7 @@ export function TimelineDemo() {
                   {/* Icon circle — positioned absolutely on the line, always above it */}
                   <div
                     className="absolute -left-10 top-3 z-10 size-8 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: colors.bg, color: colors.text, boxShadow: "0 0 0 5px white" }}
+                    style={{ background: `linear-gradient(${colors.bg}, ${colors.bg}), white`, color: colors.text, boxShadow: "0 0 0 4px white" }}
                   >
                     {event.icon(colors.text)}
                   </div>
