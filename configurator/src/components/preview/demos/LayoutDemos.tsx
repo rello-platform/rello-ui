@@ -57,9 +57,11 @@ export function AccordionDemo() {
                 <span className={`text-sm ${openItems.includes(item.id) ? "text-[var(--brand-primary)] font-bold" : "text-[var(--foreground)] font-medium"}`}>{item.title}</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--neutral-400)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-200 shrink-0" style={{ transform: openItems.includes(item.id) ? "rotate(180deg)" : "rotate(0)" }}><path d="M6 9l6 6 6-6" /></svg>
               </button>
-              <div style={{ maxHeight: openItems.includes(item.id) ? 200 : 0, overflow: "hidden", transition: "max-height 200ms ease-out" }}>
-                <div className="px-4 pb-3">
-                  <p className="text-sm text-[var(--neutral-600)]">{item.content}</p>
+              <div style={{ display: "grid", gridTemplateRows: openItems.includes(item.id) ? "1fr" : "0fr", transition: "grid-template-rows 300ms ease-in-out" }}>
+                <div style={{ overflow: "hidden" }}>
+                  <div className="px-4 pb-3">
+                    <p className="text-sm text-[var(--neutral-600)]">{item.content}</p>
+                  </div>
                 </div>
               </div>
             </div>
