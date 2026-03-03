@@ -14,12 +14,14 @@ type Tab = "tokens" | "specs";
 
 export function App() {
   const { tokens, loading, error, updateToken, resetTokens, isDirty: tokensDirty, submitTokens, submitting: tokensSubmitting } = useTokens();
-  const { specs, loading: specsLoading, updateSpec, isDirty: specsDirty, submitSpecs, submitting: specsSubmitting } = useSpecs();
+  const { specs, loading: specsLoading, updateSpec, isDirty: specsDirty, submitSpecs, submitting: specsSubmitting, makeDefault: specsMakeDefault, resetToDefault: specsResetToDefault } = useSpecs();
   const previewStyle = usePreview(tokens);
   const [tab, setTab] = useState<Tab>("tokens");
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [submitMessage, setSubmitMessage] = useState("");
-  const [submitResult, setSubmitResult] = useState<{ success: boolean; sha?: string } | null>(null);
+  const [submitResult, setSubmitResult] = useState<{ success: boolean; sha?: string; action?: string } | null>(null);
+  // Preview state: when true, the preview shows current edits. When false, shows the "default" (last saved state)
+  const [previewing, setPreviewing] = useState(false);
 
   const isDirty = tab === "tokens" ? tokensDirty : specsDirty;
   const submitting = tab === "tokens" ? tokensSubmitting : specsSubmitting;
@@ -47,13 +49,38 @@ export function App() {
     );
   }
 
+  const handlePreview = () => {
+    setPreviewing(true);
+  };
+
   const handleSubmit = async () => {
     const msg = submitMessage || undefined;
     const result = tab === "tokens"
       ? await submitTokens(msg)
       : await submitSpecs(msg);
-    setSubmitResult(result);
+    setSubmitResult({ ...result, action: "committed" });
     setSubmitMessage("");
+    setPreviewing(false);
+  };
+
+  const handleResetToDefault = () => {
+    if (tab === "tokens") {
+      resetTokens();
+    } else {
+      specsResetToDefault();
+    }
+    setPreviewing(false);
+    setSubmitResult({ success: true, action: "reset" });
+  };
+
+  const handleMakeDefault = () => {
+    if (tab === "specs") {
+      specsMakeDefault();
+    }
+    // For tokens, "make default" means the current state becomes the baseline
+    // without committing to GitHub — just locks in locally
+    setPreviewing(false);
+    setSubmitResult({ success: true, action: "locked" });
   };
 
   return (
@@ -82,19 +109,19 @@ export function App() {
             </button>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {isDirty && (
-            <span className="text-xs text-[var(--warning)] font-medium">Unsaved changes</span>
+            <span className="text-xs text-[var(--warning)] font-medium mr-1">Unsaved changes</span>
           )}
-          {tab === "tokens" && (
-            <button
-              onClick={resetTokens}
-              disabled={!tokensDirty}
-              className="px-3 py-1.5 text-sm rounded-md border border-[var(--neutral-200)] text-[var(--neutral-600)] hover:bg-[var(--neutral-50)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              Reset
-            </button>
-          )}
+          {/* Preview button — updates the demo panel without committing */}
+          <button
+            onClick={handlePreview}
+            disabled={!isDirty}
+            className="px-3 py-1.5 text-sm rounded-md border border-[var(--brand-primary)] text-[var(--brand-primary)] hover:bg-[var(--brand-primary-light)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            Preview
+          </button>
+          {/* Submit — commits to GitHub */}
           <button
             onClick={handleSubmit}
             disabled={!isDirty || submitting}
@@ -105,13 +132,23 @@ export function App() {
         </div>
       </header>
 
-      {/* Success banner */}
+      {/* Result banner */}
       {submitResult?.success && (
-        <div className="bg-[var(--success-light)] border-b border-[var(--success)] px-6 py-2 flex items-center justify-between">
-          <p className="text-sm text-[var(--success)] font-medium">
-            Changes committed successfully! (SHA: {submitResult.sha?.slice(0, 7)})
+        <div className={`border-b px-6 py-2 flex items-center justify-between ${
+          submitResult.action === "committed" ? "bg-[var(--success-light)] border-[var(--success)]" :
+          submitResult.action === "reset" ? "bg-[var(--info-light)] border-[var(--info)]" :
+          "bg-[var(--brand-primary-light)] border-[var(--brand-primary)]"
+        }`}>
+          <p className={`text-sm font-medium ${
+            submitResult.action === "committed" ? "text-[var(--success)]" :
+            submitResult.action === "reset" ? "text-[var(--info)]" :
+            "text-[var(--brand-primary)]"
+          }`}>
+            {submitResult.action === "committed" && `Changes committed successfully! (SHA: ${submitResult.sha?.slice(0, 7)})`}
+            {submitResult.action === "reset" && "Reset to last saved defaults"}
+            {submitResult.action === "locked" && "Current state locked as new default"}
           </p>
-          <button onClick={() => setSubmitResult(null)} className="text-[var(--success)] text-sm hover:opacity-70">Dismiss</button>
+          <button onClick={() => setSubmitResult(null)} className="text-sm opacity-60 hover:opacity-100">&times;</button>
         </div>
       )}
 
@@ -212,6 +249,36 @@ export function App() {
 
         {/* Preview panel — scrolls independently */}
         <main className="flex-1 overflow-y-auto p-6 h-[calc(100vh-52px)]">
+          {/* Preview panel header with Reset / Make Default buttons */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              {previewing && (
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs rounded-full bg-[var(--brand-primary-light)] text-[var(--brand-primary)] font-medium">
+                  <span className="size-1.5 rounded-full bg-[var(--brand-primary)] animate-pulse" />
+                  Previewing changes
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Reset to Default — reverts to last committed state */}
+              <button
+                onClick={handleResetToDefault}
+                disabled={!isDirty && !previewing}
+                className="px-3 py-1.5 text-xs rounded-md border border-[var(--neutral-200)] text-[var(--neutral-600)] hover:bg-[var(--neutral-50)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                Reset to Default
+              </button>
+              {/* Make Default — locks current edits as the new baseline */}
+              <button
+                onClick={handleMakeDefault}
+                disabled={!isDirty}
+                className="px-3 py-1.5 text-xs rounded-md border border-[var(--success)] text-[var(--success)] hover:bg-[var(--success-light)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                Make Default
+              </button>
+            </div>
+          </div>
+
           {tab === "tokens" ? (
             <div style={previewStyle} className="bg-[var(--background)] rounded-xl shadow-lg min-h-full">
               <ComponentShowcase />

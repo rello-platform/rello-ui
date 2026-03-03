@@ -63,5 +63,15 @@ export function useSpecs() {
     }
   }, [specs]);
 
-  return { specs, loading, updateSpec, isDirty, submitSpecs, submitting };
+  // Reset to the last saved/committed state
+  const resetToDefault = useCallback(() => {
+    if (original) setSpecs(structuredClone(original));
+  }, [original]);
+
+  // Lock current edits as the new local default (without committing to GitHub)
+  const makeDefault = useCallback(() => {
+    if (specs) setOriginal(structuredClone(specs));
+  }, [specs]);
+
+  return { specs, loading, updateSpec, isDirty, submitSpecs, submitting, resetToDefault, makeDefault };
 }
