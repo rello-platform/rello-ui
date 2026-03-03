@@ -14,6 +14,21 @@ export function useTokens() {
       .then((data) => {
         setTokens(data.tokens);
         setOriginal(structuredClone(data.tokens));
+        // Load any non-default Google Fonts on startup
+        if (data.tokens?.fontFamily) {
+          const fonts = data.tokens.fontFamily as Record<string, string>;
+          const loaded = new Set<string>();
+          Object.values(fonts).forEach((fontName) => {
+            if (fontName && !loaded.has(fontName)) {
+              loaded.add(fontName);
+              const encoded = fontName.replace(/ /g, "+");
+              const link = document.createElement("link");
+              link.rel = "stylesheet";
+              link.href = `https://fonts.googleapis.com/css2?family=${encoded}:wght@400;500;600;700&display=swap`;
+              document.head.appendChild(link);
+            }
+          });
+        }
         setLoading(false);
       })
       .catch((err) => {
