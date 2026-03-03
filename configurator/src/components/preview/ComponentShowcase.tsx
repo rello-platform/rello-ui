@@ -138,6 +138,25 @@ export function ComponentShowcase() {
         </div>
       </section>
 
+      {/* Section: App Title Preview */}
+      <section>
+        <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3" style={{ fontFamily: "var(--font-heading)" }}>App Title & Subtitle</h2>
+        <Card>
+          <CardContent>
+            <div className="flex items-start gap-4">
+              <div className="size-14 rounded-2xl flex items-center justify-center shrink-0 bg-[var(--brand-accent-light)]">
+                <div className="size-8 rounded-xl bg-[var(--brand-accent)] opacity-50" />
+              </div>
+              <div>
+                <p className="text-3xl font-bold tracking-tight leading-tight text-[var(--foreground)]" style={{ fontFamily: "var(--font-app-title)" }}>APP TITLE FONT</p>
+                <p className="text-base text-[var(--neutral-500)]" style={{ fontFamily: "var(--font-app-subtitle)" }}>App subtitle font — this is the tagline under the app name</p>
+                <p className="text-sm text-[var(--neutral-400)] mt-1" style={{ fontFamily: "var(--font-app-subtitle)" }}>Welcome to the app! You have 12 hot leads and 3 pending closings.</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
       {/* Section: Typography Preview — uses CSS variable fonts so changes are live */}
       <section>
         <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3" style={{ fontFamily: "var(--font-heading)" }}>Typography</h2>
