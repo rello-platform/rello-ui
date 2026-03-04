@@ -1314,16 +1314,6 @@
       "dontUse": "Critical actions that require explicit confirmation \u2014 use a dialog. Bulk operations. Anything that modifies data without the user's explicit instruction.",
       "parameters": {}
     },
-    "app-shell": {
-      "name": "App Shell",
-      "category": "layout",
-      "description": "Full-page layout wrapper that provides the top-level structure for every Rello dashboard. Composes a sticky header slot above a flex-grow content area. All branding, navigation, and page content nest inside this shell.",
-      "behavior": "Renders immediately on mount with no animation. The header slot sticks to the top of the viewport (via the AppHeader component). The content area fills the remaining viewport height so pages never appear shorter than the screen. Accepts any React node as header and children — no opinions on what goes inside.",
-      "appearance": "Full min-h-screen flex column. Background uses the --background design token. Header area is flush to top, content area grows to fill remaining space. No borders, shadows, or padding on the shell itself — those belong to the header and page container within.",
-      "doUse": "Every dashboard page (MLO, Broker, Agent, Guest MLO). Any full-page view that needs a persistent header. Wrap the entire route layout.",
-      "dontUse": "Embedded widgets or partial-page components. Pages that don't need a sticky header. Auth screens or landing pages with custom layouts.",
-      "parameters": {}
-    },
     "app-header": {
       "name": "App Header",
       "category": "layout",
