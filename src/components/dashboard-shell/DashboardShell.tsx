@@ -252,13 +252,13 @@ function DashboardShell({
           <div>
             <h1
               className="text-2xl md:text-3xl font-bold tracking-tight leading-tight"
-              style={{ color: "var(--foreground)", fontFamily: "var(--font-heading)" }}
+              style={{ color: "var(--app-title-color, var(--foreground))", fontFamily: "var(--font-heading)" }}
             >
               {appTitle}
             </h1>
             <p
               className="text-sm md:text-base"
-              style={{ color: "var(--neutral-500)", fontFamily: "var(--font-body)" }}
+              style={{ color: "var(--app-subtitle-color, var(--neutral-500))", fontFamily: "var(--font-body)" }}
             >
               {appSubtitle}
             </p>
