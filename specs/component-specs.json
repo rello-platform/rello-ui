@@ -1363,6 +1363,16 @@
       "doUse": "Above draggable CategorySection groups on MLO and Broker dashboards. Any interface where drag-to-reorder is available and needs a hint. Onboarding or first-use guidance for reorderable layouts.",
       "dontUse": "Non-draggable interfaces. Persistent instructions — this should disappear after the user has learned the interaction. Error messages or warnings — use Alert.",
       "parameters": {}
+    },
+    "dashboard-shell": {
+      "name": "Dashboard Shell",
+      "category": "layout",
+      "description": "Full app layout shell with collapsible sidebar, large title area with app fonts, agent card, and 50/50 hero + right card split. Used as the outermost wrapper for all Rello dashboards (MLO, Broker, Agent, Guest MLO). All branding is passed as props — no internal context dependency.",
+      "behavior": "Sidebar collapses from 190px to 60px (icon-only) when not hovered, with a 300ms CSS transition. Active nav item gets brand-primary background with white text and rounded-lg with 6px inset margin. Mobile (<768px): sidebar hidden, hamburger button triggers a SlidePanel overlay. Top row stays sticky; content below scrolls. heroContent and rightCard render in a 50/50 grid; if rightCard is omitted, heroContent goes full-width.",
+      "appearance": "Title: 30px bold using --font-app-title (Playfair Display). Subtitle: --font-app-subtitle (Nunito Sans). Agent card: card background, rounded-xl, 36px avatar circle with brand-primary-light bg. Sidebar: card background, rounded-xl. Hero area uses heroCard tokens for dark spotlight styling. Page background via --background.",
+      "doUse": "As the root layout for every authenticated dashboard in the platform. MLO Command Center, Broker Dashboard, Agent Deal Desk, Guest MLO Dashboard. Any app that follows the Rello shell spec from app-layouts.json.",
+      "dontUse": "Platform Admin dashboard — uses its own admin layout. Public/unauthenticated pages. Landing pages. Nested inside other layout shells.",
+      "parameters": {}
     }
   }
 }

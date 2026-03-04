@@ -1,5 +1,154 @@
 import { useState } from "react";
 
+/* ─── Dashboard Shell Demo ─── */
+
+export function DashboardShellDemo() {
+  const [sidebarHovered, setSidebarHovered] = useState(false);
+  const [activeNav, setActiveNav] = useState(0);
+
+  const navItems = [
+    { label: "Dashboard", icon: "grid" },
+    { label: "Pipeline", icon: "bar" },
+    { label: "Contacts", icon: "people" },
+    { label: "Settings", icon: "gear" },
+  ];
+
+  return (
+    <div className="bg-[var(--neutral-50)] rounded-xl overflow-hidden border border-[var(--neutral-200)]">
+      <div className="p-4 border-b border-[var(--neutral-100)]">
+        <span className="text-sm font-medium text-[var(--neutral-700)]">Dashboard Shell — Full app layout with collapsible sidebar, title area, and 50/50 hero split</span>
+      </div>
+      <div className="p-4">
+        {/* Shell preview */}
+        <div className="rounded-xl overflow-hidden border border-[var(--card-border)]" style={{ backgroundColor: "var(--background)", minHeight: 400 }}>
+          {/* Top row: Logo + Title + Agent card */}
+          <div className="flex items-start justify-between px-5 pt-5">
+            <div className="flex items-start gap-3 max-w-md">
+              <div className="size-14 rounded-2xl flex items-center justify-center shrink-0" style={{ backgroundColor: "color-mix(in srgb, var(--brand-accent) 15%, transparent)" }}>
+                <div className="size-8 rounded-xl" style={{ backgroundColor: "var(--brand-accent)", opacity: 0.5 }} />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight" style={{ color: "var(--app-title-color, var(--foreground))", fontFamily: "var(--font-app-title, var(--font-heading))" }}>Rello</h2>
+                <p className="text-sm" style={{ color: "var(--app-subtitle-color, var(--neutral-500))", fontFamily: "var(--font-app-subtitle, var(--font-body))" }}>Your real estate command center</p>
+                <p className="text-xs mt-1" style={{ color: "var(--neutral-600)" }}>
+                  You have <span className="font-bold" style={{ color: "var(--brand-primary)" }}>12</span> hot leads that need follow-up.
+                </p>
+              </div>
+            </div>
+            {/* Agent card */}
+            <div className="rounded-xl px-3 py-2 flex items-center gap-2.5 shrink-0" style={{ backgroundColor: "var(--card-background)", border: "1px solid var(--card-border)" }}>
+              <div className="text-right">
+                <p className="text-[11px] font-medium" style={{ color: "var(--neutral-900)" }}>Susan Johnson</p>
+                <p className="text-[9px]" style={{ color: "var(--neutral-400)" }}>susan@example.com</p>
+              </div>
+              <div className="size-8 rounded-full flex items-center justify-center text-[10px] font-semibold" style={{ backgroundColor: "color-mix(in srgb, var(--brand-primary) 15%, transparent)", color: "var(--brand-primary)" }}>SJ</div>
+            </div>
+          </div>
+
+          {/* Main area: Sidebar + Hero + Right card */}
+          <div className="flex px-5 pt-3 pb-5 gap-3" style={{ minHeight: 250 }}>
+            {/* Sidebar */}
+            <div
+              className="rounded-xl flex-shrink-0 overflow-hidden transition-all duration-300 cursor-pointer"
+              style={{
+                width: sidebarHovered ? 160 : 48,
+                backgroundColor: "var(--card-background)",
+                border: "1px solid var(--card-border)",
+              }}
+              onMouseEnter={() => setSidebarHovered(true)}
+              onMouseLeave={() => setSidebarHovered(false)}
+            >
+              <div className="py-2">
+                {navItems.map((item, i) => {
+                  const isActive = i === activeNav;
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => setActiveNav(i)}
+                      className="w-full flex items-center gap-2 py-2 transition-colors"
+                      style={{
+                        paddingLeft: sidebarHovered ? 12 : 13,
+                        paddingRight: 12,
+                        backgroundColor: isActive ? "var(--brand-primary)" : "transparent",
+                        color: isActive ? "#fff" : "var(--neutral-600)",
+                        borderRadius: isActive ? 8 : 0,
+                        margin: isActive ? "2px 5px" : "0",
+                        width: isActive ? "calc(100% - 10px)" : "100%",
+                      }}
+                    >
+                      <div className="size-4 rounded flex items-center justify-center shrink-0">
+                        <div className="size-2.5 rounded-sm" style={{ backgroundColor: isActive ? "#fff" : "var(--neutral-400)", opacity: isActive ? 0.8 : 0.4 }} />
+                      </div>
+                      {sidebarHovered && <span className="text-[11px] font-medium whitespace-nowrap">{item.label}</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Hero area (50%) — spotlight styling */}
+            <div className="flex-1 rounded-xl p-4" style={{ backgroundColor: "var(--hero-card-background, var(--card-background))", border: "1px solid var(--hero-card-border, var(--card-border))" }}>
+              <p className="text-[9px] font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--hero-card-title, var(--foreground))" }}>Pipeline / Stats</p>
+              <div className="flex gap-4 mb-3">
+                {["24", "18", "6"].map((val, i) => (
+                  <div key={i}>
+                    <p className="text-xl font-bold" style={{ color: i === 0 ? "var(--brand-primary)" : "var(--hero-card-title, var(--foreground))", fontFamily: "var(--font-stat)" }}>{val}</p>
+                    <p className="text-[9px]" style={{ color: "var(--hero-card-body-text, var(--neutral-500))" }}>{["Active", "Nurturing", "Closed"][i]}</p>
+                  </div>
+                ))}
+              </div>
+              {/* Mini schedule */}
+              <div className="space-y-1.5">
+                {[{ t: "9:00 AM", e: "Team standup" }, { t: "11:00 AM", e: "Showing" }].map((s, i) => (
+                  <div key={i} className="flex items-center gap-3 text-[10px]" style={{ color: "var(--hero-card-body-text, var(--neutral-500))" }}>
+                    <span className="font-medium w-12" style={{ color: "var(--hero-card-title, var(--neutral-400))" }}>{s.t}</span>
+                    <span>{s.e}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right card (50%) */}
+            <div className="flex-1 rounded-xl p-4" style={{ backgroundColor: "var(--card-background)", border: "1px solid var(--card-border)" }}>
+              <p className="text-[9px] font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--brand-primary)" }}>Milo&apos;s Daily Brief</p>
+              <p className="text-sm font-semibold mb-1" style={{ color: "var(--neutral-900)" }}>Today&apos;s Focus</p>
+              <p className="text-xs mb-3" style={{ color: "var(--neutral-600)" }}>3 high-priority tasks need your attention.</p>
+              <div className="space-y-1.5">
+                {[
+                  { p: "var(--hot)", text: "Call Sarah M." },
+                  { p: "var(--hot)", text: "Send John to MLO" },
+                  { p: "var(--warming)", text: "Follow up with leads" },
+                ].map((task, i) => (
+                  <div key={i} className="flex items-center gap-2 text-[10px] rounded-lg px-2.5 py-1.5" style={{ backgroundColor: "var(--neutral-50)", border: "1px solid var(--neutral-100)" }}>
+                    <div className="size-1.5 rounded-full shrink-0" style={{ backgroundColor: task.p }} />
+                    <span style={{ color: "var(--neutral-700)" }}>{task.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Feature callouts */}
+        <div className="grid grid-cols-3 gap-3 mt-4">
+          <div className="bg-white rounded-lg border border-[var(--neutral-100)] p-3 text-center">
+            <p className="text-xs font-semibold text-[var(--neutral-700)] mb-0.5">Collapsible Sidebar</p>
+            <p className="text-[9px] text-[var(--neutral-400)]">60px → 190px on hover</p>
+          </div>
+          <div className="bg-white rounded-lg border border-[var(--neutral-100)] p-3 text-center">
+            <p className="text-xs font-semibold text-[var(--neutral-700)] mb-0.5">App Title Fonts</p>
+            <p className="text-[9px] text-[var(--neutral-400)]">Playfair Display + Nunito Sans</p>
+          </div>
+          <div className="bg-white rounded-lg border border-[var(--neutral-100)] p-3 text-center">
+            <p className="text-xs font-semibold text-[var(--neutral-700)] mb-0.5">Spotlight Hero</p>
+            <p className="text-[9px] text-[var(--neutral-400)]">Dark card with heroCard tokens</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── App Header Demo ─── */
 
 export function AppHeaderDemo() {
