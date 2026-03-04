@@ -1807,9 +1807,7 @@ function DashboardShell({
 }
 
 // src/components/pipeline-thermometer/PipelineThermometer.tsx
-import { GraphUp } from "iconoir-react";
 import { jsx as jsx29, jsxs as jsxs21 } from "react/jsx-runtime";
-var ICON_PROPS = { width: 20, height: 20, strokeWidth: 1.5 };
 var STAGES = ["cold", "warming", "engaged", "qualified", "hot"];
 var STAGE_LABELS = {
   cold: "Cold",
@@ -1825,6 +1823,7 @@ var STAGE_COLORS = {
   qualified: "var(--qualified)",
   hot: "var(--hot)"
 };
+var GRADIENT = "linear-gradient(to right, var(--cold), var(--warming), var(--engaged), var(--qualified), var(--hot))";
 function PipelineThermometer({
   title = "Lead Pipeline",
   data,
@@ -1833,65 +1832,125 @@ function PipelineThermometer({
   className
 }) {
   const total = STAGES.reduce((sum, stage) => sum + data[stage], 0);
-  return /* @__PURE__ */ jsxs21(Card, { className, children: [
-    /* @__PURE__ */ jsxs21("div", { className: "flex items-center justify-between mb-4", children: [
-      /* @__PURE__ */ jsxs21("div", { className: "flex items-center gap-2", children: [
-        /* @__PURE__ */ jsx29(
-          "div",
-          {
-            className: "w-8 h-8 rounded-md flex items-center justify-center",
-            style: { background: "var(--brand-primary-light)", color: "var(--brand-primary)" },
-            children: /* @__PURE__ */ jsx29(GraphUp, { ...ICON_PROPS })
-          }
-        ),
-        /* @__PURE__ */ jsx29("span", { className: "font-semibold text-[var(--neutral-900)]", children: title })
-      ] }),
-      /* @__PURE__ */ jsxs21(Badge, { variant: "default", children: [
-        total,
-        " ",
-        totalLabel
-      ] })
-    ] }),
-    /* @__PURE__ */ jsx29("div", { className: "flex h-3 rounded-full overflow-hidden bg-[var(--neutral-100)] mb-4", children: STAGES.map((stage) => {
-      const width = total > 0 ? data[stage] / total * 100 : 0;
-      if (width === 0) return null;
-      return /* @__PURE__ */ jsx29(
-        "div",
-        {
-          className: "transition-all duration-300",
-          style: { width: `${width}%`, backgroundColor: STAGE_COLORS[stage] }
-        },
-        stage
-      );
-    }) }),
-    /* @__PURE__ */ jsx29("div", { className: "grid grid-cols-5 gap-2 mb-4", children: STAGES.map((stage) => /* @__PURE__ */ jsxs21(
-      "div",
-      {
-        className: "flex items-center gap-2 p-2 rounded-md bg-[var(--neutral-50)]",
-        children: [
+  let highestActiveIndex = -1;
+  for (let i = STAGES.length - 1; i >= 0; i--) {
+    if (data[STAGES[i]] > 0) {
+      highestActiveIndex = i;
+      break;
+    }
+  }
+  const fillPct = highestActiveIndex >= 0 ? (highestActiveIndex + 1) / STAGES.length * 100 : 0;
+  return /* @__PURE__ */ jsxs21(
+    "div",
+    {
+      className: cn("rounded-xl p-5", className),
+      style: {
+        backgroundColor: "var(--card-background)",
+        border: "1px solid var(--card-border)"
+      },
+      children: [
+        /* @__PURE__ */ jsxs21("div", { className: "flex items-center justify-between mb-4", children: [
           /* @__PURE__ */ jsx29(
-            "div",
+            "span",
             {
-              className: "w-2 h-2 rounded-full flex-shrink-0",
-              style: { backgroundColor: STAGE_COLORS[stage] }
+              className: "font-semibold text-sm",
+              style: { color: "var(--foreground)" },
+              children: title
             }
           ),
-          /* @__PURE__ */ jsxs21("div", { children: [
-            /* @__PURE__ */ jsx29("div", { className: "stat-number text-lg text-[var(--neutral-900)]", children: data[stage] }),
-            /* @__PURE__ */ jsx29("div", { className: "text-[10px] text-[var(--neutral-500)]", children: STAGE_LABELS[stage] })
-          ] })
-        ]
-      },
-      stage
-    )) }),
-    stats && stats.length > 0 && /* @__PURE__ */ jsx29("div", { className: "flex items-center justify-around pt-4 border-t border-[var(--card-border)]", children: stats.map((stat, index) => /* @__PURE__ */ jsxs21("div", { className: "flex items-center gap-4", children: [
-      /* @__PURE__ */ jsxs21("div", { className: "text-center", children: [
-        /* @__PURE__ */ jsx29("div", { className: "stat-number text-lg text-[var(--brand-primary)]", children: stat.value }),
-        /* @__PURE__ */ jsx29("div", { className: "text-xs text-[var(--neutral-500)]", children: stat.label })
-      ] }),
-      index < stats.length - 1 && /* @__PURE__ */ jsx29("div", { className: "h-8 w-px bg-[var(--neutral-100)]" })
-    ] }, index)) })
-  ] });
+          /* @__PURE__ */ jsxs21(
+            "span",
+            {
+              className: "text-xs font-medium px-2.5 py-1 rounded-md",
+              style: {
+                backgroundColor: "var(--brand-primary-light)",
+                color: "var(--brand-primary)"
+              },
+              children: [
+                total,
+                " ",
+                totalLabel
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsx29("div", { className: "relative h-4 rounded-full overflow-hidden mb-3", style: { backgroundColor: "var(--neutral-200)" }, children: fillPct > 0 && /* @__PURE__ */ jsx29(
+          "div",
+          {
+            className: "absolute inset-y-0 left-0 rounded-full transition-all duration-500 ease-in-out",
+            style: {
+              width: `${fillPct}%`,
+              backgroundImage: GRADIENT,
+              backgroundSize: `${100 / fillPct * 100}% 100%`
+            }
+          }
+        ) }),
+        /* @__PURE__ */ jsx29("div", { className: "flex mb-4", children: STAGES.map((stage, i) => {
+          const isActive = i <= highestActiveIndex;
+          return /* @__PURE__ */ jsxs21("div", { className: "flex-1 text-center", children: [
+            /* @__PURE__ */ jsx29(
+              "p",
+              {
+                className: "text-sm font-bold",
+                style: {
+                  color: isActive ? "var(--foreground)" : "var(--neutral-300)",
+                  fontFamily: "var(--font-stat, var(--font-heading))"
+                },
+                children: data[stage]
+              }
+            ),
+            /* @__PURE__ */ jsx29(
+              "p",
+              {
+                className: "text-[10px] font-medium",
+                style: {
+                  color: isActive ? STAGE_COLORS[stage] : "var(--neutral-300)"
+                },
+                children: STAGE_LABELS[stage]
+              }
+            )
+          ] }, stage);
+        }) }),
+        stats && stats.length > 0 && /* @__PURE__ */ jsx29(
+          "div",
+          {
+            className: "flex items-center justify-around pt-4",
+            style: { borderTop: "1px solid var(--card-border)" },
+            children: stats.map((stat, index) => /* @__PURE__ */ jsxs21("div", { className: "flex items-center gap-4", children: [
+              /* @__PURE__ */ jsxs21("div", { className: "text-center", children: [
+                /* @__PURE__ */ jsx29(
+                  "div",
+                  {
+                    className: "text-lg font-bold",
+                    style: {
+                      color: "var(--brand-primary)",
+                      fontFamily: "var(--font-stat, var(--font-heading))"
+                    },
+                    children: stat.value
+                  }
+                ),
+                /* @__PURE__ */ jsx29(
+                  "div",
+                  {
+                    className: "text-xs",
+                    style: { color: "var(--neutral-500)" },
+                    children: stat.label
+                  }
+                )
+              ] }),
+              index < stats.length - 1 && /* @__PURE__ */ jsx29(
+                "div",
+                {
+                  className: "h-8 w-px",
+                  style: { backgroundColor: "var(--neutral-200)" }
+                }
+              )
+            ] }, index))
+          }
+        )
+      ]
+    }
+  );
 }
 
 // src/components/category-section/CategorySection.tsx
@@ -1951,7 +2010,7 @@ function AppCard({
 // src/components/category-section/CategorySection.tsx
 import { jsx as jsx31, jsxs as jsxs23 } from "react/jsx-runtime";
 var ICON_SM = { width: 16, height: 16, strokeWidth: 1.5 };
-var ICON_PROPS2 = { width: 20, height: 20, strokeWidth: 1.5 };
+var ICON_PROPS = { width: 20, height: 20, strokeWidth: 1.5 };
 function CategorySection({
   id,
   title,
@@ -1998,7 +2057,7 @@ function CategorySection({
               /* @__PURE__ */ jsx31(
                 NavArrowDown2,
                 {
-                  ...ICON_PROPS2,
+                  ...ICON_PROPS,
                   className: cn(
                     "text-[var(--neutral-400)] transition-transform duration-200",
                     isExpanded && "rotate-180"
@@ -2039,7 +2098,7 @@ function CategorySection({
 // src/components/today-schedule/TodaySchedule.tsx
 import { Calendar } from "iconoir-react";
 import { jsx as jsx32, jsxs as jsxs24 } from "react/jsx-runtime";
-var ICON_PROPS3 = { width: 18, height: 18, strokeWidth: 1.5 };
+var ICON_PROPS2 = { width: 18, height: 18, strokeWidth: 1.5 };
 function TodaySchedule({
   date,
   items,
@@ -2059,7 +2118,7 @@ function TodaySchedule({
           {
             className: "w-8 h-8 rounded-md flex items-center justify-center",
             style: { background: "var(--brand-accent-light)", color: "var(--brand-accent)" },
-            children: /* @__PURE__ */ jsx32(Calendar, { ...ICON_PROPS3 })
+            children: /* @__PURE__ */ jsx32(Calendar, { ...ICON_PROPS2 })
           }
         ),
         /* @__PURE__ */ jsxs24("div", { children: [

@@ -11,12 +11,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const sampleData = {
-  LEAD: 42,
-  NURTURING: 28,
-  APPLICATION: 15,
-  PROCESSING: 8,
-  CLOSED_WON: 12,
-  CLOSED_LOST: 5,
+  cold: 14,
+  warming: 8,
+  engaged: 23,
+  qualified: 11,
+  hot: 6,
 };
 
 export const Default: Story = {
@@ -30,9 +29,9 @@ export const WithStats: Story = {
     title: "Pipeline Overview",
     data: sampleData,
     stats: [
-      { value: "110", label: "Total Leads" },
-      { value: "23", label: "Hot (80+)" },
-      { value: "15", label: "Application" },
+      { value: "62", label: "Total Leads" },
+      { value: "6", label: "Hot" },
+      { value: "72%", label: "Engagement" },
     ],
     totalLabel: "Total",
   },
@@ -40,14 +39,22 @@ export const WithStats: Story = {
 
 export const Empty: Story = {
   args: {
-    data: { LEAD: 0, NURTURING: 0, APPLICATION: 0, PROCESSING: 0, CLOSED_WON: 0, CLOSED_LOST: 0 },
+    data: { cold: 0, warming: 0, engaged: 0, qualified: 0, hot: 0 },
   },
 };
 
-export const SingleStage: Story = {
-  name: "Single Stage Dominant",
+export const MostlyHot: Story = {
+  name: "Mostly Hot Pipeline",
   args: {
-    data: { LEAD: 85, NURTURING: 5, APPLICATION: 3, PROCESSING: 2, CLOSED_WON: 4, CLOSED_LOST: 1 },
-    title: "New Pipeline",
+    data: { cold: 2, warming: 3, engaged: 8, qualified: 15, hot: 22 },
+    title: "Top Performer",
+  },
+};
+
+export const MostlyCold: Story = {
+  name: "Mostly Cold Pipeline",
+  args: {
+    data: { cold: 35, warming: 12, engaged: 5, qualified: 2, hot: 1 },
+    title: "Needs Attention",
   },
 };
