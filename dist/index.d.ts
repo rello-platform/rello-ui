@@ -457,12 +457,11 @@ interface DashboardShellProps {
 declare function DashboardShell({ logo, appTitle, appSubtitle, highlightText, agentName, agentInitials, agentSubtitle, navGroups, activeNavLabel, onNavClick, heroContent, rightCard, children, className, }: DashboardShellProps): react_jsx_runtime.JSX.Element;
 
 interface PipelineData {
-    LEAD: number;
-    NURTURING: number;
-    APPLICATION: number;
-    PROCESSING: number;
-    CLOSED_WON: number;
-    CLOSED_LOST: number;
+    cold: number;
+    warming: number;
+    engaged: number;
+    qualified: number;
+    hot: number;
 }
 interface QuickStat {
     value: string | number;
@@ -475,7 +474,7 @@ interface PipelineThermometerProps {
     totalLabel?: string;
     className?: string;
 }
-declare const STAGES: readonly ["LEAD", "NURTURING", "APPLICATION", "PROCESSING", "CLOSED_WON", "CLOSED_LOST"];
+declare const STAGES: readonly ["cold", "warming", "engaged", "qualified", "hot"];
 declare const STAGE_LABELS: Record<keyof PipelineData, string>;
 declare const STAGE_COLORS: Record<keyof PipelineData, string>;
 declare function PipelineThermometer({ title, data, stats, totalLabel, className, }: PipelineThermometerProps): react_jsx_runtime.JSX.Element;

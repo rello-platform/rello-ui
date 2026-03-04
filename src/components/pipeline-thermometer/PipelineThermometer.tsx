@@ -9,12 +9,11 @@ import { cn } from "../../lib/cn";
 const ICON_PROPS = { width: 20, height: 20, strokeWidth: 1.5 };
 
 export interface PipelineData {
-  LEAD: number;
-  NURTURING: number;
-  APPLICATION: number;
-  PROCESSING: number;
-  CLOSED_WON: number;
-  CLOSED_LOST: number;
+  cold: number;
+  warming: number;
+  engaged: number;
+  qualified: number;
+  hot: number;
 }
 
 export interface QuickStat {
@@ -30,24 +29,22 @@ export interface PipelineThermometerProps {
   className?: string;
 }
 
-const STAGES = ["LEAD", "NURTURING", "APPLICATION", "PROCESSING", "CLOSED_WON", "CLOSED_LOST"] as const;
+const STAGES = ["cold", "warming", "engaged", "qualified", "hot"] as const;
 
 const STAGE_LABELS: Record<keyof PipelineData, string> = {
-  LEAD: "Lead",
-  NURTURING: "Nurturing",
-  APPLICATION: "Application",
-  PROCESSING: "Processing",
-  CLOSED_WON: "Closed Won",
-  CLOSED_LOST: "Closed Lost",
+  cold: "Cold",
+  warming: "Warming",
+  engaged: "Engaged",
+  qualified: "Qualified",
+  hot: "Hot",
 };
 
 const STAGE_COLORS: Record<keyof PipelineData, string> = {
-  LEAD: "#3B82F6",
-  NURTURING: "#F59E0B",
-  APPLICATION: "#8B5CF6",
-  PROCESSING: "#6366F1",
-  CLOSED_WON: "#10B981",
-  CLOSED_LOST: "#6B7280",
+  cold: "var(--cold)",
+  warming: "var(--warming)",
+  engaged: "var(--engaged)",
+  qualified: "var(--qualified)",
+  hot: "var(--hot)",
 };
 
 function PipelineThermometer({
@@ -93,7 +90,7 @@ function PipelineThermometer({
       </div>
 
       {/* Stage Cards */}
-      <div className="grid grid-cols-6 gap-2 mb-4">
+      <div className="grid grid-cols-5 gap-2 mb-4">
         {STAGES.map((stage) => (
           <div
             key={stage}

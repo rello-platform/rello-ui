@@ -1810,22 +1810,20 @@ function DashboardShell({
 import { GraphUp } from "iconoir-react";
 import { jsx as jsx29, jsxs as jsxs21 } from "react/jsx-runtime";
 var ICON_PROPS = { width: 20, height: 20, strokeWidth: 1.5 };
-var STAGES = ["LEAD", "NURTURING", "APPLICATION", "PROCESSING", "CLOSED_WON", "CLOSED_LOST"];
+var STAGES = ["cold", "warming", "engaged", "qualified", "hot"];
 var STAGE_LABELS = {
-  LEAD: "Lead",
-  NURTURING: "Nurturing",
-  APPLICATION: "Application",
-  PROCESSING: "Processing",
-  CLOSED_WON: "Closed Won",
-  CLOSED_LOST: "Closed Lost"
+  cold: "Cold",
+  warming: "Warming",
+  engaged: "Engaged",
+  qualified: "Qualified",
+  hot: "Hot"
 };
 var STAGE_COLORS = {
-  LEAD: "#3B82F6",
-  NURTURING: "#F59E0B",
-  APPLICATION: "#8B5CF6",
-  PROCESSING: "#6366F1",
-  CLOSED_WON: "#10B981",
-  CLOSED_LOST: "#6B7280"
+  cold: "var(--cold)",
+  warming: "var(--warming)",
+  engaged: "var(--engaged)",
+  qualified: "var(--qualified)",
+  hot: "var(--hot)"
 };
 function PipelineThermometer({
   title = "Lead Pipeline",
@@ -1866,7 +1864,7 @@ function PipelineThermometer({
         stage
       );
     }) }),
-    /* @__PURE__ */ jsx29("div", { className: "grid grid-cols-6 gap-2 mb-4", children: STAGES.map((stage) => /* @__PURE__ */ jsxs21(
+    /* @__PURE__ */ jsx29("div", { className: "grid grid-cols-5 gap-2 mb-4", children: STAGES.map((stage) => /* @__PURE__ */ jsxs21(
       "div",
       {
         className: "flex items-center gap-2 p-2 rounded-md bg-[var(--neutral-50)]",
