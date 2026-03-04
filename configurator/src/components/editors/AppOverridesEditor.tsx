@@ -127,8 +127,7 @@ export function AppOverridesEditor({ defaults, apps, onUpdate }: AppOverridesEdi
                                   onUpdate(appId, key, defaults[key] ?? "#cccccc");
                                   openPicker(e, appId, key, defaults[key] ?? "#cccccc", label);
                                 } else {
-                                  onUpdate(appId, key, null);
-                                  if (activePicker === `${appId}:${key}`) closePicker();
+                                  openPicker(e, appId, key, displayColor, label);
                                 }
                               }}
                               className={`px-1.5 py-0.5 text-[8px] rounded font-medium shrink-0 ${isInherited ? "bg-[var(--neutral-100)] text-[var(--neutral-400)]" : "bg-[var(--brand-primary-light)] text-[var(--brand-primary)]"}`}
@@ -164,7 +163,18 @@ export function AppOverridesEditor({ defaults, apps, onUpdate }: AppOverridesEdi
               }}
               className="mt-2 w-full px-2 py-1 text-xs font-mono border border-[var(--neutral-200)] rounded text-center"
             />
-            <button onClick={closePicker} className="mt-2 w-full px-2 py-1.5 text-xs font-medium rounded bg-[var(--brand-primary)] text-white">Done</button>
+            <div className="mt-2 flex gap-2">
+              <button
+                onClick={() => {
+                  onUpdate(pickerAppId, pickerFieldKey, null);
+                  closePicker();
+                }}
+                className="flex-1 px-2 py-1.5 text-xs font-medium rounded border border-[var(--neutral-200)] text-[var(--neutral-500)] hover:bg-[var(--neutral-50)]"
+              >
+                Set to Default
+              </button>
+              <button onClick={closePicker} className="flex-1 px-2 py-1.5 text-xs font-medium rounded bg-[var(--brand-primary)] text-white">Done</button>
+            </div>
           </div>
         </>,
         document.body
