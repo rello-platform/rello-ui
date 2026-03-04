@@ -30,6 +30,7 @@ import { SearchInputDemo, TagChipDemo, AvatarDemo, ProgressBarDemo } from "./Sea
 import { TabNavigationDemo, BreadcrumbsDemo, SidebarAppShellDemo, DropdownMenuDemo } from "./NavigationDemos";
 import { SpinnerDemo, AlertBannerDemo, ConfirmationDialogDemo, TooltipDemo } from "./FeedbackDemos";
 import { DividerDemo, AccordionDemo, ListItemDemo, AppCardDemo, WhiteLabelPreviewDemo } from "./LayoutDemos";
+import { AppShellDemo, AppHeaderDemo, PageContainerDemo, TodayScheduleDemo, CategorySectionDemo, DragHintDemo } from "./DashboardDemos";
 
 interface DemoRouterProps {
   componentId: string | null;
@@ -109,6 +110,12 @@ export function DemoRouter({ componentId, spec }: DemoRouterProps) {
     "app-card": () => <AppCardDemo />,
     "white-label-preview": () => <WhiteLabelPreviewDemo />,
     "milo-chat": () => <MiloChatDemo />,
+    "app-shell": () => <AppShellDemo />,
+    "app-header": () => <AppHeaderDemo />,
+    "page-container": () => <PageContainerDemo />,
+    "today-schedule": () => <TodayScheduleDemo />,
+    "category-section": () => <CategorySectionDemo />,
+    "drag-hint": () => <DragHintDemo />,
   };
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
