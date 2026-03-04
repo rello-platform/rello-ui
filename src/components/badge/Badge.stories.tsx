@@ -12,6 +12,7 @@ const meta = {
       options: [
         "default", "primary", "accent", "success", "warning", "error", "info",
         "hot", "qualified", "engaged", "warming", "cold",
+        "LEAD", "NURTURING", "APPLICATION", "PROCESSING", "CLOSED_WON", "CLOSED_LOST",
       ],
     },
     size: {
@@ -88,6 +89,20 @@ export const WithIcon: Story = {
       <Badge variant="hot" icon={<FireFlame width={12} height={12} />}>Hot Lead</Badge>
       <Badge variant="success" icon={<CheckCircle width={12} height={12} />}>Verified</Badge>
       <Badge variant="warning" icon={<WarningTriangle width={12} height={12} />}>Needs Review</Badge>
+    </div>
+  ),
+};
+
+export const CRMStageVariants: Story = {
+  name: "CRM Stage Variants",
+  render: () => (
+    <div className="flex flex-wrap gap-2">
+      <Badge variant="LEAD">Lead</Badge>
+      <Badge variant="NURTURING">Nurturing</Badge>
+      <Badge variant="APPLICATION">Application</Badge>
+      <Badge variant="PROCESSING">Processing</Badge>
+      <Badge variant="CLOSED_WON">Closed Won</Badge>
+      <Badge variant="CLOSED_LOST">Closed Lost</Badge>
     </div>
   ),
 };
