@@ -13,14 +13,16 @@
       "default": "./dist/index.js"
     },
     "./styles": "./src/styles/index.css",
-    "./tokens": "./src/styles/design-tokens.css"
+    "./tokens": "./src/styles/design-tokens.css",
+    "./app-overrides": "./tokens/app-overrides.json"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "tokens"
   ],
   "scripts": {
     "build": "tsup",
