@@ -167,6 +167,156 @@ interface ProgressProps extends React.ComponentPropsWithoutRef<typeof ProgressPr
 }
 declare const Progress: React.ForwardRefExoticComponent<ProgressProps & React.RefAttributes<HTMLDivElement>>;
 
+interface SurveyQuestion {
+    /** Unique key for the question (used for tracking selections) */
+    key: string;
+    /** Accent color hex for this step (e.g. "#5B9EA6") */
+    accent: string;
+    /** Question text displayed as the heading */
+    question: string;
+    /** Helper text below the question */
+    helper?: string;
+    /** Answer options */
+    options: string[];
+    /** Number of grid columns for options (default 2) */
+    columns?: number;
+    /** Illustration element rendered in the branded illustration box */
+    illustration?: React.ReactNode;
+    /** Decorative background pattern rendered behind the illustration */
+    pattern?: React.ReactNode;
+}
+interface SurveyStepCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
+    /** Array of survey questions/steps */
+    questions: SurveyQuestion[];
+    /** Currently active step index (controlled) */
+    step: number;
+    /** Called when step changes (via option select or back navigation) */
+    onStepChange?: (step: number) => void;
+    /** Record of selections keyed by question key */
+    selections?: Record<string, string>;
+    /** Called when an option is selected */
+    onSelect?: (questionKey: string, option: string) => void;
+    /** Auto-advance to next step after selection (default true) */
+    autoAdvance?: boolean;
+    /** Delay in ms before auto-advancing (default 400) */
+    advanceDelay?: number;
+    /** Whether to show progress bar (default true) */
+    showProgress?: boolean;
+    /** Whether to show back button (default true) */
+    showBack?: boolean;
+    /** Footer content rendered below the options grid */
+    footer?: React.ReactNode;
+}
+declare const SurveyStepCard: React.ForwardRefExoticComponent<SurveyStepCardProps & React.RefAttributes<HTMLDivElement>>;
+
+/** Concentric circles pattern — radiating rings from center */
+declare function ConcentricCircles({ accent }: {
+    accent: string;
+}): react_jsx_runtime.JSX.Element;
+/** Dot grid pattern — 5x5 evenly spaced dots */
+declare function DotGrid({ accent }: {
+    accent: string;
+}): react_jsx_runtime.JSX.Element;
+/** Orbital rings pattern — dashed concentric orbits with satellite dot */
+declare function OrbitalRings({ accent }: {
+    accent: string;
+}): react_jsx_runtime.JSX.Element;
+/** Cross hatch pattern — diagonal lines */
+declare function CrossHatch({ accent }: {
+    accent: string;
+}): react_jsx_runtime.JSX.Element;
+/** Diamond grid pattern — rotated squares */
+declare function DiamondGrid({ accent }: {
+    accent: string;
+}): react_jsx_runtime.JSX.Element;
+/** Radial burst pattern — lines radiating from center */
+declare function RadialBurst({ accent }: {
+    accent: string;
+}): react_jsx_runtime.JSX.Element;
+/** Registry of all available patterns by key */
+declare const PATTERNS: Record<string, React.ComponentType<{
+    accent: string;
+}>>;
+
+type ToastVariant = "success" | "warning" | "error" | "info";
+type ToastPosition = "top-right" | "top-center" | "bottom-right" | "bottom-center";
+interface ToastData {
+    id: string;
+    variant: ToastVariant;
+    title: string;
+    description?: string;
+}
+interface ToastProps extends React.HTMLAttributes<HTMLDivElement> {
+    toast: ToastData;
+    /** Animation duration in ms (default 250) */
+    duration?: number;
+    /** Whether the toast is visible (controls enter/exit animation) */
+    visible?: boolean;
+    /** Called when the dismiss button is clicked */
+    onDismiss?: (id: string) => void;
+}
+declare const Toast: React.ForwardRefExoticComponent<ToastProps & React.RefAttributes<HTMLDivElement>>;
+
+interface ToastContext {
+    toast: (options: {
+        variant?: ToastVariant;
+        title: string;
+        description?: string;
+    }) => void;
+    success: (title: string, description?: string) => void;
+    error: (title: string, description?: string) => void;
+    warning: (title: string, description?: string) => void;
+    info: (title: string, description?: string) => void;
+    dismiss: (id: string) => void;
+    dismissAll: () => void;
+}
+declare const ToastContext: React.Context<ToastContext | null>;
+interface ToasterProps {
+    /** Position on screen (default "top-right") */
+    position?: ToastPosition;
+    /** Animation duration in ms (default 250) */
+    duration?: number;
+    /** Auto-dismiss time in ms (default 4000). Set 0 to disable. */
+    autoDismiss?: number;
+    /** Max visible toasts (default 5) */
+    maxVisible?: number;
+}
+declare function ToastProvider({ children, position, duration, autoDismiss, maxVisible, }: React.PropsWithChildren<ToasterProps>): react_jsx_runtime.JSX.Element;
+declare function useToast(): ToastContext;
+
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+    /** Shimmer animation duration in ms (default 1800) */
+    shimmerDuration?: number;
+    /** Base color (default "var(--neutral-100)") */
+    baseColor?: string;
+    /** Highlight color (default "var(--neutral-50)") */
+    highlightColor?: string;
+    /** Width — CSS value (default "100%") */
+    width?: string | number;
+    /** Height — CSS value (default "1rem") */
+    height?: string | number;
+    /** Border radius — CSS value (default "0.25rem") */
+    radius?: string | number;
+}
+declare const Skeleton: React.ForwardRefExoticComponent<SkeletonProps & React.RefAttributes<HTMLDivElement>>;
+interface SkeletonCircleProps extends Omit<SkeletonProps, "width" | "height" | "radius"> {
+    /** Diameter in pixels (default 40) */
+    size?: number;
+}
+declare const SkeletonCircle: React.ForwardRefExoticComponent<SkeletonCircleProps & React.RefAttributes<HTMLDivElement>>;
+interface SkeletonTextProps extends Omit<SkeletonProps, "width" | "height"> {
+    /** Number of text lines (default 3) */
+    lines?: number;
+    /** Line height in px (default 12) */
+    lineHeight?: number;
+    /** Gap between lines in px (default 8) */
+    gap?: number;
+    /** Width of the last line as percentage (default 60) */
+    lastLineWidth?: number;
+}
+declare const SkeletonText: React.ForwardRefExoticComponent<SkeletonTextProps & React.RefAttributes<HTMLDivElement>>;
+declare function SkeletonStyles(): null;
+
 interface AppShellProps extends React.HTMLAttributes<HTMLDivElement> {
     header?: React.ReactNode;
 }
@@ -341,4 +491,4 @@ declare function StatCard({ label, value, icon, color, subtitle, className, ...p
 
 declare function cn(...inputs: ClassValue[]): string;
 
-export { AppCard, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, AppShell, type AppShellProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, Checkbox, type Column, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DragHint, type DragHintProps, EmptyState, type EmptyStateProps, InlineLoading, Input, type InputProps, Label, LoadingOverlay, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, Progress, type ProgressProps, type QuickStat, STAGES, STAGE_COLORS, STAGE_LABELS, type ScheduleItem, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, Table, type TableProps, Textarea, type TextareaProps, TodaySchedule, type TodayScheduleProps, badgeVariants, buttonVariants, cn };
+export { AppCard, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, AppShell, type AppShellProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, Checkbox, type Column, ConcentricCircles, CrossHatch, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DragHint, type DragHintProps, EmptyState, type EmptyStateProps, InlineLoading, Input, type InputProps, Label, LoadingOverlay, OrbitalRings, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, Progress, type ProgressProps, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, type ScheduleItem, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Table, type TableProps, Textarea, type TextareaProps, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, badgeVariants, buttonVariants, cn, useToast };
