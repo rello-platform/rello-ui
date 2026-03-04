@@ -517,6 +517,47 @@ These only appear on the Broker dashboard, not MLO.
 
 ---
 
+### HOME STRETCH THREE-TRACK PROGRAM — Built (20)
+
+These illustrations are used in the Home Stretch three-track program system. All built in `src/components/card-illustration/track-illustrations.tsx` and registered in `TRACK_ILLUSTRATIONS`.
+
+#### Track Selection Cards
+
+| # | Codename | Section | Accent | Pattern | Status |
+|---|----------|---------|--------|---------|--------|
+| 28 | The Sunrise | Daily Exercises Track | Amber Gold `#D4943A` | Concentric circles | ✅ Built |
+| 29 | The Summit | Weekly Challenges Track | Slate Blue `#5A7EB5` | Orbital rings | ✅ Built |
+| 30 | The Wanderer | Self-Paced Track | Sage Green `#7A9E7E` | Dot grid | ✅ Built |
+
+#### Daily Track Cards
+
+| # | Codename | Section | Accent | Pattern | Status |
+|---|----------|---------|--------|---------|--------|
+| 31 | The Gauge | Credit Score Education | Teal `#5B9EA6` | Concentric circles | ✅ Built |
+| 32 | The Nest Egg | Savings Goals & Tips | Forest `#5E8C6A` | Concentric circles | ✅ Built |
+| 33 | The Balancer | Debt-to-Income Ratio | Soft Indigo `#6E6EA8` | Dot grid | ✅ Built |
+| 34 | The Vision Board | Dream Home Exploration | Coral Rose `#C9785D` | Orbital rings | ✅ Built |
+| 35 | The Decoder | Mortgage Terms & Concepts | Steel Blue `#4A7B94` | Cross hatch | ✅ Built |
+| 36 | The Ledger | Budget & Affordability | Periwinkle `#7B8EC2` | Diamond grid | ✅ Built |
+| 37 | The Roadmap | Home Buying Timeline | Plum `#8B5E83` | Concentric circles | ✅ Built |
+| 38 | The Flame | Streak & Motivation | Burnt Sienna `#B85C38` | Radial burst | ✅ Built |
+| 39 | The Confetti | Milestone Celebration | Amber Gold `#D4943A` | Radial burst | ✅ Built |
+| 40 | The Stack | Down Payment Progress | Deep Teal `#3D7A80` | Dot grid | ✅ Built |
+| 41 | The Shield | Pre-Approval Readiness | Slate Blue `#5A7EB5` | Cross hatch | ✅ Built |
+| 42 | The Village | Neighborhood Exploration | Dusty Mauve `#A67B8A` | Orbital rings | ✅ Built |
+
+#### Weekly Track Cards
+
+| # | Codename | Section | Accent | Pattern | Status |
+|---|----------|---------|--------|---------|--------|
+| 43 | The Compass Check | Weekly Credit Review | Teal `#5B9EA6` | Concentric circles | ✅ Built |
+| 44 | The Milestone Jar | Weekly Savings Target | Sage Green `#7A9E7E` | Concentric circles | ✅ Built |
+| 45 | The Weekly Ledger | Weekly Budget Review | Slate Blue `#5A7EB5` | Diamond grid | ✅ Built |
+| 46 | The Explorer | Weekly Research Task | Lavender `#8E7CC3` | Orbital rings | ✅ Built |
+| 47 | The Trophy Case | Weekly Challenge Completion | Terracotta `#C27052` | Radial burst | ✅ Built |
+
+---
+
 ## Rules & Governance
 
 1. **Assignments are permanent.** Once an illustration is assigned to a section, it never moves. If a section is deprecated (like Neighborhood Intel → Property Engine), the illustration is retired, not reassigned.
@@ -559,6 +600,6 @@ Cards 22–27: Engine identity cards + Broker-specific cards
 
 ---
 
-*Last Updated: March 2, 2026*
-*Version: 1.0*
-*Total Illustrations: 27 (4 built, 23 to build)*
+*Last Updated: March 4, 2026*
+*Version: 2.0*
+*Total Illustrations: 47 (24 built, 23 to build)*

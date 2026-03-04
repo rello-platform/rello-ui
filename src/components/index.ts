@@ -16,6 +16,7 @@ export * from "./progress";
 export * from "./survey-step-card";
 export * from "./toast";
 export * from "./skeleton";
+export * from "./card-illustration";
 
 // Layout components
 export * from "./app-shell";

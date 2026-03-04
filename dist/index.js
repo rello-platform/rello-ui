@@ -955,11 +955,458 @@ function SkeletonStyles() {
   return null;
 }
 
-// src/components/app-shell/AppShell.tsx
+// src/components/card-illustration/CardIllustration.tsx
 import * as React15 from "react";
 import { jsx as jsx21, jsxs as jsxs15 } from "react/jsx-runtime";
-var AppShell = React15.forwardRef(
-  ({ className, header, children, ...props }, ref) => /* @__PURE__ */ jsxs15(
+var CardIllustration = React15.forwardRef(
+  ({
+    className,
+    accent,
+    size = 88,
+    radius = 18,
+    bgOpacity = 0.08,
+    pattern,
+    patternOpacity = 0.07,
+    icon,
+    dark = false,
+    style,
+    ...props
+  }, ref) => {
+    const containerBg = dark ? `rgba(255, 255, 255, ${0.06})` : `${accent}${Math.round(bgOpacity * 255).toString(16).padStart(2, "0")}`;
+    const pOpacity = dark ? Math.min(patternOpacity * 2.5, 0.2) : patternOpacity;
+    return /* @__PURE__ */ jsxs15(
+      "div",
+      {
+        ref,
+        className: cn("relative flex items-center justify-center overflow-hidden shrink-0", className),
+        style: {
+          width: size,
+          height: size,
+          borderRadius: radius,
+          backgroundColor: containerBg,
+          ...style
+        },
+        ...props,
+        children: [
+          pattern && /* @__PURE__ */ jsx21(
+            "svg",
+            {
+              className: "absolute inset-0 w-full h-full",
+              viewBox: `0 0 ${size} ${size}`,
+              style: { opacity: pOpacity },
+              children: pattern
+            }
+          ),
+          icon && /* @__PURE__ */ jsx21("div", { className: "relative", children: icon })
+        ]
+      }
+    );
+  }
+);
+CardIllustration.displayName = "CardIllustration";
+
+// src/icons/track-icons.tsx
+import { jsx as jsx22, jsxs as jsxs16 } from "react/jsx-runtime";
+function CreditScoreIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("path", { d: "M10 32a14 14 0 0 1 28 0", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx22("path", { d: "M14 32a10 10 0 0 1 20 0", stroke: accent, strokeWidth: "1", opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("line", { x1: "24", y1: "32", x2: "32", y2: "20", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "24", cy: "32", r: "2.5", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "12", cy: "28", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "16", cy: "21", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "24", cy: "18", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "32", cy: "21", r: "1", fill: accent, opacity: "0.5" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "36", cy: "28", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("path", { d: "M35 14l1.5-1.5", stroke: accent, strokeWidth: "1", opacity: "0.4" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "37.5", cy: "11.5", r: "1", fill: accent, opacity: "0.3" })
+  ] });
+}
+function SavingsIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("path", { d: "M16 16h16v20a4 4 0 0 1-4 4H20a4 4 0 0 1-4-4V16z", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx22("rect", { x: "14", y: "12", width: "20", height: "4", rx: "1", stroke: accent, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx22("ellipse", { cx: "24", cy: "30", rx: "6", ry: "2", fill: accent, opacity: "0.12" }),
+    /* @__PURE__ */ jsx22("ellipse", { cx: "24", cy: "27", rx: "6", ry: "2", fill: accent, opacity: "0.08" }),
+    /* @__PURE__ */ jsx22("ellipse", { cx: "24", cy: "33", rx: "6", ry: "2", fill: accent, opacity: "0.16" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "22", cy: "24", r: "2", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "26", cy: "22", r: "2", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("path", { d: "M34 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "37", cy: "7", r: "0.8", fill: accent, opacity: "0.25" })
+  ] });
+}
+function DtiIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("line", { x1: "24", y1: "10", x2: "24", y2: "38", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx22("rect", { x: "18", y: "36", width: "12", height: "3", rx: "1.5", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("line", { x1: "10", y1: "18", x2: "38", y2: "16", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx22("path", { d: "M6 18a4 4 0 0 0 8 0", stroke: accent, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx22("line", { x1: "10", y1: "18", x2: "6", y2: "18", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("line", { x1: "10", y1: "18", x2: "14", y2: "18", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("path", { d: "M34 16a4 4 0 0 0 8 0", stroke: accent, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx22("line", { x1: "38", y1: "16", x2: "34", y2: "16", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("line", { x1: "38", y1: "16", x2: "42", y2: "16", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "24", cy: "10", r: "2", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "10", cy: "22", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "38", cy: "20", r: "1", fill: accent, opacity: "0.2" })
+  ] });
+}
+function DreamHomeIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("path", { d: "M24 8L8 22v18h32V22z", stroke: accent, strokeWidth: "2", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx22("rect", { x: "20", y: "28", width: "8", height: "12", rx: "1", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("path", { d: "M24 20c-1-3-5-3-5 0s5 6 5 6 5-3 5-6-4-3-5 0z", fill: accent, opacity: "0.25", stroke: accent, strokeWidth: "1" }),
+    /* @__PURE__ */ jsx22("rect", { x: "12", y: "24", width: "5", height: "5", rx: "0.5", fill: accent, opacity: "0.08" }),
+    /* @__PURE__ */ jsx22("rect", { x: "31", y: "24", width: "5", height: "5", rx: "0.5", fill: accent, opacity: "0.08" }),
+    /* @__PURE__ */ jsx22("path", { d: "M34 8c0-2 2-2 2-4", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx22("rect", { x: "32", y: "10", width: "4", height: "8", rx: "0.5", stroke: accent, strokeWidth: "1", opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "38", cy: "6", r: "1", fill: accent, opacity: "0.3" })
+  ] });
+}
+function MortgageTermsIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("rect", { x: "12", y: "6", width: "24", height: "36", rx: "2", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx22("path", { d: "M30 6v6h6", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("line", { x1: "17", y1: "16", x2: "31", y2: "16", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("line", { x1: "17", y1: "21", x2: "28", y2: "21", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("line", { x1: "17", y1: "26", x2: "31", y2: "26", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("line", { x1: "17", y1: "31", x2: "25", y2: "31", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("rect", { x: "16", y: "14", width: "16", height: "5", rx: "1", fill: accent, opacity: "0.08" }),
+    /* @__PURE__ */ jsx22("path", { d: "M17 36l2 2 4-4", stroke: accent, strokeWidth: "1.5", opacity: "0.5" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "34", cy: "8", r: "1", fill: accent, opacity: "0.2" })
+  ] });
+}
+function BudgetIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("rect", { x: "12", y: "6", width: "24", height: "36", rx: "3", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx22("rect", { x: "16", y: "10", width: "16", height: "8", rx: "1.5", fill: accent, opacity: 0.1 }),
+    /* @__PURE__ */ jsx22("rect", { x: "16", y: "10", width: "16", height: "8", rx: "1.5", fill: "none", stroke: accent, strokeWidth: "1", opacity: 0.3 }),
+    /* @__PURE__ */ jsx22("text", { x: "27", y: "17", fill: accent, opacity: "0.4", fontSize: "6", fontWeight: "600", textAnchor: "end", fontFamily: "monospace", children: "$1,250" }),
+    [0, 1, 2].map(
+      (row) => [0, 1, 2].map((col) => /* @__PURE__ */ jsx22("rect", { x: 17 + col * 5, y: 22 + row * 5, width: "3.5", height: "3.5", rx: "0.5", fill: accent, opacity: row === 2 && col === 2 ? 0.35 : 0.12 }, `${row}-${col}`))
+    ),
+    /* @__PURE__ */ jsx22("rect", { x: "17", y: "37", width: "14", height: "3", rx: "0.5", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("path", { d: "M36 8l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" })
+  ] });
+}
+function TimelineIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("path", { d: "M12 40c0-6 12-6 12-12s-8-6-8-12 8-6 8-12", stroke: accent, strokeWidth: "2", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "24", cy: "28", r: "3", fill: accent, opacity: "0.2", stroke: accent, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "16", cy: "16", r: "3", fill: accent, opacity: "0.2", stroke: accent, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "24", cy: "4", r: "2", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "12", cy: "40", r: "2.5", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("line", { x1: "24", y1: "4", x2: "24", y2: "10", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("path", { d: "M24 4h6l-3 3 3 3h-6", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "32", cy: "24", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "8", cy: "32", r: "1", fill: accent, opacity: "0.15" })
+  ] });
+}
+function StreakIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("path", { d: "M24 6c0 8-10 12-10 22a10 10 0 0 0 20 0c0-10-10-14-10-22z", fill: accent, opacity: "0.15", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx22("path", { d: "M24 18c0 5-5 7-5 12a5 5 0 0 0 10 0c0-5-5-7-5-12z", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx22("ellipse", { cx: "24", cy: "34", rx: "2.5", ry: "3", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "14", cy: "18", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "34", cy: "16", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("path", { d: "M32 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "35", cy: "7", r: "0.8", fill: accent, opacity: "0.3" })
+  ] });
+}
+function DailyExerciseIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("line", { x1: "6", y1: "32", x2: "42", y2: "32", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "24", cy: "24", r: "8", fill: accent, opacity: "0.12", stroke: accent, strokeWidth: "2" }),
+    [0, 45, 90, 135, 180].map((angle) => {
+      const rad = angle * Math.PI / 180;
+      return /* @__PURE__ */ jsx22(
+        "line",
+        {
+          x1: 24 + Math.cos(rad) * 11,
+          y1: 24 - Math.sin(rad) * 11,
+          x2: 24 + Math.cos(rad) * 14,
+          y2: 24 - Math.sin(rad) * 14,
+          stroke: accent,
+          strokeWidth: "1.5",
+          strokeLinecap: "round",
+          opacity: "0.3"
+        },
+        angle
+      );
+    }),
+    /* @__PURE__ */ jsx22("path", { d: "M22 18l4-6-1 5h3l-4 6 1-5h-3z", fill: accent, opacity: "0.35" }),
+    /* @__PURE__ */ jsx22("rect", { x: "10", y: "34", width: "28", height: "4", rx: "1", fill: accent, opacity: "0.06" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "36", cy: "14", r: "1", fill: accent, opacity: "0.25" })
+  ] });
+}
+function WeeklyChallengeIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("path", { d: "M16 10h16v12a8 8 0 0 1-16 0V10z", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx22("path", { d: "M16 14c-4 0-6 2-6 5s2 5 6 5", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("path", { d: "M32 14c4 0 6 2 6 5s-2 5-6 5", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("line", { x1: "24", y1: "30", x2: "24", y2: "36", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx22("rect", { x: "18", y: "36", width: "12", height: "3", rx: "1.5", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("path", { d: "M24 14l1.5 3 3.5.5-2.5 2.5.5 3.5L24 22l-3 1.5.5-3.5-2.5-2.5 3.5-.5z", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "36", cy: "8", r: "1", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("path", { d: "M38 6l1.5-1.5", stroke: accent, strokeWidth: "1", opacity: "0.4" })
+  ] });
+}
+function SelfPacedIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("circle", { cx: "24", cy: "24", r: "16", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "24", cy: "24", r: "12", stroke: accent, strokeWidth: "0.8", opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "24", cy: "10", r: "1.5", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "24", cy: "38", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "10", cy: "24", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "38", cy: "24", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("path", { d: "M24 14l3 10-3 2-3-2z", fill: accent, opacity: "0.35" }),
+    /* @__PURE__ */ jsx22("path", { d: "M24 34l3-10-3-2-3 2z", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "24", cy: "24", r: "2", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("path", { d: "M36 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" })
+  ] });
+}
+function CelebrationIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("path", { d: "M24 8l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z", fill: accent, opacity: "0.2", stroke: accent, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx22("rect", { x: "8", y: "12", width: "3", height: "3", rx: "0.5", fill: accent, opacity: "0.25", transform: "rotate(15 9.5 13.5)" }),
+    /* @__PURE__ */ jsx22("rect", { x: "36", y: "10", width: "3", height: "3", rx: "0.5", fill: accent, opacity: "0.2", transform: "rotate(-20 37.5 11.5)" }),
+    /* @__PURE__ */ jsx22("rect", { x: "10", y: "30", width: "2.5", height: "2.5", rx: "0.5", fill: accent, opacity: "0.15", transform: "rotate(30 11.25 31.25)" }),
+    /* @__PURE__ */ jsx22("rect", { x: "35", y: "32", width: "2.5", height: "2.5", rx: "0.5", fill: accent, opacity: "0.2", transform: "rotate(-10 36.25 33.25)" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "14", cy: "22", r: "1.2", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "34", cy: "24", r: "1.2", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "20", cy: "38", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "30", cy: "40", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("path", { d: "M12 8l-2-3", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx22("path", { d: "M38 8l2-3", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function DownPaymentIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    [0, 1, 2, 3, 4].map((i) => /* @__PURE__ */ jsx22("ellipse", { cx: "24", cy: 36 - i * 4, rx: "10", ry: "3", fill: accent, opacity: 0.06 + i * 0.04, stroke: accent, strokeWidth: i === 4 ? "1.5" : "0.8" }, i)),
+    /* @__PURE__ */ jsx22("text", { x: "24", y: "23", fill: accent, opacity: "0.35", fontSize: "8", fontWeight: "700", textAnchor: "middle", fontFamily: "sans-serif", children: "$" }),
+    /* @__PURE__ */ jsx22("line", { x1: "14", y1: "36", x2: "14", y2: "20", stroke: accent, strokeWidth: "0.8", opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("line", { x1: "34", y1: "36", x2: "34", y2: "20", stroke: accent, strokeWidth: "0.8", opacity: "0.15" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "36", cy: "12", r: "1", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("path", { d: "M34 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" })
+  ] });
+}
+function PreApprovalIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("path", { d: "M24 6L10 12v12c0 10 14 18 14 18s14-8 14-18V12z", fill: accent, opacity: "0.08", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx22("path", { d: "M24 12L14 16v8c0 7 10 13 10 13s10-6 10-13V16z", fill: accent, opacity: "0.06" }),
+    /* @__PURE__ */ jsx22("path", { d: "M18 24l4 4 8-8", stroke: accent, strokeWidth: "2.5", strokeLinecap: "round", strokeLinejoin: "round", opacity: "0.5" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "36", cy: "8", r: "1", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx22("path", { d: "M38 6l1-1", stroke: accent, strokeWidth: "1", opacity: "0.3" })
+  ] });
+}
+function NeighborhoodIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs16("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx22("rect", { x: "4", y: "36", width: "40", height: "4", rx: "1", fill: accent, opacity: "0.06" }),
+    /* @__PURE__ */ jsx22("path", { d: "M10 26L6 30v6h8v-6z", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("rect", { x: "8", y: "32", width: "3", height: "4", rx: "0.5", fill: accent, opacity: "0.1" }),
+    /* @__PURE__ */ jsx22("path", { d: "M24 14L16 22v14h16V22z", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx22("rect", { x: "21", y: "26", width: "6", height: "10", rx: "1", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("rect", { x: "18", y: "24", width: "4", height: "4", rx: "0.5", fill: accent, opacity: "0.08" }),
+    /* @__PURE__ */ jsx22("rect", { x: "26", y: "24", width: "4", height: "4", rx: "0.5", fill: accent, opacity: "0.08" }),
+    /* @__PURE__ */ jsx22("path", { d: "M38 22L34 26v10h8v-10z", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx22("rect", { x: "36", y: "30", width: "3", height: "6", rx: "0.5", fill: accent, opacity: "0.1" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "13", cy: "20", r: "3", fill: accent, opacity: "0.1" }),
+    /* @__PURE__ */ jsx22("line", { x1: "13", y1: "23", x2: "13", y2: "26", stroke: accent, strokeWidth: "1", opacity: "0.2" }),
+    /* @__PURE__ */ jsx22("circle", { cx: "40", cy: "14", r: "1", fill: accent, opacity: "0.2" })
+  ] });
+}
+var TRACK_ICONS = {
+  "credit-score": CreditScoreIcon,
+  savings: SavingsIcon,
+  dti: DtiIcon,
+  "dream-home": DreamHomeIcon,
+  "mortgage-terms": MortgageTermsIcon,
+  budget: BudgetIcon,
+  timeline: TimelineIcon,
+  streak: StreakIcon,
+  "daily-exercise": DailyExerciseIcon,
+  "weekly-challenge": WeeklyChallengeIcon,
+  "self-paced": SelfPacedIcon,
+  celebration: CelebrationIcon,
+  "down-payment": DownPaymentIcon,
+  "pre-approval": PreApprovalIcon,
+  neighborhood: NeighborhoodIcon
+};
+
+// src/components/card-illustration/track-illustrations.tsx
+import { jsx as jsx23 } from "react/jsx-runtime";
+var TRACK_ILLUSTRATIONS = {
+  /* ---- Track Selection ---- */
+  "track-daily": {
+    codename: "The Sunrise",
+    section: "Daily Exercises Track Card",
+    accent: "#D4943A",
+    pattern: ConcentricCircles,
+    icon: DailyExerciseIcon
+  },
+  "track-weekly": {
+    codename: "The Summit",
+    section: "Weekly Challenges Track Card",
+    accent: "#5A7EB5",
+    pattern: OrbitalRings,
+    icon: WeeklyChallengeIcon
+  },
+  "track-self-paced": {
+    codename: "The Wanderer",
+    section: "Self-Paced Track Card",
+    accent: "#7A9E7E",
+    pattern: DotGrid,
+    icon: SelfPacedIcon
+  },
+  /* ---- Daily Track Cards ---- */
+  "daily-credit-score": {
+    codename: "The Gauge",
+    section: "Credit Score Education",
+    accent: "#5B9EA6",
+    pattern: ConcentricCircles,
+    icon: CreditScoreIcon
+  },
+  "daily-savings": {
+    codename: "The Nest Egg",
+    section: "Savings Goals & Tips",
+    accent: "#5E8C6A",
+    pattern: ConcentricCircles,
+    icon: SavingsIcon
+  },
+  "daily-dti": {
+    codename: "The Balancer",
+    section: "Debt-to-Income Ratio",
+    accent: "#6E6EA8",
+    pattern: DotGrid,
+    icon: DtiIcon
+  },
+  "daily-dream-home": {
+    codename: "The Vision Board",
+    section: "Dream Home Exploration",
+    accent: "#C9785D",
+    pattern: OrbitalRings,
+    icon: DreamHomeIcon
+  },
+  "daily-mortgage-terms": {
+    codename: "The Decoder",
+    section: "Mortgage Terms & Concepts",
+    accent: "#4A7B94",
+    pattern: CrossHatch,
+    icon: MortgageTermsIcon
+  },
+  "daily-budget": {
+    codename: "The Ledger",
+    section: "Budget & Affordability",
+    accent: "#7B8EC2",
+    pattern: DiamondGrid,
+    icon: BudgetIcon
+  },
+  "daily-timeline": {
+    codename: "The Roadmap",
+    section: "Home Buying Timeline",
+    accent: "#8B5E83",
+    pattern: ConcentricCircles,
+    icon: TimelineIcon
+  },
+  "daily-streak": {
+    codename: "The Flame",
+    section: "Streak & Motivation",
+    accent: "#B85C38",
+    pattern: RadialBurst,
+    icon: StreakIcon
+  },
+  "daily-celebration": {
+    codename: "The Confetti",
+    section: "Milestone Celebration",
+    accent: "#D4943A",
+    pattern: RadialBurst,
+    icon: CelebrationIcon
+  },
+  "daily-down-payment": {
+    codename: "The Stack",
+    section: "Down Payment Progress",
+    accent: "#3D7A80",
+    pattern: DotGrid,
+    icon: DownPaymentIcon
+  },
+  "daily-pre-approval": {
+    codename: "The Shield",
+    section: "Pre-Approval Readiness",
+    accent: "#5A7EB5",
+    pattern: CrossHatch,
+    icon: PreApprovalIcon
+  },
+  "daily-neighborhood": {
+    codename: "The Village",
+    section: "Neighborhood Exploration",
+    accent: "#A67B8A",
+    pattern: OrbitalRings,
+    icon: NeighborhoodIcon
+  },
+  /* ---- Weekly Track Cards ---- */
+  "weekly-credit-check": {
+    codename: "The Compass Check",
+    section: "Weekly Credit Review",
+    accent: "#5B9EA6",
+    pattern: ConcentricCircles,
+    icon: CreditScoreIcon
+  },
+  "weekly-savings-goal": {
+    codename: "The Milestone Jar",
+    section: "Weekly Savings Target",
+    accent: "#7A9E7E",
+    pattern: ConcentricCircles,
+    icon: SavingsIcon
+  },
+  "weekly-budget-review": {
+    codename: "The Weekly Ledger",
+    section: "Weekly Budget Review",
+    accent: "#5A7EB5",
+    pattern: DiamondGrid,
+    icon: BudgetIcon
+  },
+  "weekly-research": {
+    codename: "The Explorer",
+    section: "Weekly Research Task",
+    accent: "#8E7CC3",
+    pattern: OrbitalRings,
+    icon: NeighborhoodIcon
+  },
+  "weekly-challenge": {
+    codename: "The Trophy Case",
+    section: "Weekly Challenge Completion",
+    accent: "#C27052",
+    pattern: RadialBurst,
+    icon: WeeklyChallengeIcon
+  }
+};
+function TrackCardIllustration({
+  illustrationKey,
+  accentOverride,
+  iconSize = 48,
+  ...props
+}) {
+  const def = TRACK_ILLUSTRATIONS[illustrationKey];
+  if (!def) return null;
+  const accent = accentOverride ?? def.accent;
+  const PatternComp = def.pattern;
+  const IconComp = def.icon;
+  return /* @__PURE__ */ jsx23(
+    CardIllustration,
+    {
+      accent,
+      pattern: /* @__PURE__ */ jsx23(PatternComp, { accent }),
+      icon: /* @__PURE__ */ jsx23(IconComp, { accent, size: iconSize }),
+      ...props
+    }
+  );
+}
+
+// src/components/app-shell/AppShell.tsx
+import * as React16 from "react";
+import { jsx as jsx24, jsxs as jsxs17 } from "react/jsx-runtime";
+var AppShell = React16.forwardRef(
+  ({ className, header, children, ...props }, ref) => /* @__PURE__ */ jsxs17(
     "div",
     {
       ref,
@@ -967,7 +1414,7 @@ var AppShell = React15.forwardRef(
       ...props,
       children: [
         header,
-        /* @__PURE__ */ jsx21("div", { className: "flex-1 flex flex-col", children })
+        /* @__PURE__ */ jsx24("div", { className: "flex-1 flex flex-col", children })
       ]
     }
   )
@@ -975,10 +1422,10 @@ var AppShell = React15.forwardRef(
 AppShell.displayName = "AppShell";
 
 // src/components/app-header/AppHeader.tsx
-import * as React16 from "react";
-import { Fragment as Fragment3, jsx as jsx22, jsxs as jsxs16 } from "react/jsx-runtime";
-var AppHeader = React16.forwardRef(
-  ({ className, logo, title, leftSlot, rightSlot, children, ...props }, ref) => /* @__PURE__ */ jsx22(
+import * as React17 from "react";
+import { Fragment as Fragment3, jsx as jsx25, jsxs as jsxs18 } from "react/jsx-runtime";
+var AppHeader = React17.forwardRef(
+  ({ className, logo, title, leftSlot, rightSlot, children, ...props }, ref) => /* @__PURE__ */ jsx25(
     "header",
     {
       ref,
@@ -987,16 +1434,16 @@ var AppHeader = React16.forwardRef(
         className
       ),
       ...props,
-      children: /* @__PURE__ */ jsxs16("div", { className: "flex items-center justify-between max-w-7xl mx-auto", children: [
-        /* @__PURE__ */ jsxs16("div", { className: "flex items-center gap-3", children: [
+      children: /* @__PURE__ */ jsxs18("div", { className: "flex items-center justify-between max-w-7xl mx-auto", children: [
+        /* @__PURE__ */ jsxs18("div", { className: "flex items-center gap-3", children: [
           logo,
-          title && /* @__PURE__ */ jsxs16(Fragment3, { children: [
-            /* @__PURE__ */ jsx22("div", { className: "h-5 w-px bg-[var(--neutral-200)]" }),
-            /* @__PURE__ */ jsx22("span", { className: "text-sm text-[var(--neutral-500)]", children: title })
+          title && /* @__PURE__ */ jsxs18(Fragment3, { children: [
+            /* @__PURE__ */ jsx25("div", { className: "h-5 w-px bg-[var(--neutral-200)]" }),
+            /* @__PURE__ */ jsx25("span", { className: "text-sm text-[var(--neutral-500)]", children: title })
           ] }),
           leftSlot
         ] }),
-        /* @__PURE__ */ jsxs16("div", { className: "flex items-center gap-1", children: [
+        /* @__PURE__ */ jsxs18("div", { className: "flex items-center gap-1", children: [
           rightSlot,
           children
         ] })
@@ -1005,8 +1452,8 @@ var AppHeader = React16.forwardRef(
   )
 );
 AppHeader.displayName = "AppHeader";
-var AppHeaderAction = React16.forwardRef(
-  ({ className, dot = false, children, ...props }, ref) => /* @__PURE__ */ jsxs16(
+var AppHeaderAction = React17.forwardRef(
+  ({ className, dot = false, children, ...props }, ref) => /* @__PURE__ */ jsxs18(
     "button",
     {
       ref,
@@ -1017,13 +1464,13 @@ var AppHeaderAction = React16.forwardRef(
       ...props,
       children: [
         children,
-        dot && /* @__PURE__ */ jsx22("span", { className: "absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--hot)] rounded-full" })
+        dot && /* @__PURE__ */ jsx25("span", { className: "absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--hot)] rounded-full" })
       ]
     }
   )
 );
 AppHeaderAction.displayName = "AppHeaderAction";
-var AppHeaderDivider = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx22(
+var AppHeaderDivider = React17.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx25(
   "div",
   {
     ref,
@@ -1034,9 +1481,9 @@ var AppHeaderDivider = React16.forwardRef(({ className, ...props }, ref) => /* @
 AppHeaderDivider.displayName = "AppHeaderDivider";
 
 // src/components/slide-panel/SlidePanel.tsx
-import * as React17 from "react";
+import * as React18 from "react";
 import * as DialogPrimitive2 from "@radix-ui/react-dialog";
-import { jsx as jsx23, jsxs as jsxs17 } from "react/jsx-runtime";
+import { jsx as jsx26, jsxs as jsxs19 } from "react/jsx-runtime";
 function SlidePanel({
   isOpen,
   onClose,
@@ -1045,14 +1492,14 @@ function SlidePanel({
   children,
   className
 }) {
-  return /* @__PURE__ */ jsx23(DialogPrimitive2.Root, { open: isOpen, onOpenChange: (open) => !open && onClose(), children: /* @__PURE__ */ jsxs17(DialogPrimitive2.Portal, { children: [
-    /* @__PURE__ */ jsx23(
+  return /* @__PURE__ */ jsx26(DialogPrimitive2.Root, { open: isOpen, onOpenChange: (open) => !open && onClose(), children: /* @__PURE__ */ jsxs19(DialogPrimitive2.Portal, { children: [
+    /* @__PURE__ */ jsx26(
       DialogPrimitive2.Overlay,
       {
         className: "fixed inset-0 z-40 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
       }
     ),
-    /* @__PURE__ */ jsx23(
+    /* @__PURE__ */ jsx26(
       DialogPrimitive2.Content,
       {
         className: cn(
@@ -1069,7 +1516,7 @@ function SlidePanel({
     )
   ] }) });
 }
-var SlidePanelHeader = React17.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var SlidePanelHeader = React18.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx26(
   "div",
   {
     ref,
@@ -1081,7 +1528,7 @@ var SlidePanelHeader = React17.forwardRef(({ className, ...props }, ref) => /* @
   }
 ));
 SlidePanelHeader.displayName = "SlidePanelHeader";
-var SlidePanelBody = React17.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var SlidePanelBody = React18.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx26(
   "div",
   {
     ref,
@@ -1090,7 +1537,7 @@ var SlidePanelBody = React17.forwardRef(({ className, ...props }, ref) => /* @__
   }
 ));
 SlidePanelBody.displayName = "SlidePanelBody";
-var SlidePanelFooter = React17.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var SlidePanelFooter = React18.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx26(
   "div",
   {
     ref,
@@ -1102,9 +1549,9 @@ SlidePanelFooter.displayName = "SlidePanelFooter";
 var SlidePanelClose = DialogPrimitive2.Close;
 
 // src/components/page-container/PageContainer.tsx
-import * as React18 from "react";
+import * as React19 from "react";
 import { cva as cva3 } from "class-variance-authority";
-import { jsx as jsx24 } from "react/jsx-runtime";
+import { jsx as jsx27 } from "react/jsx-runtime";
 var pageContainerVariants = cva3("mx-auto w-full", {
   variants: {
     maxWidth: {
@@ -1122,8 +1569,8 @@ var pageContainerVariants = cva3("mx-auto w-full", {
   },
   defaultVariants: { maxWidth: "xl", padding: "md" }
 });
-var PageContainer = React18.forwardRef(
-  ({ className, maxWidth, padding, ...props }, ref) => /* @__PURE__ */ jsx24(
+var PageContainer = React19.forwardRef(
+  ({ className, maxWidth, padding, ...props }, ref) => /* @__PURE__ */ jsx27(
     "main",
     {
       ref,
@@ -1137,7 +1584,7 @@ PageContainer.displayName = "PageContainer";
 // src/components/dashboard-shell/DashboardShell.tsx
 import { useState as useState3 } from "react";
 import { Menu } from "iconoir-react";
-import { jsx as jsx25, jsxs as jsxs18 } from "react/jsx-runtime";
+import { jsx as jsx28, jsxs as jsxs20 } from "react/jsx-runtime";
 function Sidebar({
   navGroups,
   activeNavLabel,
@@ -1145,7 +1592,7 @@ function Sidebar({
   hovered,
   onHover
 }) {
-  return /* @__PURE__ */ jsx25(
+  return /* @__PURE__ */ jsx28(
     "div",
     {
       className: "rounded-xl flex-shrink-0 overflow-hidden transition-all duration-300 hidden md:block",
@@ -1156,11 +1603,11 @@ function Sidebar({
       },
       onMouseEnter: () => onHover(true),
       onMouseLeave: () => onHover(false),
-      children: /* @__PURE__ */ jsx25("div", { className: "py-2", children: navGroups.map((group, gi) => /* @__PURE__ */ jsxs18("div", { children: [
-        group.label && hovered && /* @__PURE__ */ jsx25("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-400)] px-4 pt-3 pb-1", children: group.label }),
+      children: /* @__PURE__ */ jsx28("div", { className: "py-2", children: navGroups.map((group, gi) => /* @__PURE__ */ jsxs20("div", { children: [
+        group.label && hovered && /* @__PURE__ */ jsx28("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-400)] px-4 pt-3 pb-1", children: group.label }),
         group.items.map((item) => {
           const isActive = item.label === activeNavLabel;
-          return /* @__PURE__ */ jsxs18(
+          return /* @__PURE__ */ jsxs20(
             "button",
             {
               onClick: () => onNavClick?.(item),
@@ -1175,8 +1622,8 @@ function Sidebar({
                 width: isActive ? "calc(100% - 12px)" : "100%"
               },
               children: [
-                /* @__PURE__ */ jsx25("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
-                hovered && /* @__PURE__ */ jsx25("span", { className: "text-xs font-medium whitespace-nowrap", children: item.label })
+                /* @__PURE__ */ jsx28("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
+                hovered && /* @__PURE__ */ jsx28("span", { className: "text-xs font-medium whitespace-nowrap", children: item.label })
               ]
             },
             item.label
@@ -1196,10 +1643,10 @@ function MobileNav({
   agentInitials,
   agentSubtitle
 }) {
-  return /* @__PURE__ */ jsxs18(SlidePanel, { isOpen: open, onClose, position: "left", width: "280px", children: [
-    /* @__PURE__ */ jsx25(SlidePanelHeader, { children: /* @__PURE__ */ jsx25("span", { className: "font-semibold text-[var(--neutral-900)]", children: "Menu" }) }),
-    /* @__PURE__ */ jsxs18("div", { className: "flex items-center gap-3 px-5 py-4 border-b border-[var(--card-border)]", children: [
-      /* @__PURE__ */ jsx25(
+  return /* @__PURE__ */ jsxs20(SlidePanel, { isOpen: open, onClose, position: "left", width: "280px", children: [
+    /* @__PURE__ */ jsx28(SlidePanelHeader, { children: /* @__PURE__ */ jsx28("span", { className: "font-semibold text-[var(--neutral-900)]", children: "Menu" }) }),
+    /* @__PURE__ */ jsxs20("div", { className: "flex items-center gap-3 px-5 py-4 border-b border-[var(--card-border)]", children: [
+      /* @__PURE__ */ jsx28(
         "div",
         {
           className: "w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold",
@@ -1207,16 +1654,16 @@ function MobileNav({
           children: agentInitials
         }
       ),
-      /* @__PURE__ */ jsxs18("div", { children: [
-        /* @__PURE__ */ jsx25("div", { className: "font-medium text-sm text-[var(--neutral-900)]", children: agentName }),
-        agentSubtitle && /* @__PURE__ */ jsx25("div", { className: "text-xs text-[var(--neutral-500)]", children: agentSubtitle })
+      /* @__PURE__ */ jsxs20("div", { children: [
+        /* @__PURE__ */ jsx28("div", { className: "font-medium text-sm text-[var(--neutral-900)]", children: agentName }),
+        agentSubtitle && /* @__PURE__ */ jsx28("div", { className: "text-xs text-[var(--neutral-500)]", children: agentSubtitle })
       ] })
     ] }),
-    /* @__PURE__ */ jsx25(SlidePanelBody, { children: /* @__PURE__ */ jsx25("nav", { className: "py-2", children: navGroups.map((group, gi) => /* @__PURE__ */ jsxs18("div", { children: [
-      group.label && /* @__PURE__ */ jsx25("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-400)] px-5 pt-3 pb-1", children: group.label }),
+    /* @__PURE__ */ jsx28(SlidePanelBody, { children: /* @__PURE__ */ jsx28("nav", { className: "py-2", children: navGroups.map((group, gi) => /* @__PURE__ */ jsxs20("div", { children: [
+      group.label && /* @__PURE__ */ jsx28("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-400)] px-5 pt-3 pb-1", children: group.label }),
       group.items.map((item) => {
         const isActive = item.label === activeNavLabel;
-        return /* @__PURE__ */ jsxs18(
+        return /* @__PURE__ */ jsxs20(
           "button",
           {
             onClick: () => {
@@ -1228,7 +1675,7 @@ function MobileNav({
               isActive ? "bg-[var(--brand-primary-light)] text-[var(--brand-primary)] font-semibold" : "text-[var(--neutral-600)] hover:bg-[var(--neutral-50)]"
             ),
             children: [
-              /* @__PURE__ */ jsx25("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
+              /* @__PURE__ */ jsx28("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
               item.label
             ]
           },
@@ -1256,26 +1703,26 @@ function DashboardShell({
 }) {
   const [sidebarHovered, setSidebarHovered] = useState3(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState3(false);
-  return /* @__PURE__ */ jsxs18(
+  return /* @__PURE__ */ jsxs20(
     "div",
     {
       className: cn("min-h-screen", className),
       style: { backgroundColor: "var(--background)" },
       children: [
-        /* @__PURE__ */ jsxs18("div", { className: "flex items-start justify-between px-4 md:px-6 pt-4 md:pt-6", children: [
-          /* @__PURE__ */ jsxs18("div", { className: "flex items-start gap-3 md:gap-4 max-w-xl", children: [
-            /* @__PURE__ */ jsx25(
+        /* @__PURE__ */ jsxs20("div", { className: "flex items-start justify-between px-4 md:px-6 pt-4 md:pt-6", children: [
+          /* @__PURE__ */ jsxs20("div", { className: "flex items-start gap-3 md:gap-4 max-w-xl", children: [
+            /* @__PURE__ */ jsx28(
               "button",
               {
                 className: "md:hidden p-2 -ml-2 rounded-lg text-[var(--neutral-500)] hover:bg-[var(--neutral-50)]",
                 onClick: () => setMobileMenuOpen(true),
                 "aria-label": "Open menu",
-                children: /* @__PURE__ */ jsx25(Menu, { width: 20, height: 20, strokeWidth: 1.5 })
+                children: /* @__PURE__ */ jsx28(Menu, { width: 20, height: 20, strokeWidth: 1.5 })
               }
             ),
-            /* @__PURE__ */ jsx25("div", { className: "shrink-0 hidden md:block", children: logo }),
-            /* @__PURE__ */ jsxs18("div", { children: [
-              /* @__PURE__ */ jsx25(
+            /* @__PURE__ */ jsx28("div", { className: "shrink-0 hidden md:block", children: logo }),
+            /* @__PURE__ */ jsxs20("div", { children: [
+              /* @__PURE__ */ jsx28(
                 "h1",
                 {
                   className: "text-2xl md:text-3xl font-bold tracking-tight leading-tight",
@@ -1283,7 +1730,7 @@ function DashboardShell({
                   children: appTitle
                 }
               ),
-              /* @__PURE__ */ jsx25(
+              /* @__PURE__ */ jsx28(
                 "p",
                 {
                   className: "text-sm md:text-base",
@@ -1291,10 +1738,10 @@ function DashboardShell({
                   children: appSubtitle
                 }
               ),
-              highlightText && /* @__PURE__ */ jsx25("p", { className: "text-sm leading-relaxed mt-1.5 text-[var(--neutral-600)] hidden md:block", children: highlightText })
+              highlightText && /* @__PURE__ */ jsx28("p", { className: "text-sm leading-relaxed mt-1.5 text-[var(--neutral-600)] hidden md:block", children: highlightText })
             ] })
           ] }),
-          /* @__PURE__ */ jsxs18(
+          /* @__PURE__ */ jsxs20(
             "div",
             {
               className: "rounded-xl px-3 md:px-4 py-2 md:py-2.5 flex items-center gap-3 shrink-0",
@@ -1303,11 +1750,11 @@ function DashboardShell({
                 border: "1px solid var(--card-border)"
               },
               children: [
-                /* @__PURE__ */ jsxs18("div", { className: "text-right hidden md:block", children: [
-                  /* @__PURE__ */ jsx25("p", { className: "text-xs font-medium text-[var(--foreground)]", children: agentName }),
-                  agentSubtitle && /* @__PURE__ */ jsx25("p", { className: "text-[10px] text-[var(--neutral-400)]", children: agentSubtitle })
+                /* @__PURE__ */ jsxs20("div", { className: "text-right hidden md:block", children: [
+                  /* @__PURE__ */ jsx28("p", { className: "text-xs font-medium text-[var(--foreground)]", children: agentName }),
+                  agentSubtitle && /* @__PURE__ */ jsx28("p", { className: "text-[10px] text-[var(--neutral-400)]", children: agentSubtitle })
                 ] }),
-                /* @__PURE__ */ jsx25(
+                /* @__PURE__ */ jsx28(
                   "div",
                   {
                     className: "size-9 rounded-full flex items-center justify-center text-xs font-semibold",
@@ -1322,8 +1769,8 @@ function DashboardShell({
             }
           )
         ] }),
-        /* @__PURE__ */ jsxs18("div", { className: "flex px-4 md:px-6 pt-4 pb-6 gap-4", style: { minHeight: 320 }, children: [
-          /* @__PURE__ */ jsx25(
+        /* @__PURE__ */ jsxs20("div", { className: "flex px-4 md:px-6 pt-4 pb-6 gap-4", style: { minHeight: 320 }, children: [
+          /* @__PURE__ */ jsx28(
             Sidebar,
             {
               navGroups,
@@ -1333,15 +1780,15 @@ function DashboardShell({
               onHover: setSidebarHovered
             }
           ),
-          /* @__PURE__ */ jsxs18("div", { className: "flex-1 min-w-0 flex flex-col gap-4", children: [
-            (heroContent || rightCard) && /* @__PURE__ */ jsxs18("div", { className: cn("flex flex-col lg:flex-row gap-4", !rightCard && "lg:flex-col"), children: [
-              heroContent && /* @__PURE__ */ jsx25("div", { className: "flex-1 min-w-0", children: heroContent }),
-              rightCard && /* @__PURE__ */ jsx25("div", { className: "flex-1 min-w-0", children: rightCard })
+          /* @__PURE__ */ jsxs20("div", { className: "flex-1 min-w-0 flex flex-col gap-4", children: [
+            (heroContent || rightCard) && /* @__PURE__ */ jsxs20("div", { className: cn("flex flex-col lg:flex-row gap-4", !rightCard && "lg:flex-col"), children: [
+              heroContent && /* @__PURE__ */ jsx28("div", { className: "flex-1 min-w-0", children: heroContent }),
+              rightCard && /* @__PURE__ */ jsx28("div", { className: "flex-1 min-w-0", children: rightCard })
             ] }),
             children
           ] })
         ] }),
-        /* @__PURE__ */ jsx25(
+        /* @__PURE__ */ jsx28(
           MobileNav,
           {
             open: mobileMenuOpen,
@@ -1361,7 +1808,7 @@ function DashboardShell({
 
 // src/components/pipeline-thermometer/PipelineThermometer.tsx
 import { GraphUp } from "iconoir-react";
-import { jsx as jsx26, jsxs as jsxs19 } from "react/jsx-runtime";
+import { jsx as jsx29, jsxs as jsxs21 } from "react/jsx-runtime";
 var ICON_PROPS = { width: 20, height: 20, strokeWidth: 1.5 };
 var STAGES = ["LEAD", "NURTURING", "APPLICATION", "PROCESSING", "CLOSED_WON", "CLOSED_LOST"];
 var STAGE_LABELS = {
@@ -1388,29 +1835,29 @@ function PipelineThermometer({
   className
 }) {
   const total = STAGES.reduce((sum, stage) => sum + data[stage], 0);
-  return /* @__PURE__ */ jsxs19(Card, { className, children: [
-    /* @__PURE__ */ jsxs19("div", { className: "flex items-center justify-between mb-4", children: [
-      /* @__PURE__ */ jsxs19("div", { className: "flex items-center gap-2", children: [
-        /* @__PURE__ */ jsx26(
+  return /* @__PURE__ */ jsxs21(Card, { className, children: [
+    /* @__PURE__ */ jsxs21("div", { className: "flex items-center justify-between mb-4", children: [
+      /* @__PURE__ */ jsxs21("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsx29(
           "div",
           {
             className: "w-8 h-8 rounded-md flex items-center justify-center",
             style: { background: "var(--brand-primary-light)", color: "var(--brand-primary)" },
-            children: /* @__PURE__ */ jsx26(GraphUp, { ...ICON_PROPS })
+            children: /* @__PURE__ */ jsx29(GraphUp, { ...ICON_PROPS })
           }
         ),
-        /* @__PURE__ */ jsx26("span", { className: "font-semibold text-[var(--neutral-900)]", children: title })
+        /* @__PURE__ */ jsx29("span", { className: "font-semibold text-[var(--neutral-900)]", children: title })
       ] }),
-      /* @__PURE__ */ jsxs19(Badge, { variant: "default", children: [
+      /* @__PURE__ */ jsxs21(Badge, { variant: "default", children: [
         total,
         " ",
         totalLabel
       ] })
     ] }),
-    /* @__PURE__ */ jsx26("div", { className: "flex h-3 rounded-full overflow-hidden bg-[var(--neutral-100)] mb-4", children: STAGES.map((stage) => {
+    /* @__PURE__ */ jsx29("div", { className: "flex h-3 rounded-full overflow-hidden bg-[var(--neutral-100)] mb-4", children: STAGES.map((stage) => {
       const width = total > 0 ? data[stage] / total * 100 : 0;
       if (width === 0) return null;
-      return /* @__PURE__ */ jsx26(
+      return /* @__PURE__ */ jsx29(
         "div",
         {
           className: "transition-all duration-300",
@@ -1419,32 +1866,32 @@ function PipelineThermometer({
         stage
       );
     }) }),
-    /* @__PURE__ */ jsx26("div", { className: "grid grid-cols-6 gap-2 mb-4", children: STAGES.map((stage) => /* @__PURE__ */ jsxs19(
+    /* @__PURE__ */ jsx29("div", { className: "grid grid-cols-6 gap-2 mb-4", children: STAGES.map((stage) => /* @__PURE__ */ jsxs21(
       "div",
       {
         className: "flex items-center gap-2 p-2 rounded-md bg-[var(--neutral-50)]",
         children: [
-          /* @__PURE__ */ jsx26(
+          /* @__PURE__ */ jsx29(
             "div",
             {
               className: "w-2 h-2 rounded-full flex-shrink-0",
               style: { backgroundColor: STAGE_COLORS[stage] }
             }
           ),
-          /* @__PURE__ */ jsxs19("div", { children: [
-            /* @__PURE__ */ jsx26("div", { className: "stat-number text-lg text-[var(--neutral-900)]", children: data[stage] }),
-            /* @__PURE__ */ jsx26("div", { className: "text-[10px] text-[var(--neutral-500)]", children: STAGE_LABELS[stage] })
+          /* @__PURE__ */ jsxs21("div", { children: [
+            /* @__PURE__ */ jsx29("div", { className: "stat-number text-lg text-[var(--neutral-900)]", children: data[stage] }),
+            /* @__PURE__ */ jsx29("div", { className: "text-[10px] text-[var(--neutral-500)]", children: STAGE_LABELS[stage] })
           ] })
         ]
       },
       stage
     )) }),
-    stats && stats.length > 0 && /* @__PURE__ */ jsx26("div", { className: "flex items-center justify-around pt-4 border-t border-[var(--card-border)]", children: stats.map((stat, index) => /* @__PURE__ */ jsxs19("div", { className: "flex items-center gap-4", children: [
-      /* @__PURE__ */ jsxs19("div", { className: "text-center", children: [
-        /* @__PURE__ */ jsx26("div", { className: "stat-number text-lg text-[var(--brand-primary)]", children: stat.value }),
-        /* @__PURE__ */ jsx26("div", { className: "text-xs text-[var(--neutral-500)]", children: stat.label })
+    stats && stats.length > 0 && /* @__PURE__ */ jsx29("div", { className: "flex items-center justify-around pt-4 border-t border-[var(--card-border)]", children: stats.map((stat, index) => /* @__PURE__ */ jsxs21("div", { className: "flex items-center gap-4", children: [
+      /* @__PURE__ */ jsxs21("div", { className: "text-center", children: [
+        /* @__PURE__ */ jsx29("div", { className: "stat-number text-lg text-[var(--brand-primary)]", children: stat.value }),
+        /* @__PURE__ */ jsx29("div", { className: "text-xs text-[var(--neutral-500)]", children: stat.label })
       ] }),
-      index < stats.length - 1 && /* @__PURE__ */ jsx26("div", { className: "h-8 w-px bg-[var(--neutral-100)]" })
+      index < stats.length - 1 && /* @__PURE__ */ jsx29("div", { className: "h-8 w-px bg-[var(--neutral-100)]" })
     ] }, index)) })
   ] });
 }
@@ -1454,7 +1901,7 @@ import { useState as useState4 } from "react";
 import { DragHandGesture, NavArrowDown as NavArrowDown2 } from "iconoir-react";
 
 // src/components/category-section/AppCard.tsx
-import { jsx as jsx27, jsxs as jsxs20 } from "react/jsx-runtime";
+import { jsx as jsx30, jsxs as jsxs22 } from "react/jsx-runtime";
 function AppCard({
   icon,
   title,
@@ -1468,7 +1915,7 @@ function AppCard({
   onClick,
   className
 }) {
-  return /* @__PURE__ */ jsxs20(
+  return /* @__PURE__ */ jsxs22(
     "button",
     {
       onClick,
@@ -1480,8 +1927,8 @@ function AppCard({
         className
       ),
       children: [
-        /* @__PURE__ */ jsxs20("div", { className: "flex items-center justify-between mb-3", children: [
-          /* @__PURE__ */ jsx27(
+        /* @__PURE__ */ jsxs22("div", { className: "flex items-center justify-between mb-3", children: [
+          /* @__PURE__ */ jsx30(
             "div",
             {
               className: "w-8 h-8 rounded-md flex items-center justify-center text-[var(--neutral-600)]",
@@ -1489,22 +1936,22 @@ function AppCard({
               children: icon
             }
           ),
-          /* @__PURE__ */ jsx27(Badge, { variant: statusVariant, children: status })
+          /* @__PURE__ */ jsx30(Badge, { variant: statusVariant, children: status })
         ] }),
-        /* @__PURE__ */ jsx27("h4", { className: "font-semibold text-sm text-[var(--neutral-900)] mb-2", children: title }),
-        /* @__PURE__ */ jsxs20("div", { className: "flex items-baseline gap-1.5 mb-2", children: [
-          /* @__PURE__ */ jsx27("span", { className: "stat-number text-2xl text-[var(--neutral-900)]", children: value }),
-          /* @__PURE__ */ jsx27("span", { className: "text-xs text-[var(--neutral-500)]", children: valueLabel })
+        /* @__PURE__ */ jsx30("h4", { className: "font-semibold text-sm text-[var(--neutral-900)] mb-2", children: title }),
+        /* @__PURE__ */ jsxs22("div", { className: "flex items-baseline gap-1.5 mb-2", children: [
+          /* @__PURE__ */ jsx30("span", { className: "stat-number text-2xl text-[var(--neutral-900)]", children: value }),
+          /* @__PURE__ */ jsx30("span", { className: "text-xs text-[var(--neutral-500)]", children: valueLabel })
         ] }),
-        /* @__PURE__ */ jsx27("p", { className: "text-xs text-[var(--neutral-500)] line-clamp-2", children: description }),
-        subtext && /* @__PURE__ */ jsx27("p", { className: "text-xs text-[var(--brand-primary)] mt-2 font-medium", children: subtext })
+        /* @__PURE__ */ jsx30("p", { className: "text-xs text-[var(--neutral-500)] line-clamp-2", children: description }),
+        subtext && /* @__PURE__ */ jsx30("p", { className: "text-xs text-[var(--brand-primary)] mt-2 font-medium", children: subtext })
       ]
     }
   );
 }
 
 // src/components/category-section/CategorySection.tsx
-import { jsx as jsx28, jsxs as jsxs21 } from "react/jsx-runtime";
+import { jsx as jsx31, jsxs as jsxs23 } from "react/jsx-runtime";
 var ICON_SM = { width: 16, height: 16, strokeWidth: 1.5 };
 var ICON_PROPS2 = { width: 20, height: 20, strokeWidth: 1.5 };
 function CategorySection({
@@ -1520,7 +1967,7 @@ function CategorySection({
   className
 }) {
   const [isExpanded, setIsExpanded] = useState4(defaultExpanded);
-  return /* @__PURE__ */ jsxs21(
+  return /* @__PURE__ */ jsxs23(
     "div",
     {
       "data-category": id,
@@ -1529,15 +1976,15 @@ function CategorySection({
         className
       ),
       children: [
-        /* @__PURE__ */ jsxs21(
+        /* @__PURE__ */ jsxs23(
           "button",
           {
             onClick: () => setIsExpanded(!isExpanded),
             className: "w-full flex items-center justify-between p-4 hover:bg-[var(--neutral-50)] transition-colors",
             children: [
-              /* @__PURE__ */ jsxs21("div", { className: "flex items-center gap-3", children: [
-                /* @__PURE__ */ jsx28("div", { className: "text-[var(--neutral-300)] hover:text-[var(--neutral-500)] cursor-grab active:cursor-grabbing transition-colors", children: /* @__PURE__ */ jsx28(DragHandGesture, { ...ICON_SM }) }),
-                /* @__PURE__ */ jsx28(
+              /* @__PURE__ */ jsxs23("div", { className: "flex items-center gap-3", children: [
+                /* @__PURE__ */ jsx31("div", { className: "text-[var(--neutral-300)] hover:text-[var(--neutral-500)] cursor-grab active:cursor-grabbing transition-colors", children: /* @__PURE__ */ jsx31(DragHandGesture, { ...ICON_SM }) }),
+                /* @__PURE__ */ jsx31(
                   "div",
                   {
                     className: "w-10 h-10 rounded-lg flex items-center justify-center",
@@ -1545,12 +1992,12 @@ function CategorySection({
                     children: icon
                   }
                 ),
-                /* @__PURE__ */ jsxs21("div", { className: "text-left", children: [
-                  /* @__PURE__ */ jsx28("h3", { className: "font-semibold text-[var(--neutral-900)]", children: title }),
-                  /* @__PURE__ */ jsx28("p", { className: "text-sm text-[var(--neutral-500)]", children: subtitle })
+                /* @__PURE__ */ jsxs23("div", { className: "text-left", children: [
+                  /* @__PURE__ */ jsx31("h3", { className: "font-semibold text-[var(--neutral-900)]", children: title }),
+                  /* @__PURE__ */ jsx31("p", { className: "text-sm text-[var(--neutral-500)]", children: subtitle })
                 ] })
               ] }),
-              /* @__PURE__ */ jsx28(
+              /* @__PURE__ */ jsx31(
                 NavArrowDown2,
                 {
                   ...ICON_PROPS2,
@@ -1563,12 +2010,12 @@ function CategorySection({
             ]
           }
         ),
-        /* @__PURE__ */ jsx28(
+        /* @__PURE__ */ jsx31(
           "div",
           {
             className: "grid transition-[grid-template-rows] duration-300 ease-in-out",
             style: { gridTemplateRows: isExpanded ? "1fr" : "0fr" },
-            children: /* @__PURE__ */ jsx28("div", { className: "overflow-hidden", children: /* @__PURE__ */ jsx28("div", { className: "px-4 pb-4", children: /* @__PURE__ */ jsx28("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3", children: apps.map((app, index) => /* @__PURE__ */ jsx28(
+            children: /* @__PURE__ */ jsx31("div", { className: "overflow-hidden", children: /* @__PURE__ */ jsx31("div", { className: "px-4 pb-4", children: /* @__PURE__ */ jsx31("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3", children: apps.map((app, index) => /* @__PURE__ */ jsx31(
               AppCard,
               {
                 icon: app.icon,
@@ -1593,7 +2040,7 @@ function CategorySection({
 
 // src/components/today-schedule/TodaySchedule.tsx
 import { Calendar } from "iconoir-react";
-import { jsx as jsx29, jsxs as jsxs22 } from "react/jsx-runtime";
+import { jsx as jsx32, jsxs as jsxs24 } from "react/jsx-runtime";
 var ICON_PROPS3 = { width: 18, height: 18, strokeWidth: 1.5 };
 function TodaySchedule({
   date,
@@ -1606,23 +2053,23 @@ function TodaySchedule({
     month: "long",
     day: "numeric"
   });
-  return /* @__PURE__ */ jsxs22(Card, { padding: "sm", className, children: [
-    /* @__PURE__ */ jsxs22("div", { className: "flex items-center justify-between mb-4", children: [
-      /* @__PURE__ */ jsxs22("div", { className: "flex items-center gap-3", children: [
-        /* @__PURE__ */ jsx29(
+  return /* @__PURE__ */ jsxs24(Card, { padding: "sm", className, children: [
+    /* @__PURE__ */ jsxs24("div", { className: "flex items-center justify-between mb-4", children: [
+      /* @__PURE__ */ jsxs24("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsx32(
           "div",
           {
             className: "w-8 h-8 rounded-md flex items-center justify-center",
             style: { background: "var(--brand-accent-light)", color: "var(--brand-accent)" },
-            children: /* @__PURE__ */ jsx29(Calendar, { ...ICON_PROPS3 })
+            children: /* @__PURE__ */ jsx32(Calendar, { ...ICON_PROPS3 })
           }
         ),
-        /* @__PURE__ */ jsxs22("div", { children: [
-          /* @__PURE__ */ jsx29("h4", { className: "font-semibold text-sm text-[var(--neutral-900)]", children: "Today's Schedule" }),
-          /* @__PURE__ */ jsx29("p", { className: "text-xs text-[var(--neutral-500)]", children: displayDate })
+        /* @__PURE__ */ jsxs24("div", { children: [
+          /* @__PURE__ */ jsx32("h4", { className: "font-semibold text-sm text-[var(--neutral-900)]", children: "Today's Schedule" }),
+          /* @__PURE__ */ jsx32("p", { className: "text-xs text-[var(--neutral-500)]", children: displayDate })
         ] })
       ] }),
-      onViewAll && /* @__PURE__ */ jsx29(
+      onViewAll && /* @__PURE__ */ jsx32(
         "button",
         {
           onClick: onViewAll,
@@ -1631,31 +2078,31 @@ function TodaySchedule({
         }
       )
     ] }),
-    /* @__PURE__ */ jsx29("div", { className: "space-y-0", children: items.map((item, index) => /* @__PURE__ */ jsxs22(
+    /* @__PURE__ */ jsx32("div", { className: "space-y-0", children: items.map((item, index) => /* @__PURE__ */ jsxs24(
       "div",
       {
         className: "flex items-center gap-4 py-2 border-b border-[var(--card-border)] last:border-0",
         children: [
-          /* @__PURE__ */ jsx29("span", { className: "text-xs font-medium text-[var(--neutral-400)] w-16", children: item.time }),
-          /* @__PURE__ */ jsx29("span", { className: "text-sm text-[var(--neutral-700)]", children: item.event })
+          /* @__PURE__ */ jsx32("span", { className: "text-xs font-medium text-[var(--neutral-400)] w-16", children: item.time }),
+          /* @__PURE__ */ jsx32("span", { className: "text-sm text-[var(--neutral-700)]", children: item.event })
         ]
       },
       index
     )) }),
-    items.length === 0 && /* @__PURE__ */ jsx29("p", { className: "text-sm text-[var(--neutral-400)] text-center py-4", children: "No events scheduled" })
+    items.length === 0 && /* @__PURE__ */ jsx32("p", { className: "text-sm text-[var(--neutral-400)] text-center py-4", children: "No events scheduled" })
   ] });
 }
 
 // src/components/drag-hint/DragHint.tsx
 import { DragHandGesture as DragHandGesture2 } from "iconoir-react";
-import { jsx as jsx30, jsxs as jsxs23 } from "react/jsx-runtime";
+import { jsx as jsx33, jsxs as jsxs25 } from "react/jsx-runtime";
 var ICON_SM2 = { width: 16, height: 16, strokeWidth: 1.5 };
 function DragHint({
   message = "Drag sections to rearrange your dashboard",
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs23(
+  return /* @__PURE__ */ jsxs25(
     "div",
     {
       className: cn(
@@ -1664,15 +2111,15 @@ function DragHint({
       ),
       ...props,
       children: [
-        /* @__PURE__ */ jsx30(DragHandGesture2, { ...ICON_SM2 }),
-        /* @__PURE__ */ jsx30("span", { children: message })
+        /* @__PURE__ */ jsx33(DragHandGesture2, { ...ICON_SM2 }),
+        /* @__PURE__ */ jsx33("span", { children: message })
       ]
     }
   );
 }
 
 // src/components/stat-card/StatCard.tsx
-import { jsx as jsx31, jsxs as jsxs24 } from "react/jsx-runtime";
+import { jsx as jsx34, jsxs as jsxs26 } from "react/jsx-runtime";
 function StatCard({
   label,
   value,
@@ -1682,13 +2129,13 @@ function StatCard({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx31(Card, { className, ...props, children: /* @__PURE__ */ jsxs24("div", { className: "flex items-start justify-between", children: [
-    /* @__PURE__ */ jsxs24("div", { children: [
-      /* @__PURE__ */ jsx31("p", { className: "text-sm text-[var(--neutral-500)]", children: label }),
-      /* @__PURE__ */ jsx31("p", { className: "text-2xl font-bold stat-number", style: { color }, children: value }),
-      subtitle && /* @__PURE__ */ jsx31("p", { className: "text-xs text-[var(--neutral-400)] mt-0.5", children: subtitle })
+  return /* @__PURE__ */ jsx34(Card, { className, ...props, children: /* @__PURE__ */ jsxs26("div", { className: "flex items-start justify-between", children: [
+    /* @__PURE__ */ jsxs26("div", { children: [
+      /* @__PURE__ */ jsx34("p", { className: "text-sm text-[var(--neutral-500)]", children: label }),
+      /* @__PURE__ */ jsx34("p", { className: "text-2xl font-bold stat-number", style: { color }, children: value }),
+      subtitle && /* @__PURE__ */ jsx34("p", { className: "text-xs text-[var(--neutral-400)] mt-0.5", children: subtitle })
     ] }),
-    icon && /* @__PURE__ */ jsx31(
+    icon && /* @__PURE__ */ jsx34(
       "div",
       {
         className: "w-10 h-10 rounded-lg flex items-center justify-center",
@@ -1701,234 +2148,6 @@ function StatCard({
     )
   ] }) });
 }
-
-// src/icons/track-icons.tsx
-import { jsx as jsx32, jsxs as jsxs25 } from "react/jsx-runtime";
-function CreditScoreIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("path", { d: "M10 32a14 14 0 0 1 28 0", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
-    /* @__PURE__ */ jsx32("path", { d: "M14 32a10 10 0 0 1 20 0", stroke: accent, strokeWidth: "1", opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("line", { x1: "24", y1: "32", x2: "32", y2: "20", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "32", r: "2.5", fill: accent, opacity: "0.4" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "12", cy: "28", r: "1", fill: accent, opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "16", cy: "21", r: "1", fill: accent, opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "18", r: "1", fill: accent, opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "32", cy: "21", r: "1", fill: accent, opacity: "0.5" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "36", cy: "28", r: "1", fill: accent, opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("path", { d: "M35 14l1.5-1.5", stroke: accent, strokeWidth: "1", opacity: "0.4" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "37.5", cy: "11.5", r: "1", fill: accent, opacity: "0.3" })
-  ] });
-}
-function SavingsIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("path", { d: "M16 16h16v20a4 4 0 0 1-4 4H20a4 4 0 0 1-4-4V16z", stroke: accent, strokeWidth: "2" }),
-    /* @__PURE__ */ jsx32("rect", { x: "14", y: "12", width: "20", height: "4", rx: "1", stroke: accent, strokeWidth: "1.5" }),
-    /* @__PURE__ */ jsx32("ellipse", { cx: "24", cy: "30", rx: "6", ry: "2", fill: accent, opacity: "0.12" }),
-    /* @__PURE__ */ jsx32("ellipse", { cx: "24", cy: "27", rx: "6", ry: "2", fill: accent, opacity: "0.08" }),
-    /* @__PURE__ */ jsx32("ellipse", { cx: "24", cy: "33", rx: "6", ry: "2", fill: accent, opacity: "0.16" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "22", cy: "24", r: "2", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "26", cy: "22", r: "2", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("path", { d: "M34 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "37", cy: "7", r: "0.8", fill: accent, opacity: "0.25" })
-  ] });
-}
-function DtiIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("line", { x1: "24", y1: "10", x2: "24", y2: "38", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
-    /* @__PURE__ */ jsx32("rect", { x: "18", y: "36", width: "12", height: "3", rx: "1.5", fill: accent, opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("line", { x1: "10", y1: "18", x2: "38", y2: "16", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
-    /* @__PURE__ */ jsx32("path", { d: "M6 18a4 4 0 0 0 8 0", stroke: accent, strokeWidth: "1.5" }),
-    /* @__PURE__ */ jsx32("line", { x1: "10", y1: "18", x2: "6", y2: "18", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("line", { x1: "10", y1: "18", x2: "14", y2: "18", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("path", { d: "M34 16a4 4 0 0 0 8 0", stroke: accent, strokeWidth: "1.5" }),
-    /* @__PURE__ */ jsx32("line", { x1: "38", y1: "16", x2: "34", y2: "16", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("line", { x1: "38", y1: "16", x2: "42", y2: "16", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "10", r: "2", fill: accent, opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "10", cy: "22", r: "1", fill: accent, opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "38", cy: "20", r: "1", fill: accent, opacity: "0.2" })
-  ] });
-}
-function DreamHomeIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("path", { d: "M24 8L8 22v18h32V22z", stroke: accent, strokeWidth: "2", strokeLinejoin: "round" }),
-    /* @__PURE__ */ jsx32("rect", { x: "20", y: "28", width: "8", height: "12", rx: "1", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("path", { d: "M24 20c-1-3-5-3-5 0s5 6 5 6 5-3 5-6-4-3-5 0z", fill: accent, opacity: "0.25", stroke: accent, strokeWidth: "1" }),
-    /* @__PURE__ */ jsx32("rect", { x: "12", y: "24", width: "5", height: "5", rx: "0.5", fill: accent, opacity: "0.08" }),
-    /* @__PURE__ */ jsx32("rect", { x: "31", y: "24", width: "5", height: "5", rx: "0.5", fill: accent, opacity: "0.08" }),
-    /* @__PURE__ */ jsx32("path", { d: "M34 8c0-2 2-2 2-4", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
-    /* @__PURE__ */ jsx32("rect", { x: "32", y: "10", width: "4", height: "8", rx: "0.5", stroke: accent, strokeWidth: "1", opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "38", cy: "6", r: "1", fill: accent, opacity: "0.3" })
-  ] });
-}
-function MortgageTermsIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("rect", { x: "12", y: "6", width: "24", height: "36", rx: "2", stroke: accent, strokeWidth: "2" }),
-    /* @__PURE__ */ jsx32("path", { d: "M30 6v6h6", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("line", { x1: "17", y1: "16", x2: "31", y2: "16", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("line", { x1: "17", y1: "21", x2: "28", y2: "21", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("line", { x1: "17", y1: "26", x2: "31", y2: "26", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("line", { x1: "17", y1: "31", x2: "25", y2: "31", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("rect", { x: "16", y: "14", width: "16", height: "5", rx: "1", fill: accent, opacity: "0.08" }),
-    /* @__PURE__ */ jsx32("path", { d: "M17 36l2 2 4-4", stroke: accent, strokeWidth: "1.5", opacity: "0.5" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "34", cy: "8", r: "1", fill: accent, opacity: "0.2" })
-  ] });
-}
-function BudgetIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("rect", { x: "12", y: "6", width: "24", height: "36", rx: "3", stroke: accent, strokeWidth: "2" }),
-    /* @__PURE__ */ jsx32("rect", { x: "16", y: "10", width: "16", height: "8", rx: "1.5", fill: accent, opacity: 0.1 }),
-    /* @__PURE__ */ jsx32("rect", { x: "16", y: "10", width: "16", height: "8", rx: "1.5", fill: "none", stroke: accent, strokeWidth: "1", opacity: 0.3 }),
-    /* @__PURE__ */ jsx32("text", { x: "27", y: "17", fill: accent, opacity: "0.4", fontSize: "6", fontWeight: "600", textAnchor: "end", fontFamily: "monospace", children: "$1,250" }),
-    [0, 1, 2].map(
-      (row) => [0, 1, 2].map((col) => /* @__PURE__ */ jsx32("rect", { x: 17 + col * 5, y: 22 + row * 5, width: "3.5", height: "3.5", rx: "0.5", fill: accent, opacity: row === 2 && col === 2 ? 0.35 : 0.12 }, `${row}-${col}`))
-    ),
-    /* @__PURE__ */ jsx32("rect", { x: "17", y: "37", width: "14", height: "3", rx: "0.5", fill: accent, opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("path", { d: "M36 8l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" })
-  ] });
-}
-function TimelineIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("path", { d: "M12 40c0-6 12-6 12-12s-8-6-8-12 8-6 8-12", stroke: accent, strokeWidth: "2", strokeLinecap: "round", fill: "none" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "28", r: "3", fill: accent, opacity: "0.2", stroke: accent, strokeWidth: "1.5" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "16", cy: "16", r: "3", fill: accent, opacity: "0.2", stroke: accent, strokeWidth: "1.5" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "4", r: "2", fill: accent, opacity: "0.4" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "12", cy: "40", r: "2.5", fill: accent, opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("line", { x1: "24", y1: "4", x2: "24", y2: "10", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("path", { d: "M24 4h6l-3 3 3 3h-6", fill: accent, opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "32", cy: "24", r: "1", fill: accent, opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "8", cy: "32", r: "1", fill: accent, opacity: "0.15" })
-  ] });
-}
-function StreakIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("path", { d: "M24 6c0 8-10 12-10 22a10 10 0 0 0 20 0c0-10-10-14-10-22z", fill: accent, opacity: "0.15", stroke: accent, strokeWidth: "2" }),
-    /* @__PURE__ */ jsx32("path", { d: "M24 18c0 5-5 7-5 12a5 5 0 0 0 10 0c0-5-5-7-5-12z", fill: accent, opacity: "0.25" }),
-    /* @__PURE__ */ jsx32("ellipse", { cx: "24", cy: "34", rx: "2.5", ry: "3", fill: accent, opacity: "0.4" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "14", cy: "18", r: "1", fill: accent, opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "34", cy: "16", r: "1", fill: accent, opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("path", { d: "M32 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "35", cy: "7", r: "0.8", fill: accent, opacity: "0.3" })
-  ] });
-}
-function DailyExerciseIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("line", { x1: "6", y1: "32", x2: "42", y2: "32", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "24", r: "8", fill: accent, opacity: "0.12", stroke: accent, strokeWidth: "2" }),
-    [0, 45, 90, 135, 180].map((angle) => {
-      const rad = angle * Math.PI / 180;
-      return /* @__PURE__ */ jsx32(
-        "line",
-        {
-          x1: 24 + Math.cos(rad) * 11,
-          y1: 24 - Math.sin(rad) * 11,
-          x2: 24 + Math.cos(rad) * 14,
-          y2: 24 - Math.sin(rad) * 14,
-          stroke: accent,
-          strokeWidth: "1.5",
-          strokeLinecap: "round",
-          opacity: "0.3"
-        },
-        angle
-      );
-    }),
-    /* @__PURE__ */ jsx32("path", { d: "M22 18l4-6-1 5h3l-4 6 1-5h-3z", fill: accent, opacity: "0.35" }),
-    /* @__PURE__ */ jsx32("rect", { x: "10", y: "34", width: "28", height: "4", rx: "1", fill: accent, opacity: "0.06" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "36", cy: "14", r: "1", fill: accent, opacity: "0.25" })
-  ] });
-}
-function WeeklyChallengeIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("path", { d: "M16 10h16v12a8 8 0 0 1-16 0V10z", stroke: accent, strokeWidth: "2" }),
-    /* @__PURE__ */ jsx32("path", { d: "M16 14c-4 0-6 2-6 5s2 5 6 5", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("path", { d: "M32 14c4 0 6 2 6 5s-2 5-6 5", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("line", { x1: "24", y1: "30", x2: "24", y2: "36", stroke: accent, strokeWidth: "2" }),
-    /* @__PURE__ */ jsx32("rect", { x: "18", y: "36", width: "12", height: "3", rx: "1.5", fill: accent, opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("path", { d: "M24 14l1.5 3 3.5.5-2.5 2.5.5 3.5L24 22l-3 1.5.5-3.5-2.5-2.5 3.5-.5z", fill: accent, opacity: "0.25" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "36", cy: "8", r: "1", fill: accent, opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("path", { d: "M38 6l1.5-1.5", stroke: accent, strokeWidth: "1", opacity: "0.4" })
-  ] });
-}
-function SelfPacedIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "24", r: "16", stroke: accent, strokeWidth: "2" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "24", r: "12", stroke: accent, strokeWidth: "0.8", opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "10", r: "1.5", fill: accent, opacity: "0.4" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "38", r: "1", fill: accent, opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "10", cy: "24", r: "1", fill: accent, opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "38", cy: "24", r: "1", fill: accent, opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("path", { d: "M24 14l3 10-3 2-3-2z", fill: accent, opacity: "0.35" }),
-    /* @__PURE__ */ jsx32("path", { d: "M24 34l3-10-3-2-3 2z", fill: accent, opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "24", r: "2", fill: accent, opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("path", { d: "M36 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" })
-  ] });
-}
-function CelebrationIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("path", { d: "M24 8l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z", fill: accent, opacity: "0.2", stroke: accent, strokeWidth: "1.5" }),
-    /* @__PURE__ */ jsx32("rect", { x: "8", y: "12", width: "3", height: "3", rx: "0.5", fill: accent, opacity: "0.25", transform: "rotate(15 9.5 13.5)" }),
-    /* @__PURE__ */ jsx32("rect", { x: "36", y: "10", width: "3", height: "3", rx: "0.5", fill: accent, opacity: "0.2", transform: "rotate(-20 37.5 11.5)" }),
-    /* @__PURE__ */ jsx32("rect", { x: "10", y: "30", width: "2.5", height: "2.5", rx: "0.5", fill: accent, opacity: "0.15", transform: "rotate(30 11.25 31.25)" }),
-    /* @__PURE__ */ jsx32("rect", { x: "35", y: "32", width: "2.5", height: "2.5", rx: "0.5", fill: accent, opacity: "0.2", transform: "rotate(-10 36.25 33.25)" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "14", cy: "22", r: "1.2", fill: accent, opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "34", cy: "24", r: "1.2", fill: accent, opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "20", cy: "38", r: "1", fill: accent, opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "30", cy: "40", r: "1", fill: accent, opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("path", { d: "M12 8l-2-3", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
-    /* @__PURE__ */ jsx32("path", { d: "M38 8l2-3", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
-  ] });
-}
-function DownPaymentIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    [0, 1, 2, 3, 4].map((i) => /* @__PURE__ */ jsx32("ellipse", { cx: "24", cy: 36 - i * 4, rx: "10", ry: "3", fill: accent, opacity: 0.06 + i * 0.04, stroke: accent, strokeWidth: i === 4 ? "1.5" : "0.8" }, i)),
-    /* @__PURE__ */ jsx32("text", { x: "24", y: "23", fill: accent, opacity: "0.35", fontSize: "8", fontWeight: "700", textAnchor: "middle", fontFamily: "sans-serif", children: "$" }),
-    /* @__PURE__ */ jsx32("line", { x1: "14", y1: "36", x2: "14", y2: "20", stroke: accent, strokeWidth: "0.8", opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("line", { x1: "34", y1: "36", x2: "34", y2: "20", stroke: accent, strokeWidth: "0.8", opacity: "0.15" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "36", cy: "12", r: "1", fill: accent, opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("path", { d: "M34 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" })
-  ] });
-}
-function PreApprovalIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("path", { d: "M24 6L10 12v12c0 10 14 18 14 18s14-8 14-18V12z", fill: accent, opacity: "0.08", stroke: accent, strokeWidth: "2" }),
-    /* @__PURE__ */ jsx32("path", { d: "M24 12L14 16v8c0 7 10 13 10 13s10-6 10-13V16z", fill: accent, opacity: "0.06" }),
-    /* @__PURE__ */ jsx32("path", { d: "M18 24l4 4 8-8", stroke: accent, strokeWidth: "2.5", strokeLinecap: "round", strokeLinejoin: "round", opacity: "0.5" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "36", cy: "8", r: "1", fill: accent, opacity: "0.25" }),
-    /* @__PURE__ */ jsx32("path", { d: "M38 6l1-1", stroke: accent, strokeWidth: "1", opacity: "0.3" })
-  ] });
-}
-function NeighborhoodIcon({ accent, size = 48, className }) {
-  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
-    /* @__PURE__ */ jsx32("rect", { x: "4", y: "36", width: "40", height: "4", rx: "1", fill: accent, opacity: "0.06" }),
-    /* @__PURE__ */ jsx32("path", { d: "M10 26L6 30v6h8v-6z", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("rect", { x: "8", y: "32", width: "3", height: "4", rx: "0.5", fill: accent, opacity: "0.1" }),
-    /* @__PURE__ */ jsx32("path", { d: "M24 14L16 22v14h16V22z", stroke: accent, strokeWidth: "2" }),
-    /* @__PURE__ */ jsx32("rect", { x: "21", y: "26", width: "6", height: "10", rx: "1", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("rect", { x: "18", y: "24", width: "4", height: "4", rx: "0.5", fill: accent, opacity: "0.08" }),
-    /* @__PURE__ */ jsx32("rect", { x: "26", y: "24", width: "4", height: "4", rx: "0.5", fill: accent, opacity: "0.08" }),
-    /* @__PURE__ */ jsx32("path", { d: "M38 22L34 26v10h8v-10z", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
-    /* @__PURE__ */ jsx32("rect", { x: "36", y: "30", width: "3", height: "6", rx: "0.5", fill: accent, opacity: "0.1" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "13", cy: "20", r: "3", fill: accent, opacity: "0.1" }),
-    /* @__PURE__ */ jsx32("line", { x1: "13", y1: "23", x2: "13", y2: "26", stroke: accent, strokeWidth: "1", opacity: "0.2" }),
-    /* @__PURE__ */ jsx32("circle", { cx: "40", cy: "14", r: "1", fill: accent, opacity: "0.2" })
-  ] });
-}
-var TRACK_ICONS = {
-  "credit-score": CreditScoreIcon,
-  savings: SavingsIcon,
-  dti: DtiIcon,
-  "dream-home": DreamHomeIcon,
-  "mortgage-terms": MortgageTermsIcon,
-  budget: BudgetIcon,
-  timeline: TimelineIcon,
-  streak: StreakIcon,
-  "daily-exercise": DailyExerciseIcon,
-  "weekly-challenge": WeeklyChallengeIcon,
-  "self-paced": SelfPacedIcon,
-  celebration: CelebrationIcon,
-  "down-payment": DownPaymentIcon,
-  "pre-approval": PreApprovalIcon,
-  neighborhood: NeighborhoodIcon
-};
 export {
   AppCard,
   AppHeader,
@@ -1947,6 +2166,7 @@ export {
   CardDescription,
   CardFooter,
   CardHeader,
+  CardIllustration,
   CardLoader,
   CardTitle,
   CategorySection,
@@ -2018,12 +2238,14 @@ export {
   StreakIcon,
   SurveyStepCard,
   TRACK_ICONS,
+  TRACK_ILLUSTRATIONS,
   Table,
   Textarea,
   TimelineIcon,
   Toast,
   ToastProvider,
   TodaySchedule,
+  TrackCardIllustration,
   WeeklyChallengeIcon,
   badgeVariants,
   buttonVariants,

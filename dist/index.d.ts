@@ -317,6 +317,64 @@ interface SkeletonTextProps extends Omit<SkeletonProps, "width" | "height"> {
 declare const SkeletonText: React.ForwardRefExoticComponent<SkeletonTextProps & React.RefAttributes<HTMLDivElement>>;
 declare function SkeletonStyles(): null;
 
+interface CardIllustrationProps extends React.HTMLAttributes<HTMLDivElement> {
+    /** Accent color hex (e.g. "#5B9EA6") */
+    accent: string;
+    /** Container size in px (default 88) */
+    size?: number;
+    /** Border radius in px (default 18) */
+    radius?: number;
+    /** Container background opacity 0-1 (default 0.08) */
+    bgOpacity?: number;
+    /** Pattern SVG element (Layer 2) — rendered at low opacity inside the container */
+    pattern?: React.ReactNode;
+    /** Pattern opacity 0-1 (default 0.07) */
+    patternOpacity?: number;
+    /** Icon/illustration element (Layer 3) — rendered centered on top */
+    icon?: React.ReactNode;
+    /** Dark mode variant — adjusts opacities per spec */
+    dark?: boolean;
+}
+/**
+ * Branded Card Illustration — 3-layer construction
+ *
+ * Layer 1: Tinted container (accent at 6-10% opacity)
+ * Layer 2: Decorative SVG pattern (3-12% opacity)
+ * Layer 3: Primary icon/illustration (centered)
+ *
+ * Used on dashboard cards, survey steps, and track cards.
+ */
+declare const CardIllustration: React.ForwardRefExoticComponent<CardIllustrationProps & React.RefAttributes<HTMLDivElement>>;
+
+interface TrackIllustrationDef {
+    /** Creative codename */
+    codename: string;
+    /** What this card covers */
+    section: string;
+    /** Accent color hex */
+    accent: string;
+    /** Pattern component */
+    pattern: React.ComponentType<{
+        accent: string;
+    }>;
+    /** Icon component */
+    icon: React.ComponentType<{
+        accent: string;
+        size?: number;
+    }>;
+}
+/** Pre-defined track card illustrations — permanently assigned */
+declare const TRACK_ILLUSTRATIONS: Record<string, TrackIllustrationDef>;
+interface TrackCardIllustrationProps extends Omit<CardIllustrationProps, "accent" | "pattern" | "icon"> {
+    /** Registry key (e.g. "daily-credit-score") */
+    illustrationKey: string;
+    /** Override accent color */
+    accentOverride?: string;
+    /** Icon size in px (default 48) */
+    iconSize?: number;
+}
+declare function TrackCardIllustration({ illustrationKey, accentOverride, iconSize, ...props }: TrackCardIllustrationProps): react_jsx_runtime.JSX.Element | null;
+
 interface AppShellProps extends React.HTMLAttributes<HTMLDivElement> {
     header?: React.ReactNode;
 }
@@ -513,4 +571,4 @@ declare const TRACK_ICONS: Record<string, React.ComponentType<TrackIconProps>>;
 
 declare function cn(...inputs: ClassValue[]): string;
 
-export { AppCard, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, AppShell, type AppShellProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, CreditScoreIcon, CrossHatch, DailyExerciseIcon, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DtiIcon, EmptyState, type EmptyStateProps, InlineLoading, Input, type InputProps, Label, LoadingOverlay, MortgageTermsIcon, NeighborhoodIcon, OrbitalRings, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, TRACK_ICONS, Table, type TableProps, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, type TrackIconProps, WeeklyChallengeIcon, badgeVariants, buttonVariants, cn, useToast };
+export { AppCard, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, AppShell, type AppShellProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, CreditScoreIcon, CrossHatch, DailyExerciseIcon, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DtiIcon, EmptyState, type EmptyStateProps, InlineLoading, Input, type InputProps, Label, LoadingOverlay, MortgageTermsIcon, NeighborhoodIcon, OrbitalRings, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WeeklyChallengeIcon, badgeVariants, buttonVariants, cn, useToast };
