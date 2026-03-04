@@ -1313,6 +1313,66 @@
       "doUse": "Contextual help and data retrieval. Market data queries. Lead scoring explanations. Daily planning assistance. Property comparisons and insights.",
       "dontUse": "Critical actions that require explicit confirmation \u2014 use a dialog. Bulk operations. Anything that modifies data without the user's explicit instruction.",
       "parameters": {}
+    },
+    "app-shell": {
+      "name": "App Shell",
+      "category": "layout",
+      "description": "Full-page layout wrapper that provides the top-level structure for every Rello dashboard. Composes a sticky header slot above a flex-grow content area. All branding, navigation, and page content nest inside this shell.",
+      "behavior": "Renders immediately on mount with no animation. The header slot sticks to the top of the viewport (via the AppHeader component). The content area fills the remaining viewport height so pages never appear shorter than the screen. Accepts any React node as header and children — no opinions on what goes inside.",
+      "appearance": "Full min-h-screen flex column. Background uses the --background design token. Header area is flush to top, content area grows to fill remaining space. No borders, shadows, or padding on the shell itself — those belong to the header and page container within.",
+      "doUse": "Every dashboard page (MLO, Broker, Agent, Guest MLO). Any full-page view that needs a persistent header. Wrap the entire route layout.",
+      "dontUse": "Embedded widgets or partial-page components. Pages that don't need a sticky header. Auth screens or landing pages with custom layouts.",
+      "parameters": {}
+    },
+    "app-header": {
+      "name": "App Header",
+      "category": "layout",
+      "description": "Sticky top bar providing logo, title, and action slots for every dashboard. Includes sub-components AppHeaderAction (icon button with optional notification dot) and AppHeaderDivider (vertical separator). Designed for white-label — all branding passes in as props, no internal context dependency.",
+      "behavior": "Sticks to the top of the viewport (sticky, z-30). Left side shows logo, optional title with divider, and a leftSlot for additional controls. Right side shows rightSlot and children for action buttons. AppHeaderAction buttons have hover background transition (150ms). The dot prop on AppHeaderAction renders a small red notification indicator.",
+      "appearance": "Card-background fill with bottom border (card-border). Horizontal padding 16px, vertical 12px. Inner content max-width 7xl, centered. Logo and title separated by a 1px vertical divider (neutral-200). Action buttons: 8px padding, rounded-lg, neutral-500 text, hover neutral-50 background. Notification dot: 8px red circle (--hot) positioned top-right of the action button.",
+      "doUse": "Every dashboard layout as the header slot of AppShell. White-labeled apps where branding changes per tenant. Any page that needs a persistent top bar with logo and actions.",
+      "dontUse": "Inline section headers within a page — use a heading element. Footer bars. Pages without navigation or branding.",
+      "parameters": {}
+    },
+    "page-container": {
+      "name": "Page Container",
+      "category": "layout",
+      "description": "Centered content wrapper that constrains page width and applies consistent padding. Uses CVA variants for max-width (sm through full) and padding (sm, md, lg). Renders as a <main> element for accessibility.",
+      "behavior": "Static layout component — no animation or interaction. Centers content horizontally with auto margins. Responsive by default — content fills available width up to the max-width constraint.",
+      "appearance": "Five max-width variants: sm (max-w-3xl / 768px), md (max-w-5xl / 1024px), lg (max-w-6xl / 1152px), xl (max-w-7xl / 1280px, default), full (no constraint). Three padding variants: sm (px-12 py-16), md (px-16 py-24, default), lg (px-24 py-32). No background, border, or shadow — inherits from parent.",
+      "doUse": "Every dashboard page as the main content area inside AppShell. Any page that needs centered, width-constrained content. Settings pages, detail views, form pages.",
+      "dontUse": "Full-bleed backgrounds that need edge-to-edge rendering. Nested containers — one PageContainer per page. Sidebar content areas (they have their own width constraints).",
+      "parameters": {}
+    },
+    "today-schedule": {
+      "name": "Today's Schedule",
+      "category": "rello",
+      "description": "A compact daily agenda card showing time-and-event pairs for the current day. Used on every MLO and Broker dashboard to surface the day's appointments, calls, and deadlines at a glance. Wraps content in a Card with a calendar icon header.",
+      "behavior": "Static display — no interaction on individual items. Date defaults to today (formatted as 'Wednesday, March 4') but can be overridden via the date prop. Optional 'View All' link in the header triggers an onViewAll callback. Empty state shows a centered 'No events scheduled' message.",
+      "appearance": "Card container with sm padding. Header: 32px rounded-md icon container in brand-accent-light with Calendar icon in brand-accent, title 'Today's Schedule' (14px semibold), date subtitle (12px neutral-500). 'View All' link in brand-primary on the right. Schedule items: time in 12px medium neutral-400 (64px fixed width), event in 14px neutral-700. Items separated by card-border bottom borders (last item has no border).",
+      "doUse": "MLO Command Center dashboard. Broker Command Center dashboard. Any dashboard that surfaces daily schedule data. Sidebar widgets showing upcoming events.",
+      "dontUse": "Full calendar views — use a dedicated calendar component. Multi-day schedules — this is single-day only. Task lists — this is for time-bound events, not todos.",
+      "parameters": {}
+    },
+    "category-section": {
+      "name": "Category Section",
+      "category": "rello",
+      "description": "Collapsible accordion section that groups related AppCards on MLO and Broker dashboards. Each category has a drag handle for reordering, a branded icon, title/subtitle, and an expandable grid of AppCards. The primary organizational unit of the dashboard.",
+      "behavior": "Click the header to expand or collapse the app grid. Expand/collapse uses CSS grid-template-rows transition (0fr ↔ 1fr, 300ms ease-in-out) for smooth height animation regardless of content. Chevron rotates 180° when expanded. Drag handle icon in the header enables category reordering (via external SortableJS integration). Apps render in a responsive grid (1 col mobile, 2 col tablet, 3 col desktop). Optional onAppClick callback fires when an AppCard is clicked.",
+      "appearance": "Card-styled container: card-background, card-border, rounded-xl, overflow-hidden. Header: full-width button, 16px padding, hover neutral-50 background. Drag handle: neutral-300 (hover neutral-500), grab cursor. Category icon: 40px rounded-lg container with custom iconBg and iconColor. Title: semibold neutral-900. Subtitle: 14px neutral-500. Chevron: neutral-400, right-aligned. Content area: 16px horizontal padding, 16px bottom padding, responsive 3-column grid with 12px gap.",
+      "doUse": "MLO dashboard app categories (Engagement Tools, Analytics, etc.). Broker dashboard team tools. Any grouped collection of AppCards that benefits from expand/collapse. Reorderable dashboard sections.",
+      "dontUse": "Generic accordions — use the Accordion component. Non-app content grouping. Sections with fewer than 2 items. Navigation menus.",
+      "parameters": {}
+    },
+    "drag-hint": {
+      "name": "Drag Hint",
+      "category": "feedback",
+      "description": "A small instructional banner that tells users they can drag to reorder dashboard sections. Displays a drag-hand icon alongside a customizable message. Placed above or below draggable CategorySection groups.",
+      "behavior": "Static display — no interaction. Message defaults to 'Drag sections to rearrange your dashboard' but can be overridden via the message prop. Intended to be conditionally rendered (e.g., only on first visit or when edit mode is active).",
+      "appearance": "Centered flex row with 8px gap. Drag-hand icon: 16px, inherits text color. Text: 12px neutral-400. Vertical padding: 8px. No background, border, or shadow — blends subtly into the page.",
+      "doUse": "Above draggable CategorySection groups on MLO and Broker dashboards. Any interface where drag-to-reorder is available and needs a hint. Onboarding or first-use guidance for reorderable layouts.",
+      "dontUse": "Non-draggable interfaces. Persistent instructions — this should disappear after the user has learned the interaction. Error messages or warnings — use Alert.",
+      "parameters": {}
     }
   }
 }
