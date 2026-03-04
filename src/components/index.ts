@@ -13,3 +13,16 @@ export * from "./empty-state";
 export * from "./pagination";
 export * from "./table";
 export * from "./progress";
+
+// Layout components
+export * from "./app-shell";
+export * from "./app-header";
+export * from "./slide-panel";
+export * from "./page-container";
+
+// Dashboard widgets
+export * from "./pipeline-thermometer";
+export * from "./category-section";
+export * from "./today-schedule";
+export * from "./drag-hint";
+export * from "./stat-card";

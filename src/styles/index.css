@@ -21,4 +21,5 @@
   .font-body { font-family: "Open Sans", sans-serif; }
   .font-ui { font-family: "Hind", sans-serif; }
   .font-stat { font-family: "Mina", sans-serif; }
+  .stat-number { font-family: "Mina", sans-serif; font-weight: 600; }
 }

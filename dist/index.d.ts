@@ -46,7 +46,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 declare const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>;
 
 declare const badgeVariants: (props?: ({
-    variant?: "primary" | "accent" | "default" | "error" | "success" | "warning" | "info" | "hot" | "qualified" | "engaged" | "warming" | "cold" | null | undefined;
+    variant?: "primary" | "accent" | "default" | "error" | "success" | "warning" | "info" | "hot" | "qualified" | "engaged" | "warming" | "cold" | "LEAD" | "NURTURING" | "APPLICATION" | "PROCESSING" | "CLOSED_WON" | "CLOSED_LOST" | null | undefined;
     size?: "xs" | "sm" | "md" | "lg" | null | undefined;
 } & class_variance_authority_types.ClassProp) | undefined) => string;
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {
@@ -54,6 +54,7 @@ interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement>, VariantProps
     dot?: boolean;
 }
 declare function Badge({ className, variant, size, icon, dot, children, ...props }: BadgeProps): react_jsx_runtime.JSX.Element;
+type BadgeVariant = NonNullable<VariantProps<typeof badgeVariants>["variant"]>;
 
 declare const Select: React.FC<SelectPrimitive.SelectProps>;
 declare const SelectGroup: React.ForwardRefExoticComponent<SelectPrimitive.SelectGroupProps & React.RefAttributes<HTMLDivElement>>;
@@ -166,6 +167,137 @@ interface ProgressProps extends React.ComponentPropsWithoutRef<typeof ProgressPr
 }
 declare const Progress: React.ForwardRefExoticComponent<ProgressProps & React.RefAttributes<HTMLDivElement>>;
 
+interface AppShellProps extends React.HTMLAttributes<HTMLDivElement> {
+    header?: React.ReactNode;
+}
+declare const AppShell: React.ForwardRefExoticComponent<AppShellProps & React.RefAttributes<HTMLDivElement>>;
+
+interface AppHeaderProps extends React.HTMLAttributes<HTMLElement> {
+    logo?: React.ReactNode;
+    title?: string;
+    leftSlot?: React.ReactNode;
+    rightSlot?: React.ReactNode;
+}
+declare const AppHeader: React.ForwardRefExoticComponent<AppHeaderProps & React.RefAttributes<HTMLElement>>;
+interface AppHeaderActionProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    dot?: boolean;
+}
+declare const AppHeaderAction: React.ForwardRefExoticComponent<AppHeaderActionProps & React.RefAttributes<HTMLButtonElement>>;
+declare const AppHeaderDivider: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
+
+interface SlidePanelProps {
+    isOpen: boolean;
+    onClose: () => void;
+    position?: "left" | "right";
+    width?: string;
+    children?: React.ReactNode;
+    className?: string;
+}
+declare function SlidePanel({ isOpen, onClose, position, width, children, className, }: SlidePanelProps): react_jsx_runtime.JSX.Element;
+declare const SlidePanelHeader: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
+declare const SlidePanelBody: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
+declare const SlidePanelFooter: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
+declare const SlidePanelClose: React.ForwardRefExoticComponent<DialogPrimitive.DialogCloseProps & React.RefAttributes<HTMLButtonElement>>;
+
+declare const pageContainerVariants: (props?: ({
+    maxWidth?: "sm" | "md" | "lg" | "xl" | "full" | null | undefined;
+    padding?: "sm" | "md" | "lg" | null | undefined;
+} & class_variance_authority_types.ClassProp) | undefined) => string;
+interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof pageContainerVariants> {
+}
+declare const PageContainer: React.ForwardRefExoticComponent<PageContainerProps & React.RefAttributes<HTMLDivElement>>;
+
+interface PipelineData {
+    LEAD: number;
+    NURTURING: number;
+    APPLICATION: number;
+    PROCESSING: number;
+    CLOSED_WON: number;
+    CLOSED_LOST: number;
+}
+interface QuickStat {
+    value: string | number;
+    label: string;
+}
+interface PipelineThermometerProps {
+    title?: string;
+    data: PipelineData;
+    stats?: QuickStat[];
+    totalLabel?: string;
+    className?: string;
+}
+declare const STAGES: readonly ["LEAD", "NURTURING", "APPLICATION", "PROCESSING", "CLOSED_WON", "CLOSED_LOST"];
+declare const STAGE_LABELS: Record<keyof PipelineData, string>;
+declare const STAGE_COLORS: Record<keyof PipelineData, string>;
+declare function PipelineThermometer({ title, data, stats, totalLabel, className, }: PipelineThermometerProps): react_jsx_runtime.JSX.Element;
+
+interface AppCardProps {
+    icon: React.ReactNode;
+    title: string;
+    status: string;
+    statusVariant: BadgeVariant;
+    value: string | number;
+    valueLabel: string;
+    description: string;
+    subtext?: string;
+    large?: boolean;
+    onClick?: () => void;
+    className?: string;
+}
+declare function AppCard({ icon, title, status, statusVariant, value, valueLabel, description, subtext, large, onClick, className, }: AppCardProps): react_jsx_runtime.JSX.Element;
+
+interface CategoryApp {
+    icon: React.ReactNode;
+    title: string;
+    status: string;
+    statusVariant: AppCardProps["statusVariant"];
+    value: string | number;
+    valueLabel: string;
+    description: string;
+    subtext?: string;
+    large?: boolean;
+    href?: string;
+}
+interface CategorySectionProps {
+    id: string;
+    title: string;
+    subtitle: string;
+    icon: React.ReactNode;
+    iconBg: string;
+    iconColor: string;
+    apps: CategoryApp[];
+    defaultExpanded?: boolean;
+    onAppClick?: (app: CategoryApp) => void;
+    className?: string;
+}
+declare function CategorySection({ id, title, subtitle, icon, iconBg, iconColor, apps, defaultExpanded, onAppClick, className, }: CategorySectionProps): react_jsx_runtime.JSX.Element;
+
+interface ScheduleItem {
+    time: string;
+    event: string;
+}
+interface TodayScheduleProps {
+    date?: string;
+    items: ScheduleItem[];
+    onViewAll?: () => void;
+    className?: string;
+}
+declare function TodaySchedule({ date, items, onViewAll, className, }: TodayScheduleProps): react_jsx_runtime.JSX.Element;
+
+interface DragHintProps extends React.HTMLAttributes<HTMLDivElement> {
+    message?: string;
+}
+declare function DragHint({ message, className, ...props }: DragHintProps): react_jsx_runtime.JSX.Element;
+
+interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
+    label: string;
+    value: string | number;
+    icon?: React.ReactNode;
+    color?: string;
+    subtitle?: string;
+}
+declare function StatCard({ label, value, icon, color, subtitle, className, ...props }: StatCardProps): react_jsx_runtime.JSX.Element;
+
 declare function cn(...inputs: ClassValue[]): string;
 
-export { Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardLoader, type CardProps, CardTitle, Checkbox, type Column, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, EmptyState, type EmptyStateProps, InlineLoading, Input, type InputProps, Label, LoadingOverlay, PageLoader, Pagination, type PaginationProps, Progress, type ProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, Spinner, type SpinnerProps, Table, type TableProps, Textarea, type TextareaProps, badgeVariants, buttonVariants, cn };
+export { AppCard, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, AppShell, type AppShellProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, Checkbox, type Column, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DragHint, type DragHintProps, EmptyState, type EmptyStateProps, InlineLoading, Input, type InputProps, Label, LoadingOverlay, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, Progress, type ProgressProps, type QuickStat, STAGES, STAGE_COLORS, STAGE_LABELS, type ScheduleItem, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, Table, type TableProps, Textarea, type TextareaProps, TodaySchedule, type TodayScheduleProps, badgeVariants, buttonVariants, cn };
