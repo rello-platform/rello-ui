@@ -1701,6 +1701,234 @@ function StatCard({
     )
   ] }) });
 }
+
+// src/icons/track-icons.tsx
+import { jsx as jsx32, jsxs as jsxs25 } from "react/jsx-runtime";
+function CreditScoreIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("path", { d: "M10 32a14 14 0 0 1 28 0", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx32("path", { d: "M14 32a10 10 0 0 1 20 0", stroke: accent, strokeWidth: "1", opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("line", { x1: "24", y1: "32", x2: "32", y2: "20", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "32", r: "2.5", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "12", cy: "28", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "16", cy: "21", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "18", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "32", cy: "21", r: "1", fill: accent, opacity: "0.5" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "36", cy: "28", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("path", { d: "M35 14l1.5-1.5", stroke: accent, strokeWidth: "1", opacity: "0.4" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "37.5", cy: "11.5", r: "1", fill: accent, opacity: "0.3" })
+  ] });
+}
+function SavingsIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("path", { d: "M16 16h16v20a4 4 0 0 1-4 4H20a4 4 0 0 1-4-4V16z", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx32("rect", { x: "14", y: "12", width: "20", height: "4", rx: "1", stroke: accent, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx32("ellipse", { cx: "24", cy: "30", rx: "6", ry: "2", fill: accent, opacity: "0.12" }),
+    /* @__PURE__ */ jsx32("ellipse", { cx: "24", cy: "27", rx: "6", ry: "2", fill: accent, opacity: "0.08" }),
+    /* @__PURE__ */ jsx32("ellipse", { cx: "24", cy: "33", rx: "6", ry: "2", fill: accent, opacity: "0.16" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "22", cy: "24", r: "2", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "26", cy: "22", r: "2", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("path", { d: "M34 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "37", cy: "7", r: "0.8", fill: accent, opacity: "0.25" })
+  ] });
+}
+function DtiIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("line", { x1: "24", y1: "10", x2: "24", y2: "38", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx32("rect", { x: "18", y: "36", width: "12", height: "3", rx: "1.5", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("line", { x1: "10", y1: "18", x2: "38", y2: "16", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx32("path", { d: "M6 18a4 4 0 0 0 8 0", stroke: accent, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx32("line", { x1: "10", y1: "18", x2: "6", y2: "18", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("line", { x1: "10", y1: "18", x2: "14", y2: "18", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("path", { d: "M34 16a4 4 0 0 0 8 0", stroke: accent, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx32("line", { x1: "38", y1: "16", x2: "34", y2: "16", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("line", { x1: "38", y1: "16", x2: "42", y2: "16", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "10", r: "2", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "10", cy: "22", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "38", cy: "20", r: "1", fill: accent, opacity: "0.2" })
+  ] });
+}
+function DreamHomeIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("path", { d: "M24 8L8 22v18h32V22z", stroke: accent, strokeWidth: "2", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx32("rect", { x: "20", y: "28", width: "8", height: "12", rx: "1", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("path", { d: "M24 20c-1-3-5-3-5 0s5 6 5 6 5-3 5-6-4-3-5 0z", fill: accent, opacity: "0.25", stroke: accent, strokeWidth: "1" }),
+    /* @__PURE__ */ jsx32("rect", { x: "12", y: "24", width: "5", height: "5", rx: "0.5", fill: accent, opacity: "0.08" }),
+    /* @__PURE__ */ jsx32("rect", { x: "31", y: "24", width: "5", height: "5", rx: "0.5", fill: accent, opacity: "0.08" }),
+    /* @__PURE__ */ jsx32("path", { d: "M34 8c0-2 2-2 2-4", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx32("rect", { x: "32", y: "10", width: "4", height: "8", rx: "0.5", stroke: accent, strokeWidth: "1", opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "38", cy: "6", r: "1", fill: accent, opacity: "0.3" })
+  ] });
+}
+function MortgageTermsIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("rect", { x: "12", y: "6", width: "24", height: "36", rx: "2", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx32("path", { d: "M30 6v6h6", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("line", { x1: "17", y1: "16", x2: "31", y2: "16", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("line", { x1: "17", y1: "21", x2: "28", y2: "21", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("line", { x1: "17", y1: "26", x2: "31", y2: "26", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("line", { x1: "17", y1: "31", x2: "25", y2: "31", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("rect", { x: "16", y: "14", width: "16", height: "5", rx: "1", fill: accent, opacity: "0.08" }),
+    /* @__PURE__ */ jsx32("path", { d: "M17 36l2 2 4-4", stroke: accent, strokeWidth: "1.5", opacity: "0.5" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "34", cy: "8", r: "1", fill: accent, opacity: "0.2" })
+  ] });
+}
+function BudgetIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("rect", { x: "12", y: "6", width: "24", height: "36", rx: "3", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx32("rect", { x: "16", y: "10", width: "16", height: "8", rx: "1.5", fill: accent, opacity: 0.1 }),
+    /* @__PURE__ */ jsx32("rect", { x: "16", y: "10", width: "16", height: "8", rx: "1.5", fill: "none", stroke: accent, strokeWidth: "1", opacity: 0.3 }),
+    /* @__PURE__ */ jsx32("text", { x: "27", y: "17", fill: accent, opacity: "0.4", fontSize: "6", fontWeight: "600", textAnchor: "end", fontFamily: "monospace", children: "$1,250" }),
+    [0, 1, 2].map(
+      (row) => [0, 1, 2].map((col) => /* @__PURE__ */ jsx32("rect", { x: 17 + col * 5, y: 22 + row * 5, width: "3.5", height: "3.5", rx: "0.5", fill: accent, opacity: row === 2 && col === 2 ? 0.35 : 0.12 }, `${row}-${col}`))
+    ),
+    /* @__PURE__ */ jsx32("rect", { x: "17", y: "37", width: "14", height: "3", rx: "0.5", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("path", { d: "M36 8l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" })
+  ] });
+}
+function TimelineIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("path", { d: "M12 40c0-6 12-6 12-12s-8-6-8-12 8-6 8-12", stroke: accent, strokeWidth: "2", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "28", r: "3", fill: accent, opacity: "0.2", stroke: accent, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "16", cy: "16", r: "3", fill: accent, opacity: "0.2", stroke: accent, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "4", r: "2", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "12", cy: "40", r: "2.5", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("line", { x1: "24", y1: "4", x2: "24", y2: "10", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("path", { d: "M24 4h6l-3 3 3 3h-6", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "32", cy: "24", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "8", cy: "32", r: "1", fill: accent, opacity: "0.15" })
+  ] });
+}
+function StreakIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("path", { d: "M24 6c0 8-10 12-10 22a10 10 0 0 0 20 0c0-10-10-14-10-22z", fill: accent, opacity: "0.15", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx32("path", { d: "M24 18c0 5-5 7-5 12a5 5 0 0 0 10 0c0-5-5-7-5-12z", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx32("ellipse", { cx: "24", cy: "34", rx: "2.5", ry: "3", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "14", cy: "18", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "34", cy: "16", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("path", { d: "M32 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "35", cy: "7", r: "0.8", fill: accent, opacity: "0.3" })
+  ] });
+}
+function DailyExerciseIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("line", { x1: "6", y1: "32", x2: "42", y2: "32", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "24", r: "8", fill: accent, opacity: "0.12", stroke: accent, strokeWidth: "2" }),
+    [0, 45, 90, 135, 180].map((angle) => {
+      const rad = angle * Math.PI / 180;
+      return /* @__PURE__ */ jsx32(
+        "line",
+        {
+          x1: 24 + Math.cos(rad) * 11,
+          y1: 24 - Math.sin(rad) * 11,
+          x2: 24 + Math.cos(rad) * 14,
+          y2: 24 - Math.sin(rad) * 14,
+          stroke: accent,
+          strokeWidth: "1.5",
+          strokeLinecap: "round",
+          opacity: "0.3"
+        },
+        angle
+      );
+    }),
+    /* @__PURE__ */ jsx32("path", { d: "M22 18l4-6-1 5h3l-4 6 1-5h-3z", fill: accent, opacity: "0.35" }),
+    /* @__PURE__ */ jsx32("rect", { x: "10", y: "34", width: "28", height: "4", rx: "1", fill: accent, opacity: "0.06" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "36", cy: "14", r: "1", fill: accent, opacity: "0.25" })
+  ] });
+}
+function WeeklyChallengeIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("path", { d: "M16 10h16v12a8 8 0 0 1-16 0V10z", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx32("path", { d: "M16 14c-4 0-6 2-6 5s2 5 6 5", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("path", { d: "M32 14c4 0 6 2 6 5s-2 5-6 5", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("line", { x1: "24", y1: "30", x2: "24", y2: "36", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx32("rect", { x: "18", y: "36", width: "12", height: "3", rx: "1.5", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("path", { d: "M24 14l1.5 3 3.5.5-2.5 2.5.5 3.5L24 22l-3 1.5.5-3.5-2.5-2.5 3.5-.5z", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "36", cy: "8", r: "1", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("path", { d: "M38 6l1.5-1.5", stroke: accent, strokeWidth: "1", opacity: "0.4" })
+  ] });
+}
+function SelfPacedIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "24", r: "16", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "24", r: "12", stroke: accent, strokeWidth: "0.8", opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "10", r: "1.5", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "38", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "10", cy: "24", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "38", cy: "24", r: "1", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("path", { d: "M24 14l3 10-3 2-3-2z", fill: accent, opacity: "0.35" }),
+    /* @__PURE__ */ jsx32("path", { d: "M24 34l3-10-3-2-3 2z", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "24", cy: "24", r: "2", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("path", { d: "M36 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" })
+  ] });
+}
+function CelebrationIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("path", { d: "M24 8l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z", fill: accent, opacity: "0.2", stroke: accent, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx32("rect", { x: "8", y: "12", width: "3", height: "3", rx: "0.5", fill: accent, opacity: "0.25", transform: "rotate(15 9.5 13.5)" }),
+    /* @__PURE__ */ jsx32("rect", { x: "36", y: "10", width: "3", height: "3", rx: "0.5", fill: accent, opacity: "0.2", transform: "rotate(-20 37.5 11.5)" }),
+    /* @__PURE__ */ jsx32("rect", { x: "10", y: "30", width: "2.5", height: "2.5", rx: "0.5", fill: accent, opacity: "0.15", transform: "rotate(30 11.25 31.25)" }),
+    /* @__PURE__ */ jsx32("rect", { x: "35", y: "32", width: "2.5", height: "2.5", rx: "0.5", fill: accent, opacity: "0.2", transform: "rotate(-10 36.25 33.25)" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "14", cy: "22", r: "1.2", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "34", cy: "24", r: "1.2", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "20", cy: "38", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "30", cy: "40", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("path", { d: "M12 8l-2-3", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx32("path", { d: "M38 8l2-3", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function DownPaymentIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    [0, 1, 2, 3, 4].map((i) => /* @__PURE__ */ jsx32("ellipse", { cx: "24", cy: 36 - i * 4, rx: "10", ry: "3", fill: accent, opacity: 0.06 + i * 0.04, stroke: accent, strokeWidth: i === 4 ? "1.5" : "0.8" }, i)),
+    /* @__PURE__ */ jsx32("text", { x: "24", y: "23", fill: accent, opacity: "0.35", fontSize: "8", fontWeight: "700", textAnchor: "middle", fontFamily: "sans-serif", children: "$" }),
+    /* @__PURE__ */ jsx32("line", { x1: "14", y1: "36", x2: "14", y2: "20", stroke: accent, strokeWidth: "0.8", opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("line", { x1: "34", y1: "36", x2: "34", y2: "20", stroke: accent, strokeWidth: "0.8", opacity: "0.15" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "36", cy: "12", r: "1", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("path", { d: "M34 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4" })
+  ] });
+}
+function PreApprovalIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("path", { d: "M24 6L10 12v12c0 10 14 18 14 18s14-8 14-18V12z", fill: accent, opacity: "0.08", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx32("path", { d: "M24 12L14 16v8c0 7 10 13 10 13s10-6 10-13V16z", fill: accent, opacity: "0.06" }),
+    /* @__PURE__ */ jsx32("path", { d: "M18 24l4 4 8-8", stroke: accent, strokeWidth: "2.5", strokeLinecap: "round", strokeLinejoin: "round", opacity: "0.5" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "36", cy: "8", r: "1", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx32("path", { d: "M38 6l1-1", stroke: accent, strokeWidth: "1", opacity: "0.3" })
+  ] });
+}
+function NeighborhoodIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs25("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx32("rect", { x: "4", y: "36", width: "40", height: "4", rx: "1", fill: accent, opacity: "0.06" }),
+    /* @__PURE__ */ jsx32("path", { d: "M10 26L6 30v6h8v-6z", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("rect", { x: "8", y: "32", width: "3", height: "4", rx: "0.5", fill: accent, opacity: "0.1" }),
+    /* @__PURE__ */ jsx32("path", { d: "M24 14L16 22v14h16V22z", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx32("rect", { x: "21", y: "26", width: "6", height: "10", rx: "1", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("rect", { x: "18", y: "24", width: "4", height: "4", rx: "0.5", fill: accent, opacity: "0.08" }),
+    /* @__PURE__ */ jsx32("rect", { x: "26", y: "24", width: "4", height: "4", rx: "0.5", fill: accent, opacity: "0.08" }),
+    /* @__PURE__ */ jsx32("path", { d: "M38 22L34 26v10h8v-10z", stroke: accent, strokeWidth: "1.5", opacity: "0.3" }),
+    /* @__PURE__ */ jsx32("rect", { x: "36", y: "30", width: "3", height: "6", rx: "0.5", fill: accent, opacity: "0.1" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "13", cy: "20", r: "3", fill: accent, opacity: "0.1" }),
+    /* @__PURE__ */ jsx32("line", { x1: "13", y1: "23", x2: "13", y2: "26", stroke: accent, strokeWidth: "1", opacity: "0.2" }),
+    /* @__PURE__ */ jsx32("circle", { cx: "40", cy: "14", r: "1", fill: accent, opacity: "0.2" })
+  ] });
+}
+var TRACK_ICONS = {
+  "credit-score": CreditScoreIcon,
+  savings: SavingsIcon,
+  dti: DtiIcon,
+  "dream-home": DreamHomeIcon,
+  "mortgage-terms": MortgageTermsIcon,
+  budget: BudgetIcon,
+  timeline: TimelineIcon,
+  streak: StreakIcon,
+  "daily-exercise": DailyExerciseIcon,
+  "weekly-challenge": WeeklyChallengeIcon,
+  "self-paced": SelfPacedIcon,
+  celebration: CelebrationIcon,
+  "down-payment": DownPaymentIcon,
+  "pre-approval": PreApprovalIcon,
+  neighborhood: NeighborhoodIcon
+};
 export {
   AppCard,
   AppHeader,
@@ -1711,6 +1939,7 @@ export {
   AvatarFallback,
   AvatarImage,
   Badge,
+  BudgetIcon,
   Button,
   ButtonSpinner,
   Card,
@@ -1721,9 +1950,12 @@ export {
   CardLoader,
   CardTitle,
   CategorySection,
+  CelebrationIcon,
   Checkbox,
   ConcentricCircles,
+  CreditScoreIcon,
   CrossHatch,
+  DailyExerciseIcon,
   DashboardShell,
   Dialog,
   DialogClose,
@@ -1737,23 +1969,30 @@ export {
   DialogTrigger,
   DiamondGrid,
   DotGrid,
+  DownPaymentIcon,
   DragHint,
+  DreamHomeIcon,
+  DtiIcon,
   EmptyState,
   InlineLoading,
   Input,
   Label2 as Label,
   LoadingOverlay,
+  MortgageTermsIcon,
+  NeighborhoodIcon,
   OrbitalRings,
   PATTERNS,
   PageContainer,
   PageLoader,
   Pagination,
   PipelineThermometer,
+  PreApprovalIcon,
   Progress,
   RadialBurst,
   STAGES,
   STAGE_COLORS,
   STAGE_LABELS,
+  SavingsIcon,
   Select,
   SelectContent,
   SelectGroup,
@@ -1764,6 +2003,7 @@ export {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
+  SelfPacedIcon,
   Skeleton,
   SkeletonCircle,
   SkeletonStyles,
@@ -1775,12 +2015,16 @@ export {
   SlidePanelHeader,
   Spinner,
   StatCard,
+  StreakIcon,
   SurveyStepCard,
+  TRACK_ICONS,
   Table,
   Textarea,
+  TimelineIcon,
   Toast,
   ToastProvider,
   TodaySchedule,
+  WeeklyChallengeIcon,
   badgeVariants,
   buttonVariants,
   cn,
