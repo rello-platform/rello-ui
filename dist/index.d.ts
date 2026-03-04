@@ -207,6 +207,47 @@ interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement>, Varia
 }
 declare const PageContainer: React.ForwardRefExoticComponent<PageContainerProps & React.RefAttributes<HTMLDivElement>>;
 
+interface DashboardNavItem {
+    icon: React.ReactNode;
+    label: string;
+    href?: string;
+    onClick?: () => void;
+}
+interface DashboardNavGroup {
+    label?: string | null;
+    items: DashboardNavItem[];
+}
+interface DashboardShellProps {
+    /** Logo element (top-left, beside title) */
+    logo: React.ReactNode;
+    /** App title — renders in heading font at 30px */
+    appTitle: string;
+    /** Subtitle below the title */
+    appSubtitle: string;
+    /** Dynamic highlight paragraph (numbers auto-bolded if string) */
+    highlightText?: React.ReactNode;
+    /** Agent name shown in top-right card */
+    agentName: string;
+    /** Two-letter initials for the avatar circle */
+    agentInitials: string;
+    /** Role/title shown below agent name */
+    agentSubtitle?: string;
+    /** Sidebar navigation groups */
+    navGroups: DashboardNavGroup[];
+    /** Label of the currently active nav item */
+    activeNavLabel?: string;
+    /** Called when a nav item is clicked */
+    onNavClick?: (item: DashboardNavItem) => void;
+    /** Left 50% of main content area */
+    heroContent?: React.ReactNode;
+    /** Right 50% of main content area (omit for full-width hero) */
+    rightCard?: React.ReactNode;
+    /** Content below the hero row */
+    children?: React.ReactNode;
+    className?: string;
+}
+declare function DashboardShell({ logo, appTitle, appSubtitle, highlightText, agentName, agentInitials, agentSubtitle, navGroups, activeNavLabel, onNavClick, heroContent, rightCard, children, className, }: DashboardShellProps): react_jsx_runtime.JSX.Element;
+
 interface PipelineData {
     LEAD: number;
     NURTURING: number;
@@ -300,4 +341,4 @@ declare function StatCard({ label, value, icon, color, subtitle, className, ...p
 
 declare function cn(...inputs: ClassValue[]): string;
 
-export { AppCard, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, AppShell, type AppShellProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, Checkbox, type Column, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DragHint, type DragHintProps, EmptyState, type EmptyStateProps, InlineLoading, Input, type InputProps, Label, LoadingOverlay, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, Progress, type ProgressProps, type QuickStat, STAGES, STAGE_COLORS, STAGE_LABELS, type ScheduleItem, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, Table, type TableProps, Textarea, type TextareaProps, TodaySchedule, type TodayScheduleProps, badgeVariants, buttonVariants, cn };
+export { AppCard, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, AppShell, type AppShellProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, Checkbox, type Column, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DragHint, type DragHintProps, EmptyState, type EmptyStateProps, InlineLoading, Input, type InputProps, Label, LoadingOverlay, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, Progress, type ProgressProps, type QuickStat, STAGES, STAGE_COLORS, STAGE_LABELS, type ScheduleItem, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, Table, type TableProps, Textarea, type TextareaProps, TodaySchedule, type TodayScheduleProps, badgeVariants, buttonVariants, cn };

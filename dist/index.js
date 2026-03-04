@@ -623,9 +623,234 @@ var PageContainer = React14.forwardRef(
 );
 PageContainer.displayName = "PageContainer";
 
+// src/components/dashboard-shell/DashboardShell.tsx
+import { useState } from "react";
+import { Menu } from "iconoir-react";
+import { jsx as jsx20, jsxs as jsxs14 } from "react/jsx-runtime";
+function Sidebar({
+  navGroups,
+  activeNavLabel,
+  onNavClick,
+  hovered,
+  onHover
+}) {
+  return /* @__PURE__ */ jsx20(
+    "div",
+    {
+      className: "rounded-xl flex-shrink-0 overflow-hidden transition-all duration-300 hidden md:block",
+      style: {
+        width: hovered ? 190 : 60,
+        backgroundColor: "var(--card-background)",
+        border: "1px solid var(--card-border)"
+      },
+      onMouseEnter: () => onHover(true),
+      onMouseLeave: () => onHover(false),
+      children: /* @__PURE__ */ jsx20("div", { className: "py-2", children: navGroups.map((group, gi) => /* @__PURE__ */ jsxs14("div", { children: [
+        group.label && hovered && /* @__PURE__ */ jsx20("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-400)] px-4 pt-3 pb-1", children: group.label }),
+        group.items.map((item) => {
+          const isActive = item.label === activeNavLabel;
+          return /* @__PURE__ */ jsxs14(
+            "button",
+            {
+              onClick: () => onNavClick?.(item),
+              className: "w-full flex items-center gap-2.5 py-2.5 transition-colors",
+              style: {
+                paddingLeft: hovered ? 14 : 16,
+                paddingRight: 14,
+                backgroundColor: isActive ? "var(--brand-primary)" : "transparent",
+                color: isActive ? "#fff" : "var(--neutral-600)",
+                borderRadius: isActive ? 10 : 0,
+                margin: isActive ? "2px 6px" : "0",
+                width: isActive ? "calc(100% - 12px)" : "100%"
+              },
+              children: [
+                /* @__PURE__ */ jsx20("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
+                hovered && /* @__PURE__ */ jsx20("span", { className: "text-xs font-medium whitespace-nowrap", children: item.label })
+              ]
+            },
+            item.label
+          );
+        })
+      ] }, gi)) })
+    }
+  );
+}
+function MobileNav({
+  open,
+  onClose,
+  navGroups,
+  activeNavLabel,
+  onNavClick,
+  agentName,
+  agentInitials,
+  agentSubtitle
+}) {
+  return /* @__PURE__ */ jsxs14(SlidePanel, { isOpen: open, onClose, position: "left", width: "280px", children: [
+    /* @__PURE__ */ jsx20(SlidePanelHeader, { children: /* @__PURE__ */ jsx20("span", { className: "font-semibold text-[var(--neutral-900)]", children: "Menu" }) }),
+    /* @__PURE__ */ jsxs14("div", { className: "flex items-center gap-3 px-5 py-4 border-b border-[var(--card-border)]", children: [
+      /* @__PURE__ */ jsx20(
+        "div",
+        {
+          className: "w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold",
+          style: { background: "var(--brand-primary-light)", color: "var(--brand-primary)" },
+          children: agentInitials
+        }
+      ),
+      /* @__PURE__ */ jsxs14("div", { children: [
+        /* @__PURE__ */ jsx20("div", { className: "font-medium text-sm text-[var(--neutral-900)]", children: agentName }),
+        agentSubtitle && /* @__PURE__ */ jsx20("div", { className: "text-xs text-[var(--neutral-500)]", children: agentSubtitle })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx20(SlidePanelBody, { children: /* @__PURE__ */ jsx20("nav", { className: "py-2", children: navGroups.map((group, gi) => /* @__PURE__ */ jsxs14("div", { children: [
+      group.label && /* @__PURE__ */ jsx20("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-400)] px-5 pt-3 pb-1", children: group.label }),
+      group.items.map((item) => {
+        const isActive = item.label === activeNavLabel;
+        return /* @__PURE__ */ jsxs14(
+          "button",
+          {
+            onClick: () => {
+              onNavClick?.(item);
+              onClose();
+            },
+            className: cn(
+              "flex items-center gap-3 w-full px-5 py-2.5 text-sm transition-colors",
+              isActive ? "bg-[var(--brand-primary-light)] text-[var(--brand-primary)] font-semibold" : "text-[var(--neutral-600)] hover:bg-[var(--neutral-50)]"
+            ),
+            children: [
+              /* @__PURE__ */ jsx20("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
+              item.label
+            ]
+          },
+          item.label
+        );
+      })
+    ] }, gi)) }) })
+  ] });
+}
+function DashboardShell({
+  logo,
+  appTitle,
+  appSubtitle,
+  highlightText,
+  agentName,
+  agentInitials,
+  agentSubtitle,
+  navGroups,
+  activeNavLabel,
+  onNavClick,
+  heroContent,
+  rightCard,
+  children,
+  className
+}) {
+  const [sidebarHovered, setSidebarHovered] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  return /* @__PURE__ */ jsxs14(
+    "div",
+    {
+      className: cn("min-h-screen", className),
+      style: { backgroundColor: "var(--background)" },
+      children: [
+        /* @__PURE__ */ jsxs14("div", { className: "flex items-start justify-between px-4 md:px-6 pt-4 md:pt-6", children: [
+          /* @__PURE__ */ jsxs14("div", { className: "flex items-start gap-3 md:gap-4 max-w-xl", children: [
+            /* @__PURE__ */ jsx20(
+              "button",
+              {
+                className: "md:hidden p-2 -ml-2 rounded-lg text-[var(--neutral-500)] hover:bg-[var(--neutral-50)]",
+                onClick: () => setMobileMenuOpen(true),
+                "aria-label": "Open menu",
+                children: /* @__PURE__ */ jsx20(Menu, { width: 20, height: 20, strokeWidth: 1.5 })
+              }
+            ),
+            /* @__PURE__ */ jsx20("div", { className: "shrink-0 hidden md:block", children: logo }),
+            /* @__PURE__ */ jsxs14("div", { children: [
+              /* @__PURE__ */ jsx20(
+                "h1",
+                {
+                  className: "text-2xl md:text-3xl font-bold tracking-tight leading-tight",
+                  style: { color: "var(--foreground)", fontFamily: "var(--font-heading)" },
+                  children: appTitle
+                }
+              ),
+              /* @__PURE__ */ jsx20(
+                "p",
+                {
+                  className: "text-sm md:text-base",
+                  style: { color: "var(--neutral-500)", fontFamily: "var(--font-body)" },
+                  children: appSubtitle
+                }
+              ),
+              highlightText && /* @__PURE__ */ jsx20("p", { className: "text-sm leading-relaxed mt-1.5 text-[var(--neutral-600)] hidden md:block", children: highlightText })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs14(
+            "div",
+            {
+              className: "rounded-xl px-3 md:px-4 py-2 md:py-2.5 flex items-center gap-3 shrink-0",
+              style: {
+                backgroundColor: "var(--card-background)",
+                border: "1px solid var(--card-border)"
+              },
+              children: [
+                /* @__PURE__ */ jsxs14("div", { className: "text-right hidden md:block", children: [
+                  /* @__PURE__ */ jsx20("p", { className: "text-xs font-medium text-[var(--foreground)]", children: agentName }),
+                  agentSubtitle && /* @__PURE__ */ jsx20("p", { className: "text-[10px] text-[var(--neutral-400)]", children: agentSubtitle })
+                ] }),
+                /* @__PURE__ */ jsx20(
+                  "div",
+                  {
+                    className: "size-9 rounded-full flex items-center justify-center text-xs font-semibold",
+                    style: {
+                      backgroundColor: "var(--brand-primary-light)",
+                      color: "var(--brand-primary)"
+                    },
+                    children: agentInitials
+                  }
+                )
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxs14("div", { className: "flex px-4 md:px-6 pt-4 pb-6 gap-4", style: { minHeight: 320 }, children: [
+          /* @__PURE__ */ jsx20(
+            Sidebar,
+            {
+              navGroups,
+              activeNavLabel,
+              onNavClick,
+              hovered: sidebarHovered,
+              onHover: setSidebarHovered
+            }
+          ),
+          /* @__PURE__ */ jsxs14("div", { className: "flex-1 min-w-0 flex flex-col gap-4", children: [
+            (heroContent || rightCard) && /* @__PURE__ */ jsxs14("div", { className: cn("flex flex-col lg:flex-row gap-4", !rightCard && "lg:flex-col"), children: [
+              heroContent && /* @__PURE__ */ jsx20("div", { className: "flex-1 min-w-0", children: heroContent }),
+              rightCard && /* @__PURE__ */ jsx20("div", { className: "flex-1 min-w-0", children: rightCard })
+            ] }),
+            children
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx20(
+          MobileNav,
+          {
+            open: mobileMenuOpen,
+            onClose: () => setMobileMenuOpen(false),
+            navGroups,
+            activeNavLabel,
+            onNavClick,
+            agentName,
+            agentInitials,
+            agentSubtitle
+          }
+        )
+      ]
+    }
+  );
+}
+
 // src/components/pipeline-thermometer/PipelineThermometer.tsx
 import { GraphUp } from "iconoir-react";
-import { jsx as jsx20, jsxs as jsxs14 } from "react/jsx-runtime";
+import { jsx as jsx21, jsxs as jsxs15 } from "react/jsx-runtime";
 var ICON_PROPS = { width: 20, height: 20, strokeWidth: 1.5 };
 var STAGES = ["LEAD", "NURTURING", "APPLICATION", "PROCESSING", "CLOSED_WON", "CLOSED_LOST"];
 var STAGE_LABELS = {
@@ -652,29 +877,29 @@ function PipelineThermometer({
   className
 }) {
   const total = STAGES.reduce((sum, stage) => sum + data[stage], 0);
-  return /* @__PURE__ */ jsxs14(Card, { className, children: [
-    /* @__PURE__ */ jsxs14("div", { className: "flex items-center justify-between mb-4", children: [
-      /* @__PURE__ */ jsxs14("div", { className: "flex items-center gap-2", children: [
-        /* @__PURE__ */ jsx20(
+  return /* @__PURE__ */ jsxs15(Card, { className, children: [
+    /* @__PURE__ */ jsxs15("div", { className: "flex items-center justify-between mb-4", children: [
+      /* @__PURE__ */ jsxs15("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsx21(
           "div",
           {
             className: "w-8 h-8 rounded-md flex items-center justify-center",
             style: { background: "var(--brand-primary-light)", color: "var(--brand-primary)" },
-            children: /* @__PURE__ */ jsx20(GraphUp, { ...ICON_PROPS })
+            children: /* @__PURE__ */ jsx21(GraphUp, { ...ICON_PROPS })
           }
         ),
-        /* @__PURE__ */ jsx20("span", { className: "font-semibold text-[var(--neutral-900)]", children: title })
+        /* @__PURE__ */ jsx21("span", { className: "font-semibold text-[var(--neutral-900)]", children: title })
       ] }),
-      /* @__PURE__ */ jsxs14(Badge, { variant: "default", children: [
+      /* @__PURE__ */ jsxs15(Badge, { variant: "default", children: [
         total,
         " ",
         totalLabel
       ] })
     ] }),
-    /* @__PURE__ */ jsx20("div", { className: "flex h-3 rounded-full overflow-hidden bg-[var(--neutral-100)] mb-4", children: STAGES.map((stage) => {
+    /* @__PURE__ */ jsx21("div", { className: "flex h-3 rounded-full overflow-hidden bg-[var(--neutral-100)] mb-4", children: STAGES.map((stage) => {
       const width = total > 0 ? data[stage] / total * 100 : 0;
       if (width === 0) return null;
-      return /* @__PURE__ */ jsx20(
+      return /* @__PURE__ */ jsx21(
         "div",
         {
           className: "transition-all duration-300",
@@ -683,42 +908,42 @@ function PipelineThermometer({
         stage
       );
     }) }),
-    /* @__PURE__ */ jsx20("div", { className: "grid grid-cols-6 gap-2 mb-4", children: STAGES.map((stage) => /* @__PURE__ */ jsxs14(
+    /* @__PURE__ */ jsx21("div", { className: "grid grid-cols-6 gap-2 mb-4", children: STAGES.map((stage) => /* @__PURE__ */ jsxs15(
       "div",
       {
         className: "flex items-center gap-2 p-2 rounded-md bg-[var(--neutral-50)]",
         children: [
-          /* @__PURE__ */ jsx20(
+          /* @__PURE__ */ jsx21(
             "div",
             {
               className: "w-2 h-2 rounded-full flex-shrink-0",
               style: { backgroundColor: STAGE_COLORS[stage] }
             }
           ),
-          /* @__PURE__ */ jsxs14("div", { children: [
-            /* @__PURE__ */ jsx20("div", { className: "stat-number text-lg text-[var(--neutral-900)]", children: data[stage] }),
-            /* @__PURE__ */ jsx20("div", { className: "text-[10px] text-[var(--neutral-500)]", children: STAGE_LABELS[stage] })
+          /* @__PURE__ */ jsxs15("div", { children: [
+            /* @__PURE__ */ jsx21("div", { className: "stat-number text-lg text-[var(--neutral-900)]", children: data[stage] }),
+            /* @__PURE__ */ jsx21("div", { className: "text-[10px] text-[var(--neutral-500)]", children: STAGE_LABELS[stage] })
           ] })
         ]
       },
       stage
     )) }),
-    stats && stats.length > 0 && /* @__PURE__ */ jsx20("div", { className: "flex items-center justify-around pt-4 border-t border-[var(--card-border)]", children: stats.map((stat, index) => /* @__PURE__ */ jsxs14("div", { className: "flex items-center gap-4", children: [
-      /* @__PURE__ */ jsxs14("div", { className: "text-center", children: [
-        /* @__PURE__ */ jsx20("div", { className: "stat-number text-lg text-[var(--brand-primary)]", children: stat.value }),
-        /* @__PURE__ */ jsx20("div", { className: "text-xs text-[var(--neutral-500)]", children: stat.label })
+    stats && stats.length > 0 && /* @__PURE__ */ jsx21("div", { className: "flex items-center justify-around pt-4 border-t border-[var(--card-border)]", children: stats.map((stat, index) => /* @__PURE__ */ jsxs15("div", { className: "flex items-center gap-4", children: [
+      /* @__PURE__ */ jsxs15("div", { className: "text-center", children: [
+        /* @__PURE__ */ jsx21("div", { className: "stat-number text-lg text-[var(--brand-primary)]", children: stat.value }),
+        /* @__PURE__ */ jsx21("div", { className: "text-xs text-[var(--neutral-500)]", children: stat.label })
       ] }),
-      index < stats.length - 1 && /* @__PURE__ */ jsx20("div", { className: "h-8 w-px bg-[var(--neutral-100)]" })
+      index < stats.length - 1 && /* @__PURE__ */ jsx21("div", { className: "h-8 w-px bg-[var(--neutral-100)]" })
     ] }, index)) })
   ] });
 }
 
 // src/components/category-section/CategorySection.tsx
-import { useState } from "react";
+import { useState as useState2 } from "react";
 import { DragHandGesture, NavArrowDown as NavArrowDown2 } from "iconoir-react";
 
 // src/components/category-section/AppCard.tsx
-import { jsx as jsx21, jsxs as jsxs15 } from "react/jsx-runtime";
+import { jsx as jsx22, jsxs as jsxs16 } from "react/jsx-runtime";
 function AppCard({
   icon,
   title,
@@ -732,7 +957,7 @@ function AppCard({
   onClick,
   className
 }) {
-  return /* @__PURE__ */ jsxs15(
+  return /* @__PURE__ */ jsxs16(
     "button",
     {
       onClick,
@@ -744,8 +969,8 @@ function AppCard({
         className
       ),
       children: [
-        /* @__PURE__ */ jsxs15("div", { className: "flex items-center justify-between mb-3", children: [
-          /* @__PURE__ */ jsx21(
+        /* @__PURE__ */ jsxs16("div", { className: "flex items-center justify-between mb-3", children: [
+          /* @__PURE__ */ jsx22(
             "div",
             {
               className: "w-8 h-8 rounded-md flex items-center justify-center text-[var(--neutral-600)]",
@@ -753,22 +978,22 @@ function AppCard({
               children: icon
             }
           ),
-          /* @__PURE__ */ jsx21(Badge, { variant: statusVariant, children: status })
+          /* @__PURE__ */ jsx22(Badge, { variant: statusVariant, children: status })
         ] }),
-        /* @__PURE__ */ jsx21("h4", { className: "font-semibold text-sm text-[var(--neutral-900)] mb-2", children: title }),
-        /* @__PURE__ */ jsxs15("div", { className: "flex items-baseline gap-1.5 mb-2", children: [
-          /* @__PURE__ */ jsx21("span", { className: "stat-number text-2xl text-[var(--neutral-900)]", children: value }),
-          /* @__PURE__ */ jsx21("span", { className: "text-xs text-[var(--neutral-500)]", children: valueLabel })
+        /* @__PURE__ */ jsx22("h4", { className: "font-semibold text-sm text-[var(--neutral-900)] mb-2", children: title }),
+        /* @__PURE__ */ jsxs16("div", { className: "flex items-baseline gap-1.5 mb-2", children: [
+          /* @__PURE__ */ jsx22("span", { className: "stat-number text-2xl text-[var(--neutral-900)]", children: value }),
+          /* @__PURE__ */ jsx22("span", { className: "text-xs text-[var(--neutral-500)]", children: valueLabel })
         ] }),
-        /* @__PURE__ */ jsx21("p", { className: "text-xs text-[var(--neutral-500)] line-clamp-2", children: description }),
-        subtext && /* @__PURE__ */ jsx21("p", { className: "text-xs text-[var(--brand-primary)] mt-2 font-medium", children: subtext })
+        /* @__PURE__ */ jsx22("p", { className: "text-xs text-[var(--neutral-500)] line-clamp-2", children: description }),
+        subtext && /* @__PURE__ */ jsx22("p", { className: "text-xs text-[var(--brand-primary)] mt-2 font-medium", children: subtext })
       ]
     }
   );
 }
 
 // src/components/category-section/CategorySection.tsx
-import { jsx as jsx22, jsxs as jsxs16 } from "react/jsx-runtime";
+import { jsx as jsx23, jsxs as jsxs17 } from "react/jsx-runtime";
 var ICON_SM = { width: 16, height: 16, strokeWidth: 1.5 };
 var ICON_PROPS2 = { width: 20, height: 20, strokeWidth: 1.5 };
 function CategorySection({
@@ -783,8 +1008,8 @@ function CategorySection({
   onAppClick,
   className
 }) {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
-  return /* @__PURE__ */ jsxs16(
+  const [isExpanded, setIsExpanded] = useState2(defaultExpanded);
+  return /* @__PURE__ */ jsxs17(
     "div",
     {
       "data-category": id,
@@ -793,15 +1018,15 @@ function CategorySection({
         className
       ),
       children: [
-        /* @__PURE__ */ jsxs16(
+        /* @__PURE__ */ jsxs17(
           "button",
           {
             onClick: () => setIsExpanded(!isExpanded),
             className: "w-full flex items-center justify-between p-4 hover:bg-[var(--neutral-50)] transition-colors",
             children: [
-              /* @__PURE__ */ jsxs16("div", { className: "flex items-center gap-3", children: [
-                /* @__PURE__ */ jsx22("div", { className: "text-[var(--neutral-300)] hover:text-[var(--neutral-500)] cursor-grab active:cursor-grabbing transition-colors", children: /* @__PURE__ */ jsx22(DragHandGesture, { ...ICON_SM }) }),
-                /* @__PURE__ */ jsx22(
+              /* @__PURE__ */ jsxs17("div", { className: "flex items-center gap-3", children: [
+                /* @__PURE__ */ jsx23("div", { className: "text-[var(--neutral-300)] hover:text-[var(--neutral-500)] cursor-grab active:cursor-grabbing transition-colors", children: /* @__PURE__ */ jsx23(DragHandGesture, { ...ICON_SM }) }),
+                /* @__PURE__ */ jsx23(
                   "div",
                   {
                     className: "w-10 h-10 rounded-lg flex items-center justify-center",
@@ -809,12 +1034,12 @@ function CategorySection({
                     children: icon
                   }
                 ),
-                /* @__PURE__ */ jsxs16("div", { className: "text-left", children: [
-                  /* @__PURE__ */ jsx22("h3", { className: "font-semibold text-[var(--neutral-900)]", children: title }),
-                  /* @__PURE__ */ jsx22("p", { className: "text-sm text-[var(--neutral-500)]", children: subtitle })
+                /* @__PURE__ */ jsxs17("div", { className: "text-left", children: [
+                  /* @__PURE__ */ jsx23("h3", { className: "font-semibold text-[var(--neutral-900)]", children: title }),
+                  /* @__PURE__ */ jsx23("p", { className: "text-sm text-[var(--neutral-500)]", children: subtitle })
                 ] })
               ] }),
-              /* @__PURE__ */ jsx22(
+              /* @__PURE__ */ jsx23(
                 NavArrowDown2,
                 {
                   ...ICON_PROPS2,
@@ -827,12 +1052,12 @@ function CategorySection({
             ]
           }
         ),
-        /* @__PURE__ */ jsx22(
+        /* @__PURE__ */ jsx23(
           "div",
           {
             className: "grid transition-[grid-template-rows] duration-300 ease-in-out",
             style: { gridTemplateRows: isExpanded ? "1fr" : "0fr" },
-            children: /* @__PURE__ */ jsx22("div", { className: "overflow-hidden", children: /* @__PURE__ */ jsx22("div", { className: "px-4 pb-4", children: /* @__PURE__ */ jsx22("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3", children: apps.map((app, index) => /* @__PURE__ */ jsx22(
+            children: /* @__PURE__ */ jsx23("div", { className: "overflow-hidden", children: /* @__PURE__ */ jsx23("div", { className: "px-4 pb-4", children: /* @__PURE__ */ jsx23("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3", children: apps.map((app, index) => /* @__PURE__ */ jsx23(
               AppCard,
               {
                 icon: app.icon,
@@ -857,7 +1082,7 @@ function CategorySection({
 
 // src/components/today-schedule/TodaySchedule.tsx
 import { Calendar } from "iconoir-react";
-import { jsx as jsx23, jsxs as jsxs17 } from "react/jsx-runtime";
+import { jsx as jsx24, jsxs as jsxs18 } from "react/jsx-runtime";
 var ICON_PROPS3 = { width: 18, height: 18, strokeWidth: 1.5 };
 function TodaySchedule({
   date,
@@ -870,23 +1095,23 @@ function TodaySchedule({
     month: "long",
     day: "numeric"
   });
-  return /* @__PURE__ */ jsxs17(Card, { padding: "sm", className, children: [
-    /* @__PURE__ */ jsxs17("div", { className: "flex items-center justify-between mb-4", children: [
-      /* @__PURE__ */ jsxs17("div", { className: "flex items-center gap-3", children: [
-        /* @__PURE__ */ jsx23(
+  return /* @__PURE__ */ jsxs18(Card, { padding: "sm", className, children: [
+    /* @__PURE__ */ jsxs18("div", { className: "flex items-center justify-between mb-4", children: [
+      /* @__PURE__ */ jsxs18("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsx24(
           "div",
           {
             className: "w-8 h-8 rounded-md flex items-center justify-center",
             style: { background: "var(--brand-accent-light)", color: "var(--brand-accent)" },
-            children: /* @__PURE__ */ jsx23(Calendar, { ...ICON_PROPS3 })
+            children: /* @__PURE__ */ jsx24(Calendar, { ...ICON_PROPS3 })
           }
         ),
-        /* @__PURE__ */ jsxs17("div", { children: [
-          /* @__PURE__ */ jsx23("h4", { className: "font-semibold text-sm text-[var(--neutral-900)]", children: "Today's Schedule" }),
-          /* @__PURE__ */ jsx23("p", { className: "text-xs text-[var(--neutral-500)]", children: displayDate })
+        /* @__PURE__ */ jsxs18("div", { children: [
+          /* @__PURE__ */ jsx24("h4", { className: "font-semibold text-sm text-[var(--neutral-900)]", children: "Today's Schedule" }),
+          /* @__PURE__ */ jsx24("p", { className: "text-xs text-[var(--neutral-500)]", children: displayDate })
         ] })
       ] }),
-      onViewAll && /* @__PURE__ */ jsx23(
+      onViewAll && /* @__PURE__ */ jsx24(
         "button",
         {
           onClick: onViewAll,
@@ -895,31 +1120,31 @@ function TodaySchedule({
         }
       )
     ] }),
-    /* @__PURE__ */ jsx23("div", { className: "space-y-0", children: items.map((item, index) => /* @__PURE__ */ jsxs17(
+    /* @__PURE__ */ jsx24("div", { className: "space-y-0", children: items.map((item, index) => /* @__PURE__ */ jsxs18(
       "div",
       {
         className: "flex items-center gap-4 py-2 border-b border-[var(--card-border)] last:border-0",
         children: [
-          /* @__PURE__ */ jsx23("span", { className: "text-xs font-medium text-[var(--neutral-400)] w-16", children: item.time }),
-          /* @__PURE__ */ jsx23("span", { className: "text-sm text-[var(--neutral-700)]", children: item.event })
+          /* @__PURE__ */ jsx24("span", { className: "text-xs font-medium text-[var(--neutral-400)] w-16", children: item.time }),
+          /* @__PURE__ */ jsx24("span", { className: "text-sm text-[var(--neutral-700)]", children: item.event })
         ]
       },
       index
     )) }),
-    items.length === 0 && /* @__PURE__ */ jsx23("p", { className: "text-sm text-[var(--neutral-400)] text-center py-4", children: "No events scheduled" })
+    items.length === 0 && /* @__PURE__ */ jsx24("p", { className: "text-sm text-[var(--neutral-400)] text-center py-4", children: "No events scheduled" })
   ] });
 }
 
 // src/components/drag-hint/DragHint.tsx
 import { DragHandGesture as DragHandGesture2 } from "iconoir-react";
-import { jsx as jsx24, jsxs as jsxs18 } from "react/jsx-runtime";
+import { jsx as jsx25, jsxs as jsxs19 } from "react/jsx-runtime";
 var ICON_SM2 = { width: 16, height: 16, strokeWidth: 1.5 };
 function DragHint({
   message = "Drag sections to rearrange your dashboard",
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs18(
+  return /* @__PURE__ */ jsxs19(
     "div",
     {
       className: cn(
@@ -928,15 +1153,15 @@ function DragHint({
       ),
       ...props,
       children: [
-        /* @__PURE__ */ jsx24(DragHandGesture2, { ...ICON_SM2 }),
-        /* @__PURE__ */ jsx24("span", { children: message })
+        /* @__PURE__ */ jsx25(DragHandGesture2, { ...ICON_SM2 }),
+        /* @__PURE__ */ jsx25("span", { children: message })
       ]
     }
   );
 }
 
 // src/components/stat-card/StatCard.tsx
-import { jsx as jsx25, jsxs as jsxs19 } from "react/jsx-runtime";
+import { jsx as jsx26, jsxs as jsxs20 } from "react/jsx-runtime";
 function StatCard({
   label,
   value,
@@ -946,13 +1171,13 @@ function StatCard({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx25(Card, { className, ...props, children: /* @__PURE__ */ jsxs19("div", { className: "flex items-start justify-between", children: [
-    /* @__PURE__ */ jsxs19("div", { children: [
-      /* @__PURE__ */ jsx25("p", { className: "text-sm text-[var(--neutral-500)]", children: label }),
-      /* @__PURE__ */ jsx25("p", { className: "text-2xl font-bold stat-number", style: { color }, children: value }),
-      subtitle && /* @__PURE__ */ jsx25("p", { className: "text-xs text-[var(--neutral-400)] mt-0.5", children: subtitle })
+  return /* @__PURE__ */ jsx26(Card, { className, ...props, children: /* @__PURE__ */ jsxs20("div", { className: "flex items-start justify-between", children: [
+    /* @__PURE__ */ jsxs20("div", { children: [
+      /* @__PURE__ */ jsx26("p", { className: "text-sm text-[var(--neutral-500)]", children: label }),
+      /* @__PURE__ */ jsx26("p", { className: "text-2xl font-bold stat-number", style: { color }, children: value }),
+      subtitle && /* @__PURE__ */ jsx26("p", { className: "text-xs text-[var(--neutral-400)] mt-0.5", children: subtitle })
     ] }),
-    icon && /* @__PURE__ */ jsx25(
+    icon && /* @__PURE__ */ jsx26(
       "div",
       {
         className: "w-10 h-10 rounded-lg flex items-center justify-center",
@@ -986,6 +1211,7 @@ export {
   CardTitle,
   CategorySection,
   Checkbox,
+  DashboardShell,
   Dialog,
   DialogClose,
   DialogContent,

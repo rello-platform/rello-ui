@@ -19,6 +19,7 @@ export * from "./app-shell";
 export * from "./app-header";
 export * from "./slide-panel";
 export * from "./page-container";
+export * from "./dashboard-shell";
 
 // Dashboard widgets
 export * from "./pipeline-thermometer";
