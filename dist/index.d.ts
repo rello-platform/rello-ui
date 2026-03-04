@@ -547,6 +547,129 @@ interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 declare function StatCard({ label, value, icon, color, subtitle, className, ...props }: StatCardProps): react_jsx_runtime.JSX.Element;
 
+interface ProgressSegment {
+    /** How many units this segment represents */
+    value: number;
+    /** CSS color for the segment */
+    color: string;
+}
+interface SegmentedProgressProps extends React.HTMLAttributes<HTMLDivElement> {
+    /** Segments to display (each with a value and color) */
+    segments: ProgressSegment[];
+    /** Total number of units */
+    total: number;
+    /** Bar height */
+    size?: "sm" | "md" | "lg";
+}
+declare function SegmentedProgress({ segments, total, size, className, ...props }: SegmentedProgressProps): react_jsx_runtime.JSX.Element | null;
+
+type TaskTemperature = "hot" | "qualified" | "engaged" | "warming" | "cold" | "sphere";
+type TaskActionType = "call" | "text" | "email" | "review" | "send";
+interface HeroActionTask {
+    id: string;
+    contactName: string;
+    contextLine: string;
+    temperature: TaskTemperature;
+    completed: boolean;
+    actionType?: TaskActionType;
+}
+interface HeroActionCardProps {
+    /** Card title, e.g. "FIVE BEFORE 9" */
+    title: string;
+    /** Main heading, e.g. "Your calls today" */
+    heading: string;
+    /** Motivational subtitle */
+    subtitle?: string;
+    /** Progress: completed / total */
+    completedCount: number;
+    totalCount: number;
+    /** The task items */
+    tasks: HeroActionTask[];
+    /** Called when a task is checked/unchecked */
+    onTaskToggle?: (taskId: string, completed: boolean) => void;
+    /** Called when a task row is clicked (e.g., open contact) */
+    onTaskClick?: (taskId: string) => void;
+    /** Footer action */
+    onViewFullPlan?: () => void;
+    /** Footer button text */
+    footerText?: string;
+    className?: string;
+}
+declare function HeroActionCard({ title, heading, subtitle, completedCount, totalCount, tasks, onTaskToggle, onTaskClick, onViewFullPlan, footerText, className, }: HeroActionCardProps): react_jsx_runtime.JSX.Element;
+
+interface AudioPlayerCardProps {
+    /** Audio source URL */
+    src: string;
+    /** Track title */
+    title: string;
+    /** Subtitle / description */
+    subtitle?: string;
+    /** Optional icon element to render left of the title */
+    icon?: React.ReactNode;
+    /** Additional class names */
+    className?: string;
+}
+declare function AudioPlayerCard({ src, title, subtitle, icon, className, }: AudioPlayerCardProps): react_jsx_runtime.JSX.Element;
+
+type NewsTagType = "new" | "sold" | "price" | "update" | "alert" | "report";
+interface NewsItem {
+    id: string;
+    /** Tag label, e.g. "NEW", "SOLD" */
+    tag: NewsTagType;
+    /** Headline text */
+    headline: string;
+    /** Short summary */
+    summary?: string;
+    /** URL to open on click */
+    href?: string;
+    /** Timestamp string, e.g. "2h ago" */
+    timestamp?: string;
+}
+interface NewsRowProps {
+    /** News items to display */
+    items: NewsItem[];
+    /** Called when an item is clicked */
+    onItemClick?: (item: NewsItem) => void;
+    /** Max number of items to show */
+    maxItems?: number;
+    /** Additional class names */
+    className?: string;
+}
+declare function NewsRow({ items, onItemClick, maxItems, className, }: NewsRowProps): react_jsx_runtime.JSX.Element;
+
+interface MiniKanbanItem {
+    id: string;
+    /** Primary label (e.g. contact name) */
+    label: string;
+    /** Secondary text (e.g. loan amount, status) */
+    subtitle?: string;
+    /** Optional color for the left accent */
+    color?: string;
+}
+interface MiniKanbanColumn {
+    /** Column identifier */
+    id: string;
+    /** Column header label */
+    title: string;
+    /** Color for the column header accent */
+    color: string;
+    /** Items in this column */
+    items: MiniKanbanItem[];
+    /** Count override — if provided, shown instead of items.length */
+    count?: number;
+}
+interface MiniKanbanProps {
+    /** Columns to display */
+    columns: MiniKanbanColumn[];
+    /** Called when an item is clicked */
+    onItemClick?: (itemId: string, columnId: string) => void;
+    /** Max items to show per column before truncating */
+    maxItemsPerColumn?: number;
+    /** Additional class names */
+    className?: string;
+}
+declare function MiniKanban({ columns, onItemClick, maxItemsPerColumn, className, }: MiniKanbanProps): react_jsx_runtime.JSX.Element;
+
 interface TrackIconProps {
     accent: string;
     size?: number;
@@ -571,4 +694,4 @@ declare const TRACK_ICONS: Record<string, React.ComponentType<TrackIconProps>>;
 
 declare function cn(...inputs: ClassValue[]): string;
 
-export { AppCard, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, AppShell, type AppShellProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, CreditScoreIcon, CrossHatch, DailyExerciseIcon, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DtiIcon, EmptyState, type EmptyStateProps, InlineLoading, Input, type InputProps, Label, LoadingOverlay, MortgageTermsIcon, NeighborhoodIcon, OrbitalRings, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WeeklyChallengeIcon, badgeVariants, buttonVariants, cn, useToast };
+export { AppCard, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, AppShell, type AppShellProps, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, CreditScoreIcon, CrossHatch, DailyExerciseIcon, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DtiIcon, EmptyState, type EmptyStateProps, HeroActionCard, type HeroActionCardProps, type HeroActionTask, InlineLoading, Input, type InputProps, Label, LoadingOverlay, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, OrbitalRings, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TaskActionType, type TaskTemperature, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WeeklyChallengeIcon, badgeVariants, buttonVariants, cn, useToast };

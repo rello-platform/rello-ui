@@ -2148,12 +2148,634 @@ function StatCard({
     )
   ] }) });
 }
+
+// src/components/segmented-progress/SegmentedProgress.tsx
+import { jsx as jsx35 } from "react/jsx-runtime";
+var SIZE_MAP = {
+  sm: "h-1.5",
+  md: "h-2.5",
+  lg: "h-3.5"
+};
+function SegmentedProgress({
+  segments,
+  total,
+  size = "md",
+  className,
+  ...props
+}) {
+  if (total <= 0) return null;
+  return /* @__PURE__ */ jsx35(
+    "div",
+    {
+      className: cn("flex gap-1 w-full", className),
+      role: "progressbar",
+      "aria-valuemin": 0,
+      "aria-valuemax": total,
+      "aria-valuenow": segments.reduce((sum, s) => sum + s.value, 0),
+      ...props,
+      children: Array.from({ length: total }).map((_, i) => {
+        let color = "var(--neutral-200)";
+        let filled = 0;
+        for (const seg of segments) {
+          if (i < filled + seg.value) {
+            color = seg.color;
+            break;
+          }
+          filled += seg.value;
+        }
+        const isFilled = i < segments.reduce((sum, s) => sum + s.value, 0);
+        return /* @__PURE__ */ jsx35(
+          "div",
+          {
+            className: cn("flex-1 rounded-full transition-colors duration-300", SIZE_MAP[size]),
+            style: {
+              backgroundColor: isFilled ? color : "var(--neutral-200)"
+            }
+          },
+          i
+        );
+      })
+    }
+  );
+}
+
+// src/components/hero-action-card/HeroActionCard.tsx
+import { Phone, Check as Check3, SendDiagonal, Mail, Eye } from "iconoir-react";
+import { jsx as jsx36, jsxs as jsxs27 } from "react/jsx-runtime";
+var TEMP_COLORS = {
+  hot: "var(--hot)",
+  qualified: "var(--qualified)",
+  engaged: "var(--engaged)",
+  warming: "var(--warming)",
+  cold: "var(--cold)",
+  sphere: "var(--neutral-400)"
+};
+var TEMP_LABELS = {
+  hot: "HOT",
+  qualified: "QUALIFIED",
+  engaged: "ENGAGED",
+  warming: "WARM",
+  cold: "COLD",
+  sphere: "SPHERE"
+};
+var ACTION_ICONS = {
+  call: Phone,
+  text: SendDiagonal,
+  email: Mail,
+  review: Eye,
+  send: SendDiagonal
+};
+function HeroActionCard({
+  title,
+  heading,
+  subtitle,
+  completedCount,
+  totalCount,
+  tasks,
+  onTaskToggle,
+  onTaskClick,
+  onViewFullPlan,
+  footerText = "View Full Action Plan",
+  className
+}) {
+  const segments = [];
+  let completedSoFar = 0;
+  for (const task of tasks) {
+    if (task.completed) {
+      segments.push({ value: 1, color: "var(--success)" });
+      completedSoFar++;
+    }
+  }
+  const nextUncompleted = tasks.find((t) => !t.completed);
+  if (nextUncompleted) {
+    segments.push({ value: 1, color: TEMP_COLORS[nextUncompleted.temperature] });
+  }
+  return /* @__PURE__ */ jsxs27(
+    "div",
+    {
+      className: cn("rounded-xl overflow-hidden", className),
+      style: {
+        backgroundColor: "var(--hero-card-background, var(--card-background))",
+        border: "1px solid var(--hero-card-border, var(--card-border))"
+      },
+      children: [
+        /* @__PURE__ */ jsxs27("div", { className: "px-5 pt-5 pb-3", children: [
+          /* @__PURE__ */ jsxs27("div", { className: "flex items-start justify-between mb-1", children: [
+            /* @__PURE__ */ jsxs27("div", { children: [
+              /* @__PURE__ */ jsx36(
+                "p",
+                {
+                  className: "text-[11px] font-semibold uppercase tracking-wider mb-1",
+                  style: { color: "var(--brand-primary)" },
+                  children: title
+                }
+              ),
+              /* @__PURE__ */ jsx36(
+                "h2",
+                {
+                  className: "text-xl font-bold",
+                  style: { color: "var(--hero-card-title, var(--foreground))" },
+                  children: heading
+                }
+              ),
+              subtitle && /* @__PURE__ */ jsx36(
+                "p",
+                {
+                  className: "text-sm mt-0.5",
+                  style: { color: "var(--hero-card-body-text, var(--neutral-500))" },
+                  children: subtitle
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs27("div", { className: "text-right shrink-0 ml-4", children: [
+              /* @__PURE__ */ jsxs27(
+                "p",
+                {
+                  className: "text-3xl font-bold",
+                  style: {
+                    color: "var(--brand-primary)",
+                    fontFamily: "var(--font-stat, var(--font-heading))"
+                  },
+                  children: [
+                    completedCount,
+                    "/",
+                    totalCount
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsx36(
+                "p",
+                {
+                  className: "text-xs",
+                  style: { color: "var(--hero-card-body-text, var(--neutral-500))" },
+                  children: "completed"
+                }
+              )
+            ] })
+          ] }),
+          /* @__PURE__ */ jsx36("div", { className: "mt-3", children: /* @__PURE__ */ jsx36(
+            SegmentedProgress,
+            {
+              segments,
+              total: totalCount,
+              size: "md"
+            }
+          ) })
+        ] }),
+        /* @__PURE__ */ jsx36("div", { className: "px-5 pb-5 space-y-2 mt-2", children: tasks.map((task) => {
+          const isCompleted = task.completed;
+          const isNext = !isCompleted && task.id === nextUncompleted?.id;
+          const ActionIcon = task.actionType ? ACTION_ICONS[task.actionType] : Phone;
+          const tempColor = TEMP_COLORS[task.temperature];
+          return /* @__PURE__ */ jsxs27(
+            "div",
+            {
+              className: cn(
+                "flex items-center gap-3 rounded-xl px-4 py-3 transition-all cursor-pointer",
+                isCompleted && "opacity-60"
+              ),
+              style: {
+                backgroundColor: isNext ? `color-mix(in srgb, ${tempColor} 12%, var(--hero-card-background, var(--card-background)))` : `color-mix(in srgb, var(--neutral-500) 8%, var(--hero-card-background, var(--card-background)))`,
+                border: isNext ? `1px solid color-mix(in srgb, ${tempColor} 30%, transparent)` : "1px solid transparent"
+              },
+              onClick: () => onTaskClick?.(task.id),
+              children: [
+                /* @__PURE__ */ jsx36(
+                  "button",
+                  {
+                    className: cn(
+                      "size-9 rounded-full flex items-center justify-center shrink-0 transition-colors"
+                    ),
+                    style: {
+                      backgroundColor: isCompleted ? "color-mix(in srgb, var(--success) 20%, transparent)" : "color-mix(in srgb, var(--neutral-400) 15%, transparent)",
+                      color: isCompleted ? "var(--success)" : "var(--hero-card-body-text, var(--neutral-500))"
+                    },
+                    onClick: (e) => {
+                      e.stopPropagation();
+                      onTaskToggle?.(task.id, !isCompleted);
+                    },
+                    "aria-label": isCompleted ? "Mark incomplete" : "Mark complete",
+                    children: isCompleted ? /* @__PURE__ */ jsx36(Check3, { width: 18, height: 18, strokeWidth: 2 }) : /* @__PURE__ */ jsx36(ActionIcon, { width: 18, height: 18, strokeWidth: 1.5 })
+                  }
+                ),
+                /* @__PURE__ */ jsxs27("div", { className: "flex-1 min-w-0", children: [
+                  /* @__PURE__ */ jsx36(
+                    "p",
+                    {
+                      className: cn("font-semibold text-sm", isCompleted && "line-through"),
+                      style: { color: "var(--hero-card-title, var(--foreground))" },
+                      children: task.contactName
+                    }
+                  ),
+                  /* @__PURE__ */ jsx36(
+                    "p",
+                    {
+                      className: "text-xs truncate",
+                      style: { color: "var(--hero-card-body-text, var(--neutral-500))" },
+                      children: task.contextLine
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsx36(
+                  "span",
+                  {
+                    className: "text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md shrink-0",
+                    style: {
+                      backgroundColor: `color-mix(in srgb, ${tempColor} 15%, transparent)`,
+                      color: tempColor
+                    },
+                    children: TEMP_LABELS[task.temperature]
+                  }
+                )
+              ]
+            },
+            task.id
+          );
+        }) }),
+        onViewFullPlan && /* @__PURE__ */ jsx36(
+          "div",
+          {
+            className: "px-5 py-3 text-center",
+            style: {
+              borderTop: "1px solid var(--hero-card-border, var(--card-border))"
+            },
+            children: /* @__PURE__ */ jsx36(
+              "button",
+              {
+                onClick: onViewFullPlan,
+                className: "text-xs font-medium transition-opacity hover:opacity-80",
+                style: { color: "var(--brand-primary)" },
+                children: footerText
+              }
+            )
+          }
+        )
+      ]
+    }
+  );
+}
+
+// src/components/audio-player-card/AudioPlayerCard.tsx
+import { useState as useState5, useRef as useRef2, useEffect as useEffect3, useCallback as useCallback2 } from "react";
+import { Play, Pause } from "iconoir-react";
+import { jsx as jsx37, jsxs as jsxs28 } from "react/jsx-runtime";
+function formatTime(seconds) {
+  if (!isFinite(seconds) || seconds < 0) return "0:00";
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+function AudioPlayerCard({
+  src,
+  title,
+  subtitle,
+  icon,
+  className
+}) {
+  const audioRef = useRef2(null);
+  const [isPlaying, setIsPlaying] = useState5(false);
+  const [currentTime, setCurrentTime] = useState5(0);
+  const [duration, setDuration] = useState5(0);
+  const progress = duration > 0 ? currentTime / duration * 100 : 0;
+  const togglePlay = useCallback2(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+    setIsPlaying(!isPlaying);
+  }, [isPlaying]);
+  const handleSeek = useCallback2(
+    (e) => {
+      const audio = audioRef.current;
+      if (!audio || !duration) return;
+      const rect = e.currentTarget.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      audio.currentTime = ratio * duration;
+    },
+    [duration]
+  );
+  useEffect3(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const onTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const onLoadedMetadata = () => setDuration(audio.duration);
+    const onEnded = () => setIsPlaying(false);
+    audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("loadedmetadata", onLoadedMetadata);
+    audio.addEventListener("ended", onEnded);
+    return () => {
+      audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("loadedmetadata", onLoadedMetadata);
+      audio.removeEventListener("ended", onEnded);
+    };
+  }, []);
+  return /* @__PURE__ */ jsxs28(
+    "div",
+    {
+      className: cn("rounded-xl p-4", className),
+      style: {
+        backgroundColor: "var(--card-background)",
+        border: "1px solid var(--card-border)"
+      },
+      children: [
+        /* @__PURE__ */ jsx37("audio", { ref: audioRef, src, preload: "metadata" }),
+        /* @__PURE__ */ jsxs28("div", { className: "flex items-center gap-3", children: [
+          /* @__PURE__ */ jsx37(
+            "button",
+            {
+              onClick: togglePlay,
+              className: "size-10 rounded-full flex items-center justify-center shrink-0 transition-colors",
+              style: {
+                backgroundColor: "var(--brand-primary)",
+                color: "#FFFFFF"
+              },
+              "aria-label": isPlaying ? "Pause" : "Play",
+              children: isPlaying ? /* @__PURE__ */ jsx37(Pause, { width: 18, height: 18, strokeWidth: 2 }) : /* @__PURE__ */ jsx37(Play, { width: 18, height: 18, strokeWidth: 2 })
+            }
+          ),
+          /* @__PURE__ */ jsxs28("div", { className: "flex-1 min-w-0", children: [
+            /* @__PURE__ */ jsxs28("div", { className: "flex items-center gap-2 mb-1", children: [
+              icon && /* @__PURE__ */ jsx37("span", { style: { color: "var(--brand-primary)" }, children: icon }),
+              /* @__PURE__ */ jsx37(
+                "p",
+                {
+                  className: "font-semibold text-sm truncate",
+                  style: { color: "var(--foreground)" },
+                  children: title
+                }
+              )
+            ] }),
+            subtitle && /* @__PURE__ */ jsx37(
+              "p",
+              {
+                className: "text-xs truncate mb-2",
+                style: { color: "var(--neutral-500)" },
+                children: subtitle
+              }
+            ),
+            /* @__PURE__ */ jsx37(
+              "div",
+              {
+                className: "h-1.5 rounded-full cursor-pointer",
+                style: { backgroundColor: "var(--neutral-200)" },
+                onClick: handleSeek,
+                children: /* @__PURE__ */ jsx37(
+                  "div",
+                  {
+                    className: "h-full rounded-full transition-all duration-100",
+                    style: {
+                      width: `${progress}%`,
+                      backgroundColor: "var(--brand-primary)"
+                    }
+                  }
+                )
+              }
+            ),
+            /* @__PURE__ */ jsxs28("div", { className: "flex justify-between mt-1", children: [
+              /* @__PURE__ */ jsx37(
+                "span",
+                {
+                  className: "text-[10px]",
+                  style: { color: "var(--neutral-400)" },
+                  children: formatTime(currentTime)
+                }
+              ),
+              /* @__PURE__ */ jsx37(
+                "span",
+                {
+                  className: "text-[10px]",
+                  style: { color: "var(--neutral-400)" },
+                  children: formatTime(duration)
+                }
+              )
+            ] })
+          ] })
+        ] })
+      ]
+    }
+  );
+}
+
+// src/components/news-row/NewsRow.tsx
+import { OpenNewWindow } from "iconoir-react";
+import { jsx as jsx38, jsxs as jsxs29 } from "react/jsx-runtime";
+var TAG_COLORS = {
+  new: { bg: "var(--info-light)", text: "var(--info)" },
+  sold: { bg: "var(--success-light)", text: "var(--success)" },
+  price: { bg: "var(--warning-light)", text: "var(--warning)" },
+  update: { bg: "var(--brand-primary-light)", text: "var(--brand-primary)" },
+  alert: { bg: "var(--error-light)", text: "var(--error)" },
+  report: { bg: "var(--brand-accent-light)", text: "var(--brand-accent)" }
+};
+var TAG_LABELS = {
+  new: "NEW",
+  sold: "SOLD",
+  price: "PRICE",
+  update: "UPDATE",
+  alert: "ALERT",
+  report: "REPORT"
+};
+function NewsRow({
+  items,
+  onItemClick,
+  maxItems,
+  className
+}) {
+  const visibleItems = maxItems ? items.slice(0, maxItems) : items;
+  return /* @__PURE__ */ jsx38("div", { className: cn("space-y-1", className), children: visibleItems.map((item) => {
+    const tagStyle = TAG_COLORS[item.tag];
+    return /* @__PURE__ */ jsxs29(
+      "div",
+      {
+        className: cn(
+          "flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors",
+          (item.href || onItemClick) && "cursor-pointer hover:opacity-80"
+        ),
+        style: {
+          backgroundColor: "color-mix(in srgb, var(--neutral-500) 5%, transparent)"
+        },
+        onClick: () => {
+          if (onItemClick) {
+            onItemClick(item);
+          } else if (item.href) {
+            window.open(item.href, "_blank", "noopener");
+          }
+        },
+        children: [
+          /* @__PURE__ */ jsx38(
+            "span",
+            {
+              className: "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shrink-0 mt-0.5",
+              style: {
+                backgroundColor: tagStyle.bg,
+                color: tagStyle.text
+              },
+              children: TAG_LABELS[item.tag]
+            }
+          ),
+          /* @__PURE__ */ jsxs29("div", { className: "flex-1 min-w-0", children: [
+            /* @__PURE__ */ jsx38(
+              "p",
+              {
+                className: "text-sm font-medium leading-tight",
+                style: { color: "var(--foreground)" },
+                children: item.headline
+              }
+            ),
+            item.summary && /* @__PURE__ */ jsx38(
+              "p",
+              {
+                className: "text-xs mt-0.5 line-clamp-2",
+                style: { color: "var(--neutral-500)" },
+                children: item.summary
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxs29("div", { className: "flex items-center gap-1.5 shrink-0", children: [
+            item.timestamp && /* @__PURE__ */ jsx38(
+              "span",
+              {
+                className: "text-[10px]",
+                style: { color: "var(--neutral-400)" },
+                children: item.timestamp
+              }
+            ),
+            item.href && /* @__PURE__ */ jsx38(
+              OpenNewWindow,
+              {
+                width: 12,
+                height: 12,
+                strokeWidth: 1.5,
+                style: { color: "var(--neutral-400)" }
+              }
+            )
+          ] })
+        ]
+      },
+      item.id
+    );
+  }) });
+}
+
+// src/components/mini-kanban/MiniKanban.tsx
+import { jsx as jsx39, jsxs as jsxs30 } from "react/jsx-runtime";
+function MiniKanban({
+  columns,
+  onItemClick,
+  maxItemsPerColumn = 3,
+  className
+}) {
+  return /* @__PURE__ */ jsx39("div", { className: cn("flex gap-2 overflow-x-auto", className), children: columns.map((col) => {
+    const visibleItems = col.items.slice(0, maxItemsPerColumn);
+    const hiddenCount = col.items.length - visibleItems.length;
+    const displayCount = col.count ?? col.items.length;
+    return /* @__PURE__ */ jsxs30(
+      "div",
+      {
+        className: "flex-1 min-w-[140px] rounded-lg overflow-hidden",
+        style: {
+          backgroundColor: "color-mix(in srgb, var(--neutral-500) 6%, var(--card-background))",
+          border: "1px solid var(--card-border)"
+        },
+        children: [
+          /* @__PURE__ */ jsxs30(
+            "div",
+            {
+              className: "px-3 py-2 flex items-center justify-between",
+              style: {
+                borderBottom: `2px solid ${col.color}`
+              },
+              children: [
+                /* @__PURE__ */ jsx39(
+                  "span",
+                  {
+                    className: "text-[11px] font-semibold uppercase tracking-wider truncate",
+                    style: { color: "var(--foreground)" },
+                    children: col.title
+                  }
+                ),
+                /* @__PURE__ */ jsx39(
+                  "span",
+                  {
+                    className: "text-[11px] font-bold ml-2 shrink-0",
+                    style: { color: col.color },
+                    children: displayCount
+                  }
+                )
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxs30("div", { className: "p-1.5 space-y-1", children: [
+            visibleItems.map((item) => /* @__PURE__ */ jsxs30(
+              "div",
+              {
+                className: cn(
+                  "rounded-md px-2.5 py-2 transition-colors",
+                  onItemClick && "cursor-pointer hover:opacity-80"
+                ),
+                style: {
+                  backgroundColor: "var(--card-background)",
+                  borderLeft: item.color ? `3px solid ${item.color}` : void 0
+                },
+                onClick: () => onItemClick?.(item.id, col.id),
+                children: [
+                  /* @__PURE__ */ jsx39(
+                    "p",
+                    {
+                      className: "text-xs font-medium truncate",
+                      style: { color: "var(--foreground)" },
+                      children: item.label
+                    }
+                  ),
+                  item.subtitle && /* @__PURE__ */ jsx39(
+                    "p",
+                    {
+                      className: "text-[10px] truncate mt-0.5",
+                      style: { color: "var(--neutral-500)" },
+                      children: item.subtitle
+                    }
+                  )
+                ]
+              },
+              item.id
+            )),
+            visibleItems.length === 0 && /* @__PURE__ */ jsx39(
+              "p",
+              {
+                className: "text-[10px] text-center py-3",
+                style: { color: "var(--neutral-400)" },
+                children: "No items"
+              }
+            ),
+            hiddenCount > 0 && /* @__PURE__ */ jsxs30(
+              "p",
+              {
+                className: "text-[10px] text-center py-1 font-medium",
+                style: { color: "var(--brand-primary)" },
+                children: [
+                  "+",
+                  hiddenCount,
+                  " more"
+                ]
+              }
+            )
+          ] })
+        ]
+      },
+      col.id
+    );
+  }) });
+}
 export {
   AppCard,
   AppHeader,
   AppHeaderAction,
   AppHeaderDivider,
   AppShell,
+  AudioPlayerCard,
   Avatar,
   AvatarFallback,
   AvatarImage,
@@ -2194,12 +2816,15 @@ export {
   DreamHomeIcon,
   DtiIcon,
   EmptyState,
+  HeroActionCard,
   InlineLoading,
   Input,
   Label2 as Label,
   LoadingOverlay,
+  MiniKanban,
   MortgageTermsIcon,
   NeighborhoodIcon,
+  NewsRow,
   OrbitalRings,
   PATTERNS,
   PageContainer,
@@ -2213,6 +2838,7 @@ export {
   STAGE_COLORS,
   STAGE_LABELS,
   SavingsIcon,
+  SegmentedProgress,
   Select,
   SelectContent,
   SelectGroup,

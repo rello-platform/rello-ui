@@ -31,3 +31,8 @@ export * from "./category-section";
 export * from "./today-schedule";
 export * from "./drag-hint";
 export * from "./stat-card";
+export * from "./segmented-progress";
+export * from "./hero-action-card";
+export * from "./audio-player-card";
+export * from "./news-row";
+export * from "./mini-kanban";
