@@ -1,5 +1,5 @@
 {
-  "name": "@rello/ui",
+  "name": "@rello-platform/ui",
   "version": "1.0.0",
   "description": "Shared UI component library for Rello applications",
   "type": "module",
@@ -8,11 +8,15 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js",
       "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
       "default": "./dist/index.js"
-    }
+    },
+    "./styles": "./src/styles/index.css",
+    "./tokens": "./src/styles/design-tokens.css"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "files": [
     "dist",
