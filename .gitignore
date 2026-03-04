@@ -1,7 +1,7 @@
 node_modules/
 .env
 .env.local
-dist/
+# dist/ — committed so git-based installs work without a build step
 storybook-static/
 configurator/dist/
 configurator/dist-server/
