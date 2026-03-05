@@ -1969,6 +1969,7 @@ function AppCard({
   description,
   subtext,
   large = false,
+  accentColor,
   onClick,
   className
 }) {
@@ -1985,7 +1986,15 @@ function AppCard({
       ),
       children: [
         /* @__PURE__ */ jsxs22("div", { className: "flex items-center justify-between mb-3", children: [
-          /* @__PURE__ */ jsx30(
+          accentColor ? /* @__PURE__ */ jsx30(
+            CardIllustration,
+            {
+              accent: accentColor,
+              size: 36,
+              radius: 10,
+              icon
+            }
+          ) : /* @__PURE__ */ jsx30(
             "div",
             {
               className: "w-8 h-8 rounded-md flex items-center justify-center text-[var(--neutral-600)]",
@@ -2084,6 +2093,7 @@ function CategorySection({
                 description: app.description,
                 subtext: app.subtext,
                 large: app.large,
+                accentColor: app.accentColor ?? iconColor,
                 onClick: () => onAppClick?.(app)
               },
               index
@@ -2293,6 +2303,7 @@ function HeroActionCard({
   onTaskClick,
   onViewFullPlan,
   footerText = "View Full Action Plan",
+  illustration,
   className
 }) {
   const segments = [];
@@ -2318,31 +2329,34 @@ function HeroActionCard({
       children: [
         /* @__PURE__ */ jsxs27("div", { className: "px-5 pt-5 pb-3", children: [
           /* @__PURE__ */ jsxs27("div", { className: "flex items-start justify-between mb-1", children: [
-            /* @__PURE__ */ jsxs27("div", { children: [
-              /* @__PURE__ */ jsx36(
-                "p",
-                {
-                  className: "text-[11px] font-semibold uppercase tracking-wider mb-1",
-                  style: { color: "var(--brand-primary)" },
-                  children: title
-                }
-              ),
-              /* @__PURE__ */ jsx36(
-                "h2",
-                {
-                  className: "text-xl font-bold",
-                  style: { color: "var(--hero-card-title, var(--foreground))" },
-                  children: heading
-                }
-              ),
-              subtitle && /* @__PURE__ */ jsx36(
-                "p",
-                {
-                  className: "text-sm mt-0.5",
-                  style: { color: "var(--hero-card-body-text, var(--neutral-500))" },
-                  children: subtitle
-                }
-              )
+            /* @__PURE__ */ jsxs27("div", { className: "flex items-center gap-3", children: [
+              illustration && /* @__PURE__ */ jsx36("div", { className: "shrink-0", children: illustration }),
+              /* @__PURE__ */ jsxs27("div", { children: [
+                /* @__PURE__ */ jsx36(
+                  "p",
+                  {
+                    className: "text-[11px] font-semibold uppercase tracking-wider mb-1",
+                    style: { color: "var(--brand-primary)" },
+                    children: title
+                  }
+                ),
+                /* @__PURE__ */ jsx36(
+                  "h2",
+                  {
+                    className: "text-xl font-bold",
+                    style: { color: "var(--hero-card-title, var(--foreground))" },
+                    children: heading
+                  }
+                ),
+                subtitle && /* @__PURE__ */ jsx36(
+                  "p",
+                  {
+                    className: "text-sm mt-0.5",
+                    style: { color: "var(--hero-card-body-text, var(--neutral-500))" },
+                    children: subtitle
+                  }
+                )
+              ] })
             ] }),
             /* @__PURE__ */ jsxs27("div", { className: "text-right shrink-0 ml-4", children: [
               /* @__PURE__ */ jsxs27(

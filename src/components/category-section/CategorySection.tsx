@@ -20,6 +20,8 @@ export interface CategoryApp {
   subtext?: string;
   large?: boolean;
   href?: string;
+  /** Override accent color for this app's icon illustration */
+  accentColor?: string;
 }
 
 export interface CategorySectionProps {
@@ -113,6 +115,7 @@ function CategorySection({
                   description={app.description}
                   subtext={app.subtext}
                   large={app.large}
+                  accentColor={app.accentColor ?? iconColor}
                   onClick={() => onAppClick?.(app)}
                 />
               ))}

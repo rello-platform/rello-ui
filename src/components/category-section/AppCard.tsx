@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Badge, type BadgeVariant } from "../badge";
+import { CardIllustration } from "../card-illustration";
 import { cn } from "../../lib/cn";
 
 export interface AppCardProps {
@@ -14,6 +15,8 @@ export interface AppCardProps {
   description: string;
   subtext?: string;
   large?: boolean;
+  /** Accent color for the branded icon illustration */
+  accentColor?: string;
   onClick?: () => void;
   className?: string;
 }
@@ -28,6 +31,7 @@ function AppCard({
   description,
   subtext,
   large = false,
+  accentColor,
   onClick,
   className,
 }: AppCardProps) {
@@ -44,12 +48,21 @@ function AppCard({
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <div
-          className="w-8 h-8 rounded-md flex items-center justify-center text-[var(--neutral-600)]"
-          style={{ background: "var(--neutral-100)" }}
-        >
-          {icon}
-        </div>
+        {accentColor ? (
+          <CardIllustration
+            accent={accentColor}
+            size={36}
+            radius={10}
+            icon={icon}
+          />
+        ) : (
+          <div
+            className="w-8 h-8 rounded-md flex items-center justify-center text-[var(--neutral-600)]"
+            style={{ background: "var(--neutral-100)" }}
+          >
+            {icon}
+          </div>
+        )}
         <Badge variant={statusVariant}>{status}</Badge>
       </div>
 

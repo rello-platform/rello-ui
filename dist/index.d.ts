@@ -489,10 +489,12 @@ interface AppCardProps {
     description: string;
     subtext?: string;
     large?: boolean;
+    /** Accent color for the branded icon illustration */
+    accentColor?: string;
     onClick?: () => void;
     className?: string;
 }
-declare function AppCard({ icon, title, status, statusVariant, value, valueLabel, description, subtext, large, onClick, className, }: AppCardProps): react_jsx_runtime.JSX.Element;
+declare function AppCard({ icon, title, status, statusVariant, value, valueLabel, description, subtext, large, accentColor, onClick, className, }: AppCardProps): react_jsx_runtime.JSX.Element;
 
 interface CategoryApp {
     icon: React.ReactNode;
@@ -505,6 +507,8 @@ interface CategoryApp {
     subtext?: string;
     large?: boolean;
     href?: string;
+    /** Override accent color for this app's icon illustration */
+    accentColor?: string;
 }
 interface CategorySectionProps {
     id: string;
@@ -592,9 +596,11 @@ interface HeroActionCardProps {
     onViewFullPlan?: () => void;
     /** Footer button text */
     footerText?: string;
+    /** Optional branded illustration rendered next to the header */
+    illustration?: React.ReactNode;
     className?: string;
 }
-declare function HeroActionCard({ title, heading, subtitle, completedCount, totalCount, tasks, onTaskToggle, onTaskClick, onViewFullPlan, footerText, className, }: HeroActionCardProps): react_jsx_runtime.JSX.Element;
+declare function HeroActionCard({ title, heading, subtitle, completedCount, totalCount, tasks, onTaskToggle, onTaskClick, onViewFullPlan, footerText, illustration, className, }: HeroActionCardProps): react_jsx_runtime.JSX.Element;
 
 interface AudioPlayerCardProps {
     /** Audio source URL */

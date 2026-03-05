@@ -41,6 +41,8 @@ export interface HeroActionCardProps {
   onViewFullPlan?: () => void;
   /** Footer button text */
   footerText?: string;
+  /** Optional branded illustration rendered next to the header */
+  illustration?: React.ReactNode;
   className?: string;
 }
 
@@ -85,6 +87,7 @@ function HeroActionCard({
   onTaskClick,
   onViewFullPlan,
   footerText = "View Full Action Plan",
+  illustration,
   className,
 }: HeroActionCardProps) {
   // Build segments for the progress bar
@@ -113,27 +116,30 @@ function HeroActionCard({
       {/* Header */}
       <div className="px-5 pt-5 pb-3">
         <div className="flex items-start justify-between mb-1">
-          <div>
-            <p
-              className="text-[11px] font-semibold uppercase tracking-wider mb-1"
-              style={{ color: "var(--brand-primary)" }}
-            >
-              {title}
-            </p>
-            <h2
-              className="text-xl font-bold"
-              style={{ color: "var(--hero-card-title, var(--foreground))" }}
-            >
-              {heading}
-            </h2>
-            {subtitle && (
+          <div className="flex items-center gap-3">
+            {illustration && <div className="shrink-0">{illustration}</div>}
+            <div>
               <p
-                className="text-sm mt-0.5"
-                style={{ color: "var(--hero-card-body-text, var(--neutral-500))" }}
+                className="text-[11px] font-semibold uppercase tracking-wider mb-1"
+                style={{ color: "var(--brand-primary)" }}
               >
-                {subtitle}
+                {title}
               </p>
-            )}
+              <h2
+                className="text-xl font-bold"
+                style={{ color: "var(--hero-card-title, var(--foreground))" }}
+              >
+                {heading}
+              </h2>
+              {subtitle && (
+                <p
+                  className="text-sm mt-0.5"
+                  style={{ color: "var(--hero-card-body-text, var(--neutral-500))" }}
+                >
+                  {subtitle}
+                </p>
+              )}
+            </div>
           </div>
           <div className="text-right shrink-0 ml-4">
             <p
