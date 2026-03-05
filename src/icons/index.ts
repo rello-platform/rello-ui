@@ -17,3 +17,11 @@ export {
   TRACK_ICONS,
   type TrackIconProps,
 } from "./track-icons";
+
+export {
+  DawnIcon,
+  SignalIcon,
+  PulseIcon,
+  AtlasIcon,
+  DASHBOARD_ICONS,
+} from "./dashboard-icons";

@@ -114,50 +114,51 @@ function HeroActionCard({
       }}
     >
       {/* Header */}
-      <div className="px-5 pt-5 pb-3">
+      <div className="px-5 pt-5 pb-3 relative">
         <div className="flex items-start justify-between mb-1">
-          <div className="flex items-center gap-3">
-            {illustration && <div className="shrink-0">{illustration}</div>}
-            <div>
+          <div>
+            <p
+              className="text-[11px] font-semibold uppercase tracking-wider mb-1"
+              style={{ color: "var(--brand-primary)" }}
+            >
+              {title}
+            </p>
+            <h2
+              className="text-xl font-bold"
+              style={{ color: "var(--hero-card-title, var(--foreground))" }}
+            >
+              {heading}
+            </h2>
+            {subtitle && (
               <p
-                className="text-[11px] font-semibold uppercase tracking-wider mb-1"
-                style={{ color: "var(--brand-primary)" }}
+                className="text-sm mt-0.5"
+                style={{ color: "var(--hero-card-body-text, var(--neutral-500))" }}
               >
-                {title}
+                {subtitle}
               </p>
-              <h2
-                className="text-xl font-bold"
-                style={{ color: "var(--hero-card-title, var(--foreground))" }}
+            )}
+            <div className="mt-1">
+              <span
+                className="text-2xl font-bold"
+                style={{
+                  color: "var(--brand-primary)",
+                  fontFamily: "var(--font-stat, var(--font-heading))",
+                }}
               >
-                {heading}
-              </h2>
-              {subtitle && (
-                <p
-                  className="text-sm mt-0.5"
-                  style={{ color: "var(--hero-card-body-text, var(--neutral-500))" }}
-                >
-                  {subtitle}
-                </p>
-              )}
+                {completedCount}/{totalCount}
+              </span>
+              <span
+                className="text-xs ml-1.5"
+                style={{ color: "var(--hero-card-body-text, var(--neutral-500))" }}
+              >
+                completed
+              </span>
             </div>
           </div>
-          <div className="text-right shrink-0 ml-4">
-            <p
-              className="text-3xl font-bold"
-              style={{
-                color: "var(--brand-primary)",
-                fontFamily: "var(--font-stat, var(--font-heading))",
-              }}
-            >
-              {completedCount}/{totalCount}
-            </p>
-            <p
-              className="text-xs"
-              style={{ color: "var(--hero-card-body-text, var(--neutral-500))" }}
-            >
-              completed
-            </p>
-          </div>
+          {/* Branded illustration — top right */}
+          {illustration && (
+            <div className="shrink-0 ml-3">{illustration}</div>
+          )}
         </div>
 
         {/* Progress bar */}
