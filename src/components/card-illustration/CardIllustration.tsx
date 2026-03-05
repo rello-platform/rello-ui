@@ -14,11 +14,11 @@ export interface CardIllustrationProps extends React.HTMLAttributes<HTMLDivEleme
   size?: number;
   /** Border radius in px (default 18) */
   radius?: number;
-  /** Container background opacity 0-1 (default 0.08) */
+  /** Container background opacity 0-1 (default 0.14) */
   bgOpacity?: number;
   /** Pattern SVG element (Layer 2) — rendered at low opacity inside the container */
   pattern?: React.ReactNode;
-  /** Pattern opacity 0-1 (default 0.07) */
+  /** Pattern opacity 0-1 (default 0.12) */
   patternOpacity?: number;
   /** Icon/illustration element (Layer 3) — rendered centered on top */
   icon?: React.ReactNode;
@@ -42,9 +42,9 @@ const CardIllustration = React.forwardRef<HTMLDivElement, CardIllustrationProps>
       accent,
       size = 88,
       radius = 18,
-      bgOpacity = 0.08,
+      bgOpacity = 0.14,
       pattern,
-      patternOpacity = 0.07,
+      patternOpacity = 0.12,
       icon,
       dark = false,
       style,

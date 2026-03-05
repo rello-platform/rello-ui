@@ -324,11 +324,11 @@ interface CardIllustrationProps extends React.HTMLAttributes<HTMLDivElement> {
     size?: number;
     /** Border radius in px (default 18) */
     radius?: number;
-    /** Container background opacity 0-1 (default 0.08) */
+    /** Container background opacity 0-1 (default 0.14) */
     bgOpacity?: number;
     /** Pattern SVG element (Layer 2) — rendered at low opacity inside the container */
     pattern?: React.ReactNode;
-    /** Pattern opacity 0-1 (default 0.07) */
+    /** Pattern opacity 0-1 (default 0.12) */
     patternOpacity?: number;
     /** Icon/illustration element (Layer 3) — rendered centered on top */
     icon?: React.ReactNode;
@@ -374,6 +374,61 @@ interface TrackCardIllustrationProps extends Omit<CardIllustrationProps, "accent
     iconSize?: number;
 }
 declare function TrackCardIllustration({ illustrationKey, accentOverride, iconSize, ...props }: TrackCardIllustrationProps): react_jsx_runtime.JSX.Element | null;
+
+interface TrackIconProps {
+    accent: string;
+    size?: number;
+    className?: string;
+}
+declare function CreditScoreIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function SavingsIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function DtiIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function DreamHomeIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function MortgageTermsIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function BudgetIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function TimelineIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function StreakIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function DailyExerciseIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function WeeklyChallengeIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function SelfPacedIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function CelebrationIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function DownPaymentIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function PreApprovalIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function NeighborhoodIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare const TRACK_ICONS: Record<string, React.ComponentType<TrackIconProps>>;
+
+declare function DawnIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function SignalIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function PulseIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function AtlasIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare const DASHBOARD_ICONS: Record<string, React.ComponentType<TrackIconProps>>;
+
+interface DashboardIllustrationDef {
+    /** Creative codename */
+    codename: string;
+    /** What card this is for */
+    section: string;
+    /** Accent color hex */
+    accent: string;
+    /** Pattern component */
+    pattern: React.ComponentType<{
+        accent: string;
+    }>;
+    /** Icon component */
+    icon: React.ComponentType<TrackIconProps>;
+    /** Whether this should render in dark mode */
+    dark?: boolean;
+}
+declare const DASHBOARD_ILLUSTRATIONS: Record<string, DashboardIllustrationDef>;
+interface DashboardCardIllustrationProps extends Omit<CardIllustrationProps, "accent" | "pattern" | "icon" | "dark"> {
+    /** Registry key (e.g. "market-intel", "before-9") */
+    illustrationKey: string;
+    /** Override accent color */
+    accentOverride?: string;
+    /** Icon size in px (default 48) */
+    iconSize?: number;
+}
+declare function DashboardCardIllustration({ illustrationKey, accentOverride, iconSize, ...props }: DashboardCardIllustrationProps): react_jsx_runtime.JSX.Element | null;
 
 interface AppShellProps extends React.HTMLAttributes<HTMLDivElement> {
     header?: React.ReactNode;
@@ -675,34 +730,6 @@ interface MiniKanbanProps {
 }
 declare function MiniKanban({ columns, onItemClick, maxItemsPerColumn, className, }: MiniKanbanProps): react_jsx_runtime.JSX.Element;
 
-interface TrackIconProps {
-    accent: string;
-    size?: number;
-    className?: string;
-}
-declare function CreditScoreIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function SavingsIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function DtiIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function DreamHomeIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function MortgageTermsIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function BudgetIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function TimelineIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function StreakIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function DailyExerciseIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function WeeklyChallengeIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function SelfPacedIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function CelebrationIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function DownPaymentIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function PreApprovalIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function NeighborhoodIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare const TRACK_ICONS: Record<string, React.ComponentType<TrackIconProps>>;
-
-declare function DawnIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function SignalIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function PulseIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare function AtlasIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
-declare const DASHBOARD_ICONS: Record<string, React.ComponentType<TrackIconProps>>;
-
 declare function cn(...inputs: ClassValue[]): string;
 
-export { AppCard, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DailyExerciseIcon, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DtiIcon, EmptyState, type EmptyStateProps, HeroActionCard, type HeroActionCardProps, type HeroActionTask, InlineLoading, Input, type InputProps, Label, LoadingOverlay, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, OrbitalRings, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TaskActionType, type TaskTemperature, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WeeklyChallengeIcon, badgeVariants, buttonVariants, cn, useToast };
+export { AppCard, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DtiIcon, EmptyState, type EmptyStateProps, HeroActionCard, type HeroActionCardProps, type HeroActionTask, InlineLoading, Input, type InputProps, Label, LoadingOverlay, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, OrbitalRings, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TaskActionType, type TaskTemperature, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WeeklyChallengeIcon, badgeVariants, buttonVariants, cn, useToast };
