@@ -266,8 +266,8 @@ function DashboardShell({
               {appTitle}
             </h1>
             <p
-              className="text-sm md:text-base font-semibold"
-              style={{ color: "var(--app-subtitle-color, var(--neutral-500))", fontFamily: "var(--font-app-subtitle, var(--font-body))" }}
+              className="text-sm md:text-base font-bold"
+              style={{ color: "var(--foreground)", fontFamily: "var(--font-app-subtitle, var(--font-body))" }}
             >
               {appSubtitle}
             </p>
