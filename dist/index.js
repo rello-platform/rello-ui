@@ -2188,6 +2188,7 @@ function DashboardShell({
   heroContent,
   rightCard,
   children,
+  headerClassName,
   className
 }) {
   const [sidebarHovered, setSidebarHovered] = useState3(false);
@@ -2199,7 +2200,7 @@ function DashboardShell({
       style: { backgroundColor: "var(--background)" },
       children: [
         /* @__PURE__ */ jsxs22("div", { className: "flex items-start justify-between px-4 md:px-6 pt-4 md:pt-6", children: [
-          /* @__PURE__ */ jsxs22("div", { className: "flex items-start gap-3 md:gap-4 max-w-xl", children: [
+          /* @__PURE__ */ jsxs22("div", { className: cn("flex items-start gap-3 md:gap-4 max-w-xl", headerClassName), children: [
             /* @__PURE__ */ jsx32(
               "button",
               {

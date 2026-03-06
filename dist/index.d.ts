@@ -544,9 +544,11 @@ interface DashboardShellProps {
     rightCard?: React.ReactNode;
     /** Content below the hero row */
     children?: React.ReactNode;
+    /** Extra className for the header left area (logo + title) — useful for animations */
+    headerClassName?: string;
     className?: string;
 }
-declare function DashboardShell({ logo, appTitle, appSubtitle, highlightText, agentName, agentInitials, agentSubtitle, navGroups, activeNavLabel, onNavClick, heroContent, rightCard, children, className, }: DashboardShellProps): react_jsx_runtime.JSX.Element;
+declare function DashboardShell({ logo, appTitle, appSubtitle, highlightText, agentName, agentInitials, agentSubtitle, navGroups, activeNavLabel, onNavClick, heroContent, rightCard, children, headerClassName, className, }: DashboardShellProps): react_jsx_runtime.JSX.Element;
 
 interface PipelineData {
     cold: number;

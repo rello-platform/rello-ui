@@ -52,6 +52,9 @@ export interface DashboardShellProps {
   /** Content below the hero row */
   children?: React.ReactNode;
 
+  /** Extra className for the header left area (logo + title) — useful for animations */
+  headerClassName?: string;
+
   className?: string;
 }
 
@@ -223,6 +226,7 @@ function DashboardShell({
   heroContent,
   rightCard,
   children,
+  headerClassName,
   className,
 }: DashboardShellProps) {
   const [sidebarHovered, setSidebarHovered] = useState(false);
@@ -236,7 +240,7 @@ function DashboardShell({
       {/* === TOP ROW: Logo + Title on left, Agent card on right === */}
       <div className="flex items-start justify-between px-4 md:px-6 pt-4 md:pt-6">
         {/* Left: Logo + Title + Subtitle + Highlight */}
-        <div className="flex items-start gap-3 md:gap-4 max-w-xl">
+        <div className={cn("flex items-start gap-3 md:gap-4 max-w-xl", headerClassName)}>
           {/* Mobile hamburger */}
           <button
             className="md:hidden p-2 -ml-2 rounded-lg text-[var(--neutral-500)] hover:bg-[var(--neutral-50)]"
