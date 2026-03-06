@@ -52,6 +52,9 @@ export interface DashboardShellProps {
   /** Content below the hero row */
   children?: React.ReactNode;
 
+  /** Content rendered inside the agent card (left-justified) — card expands to fill top bar */
+  headerActions?: React.ReactNode;
+
   /** Extra className for the header left area (logo + title) — useful for animations */
   headerClassName?: string;
 
@@ -226,6 +229,7 @@ function DashboardShell({
   heroContent,
   rightCard,
   children,
+  headerActions,
   headerClassName,
   className,
 }: DashboardShellProps) {
@@ -274,22 +278,31 @@ function DashboardShell({
           </div>
         </div>
 
-        {/* Right: Agent card */}
+        {/* Right: Agent card — expands when headerActions present */}
         <div
-          className="rounded-xl px-3 md:px-4 py-2 md:py-2.5 flex items-center gap-3 shrink-0"
+          className={cn(
+            "rounded-xl px-3 md:px-4 py-2 md:py-2.5 flex items-center gap-3",
+            headerActions ? "flex-1 min-w-0" : "shrink-0"
+          )}
           style={{
             backgroundColor: "var(--card-background)",
             border: "1px solid var(--card-border)",
+            transition: "flex 300ms ease",
           }}
         >
-          <div className="text-right hidden md:block">
+          {headerActions && (
+            <div className="flex-1 min-w-0 flex items-center">
+              {headerActions}
+            </div>
+          )}
+          <div className="text-right hidden md:block shrink-0">
             <p className="text-xs font-medium text-[var(--foreground)]">{agentName}</p>
             {agentSubtitle && (
               <p className="text-[10px] text-[var(--neutral-400)]">{agentSubtitle}</p>
             )}
           </div>
           <div
-            className="size-9 rounded-full flex items-center justify-center text-xs font-semibold"
+            className="size-9 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
             style={{
               backgroundColor: "var(--brand-primary-light)",
               color: "var(--brand-primary)",
