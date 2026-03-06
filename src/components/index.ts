@@ -36,3 +36,7 @@ export * from "./hero-action-card";
 export * from "./audio-player-card";
 export * from "./news-row";
 export * from "./mini-kanban";
+export * from "./conversion-score";
+export * from "./decision-explanation-card";
+export * from "./behavioral-tag";
+export * from "./was-this-helpful";

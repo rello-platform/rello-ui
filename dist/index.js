@@ -3339,6 +3339,342 @@ function MiniKanban({
     );
   }) });
 }
+
+// src/components/conversion-score/ConversionScore.tsx
+import * as React20 from "react";
+import { jsx as jsx44, jsxs as jsxs33 } from "react/jsx-runtime";
+var gradients = {
+  hot: ["#E8915A", "#D9534F"],
+  warm: ["#E8915A", "#D4A84B"],
+  cold: ["#7BAFD4", "#5B8DB8"]
+};
+var temperatureColors = {
+  hot: "#D9534F",
+  warm: "#D4A84B",
+  cold: "#5B8DB8"
+};
+var temperatureBadgeVariant = {
+  hot: "hot",
+  warm: "warming",
+  cold: "cold"
+};
+var RING_SIZE = 96;
+var STROKE_WIDTH = 6;
+var RADIUS = (RING_SIZE - STROKE_WIDTH) / 2;
+var CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+function ConversionScore({
+  score,
+  temperature,
+  trend,
+  label = "Conversion Score",
+  className,
+  ...props
+}) {
+  const clampedScore = Math.max(0, Math.min(100, score));
+  const offset = CIRCUMFERENCE - clampedScore / 100 * CIRCUMFERENCE;
+  const [start, end] = gradients[temperature];
+  const gradientId = React20.useId();
+  return /* @__PURE__ */ jsxs33(Card, { className: cn("inline-flex flex-col items-center gap-3", className), ...props, children: [
+    /* @__PURE__ */ jsxs33("div", { className: "relative", style: { width: RING_SIZE, height: RING_SIZE }, children: [
+      /* @__PURE__ */ jsxs33("svg", { width: RING_SIZE, height: RING_SIZE, viewBox: `0 0 ${RING_SIZE} ${RING_SIZE}`, children: [
+        /* @__PURE__ */ jsx44("defs", { children: /* @__PURE__ */ jsxs33("linearGradient", { id: gradientId, x1: "0%", y1: "0%", x2: "100%", y2: "0%", children: [
+          /* @__PURE__ */ jsx44("stop", { offset: "0%", stopColor: start }),
+          /* @__PURE__ */ jsx44("stop", { offset: "100%", stopColor: end })
+        ] }) }),
+        /* @__PURE__ */ jsx44(
+          "circle",
+          {
+            cx: RING_SIZE / 2,
+            cy: RING_SIZE / 2,
+            r: RADIUS,
+            fill: "none",
+            stroke: "var(--neutral-100)",
+            strokeWidth: STROKE_WIDTH
+          }
+        ),
+        /* @__PURE__ */ jsx44(
+          "circle",
+          {
+            cx: RING_SIZE / 2,
+            cy: RING_SIZE / 2,
+            r: RADIUS,
+            fill: "none",
+            stroke: `url(#${gradientId})`,
+            strokeWidth: STROKE_WIDTH,
+            strokeLinecap: "round",
+            strokeDasharray: CIRCUMFERENCE,
+            strokeDashoffset: offset,
+            transform: `rotate(-90 ${RING_SIZE / 2} ${RING_SIZE / 2})`,
+            className: "transition-all duration-500 ease-out"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsx44("div", { className: "absolute inset-0 flex items-center justify-center", children: /* @__PURE__ */ jsx44(
+        "span",
+        {
+          className: "text-2xl font-bold",
+          style: { fontFamily: "var(--font-stat)", color: temperatureColors[temperature] },
+          children: clampedScore
+        }
+      ) })
+    ] }),
+    /* @__PURE__ */ jsx44("p", { className: "text-xs text-[var(--neutral-500)]", children: label }),
+    /* @__PURE__ */ jsx44(Badge, { variant: temperatureBadgeVariant[temperature], size: "sm", dot: true, children: temperature.charAt(0).toUpperCase() + temperature.slice(1) }),
+    trend && /* @__PURE__ */ jsxs33("div", { className: "flex items-center gap-1 text-xs text-[var(--neutral-500)]", children: [
+      /* @__PURE__ */ jsx44(
+        "svg",
+        {
+          width: "12",
+          height: "12",
+          viewBox: "0 0 12 12",
+          fill: "none",
+          className: cn(
+            trend.direction === "up" ? "text-[var(--success)]" : "text-[var(--error)]",
+            trend.direction === "down" && "rotate-180"
+          ),
+          children: /* @__PURE__ */ jsx44(
+            "path",
+            {
+              d: "M6 2.5V9.5M6 2.5L3 5.5M6 2.5L9 5.5",
+              stroke: "currentColor",
+              strokeWidth: "1.5",
+              strokeLinecap: "round",
+              strokeLinejoin: "round"
+            }
+          )
+        }
+      ),
+      /* @__PURE__ */ jsx44("span", { children: trend.value })
+    ] })
+  ] });
+}
+
+// src/components/decision-explanation-card/DecisionExplanationCard.tsx
+import * as React21 from "react";
+import { jsx as jsx45, jsxs as jsxs34 } from "react/jsx-runtime";
+var factorGradients = {
+  hot: ["#E8915A", "#D9534F"],
+  qualified: ["#D4A84B", "#E8915A"],
+  engaged: ["#C4B84B", "#D4A84B"],
+  warming: ["#7BB5C8", "#6A9FB5"],
+  cold: ["#7BAFD4", "#5B8DB8"],
+  success: ["#7BB59A", "#6B9080"]
+};
+function FactorBar({ label, weight, variant = "hot" }) {
+  const gradientId = React21.useId();
+  const [start, end] = factorGradients[variant];
+  const clampedWeight = Math.max(0, Math.min(100, weight));
+  return /* @__PURE__ */ jsxs34("div", { className: "flex items-center gap-3", children: [
+    /* @__PURE__ */ jsx45("span", { className: "text-xs text-[var(--neutral-600)] w-24 shrink-0 truncate", children: label }),
+    /* @__PURE__ */ jsx45("div", { className: "relative flex-1 h-2 rounded-full bg-[var(--neutral-100)] overflow-hidden", children: /* @__PURE__ */ jsxs34("svg", { className: "absolute inset-0 w-full h-full", preserveAspectRatio: "none", children: [
+      /* @__PURE__ */ jsx45("defs", { children: /* @__PURE__ */ jsxs34("linearGradient", { id: gradientId, x1: "0%", y1: "0%", x2: "100%", y2: "0%", children: [
+        /* @__PURE__ */ jsx45("stop", { offset: "0%", stopColor: start }),
+        /* @__PURE__ */ jsx45("stop", { offset: "100%", stopColor: end })
+      ] }) }),
+      /* @__PURE__ */ jsx45(
+        "rect",
+        {
+          x: "0",
+          y: "0",
+          width: `${clampedWeight}%`,
+          height: "100%",
+          rx: "4",
+          fill: `url(#${gradientId})`,
+          className: "transition-all duration-300 ease-out"
+        }
+      )
+    ] }) }),
+    /* @__PURE__ */ jsxs34("span", { className: "text-xs font-medium text-[var(--neutral-500)] w-8 text-right shrink-0", children: [
+      clampedWeight,
+      "%"
+    ] })
+  ] });
+}
+function DecisionExplanationCard({
+  title,
+  subtitle,
+  explanation,
+  factors,
+  confidence,
+  illustration,
+  showMiloBadge = true,
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxs34(Card, { className: cn("flex flex-col gap-4", className), ...props, children: [
+    /* @__PURE__ */ jsxs34("div", { className: "flex items-start justify-between", children: [
+      /* @__PURE__ */ jsxs34("div", { className: "flex flex-col gap-1.5 min-w-0", children: [
+        /* @__PURE__ */ jsxs34("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsx45("h3", { className: "text-lg font-semibold leading-none text-[var(--foreground)] truncate", children: title }),
+          showMiloBadge && /* @__PURE__ */ jsx45(Badge, { variant: "primary", size: "xs", children: "Milo" })
+        ] }),
+        subtitle && /* @__PURE__ */ jsx45("p", { className: "text-sm text-[var(--neutral-500)]", children: subtitle })
+      ] }),
+      illustration && /* @__PURE__ */ jsx45("div", { className: "shrink-0 ml-4", children: illustration })
+    ] }),
+    /* @__PURE__ */ jsx45("p", { className: "text-sm text-[var(--neutral-700)]", style: { fontFamily: "var(--font-body)" }, children: explanation }),
+    factors.length > 0 && /* @__PURE__ */ jsx45("div", { className: "flex flex-col gap-2.5", children: factors.map((factor) => /* @__PURE__ */ jsx45(FactorBar, { ...factor }, factor.label)) }),
+    confidence && /* @__PURE__ */ jsxs34("div", { className: "flex items-center justify-between pt-4 border-t border-[var(--card-border)]", children: [
+      /* @__PURE__ */ jsx45("span", { className: "text-xs text-[var(--neutral-500)]", children: "Confidence" }),
+      /* @__PURE__ */ jsxs34("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsx45("span", { className: "text-xs font-medium text-[var(--neutral-700)]", children: confidence.level }),
+        /* @__PURE__ */ jsxs34("span", { className: "text-xs text-[var(--neutral-400)]", children: [
+          (confidence.score * 100).toFixed(0),
+          "%"
+        ] })
+      ] })
+    ] })
+  ] });
+}
+
+// src/components/behavioral-tag/BehavioralTag.tsx
+import { jsx as jsx46, jsxs as jsxs35 } from "react/jsx-runtime";
+function BehavioralTag({ onRemove, children, className, ...badgeProps }) {
+  return /* @__PURE__ */ jsxs35(Badge, { className: cn(onRemove && "pr-1", className), ...badgeProps, children: [
+    children,
+    onRemove && /* @__PURE__ */ jsx46(
+      "button",
+      {
+        type: "button",
+        onClick: (e) => {
+          e.stopPropagation();
+          onRemove();
+        },
+        className: "inline-flex items-center justify-center size-3.5 rounded-full hover:bg-[rgba(0,0,0,0.12)] transition-colors duration-150",
+        style: { backgroundColor: "rgba(0,0,0,0.08)" },
+        "aria-label": "Remove",
+        children: /* @__PURE__ */ jsx46("svg", { width: "8", height: "8", viewBox: "0 0 8 8", fill: "none", children: /* @__PURE__ */ jsx46(
+          "path",
+          {
+            d: "M1.5 1.5L6.5 6.5M6.5 1.5L1.5 6.5",
+            stroke: "currentColor",
+            strokeWidth: "1.5",
+            strokeLinecap: "round"
+          }
+        ) })
+      }
+    )
+  ] });
+}
+
+// src/components/was-this-helpful/WasThisHelpful.tsx
+import * as React22 from "react";
+import { jsx as jsx47, jsxs as jsxs36 } from "react/jsx-runtime";
+function ThumbsUpIcon({ className }) {
+  return /* @__PURE__ */ jsxs36("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", strokeWidth: "1.5", className, children: [
+    /* @__PURE__ */ jsx47(
+      "path",
+      {
+        d: "M16.472 20H4.1a.6.6 0 0 1-.6-.6V9.6a.6.6 0 0 1 .6-.6h2.768a2 2 0 0 0 1.715-.971l2.71-4.517a1.631 1.631 0 0 1 2.961.974v3.014a.6.6 0 0 0 .6.6h3.404c1.263 0 2.164 1.222 1.771 2.402l-1.904 5.711c-.26.782-.985 1.308-1.803 1.308Z",
+        stroke: "currentColor",
+        strokeLinecap: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx47("path", { d: "M7 20V9", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round" })
+  ] });
+}
+function ThumbsDownIcon({ className }) {
+  return /* @__PURE__ */ jsxs36("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", strokeWidth: "1.5", className, children: [
+    /* @__PURE__ */ jsx47(
+      "path",
+      {
+        d: "M7.528 4H19.9a.6.6 0 0 1 .6.6v9.8a.6.6 0 0 1-.6.6h-2.768a2 2 0 0 0-1.715.971l-2.71 4.517a1.631 1.631 0 0 1-2.961-.974v-3.014a.6.6 0 0 0-.6-.6H5.742c-1.263 0-2.164-1.222-1.771-2.402l1.904-5.711C6.135 6.005 6.86 5.479 7.678 5.479",
+        stroke: "currentColor",
+        strokeLinecap: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx47("path", { d: "M17 4v11", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round" })
+  ] });
+}
+function CheckIcon() {
+  return /* @__PURE__ */ jsx47("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", strokeWidth: "2", children: /* @__PURE__ */ jsx47("path", { d: "M5 13l4 4L19 7", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round" }) });
+}
+function WasThisHelpful({
+  onFeedback,
+  label = "Was this helpful?",
+  variant = "default",
+  className,
+  ...props
+}) {
+  const [state, setState] = React22.useState("idle");
+  const handleFeedback = (helpful) => {
+    setState(helpful ? "selected-yes" : "selected-no");
+    onFeedback(helpful);
+    setTimeout(() => setState("thanked"), 1200);
+  };
+  const isCompact = variant === "compact";
+  if (state === "thanked") {
+    return /* @__PURE__ */ jsxs36(
+      "div",
+      {
+        className: cn(
+          "flex items-center gap-1.5 text-[var(--success)]",
+          variant === "inline" && "border-t border-[var(--card-border)] mt-4 pt-3",
+          className
+        ),
+        ...props,
+        children: [
+          /* @__PURE__ */ jsx47(CheckIcon, {}),
+          /* @__PURE__ */ jsx47("span", { className: "text-sm font-medium", children: "Thanks for your feedback!" })
+        ]
+      }
+    );
+  }
+  return /* @__PURE__ */ jsxs36(
+    "div",
+    {
+      className: cn(
+        "flex items-center gap-2",
+        variant === "inline" && "border-t border-[var(--card-border)] mt-4 pt-3",
+        className
+      ),
+      ...props,
+      children: [
+        !isCompact && /* @__PURE__ */ jsx47("span", { className: "text-sm text-[var(--neutral-500)] mr-1", children: label }),
+        /* @__PURE__ */ jsxs36(
+          "button",
+          {
+            type: "button",
+            onClick: () => handleFeedback(true),
+            disabled: state !== "idle",
+            className: cn(
+              "inline-flex items-center justify-center gap-1.5 rounded-md border text-sm font-medium transition-all duration-200",
+              isCompact ? "size-8" : "h-8 px-3",
+              state === "idle" && "border-[var(--neutral-200)] bg-white text-[var(--neutral-700)] hover:bg-[var(--neutral-50)]",
+              state === "selected-yes" && "bg-[var(--success-light)] border-[var(--success)] text-[var(--success)]",
+              state === "selected-no" && "opacity-[0.35] border-[var(--neutral-200)] bg-white text-[var(--neutral-700)]"
+            ),
+            "aria-label": isCompact ? "Helpful" : void 0,
+            children: [
+              /* @__PURE__ */ jsx47(ThumbsUpIcon, {}),
+              !isCompact && "Yes"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxs36(
+          "button",
+          {
+            type: "button",
+            onClick: () => handleFeedback(false),
+            disabled: state !== "idle",
+            className: cn(
+              "inline-flex items-center justify-center gap-1.5 rounded-md border text-sm font-medium transition-all duration-200",
+              isCompact ? "size-8" : "h-8 px-3",
+              state === "idle" && "border-[var(--neutral-200)] bg-white text-[var(--neutral-700)] hover:bg-[var(--neutral-50)]",
+              state === "selected-no" && "bg-[var(--error-light)] border-[var(--error)] text-[var(--error)]",
+              state === "selected-yes" && "opacity-[0.35] border-[var(--neutral-200)] bg-white text-[var(--neutral-700)]"
+            ),
+            "aria-label": isCompact ? "Not helpful" : void 0,
+            children: [
+              /* @__PURE__ */ jsx47(ThumbsDownIcon, {}),
+              !isCompact && "No"
+            ]
+          }
+        )
+      ]
+    }
+  );
+}
 export {
   APP_ICONS,
   APP_ILLUSTRATIONS,
@@ -3355,6 +3691,7 @@ export {
   AvatarFallback,
   AvatarImage,
   Badge,
+  BehavioralTag,
   BudgetIcon,
   Button,
   ButtonSpinner,
@@ -3370,6 +3707,7 @@ export {
   CelebrationIcon,
   Checkbox,
   ConcentricCircles,
+  ConversionScore,
   CreditScoreIcon,
   CrossHatch,
   DASHBOARD_ICONS,
@@ -3378,6 +3716,7 @@ export {
   DashboardCardIllustration,
   DashboardShell,
   DawnIcon,
+  DecisionExplanationCard,
   Dialog,
   DialogClose,
   DialogContent,
@@ -3462,6 +3801,7 @@ export {
   ToastProvider,
   TodaySchedule,
   TrackCardIllustration,
+  WasThisHelpful,
   WeeklyChallengeIcon,
   badgeVariants,
   buttonVariants,
