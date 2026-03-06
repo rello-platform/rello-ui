@@ -2235,25 +2235,20 @@ function DashboardShell({
           /* @__PURE__ */ jsxs22(
             "div",
             {
-              className: cn(
-                "rounded-xl px-3 md:px-4 py-2 md:py-2.5 flex items-center gap-3",
-                headerActions ? "flex-1 min-w-0" : "shrink-0"
-              ),
+              className: "rounded-xl px-3 md:px-4 py-2 md:py-2.5 flex items-center gap-3 shrink-0",
               style: {
                 backgroundColor: "var(--card-background)",
-                border: "1px solid var(--card-border)",
-                transition: "flex 300ms ease"
+                border: "1px solid var(--card-border)"
               },
               children: [
-                headerActions && /* @__PURE__ */ jsx32("div", { className: "flex-1 min-w-0 flex items-center", children: headerActions }),
-                /* @__PURE__ */ jsxs22("div", { className: "text-right hidden md:block shrink-0", children: [
+                /* @__PURE__ */ jsxs22("div", { className: "text-right hidden md:block", children: [
                   /* @__PURE__ */ jsx32("p", { className: "text-xs font-medium text-[var(--foreground)]", children: agentName }),
                   agentSubtitle && /* @__PURE__ */ jsx32("p", { className: "text-[10px] text-[var(--neutral-400)]", children: agentSubtitle })
                 ] }),
                 /* @__PURE__ */ jsx32(
                   "div",
                   {
-                    className: "size-9 rounded-full flex items-center justify-center text-xs font-semibold shrink-0",
+                    className: "size-9 rounded-full flex items-center justify-center text-xs font-semibold",
                     style: {
                       backgroundColor: "var(--brand-primary-light)",
                       color: "var(--brand-primary)"
@@ -2265,6 +2260,7 @@ function DashboardShell({
             }
           )
         ] }),
+        headerActions && /* @__PURE__ */ jsx32("div", { className: "px-4 md:px-6 pt-3", children: headerActions }),
         /* @__PURE__ */ jsxs22("div", { className: "flex px-4 md:px-6 pt-4 pb-6 gap-4", style: { minHeight: 320 }, children: [
           /* @__PURE__ */ jsx32(
             Sidebar,

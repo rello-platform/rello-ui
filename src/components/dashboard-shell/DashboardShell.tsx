@@ -278,31 +278,22 @@ function DashboardShell({
           </div>
         </div>
 
-        {/* Right: Agent card — expands when headerActions present */}
+        {/* Right: Agent card */}
         <div
-          className={cn(
-            "rounded-xl px-3 md:px-4 py-2 md:py-2.5 flex items-center gap-3",
-            headerActions ? "flex-1 min-w-0" : "shrink-0"
-          )}
+          className="rounded-xl px-3 md:px-4 py-2 md:py-2.5 flex items-center gap-3 shrink-0"
           style={{
             backgroundColor: "var(--card-background)",
             border: "1px solid var(--card-border)",
-            transition: "flex 300ms ease",
           }}
         >
-          {headerActions && (
-            <div className="flex-1 min-w-0 flex items-center">
-              {headerActions}
-            </div>
-          )}
-          <div className="text-right hidden md:block shrink-0">
+          <div className="text-right hidden md:block">
             <p className="text-xs font-medium text-[var(--foreground)]">{agentName}</p>
             {agentSubtitle && (
               <p className="text-[10px] text-[var(--neutral-400)]">{agentSubtitle}</p>
             )}
           </div>
           <div
-            className="size-9 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
+            className="size-9 rounded-full flex items-center justify-center text-xs font-semibold"
             style={{
               backgroundColor: "var(--brand-primary-light)",
               color: "var(--brand-primary)",
@@ -312,6 +303,13 @@ function DashboardShell({
           </div>
         </div>
       </div>
+
+      {/* === HEADER ACTIONS BAR (below title, full width) === */}
+      {headerActions && (
+        <div className="px-4 md:px-6 pt-3">
+          {headerActions}
+        </div>
+      )}
 
       {/* === MAIN AREA: Sidebar + Content === */}
       <div className="flex px-4 md:px-6 pt-4 pb-6 gap-4" style={{ minHeight: 320 }}>
