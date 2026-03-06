@@ -22,6 +22,8 @@ export interface CategoryApp {
   href?: string;
   /** Override accent color for this app's icon illustration */
   accentColor?: string;
+  /** Registry key for full branded illustration (pattern + custom icon) */
+  illustrationKey?: string;
 }
 
 export interface CategorySectionProps {
@@ -116,6 +118,7 @@ function CategorySection({
                   subtext={app.subtext}
                   large={app.large}
                   accentColor={app.accentColor ?? iconColor}
+                  illustrationKey={app.illustrationKey}
                   onClick={() => onAppClick?.(app)}
                 />
               ))}

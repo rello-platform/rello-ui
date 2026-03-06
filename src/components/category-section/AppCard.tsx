@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Badge, type BadgeVariant } from "../badge";
 import { CardIllustration } from "../card-illustration";
+import { AppCardIllustration, APP_ILLUSTRATIONS } from "../card-illustration";
 import { cn } from "../../lib/cn";
 
 export interface AppCardProps {
@@ -17,6 +18,8 @@ export interface AppCardProps {
   large?: boolean;
   /** Accent color for the branded icon illustration */
   accentColor?: string;
+  /** Registry key for full branded illustration (pattern + custom icon) */
+  illustrationKey?: string;
   onClick?: () => void;
   className?: string;
 }
@@ -32,6 +35,7 @@ function AppCard({
   subtext,
   large = false,
   accentColor,
+  illustrationKey,
   onClick,
   className,
 }: AppCardProps) {
@@ -48,7 +52,15 @@ function AppCard({
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        {accentColor ? (
+        {illustrationKey && APP_ILLUSTRATIONS[illustrationKey] ? (
+          <AppCardIllustration
+            illustrationKey={illustrationKey}
+            accentOverride={accentColor}
+            size={36}
+            radius={10}
+            iconSize={20}
+          />
+        ) : accentColor ? (
           <CardIllustration
             accent={accentColor}
             size={36}

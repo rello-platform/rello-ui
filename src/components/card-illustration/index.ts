@@ -11,3 +11,9 @@ export {
   type DashboardIllustrationDef,
   type DashboardCardIllustrationProps,
 } from "./dashboard-illustrations";
+export {
+  AppCardIllustration,
+  APP_ILLUSTRATIONS,
+  type AppIllustrationDef,
+  type AppCardIllustrationProps,
+} from "./app-illustrations";

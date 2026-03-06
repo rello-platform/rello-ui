@@ -403,6 +403,18 @@ declare function PulseIcon({ accent, size, className }: TrackIconProps): react_j
 declare function AtlasIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
 declare const DASHBOARD_ICONS: Record<string, React.ComponentType<TrackIconProps>>;
 
+declare function AccountabilityTrackerIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function DrumbeatIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function HarvestHomeIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function OpenHouseHubIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function HomeStretchIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function HomeReadyIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function NewsletterStudioIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function MarketIntelIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function OvenIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare function LeadCaptureFormsIcon({ accent, size, className }: TrackIconProps): react_jsx_runtime.JSX.Element;
+declare const APP_ICONS: Record<string, React.ComponentType<TrackIconProps>>;
+
 interface DashboardIllustrationDef {
     /** Creative codename */
     codename: string;
@@ -429,6 +441,31 @@ interface DashboardCardIllustrationProps extends Omit<CardIllustrationProps, "ac
     iconSize?: number;
 }
 declare function DashboardCardIllustration({ illustrationKey, accentOverride, iconSize, ...props }: DashboardCardIllustrationProps): react_jsx_runtime.JSX.Element | null;
+
+interface AppIllustrationDef {
+    /** Creative codename */
+    codename: string;
+    /** What app this is for */
+    section: string;
+    /** Accent color hex */
+    accent: string;
+    /** Pattern component */
+    pattern: React.ComponentType<{
+        accent: string;
+    }>;
+    /** Icon component */
+    icon: React.ComponentType<TrackIconProps>;
+}
+declare const APP_ILLUSTRATIONS: Record<string, AppIllustrationDef>;
+interface AppCardIllustrationProps extends Omit<CardIllustrationProps, "accent" | "pattern" | "icon"> {
+    /** Registry key (e.g. "home-ready", "drumbeat") */
+    illustrationKey: string;
+    /** Override accent color */
+    accentOverride?: string;
+    /** Icon size in px (default 24 for app cards) */
+    iconSize?: number;
+}
+declare function AppCardIllustration({ illustrationKey, accentOverride, iconSize, ...props }: AppCardIllustrationProps): react_jsx_runtime.JSX.Element | null;
 
 interface AppShellProps extends React.HTMLAttributes<HTMLDivElement> {
     header?: React.ReactNode;
@@ -546,10 +583,12 @@ interface AppCardProps {
     large?: boolean;
     /** Accent color for the branded icon illustration */
     accentColor?: string;
+    /** Registry key for full branded illustration (pattern + custom icon) */
+    illustrationKey?: string;
     onClick?: () => void;
     className?: string;
 }
-declare function AppCard({ icon, title, status, statusVariant, value, valueLabel, description, subtext, large, accentColor, onClick, className, }: AppCardProps): react_jsx_runtime.JSX.Element;
+declare function AppCard({ icon, title, status, statusVariant, value, valueLabel, description, subtext, large, accentColor, illustrationKey, onClick, className, }: AppCardProps): react_jsx_runtime.JSX.Element;
 
 interface CategoryApp {
     icon: React.ReactNode;
@@ -564,6 +603,8 @@ interface CategoryApp {
     href?: string;
     /** Override accent color for this app's icon illustration */
     accentColor?: string;
+    /** Registry key for full branded illustration (pattern + custom icon) */
+    illustrationKey?: string;
 }
 interface CategorySectionProps {
     id: string;
@@ -732,4 +773,4 @@ declare function MiniKanban({ columns, onItemClick, maxItemsPerColumn, className
 
 declare function cn(...inputs: ClassValue[]): string;
 
-export { AppCard, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DtiIcon, EmptyState, type EmptyStateProps, HeroActionCard, type HeroActionCardProps, type HeroActionTask, InlineLoading, Input, type InputProps, Label, LoadingOverlay, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, OrbitalRings, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TaskActionType, type TaskTemperature, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WeeklyChallengeIcon, badgeVariants, buttonVariants, cn, useToast };
+export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateProps, HarvestHomeIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeStretchIcon, InlineLoading, Input, type InputProps, Label, LeadCaptureFormsIcon, LoadingOverlay, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TaskActionType, type TaskTemperature, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WeeklyChallengeIcon, badgeVariants, buttonVariants, cn, useToast };
