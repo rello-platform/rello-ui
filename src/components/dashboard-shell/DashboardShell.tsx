@@ -266,13 +266,16 @@ function DashboardShell({
               {appTitle}
             </h1>
             <p
-              className="text-sm md:text-base"
+              className="text-sm md:text-base font-semibold"
               style={{ color: "var(--app-subtitle-color, var(--neutral-500))", fontFamily: "var(--font-app-subtitle, var(--font-body))" }}
             >
               {appSubtitle}
             </p>
             {highlightText && (
-              <p className="text-sm leading-relaxed mt-1.5 text-[var(--neutral-600)] hidden md:block">
+              <p
+                className="text-sm leading-relaxed mt-1.5 hidden md:block"
+                style={{ color: "var(--neutral-600)", fontFamily: "var(--font-app-subtitle, var(--font-body))" }}
+              >
                 {highlightText}
               </p>
             )}
