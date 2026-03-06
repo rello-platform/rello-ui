@@ -2112,7 +2112,7 @@ function Sidebar({
               },
               children: [
                 /* @__PURE__ */ jsx32("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
-                hovered && /* @__PURE__ */ jsx32("span", { className: "text-xs font-medium whitespace-nowrap", children: item.label })
+                hovered && /* @__PURE__ */ jsx32("span", { className: "text-xs font-medium whitespace-nowrap", style: { fontFamily: "var(--font-app-subtitle, var(--font-body))" }, children: item.label })
               ]
             },
             item.label
@@ -2163,6 +2163,7 @@ function MobileNav({
               "flex items-center gap-3 w-full px-5 py-2.5 text-sm transition-colors",
               isActive ? "bg-[var(--brand-primary-light)] text-[var(--brand-primary)] font-semibold" : "text-[var(--neutral-600)] hover:bg-[var(--neutral-50)]"
             ),
+            style: { fontFamily: "var(--font-app-subtitle, var(--font-body))" },
             children: [
               /* @__PURE__ */ jsx32("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
               item.label
