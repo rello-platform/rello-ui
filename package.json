@@ -47,6 +47,7 @@
     "@radix-ui/react-progress": "^1.1.0",
     "@radix-ui/react-select": "^2.2.0",
     "@radix-ui/react-slot": "^1.2.0",
+    "@rello-platform/ui": "github:rello-platform/rello-ui",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "iconoir-react": "^7.11.0",
