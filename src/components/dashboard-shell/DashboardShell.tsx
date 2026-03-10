@@ -55,6 +55,9 @@ export interface DashboardShellProps {
   /** Content rendered inside the agent card (left-justified) — card expands to fill top bar */
   headerActions?: React.ReactNode;
 
+  /** Content rendered to the left of the agent card in the top-right area */
+  headerRightSlot?: React.ReactNode;
+
   /** Extra className for the header left area (logo + title) — useful for animations */
   headerClassName?: string;
 
@@ -231,6 +234,7 @@ function DashboardShell({
   rightCard,
   children,
   headerActions,
+  headerRightSlot,
   headerClassName,
   className,
 }: DashboardShellProps) {
@@ -282,7 +286,9 @@ function DashboardShell({
           </div>
         </div>
 
-        {/* Right: Agent card */}
+        {/* Right: Optional slot + Agent card */}
+        <div className="flex items-center gap-3 shrink-0">
+          {headerRightSlot}
         <div
           className="rounded-xl px-3 md:px-4 py-2 md:py-2.5 flex items-center gap-3 shrink-0"
           style={{
@@ -305,6 +311,7 @@ function DashboardShell({
           >
             {agentInitials}
           </div>
+        </div>
         </div>
       </div>
 
