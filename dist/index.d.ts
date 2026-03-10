@@ -546,11 +546,13 @@ interface DashboardShellProps {
     children?: React.ReactNode;
     /** Content rendered inside the agent card (left-justified) — card expands to fill top bar */
     headerActions?: React.ReactNode;
+    /** Content rendered to the left of the agent card in the top-right area */
+    headerRightSlot?: React.ReactNode;
     /** Extra className for the header left area (logo + title) — useful for animations */
     headerClassName?: string;
     className?: string;
 }
-declare function DashboardShell({ logo, appTitle, appSubtitle, highlightText, agentName, agentInitials, agentSubtitle, navGroups, activeNavLabel, onNavClick, heroContent, rightCard, children, headerActions, headerClassName, className, }: DashboardShellProps): react_jsx_runtime.JSX.Element;
+declare function DashboardShell({ logo, appTitle, appSubtitle, highlightText, agentName, agentInitials, agentSubtitle, navGroups, activeNavLabel, onNavClick, heroContent, rightCard, children, headerActions, headerRightSlot, headerClassName, className, }: DashboardShellProps): react_jsx_runtime.JSX.Element;
 
 interface PipelineData {
     cold: number;
