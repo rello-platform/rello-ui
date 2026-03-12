@@ -1999,7 +1999,7 @@ function SlidePanel({
           position === "left" && "left-0 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left",
           className
         ),
-        style: { width },
+        style: { width, maxWidth: "calc(100vw - 48px)" },
         children
       }
     )
