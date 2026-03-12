@@ -2333,7 +2333,8 @@ function PipelineThermometer({
   data,
   stats,
   totalLabel = "Total Leads",
-  className
+  className,
+  onSegmentClick
 }) {
   const total = STAGES.reduce((sum, stage) => sum + data[stage], 0);
   let highestActiveIndex = -1;
@@ -2391,29 +2392,43 @@ function PipelineThermometer({
         ) }),
         /* @__PURE__ */ jsx33("div", { className: "flex mb-4", children: STAGES.map((stage, i) => {
           const isActive = i <= highestActiveIndex;
-          return /* @__PURE__ */ jsxs23("div", { className: "flex-1 text-center", children: [
-            /* @__PURE__ */ jsx33(
-              "p",
-              {
-                className: "text-sm font-bold",
-                style: {
-                  color: isActive ? "var(--foreground)" : "var(--neutral-300)",
-                  fontFamily: "var(--font-stat, var(--font-heading))"
-                },
-                children: data[stage]
-              }
-            ),
-            /* @__PURE__ */ jsx33(
-              "p",
-              {
-                className: "text-[10px] font-medium",
-                style: {
-                  color: isActive ? STAGE_COLORS[stage] : "var(--neutral-300)"
-                },
-                children: STAGE_LABELS[stage]
-              }
-            )
-          ] }, stage);
+          const clickable = onSegmentClick && isActive && data[stage] > 0;
+          return /* @__PURE__ */ jsxs23(
+            "div",
+            {
+              className: cn("flex-1 text-center", clickable && "cursor-pointer hover:opacity-80 transition-opacity"),
+              onClick: clickable ? () => onSegmentClick(stage) : void 0,
+              role: clickable ? "button" : void 0,
+              tabIndex: clickable ? 0 : void 0,
+              onKeyDown: clickable ? (e) => {
+                if (e.key === "Enter" || e.key === " ") onSegmentClick(stage);
+              } : void 0,
+              children: [
+                /* @__PURE__ */ jsx33(
+                  "p",
+                  {
+                    className: "text-sm font-bold",
+                    style: {
+                      color: isActive ? "var(--foreground)" : "var(--neutral-300)",
+                      fontFamily: "var(--font-stat, var(--font-heading))"
+                    },
+                    children: data[stage]
+                  }
+                ),
+                /* @__PURE__ */ jsx33(
+                  "p",
+                  {
+                    className: cn("text-[10px] font-medium", clickable && "underline decoration-dotted underline-offset-2"),
+                    style: {
+                      color: isActive ? STAGE_COLORS[stage] : "var(--neutral-300)"
+                    },
+                    children: STAGE_LABELS[stage]
+                  }
+                )
+              ]
+            },
+            stage
+          );
         }) }),
         stats && stats.length > 0 && /* @__PURE__ */ jsx33(
           "div",

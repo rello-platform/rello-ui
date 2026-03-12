@@ -24,6 +24,8 @@ export interface PipelineThermometerProps {
   stats?: QuickStat[];
   totalLabel?: string;
   className?: string;
+  /** Callback when a pipeline stage segment is clicked */
+  onSegmentClick?: (stage: keyof PipelineData) => void;
 }
 
 /* ─── Constants ─── */
@@ -56,6 +58,7 @@ function PipelineThermometer({
   stats,
   totalLabel = "Total Leads",
   className,
+  onSegmentClick,
 }: PipelineThermometerProps) {
   const total = STAGES.reduce((sum, stage) => sum + data[stage], 0);
 
@@ -116,8 +119,16 @@ function PipelineThermometer({
       <div className="flex mb-4">
         {STAGES.map((stage, i) => {
           const isActive = i <= highestActiveIndex;
+          const clickable = onSegmentClick && isActive && data[stage] > 0;
           return (
-            <div key={stage} className="flex-1 text-center">
+            <div
+              key={stage}
+              className={cn("flex-1 text-center", clickable && "cursor-pointer hover:opacity-80 transition-opacity")}
+              onClick={clickable ? () => onSegmentClick(stage) : undefined}
+              role={clickable ? "button" : undefined}
+              tabIndex={clickable ? 0 : undefined}
+              onKeyDown={clickable ? (e) => { if (e.key === "Enter" || e.key === " ") onSegmentClick(stage); } : undefined}
+            >
               <p
                 className="text-sm font-bold"
                 style={{
@@ -128,7 +139,7 @@ function PipelineThermometer({
                 {data[stage]}
               </p>
               <p
-                className="text-[10px] font-medium"
+                className={cn("text-[10px] font-medium", clickable && "underline decoration-dotted underline-offset-2")}
                 style={{
                   color: isActive ? STAGE_COLORS[stage] : "var(--neutral-300)",
                 }}
