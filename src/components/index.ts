@@ -40,3 +40,6 @@ export * from "./conversion-score";
 export * from "./decision-explanation-card";
 export * from "./behavioral-tag";
 export * from "./was-this-helpful";
+export * from "./tag-selector";
+export * from "./insight-card";
+export * from "./address-autocomplete";

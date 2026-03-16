@@ -3704,10 +3704,563 @@ function WasThisHelpful({
     }
   );
 }
+
+// src/components/tag-selector/TagSelector.tsx
+import { useState as useState7, useRef as useRef3, useEffect as useEffect4 } from "react";
+import { Plus, Search, Check as Check4 } from "iconoir-react";
+import { jsx as jsx48, jsxs as jsxs37 } from "react/jsx-runtime";
+function TagSelector({
+  tags,
+  selectedTagIds,
+  onSelect,
+  onCreate,
+  isLoading = false,
+  disabled = false,
+  placeholder = "Add tag...",
+  className,
+  ...props
+}) {
+  const [isOpen, setIsOpen] = useState7(false);
+  const [search, setSearch] = useState7("");
+  const containerRef = useRef3(null);
+  const inputRef = useRef3(null);
+  useEffect4(() => {
+    function handleClickOutside(event) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+  const filteredTags = tags.filter(
+    (tag) => tag.name.toLowerCase().includes(search.toLowerCase()) || tag.slug.toLowerCase().includes(search.toLowerCase())
+  );
+  const groupedTags = filteredTags.reduce(
+    (acc, tag) => {
+      const category = tag.category || "CUSTOM";
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(tag);
+      return acc;
+    },
+    {}
+  );
+  const exactMatch = tags.find(
+    (t) => t.name.toLowerCase() === search.toLowerCase()
+  );
+  const handleSelect = (tagId) => {
+    onSelect(tagId);
+    setSearch("");
+    inputRef.current?.focus();
+  };
+  const handleCreate = () => {
+    if (onCreate && search.trim() && !exactMatch) {
+      onCreate(search.trim());
+      setSearch("");
+      inputRef.current?.focus();
+    }
+  };
+  return /* @__PURE__ */ jsxs37("div", { ref: containerRef, className: cn("relative", className), ...props, children: [
+    /* @__PURE__ */ jsxs37(
+      "button",
+      {
+        type: "button",
+        onClick: () => {
+          setIsOpen(!isOpen);
+          setTimeout(() => inputRef.current?.focus(), 0);
+        },
+        disabled: disabled || isLoading,
+        className: "inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg border border-dashed border-[var(--neutral-300)] text-[var(--neutral-600)] hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)] hover:bg-[var(--brand-primary-light)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+        children: [
+          /* @__PURE__ */ jsx48(Plus, { width: 14, height: 14 }),
+          placeholder
+        ]
+      }
+    ),
+    isOpen && /* @__PURE__ */ jsxs37("div", { className: "absolute z-50 mt-1 w-64 bg-white rounded-lg border border-[var(--neutral-200)] shadow-lg", children: [
+      /* @__PURE__ */ jsx48("div", { className: "p-2 border-b border-[var(--neutral-100)]", children: /* @__PURE__ */ jsxs37("div", { className: "relative", children: [
+        /* @__PURE__ */ jsx48(
+          Search,
+          {
+            width: 14,
+            height: 14,
+            className: "absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--neutral-400)]"
+          }
+        ),
+        /* @__PURE__ */ jsx48(
+          "input",
+          {
+            ref: inputRef,
+            type: "text",
+            value: search,
+            onChange: (e) => setSearch(e.target.value),
+            placeholder: "Search or create tag...",
+            className: "w-full pl-8 pr-3 py-1.5 text-sm border border-[var(--neutral-200)] rounded-md focus:outline-none focus:border-[var(--brand-primary)] focus:ring-1 focus:ring-[var(--brand-primary)]",
+            onKeyDown: (e) => {
+              if (e.key === "Enter" && search && !exactMatch && onCreate) {
+                e.preventDefault();
+                handleCreate();
+              }
+            }
+          }
+        )
+      ] }) }),
+      /* @__PURE__ */ jsxs37("div", { className: "max-h-64 overflow-y-auto p-1", children: [
+        Object.keys(groupedTags).length === 0 && !search && /* @__PURE__ */ jsx48("p", { className: "px-3 py-2 text-xs text-[var(--neutral-400)] text-center", children: "No tags available" }),
+        Object.entries(groupedTags).map(([category, categoryTags]) => /* @__PURE__ */ jsxs37("div", { className: "mb-1", children: [
+          /* @__PURE__ */ jsx48("div", { className: "px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-[var(--neutral-400)]", children: category }),
+          categoryTags.map((tag) => {
+            const isSelected = selectedTagIds.includes(tag.id);
+            return /* @__PURE__ */ jsxs37(
+              "button",
+              {
+                type: "button",
+                onClick: () => handleSelect(tag.id),
+                disabled: isSelected,
+                className: "w-full flex items-center justify-between px-2 py-1.5 rounded-md hover:bg-[var(--neutral-50)] disabled:opacity-50 disabled:cursor-not-allowed",
+                children: [
+                  /* @__PURE__ */ jsx48(
+                    Badge,
+                    {
+                      size: "xs",
+                      className: "truncate max-w-[180px]",
+                      style: tag.color ? {
+                        backgroundColor: `${tag.color}15`,
+                        color: tag.color
+                      } : void 0,
+                      children: tag.name
+                    }
+                  ),
+                  isSelected && /* @__PURE__ */ jsx48(
+                    Check4,
+                    {
+                      width: 14,
+                      height: 14,
+                      className: "text-[var(--success)]"
+                    }
+                  )
+                ]
+              },
+              tag.id
+            );
+          })
+        ] }, category)),
+        search && !exactMatch && onCreate && /* @__PURE__ */ jsxs37(
+          "button",
+          {
+            type: "button",
+            onClick: handleCreate,
+            className: "w-full flex items-center gap-2 px-2 py-2 text-sm text-[var(--brand-primary)] hover:bg-[var(--brand-primary-light)] rounded-md",
+            children: [
+              /* @__PURE__ */ jsx48(Plus, { width: 14, height: 14 }),
+              'Create "',
+              search,
+              '"'
+            ]
+          }
+        ),
+        search && filteredTags.length === 0 && !onCreate && /* @__PURE__ */ jsx48("p", { className: "px-3 py-2 text-xs text-[var(--neutral-400)] text-center", children: "No matching tags" })
+      ] })
+    ] })
+  ] });
+}
+
+// src/components/insight-card/InsightCard.tsx
+import { useState as useState8 } from "react";
+import { Check as Check5, Xmark as Xmark2, NavArrowDown as NavArrowDown3, NavArrowUp as NavArrowUp2 } from "iconoir-react";
+import { jsx as jsx49, jsxs as jsxs38 } from "react/jsx-runtime";
+function InsightCard({
+  title,
+  confidence,
+  reasoning,
+  keyFactors = [],
+  onConfirm,
+  onDismiss,
+  defaultExpanded = false,
+  className,
+  ...props
+}) {
+  const [expanded, setExpanded] = useState8(defaultExpanded);
+  const pct = Math.round(confidence * 100);
+  const barColor = confidence >= 0.8 ? "var(--success, #10B981)" : confidence >= 0.6 ? "var(--warning, #F59E0B)" : "var(--neutral-400, #9CA3AF)";
+  return /* @__PURE__ */ jsxs38(
+    "div",
+    {
+      className: cn(
+        "rounded-lg border border-[var(--neutral-100)] bg-[var(--neutral-50)] px-3 py-2",
+        className
+      ),
+      ...props,
+      children: [
+        /* @__PURE__ */ jsxs38("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsx49("span", { className: "flex-1 text-sm font-medium text-[var(--neutral-800)] truncate", children: title }),
+          /* @__PURE__ */ jsxs38("div", { className: "flex items-center gap-1.5 shrink-0", children: [
+            /* @__PURE__ */ jsx49("div", { className: "w-20 h-1.5 rounded-full bg-[var(--neutral-200)] overflow-hidden", children: /* @__PURE__ */ jsx49(
+              "div",
+              {
+                className: "h-full rounded-full transition-all",
+                style: { width: `${pct}%`, backgroundColor: barColor }
+              }
+            ) }),
+            /* @__PURE__ */ jsx49("span", { className: "text-[10px] font-mono text-[var(--neutral-500)] w-8 text-right", children: confidence.toFixed(2) })
+          ] }),
+          onConfirm && /* @__PURE__ */ jsx49(
+            "button",
+            {
+              type: "button",
+              onClick: onConfirm,
+              className: "p-1 rounded hover:bg-green-100 text-green-600 transition-colors",
+              "aria-label": "Confirm insight",
+              title: "Confirm",
+              children: /* @__PURE__ */ jsx49(Check5, { width: 14, height: 14 })
+            }
+          ),
+          onDismiss && /* @__PURE__ */ jsx49(
+            "button",
+            {
+              type: "button",
+              onClick: onDismiss,
+              className: "p-1 rounded hover:bg-red-100 text-red-500 transition-colors",
+              "aria-label": "Dismiss insight",
+              title: "Dismiss",
+              children: /* @__PURE__ */ jsx49(Xmark2, { width: 14, height: 14 })
+            }
+          ),
+          (reasoning || keyFactors.length > 0) && /* @__PURE__ */ jsx49(
+            "button",
+            {
+              type: "button",
+              onClick: () => setExpanded(!expanded),
+              className: "p-1 rounded hover:bg-[var(--neutral-200)] text-[var(--neutral-400)] transition-colors",
+              "aria-label": expanded ? "Collapse details" : "Expand details",
+              children: expanded ? /* @__PURE__ */ jsx49(NavArrowUp2, { width: 14, height: 14 }) : /* @__PURE__ */ jsx49(NavArrowDown3, { width: 14, height: 14 })
+            }
+          )
+        ] }),
+        expanded && (reasoning || keyFactors.length > 0) && /* @__PURE__ */ jsxs38("div", { className: "mt-2 pt-2 border-t border-[var(--neutral-200)]", children: [
+          reasoning && /* @__PURE__ */ jsx49("p", { className: "text-xs text-[var(--neutral-600)] leading-relaxed", children: reasoning }),
+          keyFactors.length > 0 && /* @__PURE__ */ jsx49("div", { className: "mt-1.5 flex flex-wrap gap-1", children: keyFactors.map((factor, i) => /* @__PURE__ */ jsx49(
+            "span",
+            {
+              className: "inline-block px-1.5 py-0.5 text-[10px] bg-[var(--neutral-200)] text-[var(--neutral-600)] rounded",
+              children: factor
+            },
+            i
+          )) })
+        ] })
+      ]
+    }
+  );
+}
+
+// src/components/address-autocomplete/AddressAutocomplete.tsx
+import { useState as useState9, useRef as useRef4, useEffect as useEffect5, useCallback as useCallback3 } from "react";
+import { jsx as jsx50, jsxs as jsxs39 } from "react/jsx-runtime";
+function slugify(text) {
+  return text.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
+}
+function buildLocationTagSlug(address) {
+  if (address.city && address.state) {
+    return `location:${slugify(address.city)}-${address.state.toLowerCase()}`;
+  }
+  if (address.zip) {
+    return `location:${address.zip}`;
+  }
+  return `location:${slugify(address.formattedAddress)}`;
+}
+function getGoogle() {
+  return window.google;
+}
+var scriptLoadPromise = null;
+function loadGooglePlacesScript(apiKey) {
+  if (typeof window !== "undefined" && getGoogle()?.maps?.places) {
+    return Promise.resolve();
+  }
+  if (scriptLoadPromise) return scriptLoadPromise;
+  scriptLoadPromise = new Promise((resolve, reject) => {
+    if (typeof document === "undefined") {
+      reject(new Error("document is not available"));
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => resolve();
+    script.onerror = () => {
+      scriptLoadPromise = null;
+      reject(new Error("Failed to load Google Places script"));
+    };
+    document.head.appendChild(script);
+  });
+  return scriptLoadPromise;
+}
+function extractComponent(components, type, useShortName = false) {
+  const match = components.find(
+    (c) => c.types.includes(type)
+  );
+  return match ? useShortName ? match.short_name : match.long_name : "";
+}
+function AddressAutocomplete({
+  apiKey,
+  onSelect,
+  countryRestrictions = ["us"],
+  label,
+  error,
+  hint,
+  className,
+  id,
+  placeholder = "Start typing an address...",
+  ...inputProps
+}) {
+  const [inputValue, setInputValue] = useState9("");
+  const [predictions, setPredictions] = useState9([]);
+  const [isOpen, setIsOpen] = useState9(false);
+  const [activeIndex, setActiveIndex] = useState9(-1);
+  const [isLoaded, setIsLoaded] = useState9(false);
+  const containerRef = useRef4(null);
+  const inputRef = useRef4(null);
+  const autocompleteServiceRef = useRef4(null);
+  const placesServiceRef = useRef4(null);
+  const sessionTokenRef = useRef4(null);
+  const debounceRef = useRef4(null);
+  const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
+  useEffect5(() => {
+    loadGooglePlacesScript(apiKey).then(() => {
+      const g = getGoogle();
+      autocompleteServiceRef.current = new g.maps.places.AutocompleteService();
+      const attrDiv = document.createElement("div");
+      placesServiceRef.current = new g.maps.places.PlacesService(attrDiv);
+      sessionTokenRef.current = new g.maps.places.AutocompleteSessionToken();
+      setIsLoaded(true);
+    });
+  }, [apiKey]);
+  useEffect5(() => {
+    function handleClickOutside(event) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+  const fetchPredictions = useCallback3(
+    (value) => {
+      if (!autocompleteServiceRef.current || !value.trim()) {
+        setPredictions([]);
+        return;
+      }
+      autocompleteServiceRef.current.getPlacePredictions(
+        {
+          input: value,
+          componentRestrictions: countryRestrictions.length ? { country: countryRestrictions } : void 0,
+          types: ["address"],
+          sessionToken: sessionTokenRef.current ?? void 0
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (results, status) => {
+          const g = getGoogle();
+          if (status === g.maps.places.PlacesServiceStatus.OK && results) {
+            setPredictions(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              results.map((r) => ({
+                placeId: r.place_id,
+                description: r.description,
+                mainText: r.structured_formatting.main_text,
+                secondaryText: r.structured_formatting.secondary_text
+              }))
+            );
+            setIsOpen(true);
+          } else {
+            setPredictions([]);
+          }
+        }
+      );
+    },
+    [countryRestrictions]
+  );
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setInputValue(value);
+    setActiveIndex(-1);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => fetchPredictions(value), 300);
+  };
+  const handleSelectPrediction = useCallback3(
+    (prediction) => {
+      if (!placesServiceRef.current) return;
+      placesServiceRef.current.getDetails(
+        {
+          placeId: prediction.placeId,
+          fields: [
+            "address_components",
+            "formatted_address",
+            "geometry",
+            "place_id"
+          ],
+          sessionToken: sessionTokenRef.current ?? void 0
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (place, status) => {
+          const g = getGoogle();
+          if (status !== g.maps.places.PlacesServiceStatus.OK || !place?.address_components) {
+            return;
+          }
+          const components = place.address_components;
+          const streetNumber = extractComponent(components, "street_number");
+          const route = extractComponent(components, "route");
+          const city = extractComponent(components, "locality");
+          const state = extractComponent(
+            components,
+            "administrative_area_level_1",
+            true
+          );
+          const zip = extractComponent(components, "postal_code");
+          const county = extractComponent(
+            components,
+            "administrative_area_level_2"
+          );
+          const country = extractComponent(components, "country", true);
+          const structured = {
+            street: [streetNumber, route].filter(Boolean).join(" "),
+            city,
+            state,
+            zip,
+            county: county || void 0,
+            country,
+            formattedAddress: place.formatted_address || prediction.description,
+            placeId: prediction.placeId,
+            lat: place.geometry?.location?.lat(),
+            lng: place.geometry?.location?.lng()
+          };
+          const locationTag = buildLocationTagSlug(structured);
+          setInputValue(structured.formattedAddress);
+          setPredictions([]);
+          setIsOpen(false);
+          sessionTokenRef.current = new g.maps.places.AutocompleteSessionToken();
+          onSelect(structured, locationTag);
+        }
+      );
+    },
+    [onSelect]
+  );
+  const handleKeyDown = (e) => {
+    if (!isOpen || predictions.length === 0) return;
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setActiveIndex(
+          (prev) => prev < predictions.length - 1 ? prev + 1 : 0
+        );
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setActiveIndex(
+          (prev) => prev > 0 ? prev - 1 : predictions.length - 1
+        );
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (activeIndex >= 0 && activeIndex < predictions.length) {
+          handleSelectPrediction(predictions[activeIndex]);
+        }
+        break;
+      case "Escape":
+        setIsOpen(false);
+        setActiveIndex(-1);
+        break;
+    }
+  };
+  const inputElement = /* @__PURE__ */ jsxs39("div", { ref: containerRef, className: "relative", children: [
+    /* @__PURE__ */ jsx50(
+      "input",
+      {
+        ...inputProps,
+        ref: inputRef,
+        id: inputId,
+        type: "text",
+        role: "combobox",
+        "aria-expanded": isOpen,
+        "aria-autocomplete": "list",
+        "aria-controls": "address-listbox",
+        "aria-activedescendant": activeIndex >= 0 ? `address-option-${activeIndex}` : void 0,
+        "aria-invalid": !!error,
+        value: inputValue,
+        onChange: handleInputChange,
+        onKeyDown: handleKeyDown,
+        onFocus: () => {
+          if (predictions.length > 0) setIsOpen(true);
+        },
+        placeholder: isLoaded ? placeholder : "Loading...",
+        disabled: !isLoaded || inputProps.disabled,
+        className: cn(
+          "h-9 w-full rounded-md border bg-white px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none",
+          "border-[var(--neutral-200)] text-[var(--foreground)] placeholder:text-[var(--neutral-400)]",
+          "focus-visible:border-[var(--brand-primary)] focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]/20",
+          "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-[var(--neutral-50)]",
+          error && "border-[var(--error)] focus-visible:border-[var(--error)] focus-visible:ring-[var(--error)]/20",
+          className
+        )
+      }
+    ),
+    isOpen && predictions.length > 0 && /* @__PURE__ */ jsx50(
+      "ul",
+      {
+        id: "address-listbox",
+        role: "listbox",
+        className: "absolute z-50 mt-1 w-full bg-white rounded-lg border border-[var(--neutral-200)] shadow-lg overflow-hidden",
+        children: predictions.map((prediction, index) => /* @__PURE__ */ jsxs39(
+          "li",
+          {
+            id: `address-option-${index}`,
+            role: "option",
+            "aria-selected": index === activeIndex,
+            onClick: () => handleSelectPrediction(prediction),
+            onMouseEnter: () => setActiveIndex(index),
+            className: cn(
+              "flex flex-col gap-0.5 px-3 py-2 cursor-pointer transition-colors",
+              index === activeIndex ? "bg-[var(--brand-primary-light)]" : "hover:bg-[var(--neutral-50)]"
+            ),
+            children: [
+              /* @__PURE__ */ jsx50("span", { className: "text-sm font-medium text-[var(--neutral-800)] truncate", children: prediction.mainText }),
+              /* @__PURE__ */ jsx50("span", { className: "text-xs text-[var(--neutral-500)] truncate", children: prediction.secondaryText })
+            ]
+          },
+          prediction.placeId
+        ))
+      }
+    )
+  ] });
+  if (!label && !error && !hint) return inputElement;
+  return /* @__PURE__ */ jsxs39("div", { className: "w-full", children: [
+    label && /* @__PURE__ */ jsx50(
+      "label",
+      {
+        htmlFor: inputId,
+        className: "block text-sm font-medium text-[var(--neutral-700)] mb-1.5",
+        children: label
+      }
+    ),
+    inputElement,
+    (error || hint) && /* @__PURE__ */ jsx50(
+      "p",
+      {
+        className: cn(
+          "mt-1.5 text-xs",
+          error ? "text-[var(--error)]" : "text-[var(--neutral-500)]"
+        ),
+        children: error || hint
+      }
+    )
+  ] });
+}
 export {
   APP_ICONS,
   APP_ILLUSTRATIONS,
   AccountabilityTrackerIcon,
+  AddressAutocomplete,
   AppCard,
   AppCardIllustration,
   AppHeader,
@@ -3770,6 +4323,7 @@ export {
   HomeStretchIcon,
   InlineLoading,
   Input,
+  InsightCard,
   Label2 as Label,
   LeadCaptureFormsIcon,
   LoadingOverlay,
@@ -3824,6 +4378,7 @@ export {
   TRACK_ICONS,
   TRACK_ILLUSTRATIONS,
   Table,
+  TagSelector,
   Textarea,
   TimelineIcon,
   Toast,
@@ -3833,6 +4388,7 @@ export {
   WasThisHelpful,
   WeeklyChallengeIcon,
   badgeVariants,
+  buildLocationTagSlug,
   buttonVariants,
   cn,
   useToast

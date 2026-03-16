@@ -822,6 +822,96 @@ interface WasThisHelpfulProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 declare function WasThisHelpful({ onFeedback, label, variant, className, ...props }: WasThisHelpfulProps): react_jsx_runtime.JSX.Element;
 
+/**
+ * Generic tag item for the TagSelector.
+ * Consuming apps map their domain model to this shape.
+ */
+interface TagItem {
+    id: string;
+    name: string;
+    slug: string;
+    color?: string;
+    category?: string;
+}
+interface TagSelectorProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
+    /** Available tags to select from */
+    tags: TagItem[];
+    /** IDs of currently selected tags */
+    selectedTagIds: string[];
+    /** Called when a tag is selected */
+    onSelect: (tagId: string) => void;
+    /** Called when the user wants to create a new tag. If omitted, creation UI is hidden. */
+    onCreate?: (name: string) => void;
+    /** Show a loading state */
+    isLoading?: boolean;
+    /** Disable the selector */
+    disabled?: boolean;
+    /** Placeholder text for the trigger button */
+    placeholder?: string;
+}
+declare function TagSelector({ tags, selectedTagIds, onSelect, onCreate, isLoading, disabled, placeholder, className, ...props }: TagSelectorProps): react_jsx_runtime.JSX.Element;
+
+interface InsightCardProps extends React.HTMLAttributes<HTMLDivElement> {
+    /** Insight title / label */
+    title: string;
+    /** Confidence score from 0 to 1 */
+    confidence: number;
+    /** Explanatory reasoning text */
+    reasoning?: string;
+    /** Key factors that contributed to the insight */
+    keyFactors?: string[];
+    /** Called when the user confirms the insight */
+    onConfirm?: () => void;
+    /** Called when the user dismisses the insight */
+    onDismiss?: () => void;
+    /** Whether the details section starts expanded */
+    defaultExpanded?: boolean;
+}
+/**
+ * Displays a smart-assistant-generated insight with confidence bar,
+ * reasoning, and confirm/dismiss actions.
+ *
+ * Generic presentational component -- no data-fetching or app-specific logic.
+ */
+declare function InsightCard({ title, confidence, reasoning, keyFactors, onConfirm, onDismiss, defaultExpanded, className, ...props }: InsightCardProps): react_jsx_runtime.JSX.Element;
+
+/** Structured address returned on selection */
+interface StructuredAddress {
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+    county?: string;
+    country: string;
+    formattedAddress: string;
+    placeId: string;
+    lat?: number;
+    lng?: number;
+}
+interface AddressAutocompleteProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onSelect"> {
+    /** Google Places API key */
+    apiKey: string;
+    /** Called when the user selects an address */
+    onSelect: (address: StructuredAddress, locationTag: string) => void;
+    /** Restrict results to specific country codes (e.g. ["us"]) */
+    countryRestrictions?: string[];
+    /** Label displayed above the input */
+    label?: string;
+    /** Error message shown below the input */
+    error?: string;
+    /** Hint text shown below the input */
+    hint?: string;
+}
+/**
+ * Build a `location:` tag slug from structured address parts.
+ *
+ * Priority:
+ *   1. city + state  -> `location:salt-lake-city-ut`
+ *   2. zip           -> `location:84092`
+ */
+declare function buildLocationTagSlug(address: StructuredAddress): string;
+declare function AddressAutocomplete({ apiKey, onSelect, countryRestrictions, label, error, hint, className, id, placeholder, ...inputProps }: AddressAutocompleteProps): react_jsx_runtime.JSX.Element;
+
 declare function cn(...inputs: ClassValue[]): string;
 
-export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateProps, type FactorVariant, HarvestHomeIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeStretchIcon, InlineLoading, Input, type InputProps, Label, LeadCaptureFormsIcon, LoadingOverlay, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TaskActionType, type TaskTemperature, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, badgeVariants, buttonVariants, cn, useToast };
+export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, AddressAutocomplete, type AddressAutocompleteProps, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateProps, type FactorVariant, HarvestHomeIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeStretchIcon, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LoadingOverlay, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, badgeVariants, buildLocationTagSlug, buttonVariants, cn, useToast };
