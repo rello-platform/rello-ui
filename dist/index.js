@@ -2334,7 +2334,8 @@ function PipelineThermometer({
   stats,
   totalLabel = "Total Leads",
   className,
-  onSegmentClick
+  onSegmentClick,
+  onTotalClick
 }) {
   const total = STAGES.reduce((sum, stage) => sum + data[stage], 0);
   let highestActiveIndex = -1;
@@ -2366,11 +2367,17 @@ function PipelineThermometer({
           /* @__PURE__ */ jsxs23(
             "span",
             {
-              className: "text-xs font-medium px-2.5 py-1 rounded-md",
+              className: cn("text-xs font-medium px-2.5 py-1 rounded-md", onTotalClick && "cursor-pointer hover:opacity-80 transition-opacity"),
               style: {
                 backgroundColor: "var(--brand-primary-light)",
                 color: "var(--brand-primary)"
               },
+              onClick: onTotalClick,
+              role: onTotalClick ? "button" : void 0,
+              tabIndex: onTotalClick ? 0 : void 0,
+              onKeyDown: onTotalClick ? (e) => {
+                if (e.key === "Enter" || e.key === " ") onTotalClick();
+              } : void 0,
               children: [
                 total,
                 " ",

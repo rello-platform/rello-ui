@@ -26,6 +26,8 @@ export interface PipelineThermometerProps {
   className?: string;
   /** Callback when a pipeline stage segment is clicked */
   onSegmentClick?: (stage: keyof PipelineData) => void;
+  /** Callback when the total badge is clicked */
+  onTotalClick?: () => void;
 }
 
 /* ─── Constants ─── */
@@ -59,6 +61,7 @@ function PipelineThermometer({
   totalLabel = "Total Leads",
   className,
   onSegmentClick,
+  onTotalClick,
 }: PipelineThermometerProps) {
   const total = STAGES.reduce((sum, stage) => sum + data[stage], 0);
 
@@ -91,11 +94,15 @@ function PipelineThermometer({
           {title}
         </span>
         <span
-          className="text-xs font-medium px-2.5 py-1 rounded-md"
+          className={cn("text-xs font-medium px-2.5 py-1 rounded-md", onTotalClick && "cursor-pointer hover:opacity-80 transition-opacity")}
           style={{
             backgroundColor: "var(--brand-primary-light)",
             color: "var(--brand-primary)",
           }}
+          onClick={onTotalClick}
+          role={onTotalClick ? "button" : undefined}
+          tabIndex={onTotalClick ? 0 : undefined}
+          onKeyDown={onTotalClick ? (e) => { if (e.key === "Enter" || e.key === " ") onTotalClick(); } : undefined}
         >
           {total} {totalLabel}
         </span>

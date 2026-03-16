@@ -573,11 +573,13 @@ interface PipelineThermometerProps {
     className?: string;
     /** Callback when a pipeline stage segment is clicked */
     onSegmentClick?: (stage: keyof PipelineData) => void;
+    /** Callback when the total badge is clicked */
+    onTotalClick?: () => void;
 }
 declare const STAGES: readonly ["cold", "warming", "engaged", "qualified", "hot"];
 declare const STAGE_LABELS: Record<keyof PipelineData, string>;
 declare const STAGE_COLORS: Record<keyof PipelineData, string>;
-declare function PipelineThermometer({ title, data, stats, totalLabel, className, onSegmentClick, }: PipelineThermometerProps): react_jsx_runtime.JSX.Element;
+declare function PipelineThermometer({ title, data, stats, totalLabel, className, onSegmentClick, onTotalClick, }: PipelineThermometerProps): react_jsx_runtime.JSX.Element;
 
 interface AppCardProps {
     icon: React.ReactNode;
