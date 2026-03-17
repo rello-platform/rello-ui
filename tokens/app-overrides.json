@@ -198,6 +198,26 @@
       "heroCardBodyText": "#A69E8E",
       "appTitleColor": "#2A2110",
       "appSubtitleColor": "#6B5F4B"
+    },
+    "the-home-scout": {
+      "name": "The Home Scout",
+      "primary": "#2D6A4F",
+      "accent": "#D4A84B",
+      "pageBackground": "#FAFAF8",
+      "cardBackground": "#FFFFFF",
+      "cardBorder": "#E2E0DA",
+      "primaryText": "#1A2E24",
+      "secondaryText": "#546B5F",
+      "tertiaryText": "#96A89E",
+      "heroCardBackground": "#1A2E24",
+      "heroCardBorder": "#1A2E24",
+      "heroCardTitle": "#FFFFFF",
+      "rowBackground": "#F3F5F2",
+      "rowBorder": "#E2E0DA",
+      "notes": "Consumer-facing tool library & lead capture — thehomescout.app",
+      "heroCardBodyText": "#96A89E",
+      "appTitleColor": "#1A2E24",
+      "appSubtitleColor": "#546B5F"
     }
   }
 }

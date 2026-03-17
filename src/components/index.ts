@@ -6,6 +6,7 @@ export * from "./select";
 export * from "./textarea";
 export * from "./label";
 export * from "./checkbox";
+export * from "./switch";
 export * from "./avatar";
 export * from "./dialog";
 export * from "./spinner";
