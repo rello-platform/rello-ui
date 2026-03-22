@@ -478,6 +478,72 @@ Progress.displayName = ProgressPrimitive.Root.displayName;
 // src/components/survey-step-card/SurveyStepCard.tsx
 import * as React12 from "react";
 import { jsx as jsx17, jsxs as jsxs11 } from "react/jsx-runtime";
+function formatLive(value, inputType) {
+  switch (inputType) {
+    case "currency": {
+      const digits = value.replace(/[^\d]/g, "");
+      if (!digits) return { display: "", raw: "" };
+      const num = parseInt(digits, 10);
+      const display = `$${num.toLocaleString("en-US")}`;
+      return { display, raw: digits };
+    }
+    case "percentage": {
+      const digits = value.replace(/[^\d.]/g, "");
+      if (!digits) return { display: "", raw: "" };
+      const parts = digits.split(".");
+      const cleaned = parts.length > 1 ? `${parts[0]}.${parts[1].slice(0, 2)}` : parts[0];
+      const display = cleaned ? `${cleaned}%` : "";
+      return { display, raw: cleaned };
+    }
+    case "phone": {
+      const digits = value.replace(/[^\d]/g, "").slice(0, 10);
+      if (!digits) return { display: "", raw: "" };
+      if (digits.length <= 3) return { display: `(${digits}`, raw: digits };
+      if (digits.length <= 6) return { display: `(${digits.slice(0, 3)}) ${digits.slice(3)}`, raw: digits };
+      return { display: `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`, raw: digits };
+    }
+    case "number": {
+      const digits = value.replace(/[^\d.]/g, "");
+      if (!digits) return { display: "", raw: "" };
+      if (!digits.includes(".")) {
+        const num = parseInt(digits, 10);
+        return { display: num.toLocaleString("en-US"), raw: digits };
+      }
+      return { display: digits, raw: digits };
+    }
+    default:
+      return { display: value, raw: value };
+  }
+}
+function getHtmlInputType(inputType) {
+  switch (inputType) {
+    case "currency":
+    case "percentage":
+    case "number":
+      return "text";
+    // text with inputMode for better formatting control
+    case "phone":
+      return "tel";
+    case "email":
+      return "email";
+    default:
+      return "text";
+  }
+}
+function getInputMode(inputType) {
+  switch (inputType) {
+    case "currency":
+    case "percentage":
+    case "number":
+      return "decimal";
+    case "phone":
+      return "tel";
+    case "email":
+      return "email";
+    default:
+      return "text";
+  }
+}
 function IllustrationBox({
   accent,
   illustration,
@@ -551,6 +617,92 @@ function OptionButton({
     }
   );
 }
+function TextInputArea({
+  question,
+  value,
+  onSubmit,
+  isLastStep
+}) {
+  const inputType = question.inputType ?? "text";
+  const isTextarea = inputType === "textarea";
+  const [localValue, setLocalValue] = React12.useState(value);
+  const inputRef = React12.useRef(null);
+  React12.useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+  React12.useEffect(() => {
+    const timer = setTimeout(() => inputRef.current?.focus(), 100);
+    return () => clearTimeout(timer);
+  }, [question.key]);
+  const handleChange = (raw) => {
+    if (isTextarea || inputType === "text" || inputType === "email") {
+      setLocalValue(raw);
+    } else {
+      const formatted = formatLive(raw, inputType);
+      setLocalValue(formatted.display);
+    }
+  };
+  const getRawValue = () => {
+    if (isTextarea || inputType === "text" || inputType === "email") {
+      return localValue.trim();
+    }
+    return formatLive(localValue, inputType).raw;
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const raw = getRawValue();
+    if (!raw) return;
+    onSubmit(raw);
+  };
+  const btnLabel = question.submitLabel ?? (isLastStep ? "See Results \u2192" : "Next");
+  const inputClasses = "w-full py-3 px-4 rounded-xl border-2 text-sm font-medium outline-none transition-colors duration-150";
+  return /* @__PURE__ */ jsxs11("form", { onSubmit: handleSubmit, className: "px-6 py-4 space-y-3", children: [
+    isTextarea ? /* @__PURE__ */ jsx17(
+      "textarea",
+      {
+        ref: inputRef,
+        value: localValue,
+        onChange: (e) => handleChange(e.target.value),
+        placeholder: question.placeholder ?? "Type your answer...",
+        rows: 3,
+        className: inputClasses,
+        style: {
+          borderColor: localValue ? question.accent : "var(--neutral-200)",
+          backgroundColor: localValue ? `${question.accent}14` : "white",
+          color: "var(--neutral-700)",
+          resize: "none"
+        }
+      }
+    ) : /* @__PURE__ */ jsx17(
+      "input",
+      {
+        ref: inputRef,
+        type: getHtmlInputType(inputType),
+        inputMode: getInputMode(inputType),
+        value: localValue,
+        onChange: (e) => handleChange(e.target.value),
+        placeholder: question.placeholder ?? "Type your answer...",
+        className: inputClasses,
+        style: {
+          borderColor: localValue ? question.accent : "var(--neutral-200)",
+          backgroundColor: localValue ? `${question.accent}14` : "white",
+          color: "var(--neutral-700)"
+        }
+      }
+    ),
+    question.inputHint && /* @__PURE__ */ jsx17("p", { className: "text-xs text-[var(--neutral-400)]", children: question.inputHint }),
+    /* @__PURE__ */ jsx17(
+      "button",
+      {
+        type: "submit",
+        disabled: !getRawValue(),
+        className: "w-full py-3 rounded-xl text-sm font-semibold text-white transition-opacity duration-150 disabled:opacity-40 disabled:cursor-not-allowed",
+        style: { backgroundColor: question.accent },
+        children: btnLabel
+      }
+    )
+  ] });
+}
 var SurveyStepCard = React12.forwardRef(
   ({
     className,
@@ -569,24 +721,31 @@ var SurveyStepCard = React12.forwardRef(
     const [animating, setAnimating] = React12.useState(false);
     const q = questions[step];
     if (!q) return null;
+    const isTextStep = !q.options || q.options.length === 0;
+    const isLastStep = step >= questions.length - 1;
     const progress = (step + (selections[q.key] ? 1 : 0)) / questions.length * 100;
+    const animateTransition = (callback, delay = 300) => {
+      setAnimating(true);
+      setTimeout(() => {
+        callback();
+        setAnimating(false);
+      }, delay);
+    };
     const handleSelect = (option) => {
       onSelect?.(q.key, option);
-      if (autoAdvance && step < questions.length - 1) {
-        setAnimating(true);
-        setTimeout(() => {
-          onStepChange?.(step + 1);
-          setAnimating(false);
-        }, advanceDelay);
+      if (autoAdvance && !isLastStep) {
+        animateTransition(() => onStepChange?.(step + 1), advanceDelay);
+      }
+    };
+    const handleTextSubmit = (value) => {
+      onSelect?.(q.key, value);
+      if (!isLastStep) {
+        animateTransition(() => onStepChange?.(step + 1), advanceDelay);
       }
     };
     const handleBack = () => {
       if (step > 0) {
-        setAnimating(true);
-        setTimeout(() => {
-          onStepChange?.(step - 1);
-          setAnimating(false);
-        }, 300);
+        animateTransition(() => onStepChange?.(step - 1));
       }
     };
     return /* @__PURE__ */ jsxs11(
@@ -622,7 +781,15 @@ var SurveyStepCard = React12.forwardRef(
               q.helper && /* @__PURE__ */ jsx17("p", { className: "text-sm text-[var(--neutral-500)]", children: q.helper })
             ] })
           ] }),
-          /* @__PURE__ */ jsx17(
+          isTextStep ? /* @__PURE__ */ jsx17(
+            TextInputArea,
+            {
+              question: q,
+              value: selections[q.key] ?? "",
+              onSubmit: handleTextSubmit,
+              isLastStep
+            }
+          ) : /* @__PURE__ */ jsx17(
             "div",
             {
               className: "px-6 py-4",
@@ -3053,7 +3220,7 @@ function HeroActionCard({
 }
 
 // src/components/audio-player-card/AudioPlayerCard.tsx
-import { useState as useState5, useRef as useRef2, useEffect as useEffect3, useCallback as useCallback2 } from "react";
+import { useState as useState5, useRef as useRef3, useEffect as useEffect4, useCallback as useCallback2 } from "react";
 import { Play, Pause } from "iconoir-react";
 import { jsx as jsx42, jsxs as jsxs30 } from "react/jsx-runtime";
 function formatTime(seconds) {
@@ -3069,7 +3236,7 @@ function AudioPlayerCard({
   icon,
   className
 }) {
-  const audioRef = useRef2(null);
+  const audioRef = useRef3(null);
   const [isPlaying, setIsPlaying] = useState5(false);
   const [currentTime, setCurrentTime] = useState5(0);
   const [duration, setDuration] = useState5(0);
@@ -3094,7 +3261,7 @@ function AudioPlayerCard({
     },
     [duration]
   );
-  useEffect3(() => {
+  useEffect4(() => {
     const audio = audioRef.current;
     if (!audio) return;
     const onTimeUpdate = () => setCurrentTime(audio.currentTime);
@@ -3744,7 +3911,7 @@ function WasThisHelpful({
 }
 
 // src/components/tag-selector/TagSelector.tsx
-import { useState as useState7, useRef as useRef3, useEffect as useEffect4 } from "react";
+import { useState as useState7, useRef as useRef4, useEffect as useEffect5 } from "react";
 import { Plus, Search, Check as Check4 } from "iconoir-react";
 import { jsx as jsx49, jsxs as jsxs37 } from "react/jsx-runtime";
 function TagSelector({
@@ -3760,9 +3927,9 @@ function TagSelector({
 }) {
   const [isOpen, setIsOpen] = useState7(false);
   const [search, setSearch] = useState7("");
-  const containerRef = useRef3(null);
-  const inputRef = useRef3(null);
-  useEffect4(() => {
+  const containerRef = useRef4(null);
+  const inputRef = useRef4(null);
+  useEffect5(() => {
     function handleClickOutside(event) {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
         setIsOpen(false);
@@ -3994,7 +4161,7 @@ function InsightCard({
 }
 
 // src/components/address-autocomplete/AddressAutocomplete.tsx
-import { useState as useState9, useRef as useRef4, useEffect as useEffect5, useCallback as useCallback3 } from "react";
+import { useState as useState9, useRef as useRef5, useEffect as useEffect6, useCallback as useCallback3 } from "react";
 import { jsx as jsx51, jsxs as jsxs39 } from "react/jsx-runtime";
 function slugify(text) {
   return text.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
@@ -4058,14 +4225,14 @@ function AddressAutocomplete({
   const [isOpen, setIsOpen] = useState9(false);
   const [activeIndex, setActiveIndex] = useState9(-1);
   const [isLoaded, setIsLoaded] = useState9(false);
-  const containerRef = useRef4(null);
-  const inputRef = useRef4(null);
-  const autocompleteServiceRef = useRef4(null);
-  const placesServiceRef = useRef4(null);
-  const sessionTokenRef = useRef4(null);
-  const debounceRef = useRef4(null);
+  const containerRef = useRef5(null);
+  const inputRef = useRef5(null);
+  const autocompleteServiceRef = useRef5(null);
+  const placesServiceRef = useRef5(null);
+  const sessionTokenRef = useRef5(null);
+  const debounceRef = useRef5(null);
   const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
-  useEffect5(() => {
+  useEffect6(() => {
     loadGooglePlacesScript(apiKey).then(() => {
       const g = getGoogle();
       autocompleteServiceRef.current = new g.maps.places.AutocompleteService();
@@ -4075,7 +4242,7 @@ function AddressAutocomplete({
       setIsLoaded(true);
     });
   }, [apiKey]);
-  useEffect5(() => {
+  useEffect6(() => {
     function handleClickOutside(event) {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
         setIsOpen(false);

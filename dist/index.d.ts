@@ -170,6 +170,8 @@ interface ProgressProps extends React.ComponentPropsWithoutRef<typeof ProgressPr
 }
 declare const Progress: React.ForwardRefExoticComponent<ProgressProps & React.RefAttributes<HTMLDivElement>>;
 
+/** Input types that determine live formatting behavior */
+type SurveyInputType = "text" | "textarea" | "currency" | "percentage" | "phone" | "number" | "email";
 interface SurveyQuestion {
     /** Unique key for the question (used for tracking selections) */
     key: string;
@@ -179,14 +181,22 @@ interface SurveyQuestion {
     question: string;
     /** Helper text below the question */
     helper?: string;
-    /** Answer options */
-    options: string[];
+    /** Answer options — if empty/omitted, renders a text input instead */
+    options?: string[];
     /** Number of grid columns for options (default 2) */
     columns?: number;
     /** Illustration element rendered in the branded illustration box */
     illustration?: React.ReactNode;
     /** Decorative background pattern rendered behind the illustration */
     pattern?: React.ReactNode;
+    /** Input type for text steps — determines live formatting (default "text") */
+    inputType?: SurveyInputType;
+    /** Placeholder text for text input steps */
+    placeholder?: string;
+    /** Hint text shown below the input (e.g. "Just a rough number") */
+    inputHint?: string;
+    /** Label for the submit button on text input steps (default "Next", last step: "See Results") */
+    submitLabel?: string;
 }
 interface SurveyStepCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
     /** Array of survey questions/steps */
@@ -197,9 +207,9 @@ interface SurveyStepCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
     onStepChange?: (step: number) => void;
     /** Record of selections keyed by question key */
     selections?: Record<string, string>;
-    /** Called when an option is selected */
-    onSelect?: (questionKey: string, option: string) => void;
-    /** Auto-advance to next step after selection (default true) */
+    /** Called when an option is selected or text input is submitted */
+    onSelect?: (questionKey: string, value: string) => void;
+    /** Auto-advance to next step after option selection (default true). Text inputs always require explicit submit. */
     autoAdvance?: boolean;
     /** Delay in ms before auto-advancing (default 400) */
     advanceDelay?: number;
@@ -207,7 +217,7 @@ interface SurveyStepCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
     showProgress?: boolean;
     /** Whether to show back button (default true) */
     showBack?: boolean;
-    /** Footer content rendered below the options grid */
+    /** Footer content rendered below the options/input area */
     footer?: React.ReactNode;
 }
 declare const SurveyStepCard: React.ForwardRefExoticComponent<SurveyStepCardProps & React.RefAttributes<HTMLDivElement>>;
@@ -919,4 +929,4 @@ declare function AddressAutocomplete({ apiKey, onSelect, countryRestrictions, la
 
 declare function cn(...inputs: ClassValue[]): string;
 
-export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, AddressAutocomplete, type AddressAutocompleteProps, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateProps, type FactorVariant, HarvestHomeIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeStretchIcon, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LoadingOverlay, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, badgeVariants, buildLocationTagSlug, buttonVariants, cn, useToast };
+export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, AddressAutocomplete, type AddressAutocompleteProps, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateProps, type FactorVariant, HarvestHomeIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeStretchIcon, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LoadingOverlay, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, badgeVariants, buildLocationTagSlug, buttonVariants, cn, useToast };
