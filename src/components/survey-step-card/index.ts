@@ -1,4 +1,4 @@
-export { SurveyStepCard, type SurveyStepCardProps, type SurveyQuestion } from "./SurveyStepCard";
+export { SurveyStepCard, type SurveyStepCardProps, type SurveyQuestion, type SurveyInputType } from "./SurveyStepCard";
 export {
   ConcentricCircles,
   DotGrid,
