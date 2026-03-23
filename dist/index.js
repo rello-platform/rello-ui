@@ -625,10 +625,15 @@ function TextInputArea({
 }) {
   const inputType = question.inputType ?? "text";
   const isTextarea = inputType === "textarea";
-  const [localValue, setLocalValue] = React12.useState(value);
+  const needsFormatting = !isTextarea && inputType !== "text" && inputType !== "email";
   const inputRef = React12.useRef(null);
+  const toDisplay = (raw) => {
+    if (!raw || !needsFormatting) return raw;
+    return formatLive(raw, inputType).display;
+  };
+  const [localValue, setLocalValue] = React12.useState(() => toDisplay(value));
   React12.useEffect(() => {
-    setLocalValue(value);
+    setLocalValue(toDisplay(value));
   }, [value]);
   React12.useEffect(() => {
     const timer = setTimeout(() => inputRef.current?.focus(), 100);
