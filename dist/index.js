@@ -774,7 +774,7 @@ var SurveyStepCard = React12.forwardRef(
           ] }),
           /* @__PURE__ */ jsxs11("div", { className: "px-6 pt-4 pb-2 flex items-start gap-5", children: [
             (q.illustration || q.pattern) && /* @__PURE__ */ jsx17(IllustrationBox, { accent: q.accent, illustration: q.illustration, pattern: q.pattern }),
-            /* @__PURE__ */ jsxs11("div", { className: "flex-1 pt-1", style: { minWidth: 0 }, children: [
+            /* @__PURE__ */ jsxs11("div", { className: "relative flex-1 pt-1", style: { minWidth: 0 }, children: [
               /* @__PURE__ */ jsx17(
                 "h3",
                 {
