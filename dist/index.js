@@ -772,20 +772,41 @@ var SurveyStepCard = React12.forwardRef(
             showBack && step > 0 && /* @__PURE__ */ jsx17(BackButton, { onClick: handleBack }),
             showProgress && /* @__PURE__ */ jsx17(GradientProgress, { value: progress, accent: q.accent })
           ] }),
-          /* @__PURE__ */ jsxs11("div", { className: "px-6 pt-4 pb-2 flex items-start gap-5", style: { overflow: "visible" }, children: [
-            (q.illustration || q.pattern) && /* @__PURE__ */ jsx17(IllustrationBox, { accent: q.accent, illustration: q.illustration, pattern: q.pattern }),
-            /* @__PURE__ */ jsxs11("div", { className: "relative flex-1 pt-1", style: { minWidth: 0, overflow: "visible" }, children: [
-              /* @__PURE__ */ jsx17(
-                "h3",
-                {
-                  className: "text-xl font-bold mb-1 break-words",
-                  style: { color: "var(--foreground, #111827)", fontFamily: "var(--font-heading, 'Montserrat', sans-serif)", overflow: "visible" },
-                  children: q.question
-                }
-              ),
-              q.helper && /* @__PURE__ */ jsx17("p", { className: "text-sm text-[var(--neutral-500)]", children: q.helper })
-            ] })
-          ] }),
+          /* @__PURE__ */ jsxs11(
+            "div",
+            {
+              style: {
+                display: "grid",
+                gridTemplateColumns: q.illustration || q.pattern ? "88px 1fr" : "1fr",
+                gap: 20,
+                alignItems: "start",
+                paddingLeft: 24,
+                paddingRight: 24,
+                paddingTop: 16,
+                paddingBottom: 8
+              },
+              children: [
+                (q.illustration || q.pattern) && /* @__PURE__ */ jsx17(IllustrationBox, { accent: q.accent, illustration: q.illustration, pattern: q.pattern }),
+                /* @__PURE__ */ jsxs11("div", { style: { paddingTop: 4, minWidth: 0 }, children: [
+                  /* @__PURE__ */ jsx17(
+                    "h3",
+                    {
+                      style: {
+                        fontSize: "1.25rem",
+                        fontWeight: 700,
+                        marginBottom: 4,
+                        overflowWrap: "break-word",
+                        color: "var(--foreground, #111827)",
+                        fontFamily: "var(--font-heading, 'Montserrat', sans-serif)"
+                      },
+                      children: q.question
+                    }
+                  ),
+                  q.helper && /* @__PURE__ */ jsx17("p", { className: "text-sm text-[var(--neutral-500)]", children: q.helper })
+                ] })
+              ]
+            }
+          ),
           isTextStep ? /* @__PURE__ */ jsx17(
             TextInputArea,
             {

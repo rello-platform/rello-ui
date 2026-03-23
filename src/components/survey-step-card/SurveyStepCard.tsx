@@ -447,14 +447,31 @@ const SurveyStepCard = React.forwardRef<HTMLDivElement, SurveyStepCardProps>(
         )}
 
         {/* Illustration + Question */}
-        <div className="px-6 pt-4 pb-2 flex items-start gap-5" style={{ overflow: "visible" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: q.illustration || q.pattern ? "88px 1fr" : "1fr",
+            gap: 20,
+            alignItems: "start",
+            paddingLeft: 24,
+            paddingRight: 24,
+            paddingTop: 16,
+            paddingBottom: 8,
+          }}
+        >
           {(q.illustration || q.pattern) && (
             <IllustrationBox accent={q.accent} illustration={q.illustration} pattern={q.pattern} />
           )}
-          <div className="relative flex-1 pt-1" style={{ minWidth: 0, overflow: "visible" }}>
+          <div style={{ paddingTop: 4, minWidth: 0 }}>
             <h3
-              className="text-xl font-bold mb-1 break-words"
-              style={{ color: "var(--foreground, #111827)", fontFamily: "var(--font-heading, 'Montserrat', sans-serif)", overflow: "visible" }}
+              style={{
+                fontSize: "1.25rem",
+                fontWeight: 700,
+                marginBottom: 4,
+                overflowWrap: "break-word",
+                color: "var(--foreground, #111827)",
+                fontFamily: "var(--font-heading, 'Montserrat', sans-serif)",
+              }}
             >
               {q.question}
             </h3>
