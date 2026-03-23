@@ -451,9 +451,9 @@ const SurveyStepCard = React.forwardRef<HTMLDivElement, SurveyStepCardProps>(
           {(q.illustration || q.pattern) && (
             <IllustrationBox accent={q.accent} illustration={q.illustration} pattern={q.pattern} />
           )}
-          <div className="flex-1 pt-1">
+          <div className="flex-1 pt-1" style={{ minWidth: 0 }}>
             <h3
-              className="text-xl font-bold mb-1"
+              className="text-xl font-bold mb-1 break-words"
               style={{ color: "var(--foreground, #111827)", fontFamily: "var(--font-heading, 'Montserrat', sans-serif)" }}
             >
               {q.question}
