@@ -774,11 +774,11 @@ var SurveyStepCard = React12.forwardRef(
           ] }),
           /* @__PURE__ */ jsxs11("div", { className: "px-6 pt-4 pb-2 flex items-start gap-5", children: [
             (q.illustration || q.pattern) && /* @__PURE__ */ jsx17(IllustrationBox, { accent: q.accent, illustration: q.illustration, pattern: q.pattern }),
-            /* @__PURE__ */ jsxs11("div", { className: "flex-1 pt-1", children: [
+            /* @__PURE__ */ jsxs11("div", { className: "flex-1 pt-1", style: { minWidth: 0 }, children: [
               /* @__PURE__ */ jsx17(
                 "h3",
                 {
-                  className: "text-xl font-bold mb-1",
+                  className: "text-xl font-bold mb-1 break-words",
                   style: { color: "var(--foreground, #111827)", fontFamily: "var(--font-heading, 'Montserrat', sans-serif)" },
                   children: q.question
                 }
