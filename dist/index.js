@@ -778,8 +778,8 @@ var SurveyStepCard = React12.forwardRef(
               /* @__PURE__ */ jsx17(
                 "h3",
                 {
-                  className: "text-xl font-bold text-[var(--foreground)] mb-1",
-                  style: { fontFamily: "var(--font-heading, 'Montserrat', sans-serif)" },
+                  className: "text-xl font-bold mb-1",
+                  style: { color: "var(--foreground, #111827)", fontFamily: "var(--font-heading, 'Montserrat', sans-serif)" },
                   children: q.question
                 }
               ),

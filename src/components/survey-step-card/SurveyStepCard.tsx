@@ -453,8 +453,8 @@ const SurveyStepCard = React.forwardRef<HTMLDivElement, SurveyStepCardProps>(
           )}
           <div className="flex-1 pt-1">
             <h3
-              className="text-xl font-bold text-[var(--foreground)] mb-1"
-              style={{ fontFamily: "var(--font-heading, 'Montserrat', sans-serif)" }}
+              className="text-xl font-bold mb-1"
+              style={{ color: "var(--foreground, #111827)", fontFamily: "var(--font-heading, 'Montserrat', sans-serif)" }}
             >
               {q.question}
             </h3>
