@@ -262,12 +262,20 @@ function TextInputArea({
 }) {
   const inputType = question.inputType ?? "text";
   const isTextarea = inputType === "textarea";
-  const [localValue, setLocalValue] = React.useState(value);
+  const needsFormatting = !isTextarea && inputType !== "text" && inputType !== "email";
   const inputRef = React.useRef<HTMLInputElement | HTMLTextAreaElement>(null);
 
-  // Sync external value
+  // Format display value from raw stored value (e.g., "7000" → "$7,000")
+  const toDisplay = (raw: string): string => {
+    if (!raw || !needsFormatting) return raw;
+    return formatLive(raw, inputType).display;
+  };
+
+  const [localValue, setLocalValue] = React.useState(() => toDisplay(value));
+
+  // Sync external value (re-format on back-navigation)
   React.useEffect(() => {
-    setLocalValue(value);
+    setLocalValue(toDisplay(value));
   }, [value]);
 
   // Auto-focus on mount
