@@ -428,7 +428,7 @@ const SurveyStepCard = React.forwardRef<HTMLDivElement, SurveyStepCardProps>(
       <div
         ref={ref}
         className={cn(
-          "w-full max-w-lg bg-white rounded-2xl shadow-md border border-[var(--neutral-100)] overflow-hidden",
+          "w-full max-w-lg bg-white rounded-2xl shadow-md border border-[var(--neutral-100)] overflow-clip",
           className,
         )}
         style={{
