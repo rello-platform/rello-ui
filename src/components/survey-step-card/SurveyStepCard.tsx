@@ -433,7 +433,7 @@ const SurveyStepCard = React.forwardRef<HTMLDivElement, SurveyStepCardProps>(
         )}
         style={{
           opacity: animating ? 0 : 1,
-          transform: animating ? "translateY(8px)" : "translateY(0)",
+          transform: animating ? "translateY(8px)" : "none",
           transition: "all 300ms ease-out",
         }}
         {...props}
@@ -447,14 +447,14 @@ const SurveyStepCard = React.forwardRef<HTMLDivElement, SurveyStepCardProps>(
         )}
 
         {/* Illustration + Question */}
-        <div className="px-6 pt-4 pb-2 flex items-start gap-5">
+        <div className="px-6 pt-4 pb-2 flex items-start gap-5" style={{ overflow: "visible" }}>
           {(q.illustration || q.pattern) && (
             <IllustrationBox accent={q.accent} illustration={q.illustration} pattern={q.pattern} />
           )}
-          <div className="relative flex-1 pt-1" style={{ minWidth: 0 }}>
+          <div className="relative flex-1 pt-1" style={{ minWidth: 0, overflow: "visible" }}>
             <h3
               className="text-xl font-bold mb-1 break-words"
-              style={{ color: "var(--foreground, #111827)", fontFamily: "var(--font-heading, 'Montserrat', sans-serif)" }}
+              style={{ color: "var(--foreground, #111827)", fontFamily: "var(--font-heading, 'Montserrat', sans-serif)", overflow: "visible" }}
             >
               {q.question}
             </h3>
