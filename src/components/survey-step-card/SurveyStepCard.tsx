@@ -471,9 +471,6 @@ const SurveyStepCard = React.forwardRef<HTMLDivElement, SurveyStepCardProps>(
                 overflowWrap: "break-word",
                 color: "var(--foreground, #111827)",
                 fontFamily: "var(--font-heading, 'Montserrat', sans-serif)",
-                textIndent: 0,
-                paddingLeft: 2,
-                background: "rgba(255,0,0,0.08)",
               }}
             >
               {q.question}

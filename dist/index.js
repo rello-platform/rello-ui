@@ -797,10 +797,7 @@ var SurveyStepCard = React12.forwardRef(
                         marginBottom: 4,
                         overflowWrap: "break-word",
                         color: "var(--foreground, #111827)",
-                        fontFamily: "var(--font-heading, 'Montserrat', sans-serif)",
-                        textIndent: 0,
-                        paddingLeft: 2,
-                        background: "rgba(255,0,0,0.08)"
+                        fontFamily: "var(--font-heading, 'Montserrat', sans-serif)"
                       },
                       children: q.question
                     }
