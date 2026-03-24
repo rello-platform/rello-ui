@@ -727,6 +727,7 @@ var SurveyStepCard = React12.forwardRef(
     const q = questions[step];
     if (!q) return null;
     const isTextStep = !q.options || q.options.length === 0;
+    const isMultiSelect = !!q.multiSelect && !isTextStep;
     const isLastStep = step >= questions.length - 1;
     const progress = (step + (selections[q.key] ? 1 : 0)) / questions.length * 100;
     const animateTransition = (callback, delay = 300) => {
@@ -736,11 +737,32 @@ var SurveyStepCard = React12.forwardRef(
         setAnimating(false);
       }, delay);
     };
+    const multiSelected = React12.useMemo(() => {
+      if (!isMultiSelect) return /* @__PURE__ */ new Set();
+      const current = selections[q.key] ?? "";
+      return new Set(current.split(",").filter(Boolean));
+    }, [isMultiSelect, selections, q.key]);
     const handleSelect = (option) => {
+      if (isMultiSelect) {
+        const next = new Set(multiSelected);
+        if (next.has(option)) {
+          next.delete(option);
+        } else {
+          next.add(option);
+        }
+        onSelect?.(q.key, Array.from(next).join(","));
+        return;
+      }
       onSelect?.(q.key, option);
       if (autoAdvance && !isLastStep) {
         animateTransition(() => onStepChange?.(step + 1), advanceDelay);
       }
+    };
+    const handleMultiContinue = () => {
+      if (isLastStep) {
+        return;
+      }
+      animateTransition(() => onStepChange?.(step + 1), advanceDelay);
     };
     const handleTextSubmit = (value) => {
       onSelect?.(q.key, value);
@@ -815,23 +837,35 @@ var SurveyStepCard = React12.forwardRef(
               onSubmit: handleTextSubmit,
               isLastStep
             }
-          ) : /* @__PURE__ */ jsx17(
-            "div",
-            {
-              className: "px-6 py-4",
-              style: { display: "grid", gridTemplateColumns: `repeat(${q.columns ?? 2}, 1fr)`, gap: 10 },
-              children: q.options.map((option) => /* @__PURE__ */ jsx17(
-                OptionButton,
-                {
-                  option,
-                  isSelected: selections[q.key] === option,
-                  accent: q.accent,
-                  onClick: () => handleSelect(option)
-                },
-                option
-              ))
-            }
-          ),
+          ) : /* @__PURE__ */ jsxs11("div", { className: "px-6 py-4", children: [
+            /* @__PURE__ */ jsx17(
+              "div",
+              {
+                style: { display: "grid", gridTemplateColumns: `repeat(${q.columns ?? 2}, 1fr)`, gap: 10 },
+                children: q.options.map((option) => /* @__PURE__ */ jsx17(
+                  OptionButton,
+                  {
+                    option,
+                    isSelected: isMultiSelect ? multiSelected.has(option) : selections[q.key] === option,
+                    accent: q.accent,
+                    onClick: () => handleSelect(option)
+                  },
+                  option
+                ))
+              }
+            ),
+            isMultiSelect && /* @__PURE__ */ jsx17(
+              "button",
+              {
+                type: "button",
+                disabled: multiSelected.size === 0,
+                onClick: handleMultiContinue,
+                className: "w-full mt-3 py-3 rounded-xl text-sm font-semibold text-white transition-opacity duration-150 disabled:opacity-40 disabled:cursor-not-allowed",
+                style: { backgroundColor: q.accent },
+                children: q.submitLabel ?? (isLastStep ? "See Results \u2192" : "Continue \u2192")
+              }
+            )
+          ] }),
           footer && /* @__PURE__ */ jsx17("div", { className: "px-6 pb-5", children: footer })
         ]
       }

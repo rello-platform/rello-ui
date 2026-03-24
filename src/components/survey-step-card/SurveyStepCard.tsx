@@ -115,6 +115,8 @@ export interface SurveyQuestion {
   inputHint?: string;
   /** Label for the submit button on text input steps (default "Next", last step: "See Results") */
   submitLabel?: string;
+  /** Enable multi-select mode — options toggle on/off, Continue button shown. Value stored as comma-separated string. */
+  multiSelect?: boolean;
 }
 
 export interface SurveyStepCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
@@ -391,6 +393,7 @@ const SurveyStepCard = React.forwardRef<HTMLDivElement, SurveyStepCardProps>(
     if (!q) return null;
 
     const isTextStep = !q.options || q.options.length === 0;
+    const isMultiSelect = !!q.multiSelect && !isTextStep;
     const isLastStep = step >= questions.length - 1;
     const progress = ((step + (selections[q.key] ? 1 : 0)) / questions.length) * 100;
 
@@ -402,12 +405,40 @@ const SurveyStepCard = React.forwardRef<HTMLDivElement, SurveyStepCardProps>(
       }, delay);
     };
 
+    // Parse comma-separated selection into a Set for multi-select
+    const multiSelected = React.useMemo(() => {
+      if (!isMultiSelect) return new Set<string>();
+      const current = selections[q.key] ?? "";
+      return new Set(current.split(",").filter(Boolean));
+    }, [isMultiSelect, selections, q.key]);
+
     const handleSelect = (option: string) => {
+      if (isMultiSelect) {
+        // Toggle option in the set
+        const next = new Set(multiSelected);
+        if (next.has(option)) {
+          next.delete(option);
+        } else {
+          next.add(option);
+        }
+        onSelect?.(q.key, Array.from(next).join(","));
+        // Don't auto-advance — user clicks Continue
+        return;
+      }
+
       onSelect?.(q.key, option);
 
       if (autoAdvance && !isLastStep) {
         animateTransition(() => onStepChange?.(step + 1), advanceDelay);
       }
+    };
+
+    const handleMultiContinue = () => {
+      if (isLastStep) {
+        // onSelect already fired for each toggle — just need to advance
+        return;
+      }
+      animateTransition(() => onStepChange?.(step + 1), advanceDelay);
     };
 
     const handleTextSubmit = (value: string) => {
@@ -488,19 +519,31 @@ const SurveyStepCard = React.forwardRef<HTMLDivElement, SurveyStepCardProps>(
             isLastStep={isLastStep}
           />
         ) : (
-          <div
-            className="px-6 py-4"
-            style={{ display: "grid", gridTemplateColumns: `repeat(${q.columns ?? 2}, 1fr)`, gap: 10 }}
-          >
-            {q.options!.map((option) => (
-              <OptionButton
-                key={option}
-                option={option}
-                isSelected={selections[q.key] === option}
-                accent={q.accent}
-                onClick={() => handleSelect(option)}
-              />
-            ))}
+          <div className="px-6 py-4">
+            <div
+              style={{ display: "grid", gridTemplateColumns: `repeat(${q.columns ?? 2}, 1fr)`, gap: 10 }}
+            >
+              {q.options!.map((option) => (
+                <OptionButton
+                  key={option}
+                  option={option}
+                  isSelected={isMultiSelect ? multiSelected.has(option) : selections[q.key] === option}
+                  accent={q.accent}
+                  onClick={() => handleSelect(option)}
+                />
+              ))}
+            </div>
+            {isMultiSelect && (
+              <button
+                type="button"
+                disabled={multiSelected.size === 0}
+                onClick={handleMultiContinue}
+                className="w-full mt-3 py-3 rounded-xl text-sm font-semibold text-white transition-opacity duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{ backgroundColor: q.accent }}
+              >
+                {q.submitLabel ?? (isLastStep ? "See Results \u2192" : "Continue \u2192")}
+              </button>
+            )}
           </div>
         )}
 

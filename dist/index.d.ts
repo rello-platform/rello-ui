@@ -197,6 +197,8 @@ interface SurveyQuestion {
     inputHint?: string;
     /** Label for the submit button on text input steps (default "Next", last step: "See Results") */
     submitLabel?: string;
+    /** Enable multi-select mode — options toggle on/off, Continue button shown. Value stored as comma-separated string. */
+    multiSelect?: boolean;
 }
 interface SurveyStepCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
     /** Array of survey questions/steps */
