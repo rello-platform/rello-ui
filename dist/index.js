@@ -4521,6 +4521,151 @@ function AddressAutocomplete({
     )
   ] });
 }
+
+// src/components/social-links-input/SocialLinksInput.tsx
+import { Facebook, Instagram, Linkedin, Youtube } from "iconoir-react";
+import { jsx as jsx52, jsxs as jsxs40 } from "react/jsx-runtime";
+var PLATFORMS = [
+  { key: "facebook", label: "Facebook", placeholder: "https://facebook.com/yourpage", icon: Facebook },
+  { key: "instagram", label: "Instagram", placeholder: "https://instagram.com/yourhandle", icon: Instagram },
+  { key: "linkedin", label: "LinkedIn", placeholder: "https://linkedin.com/in/you", icon: Linkedin },
+  { key: "youtube", label: "YouTube", placeholder: "https://youtube.com/@yourchannel", icon: Youtube }
+];
+function SocialLinksInput({
+  value,
+  onChange,
+  label,
+  hint,
+  error,
+  disabled,
+  className
+}) {
+  function handleChange(platform, url) {
+    onChange({ ...value, [platform]: url || null });
+  }
+  return /* @__PURE__ */ jsxs40("div", { className: cn("w-full space-y-3", className), children: [
+    label && /* @__PURE__ */ jsx52("p", { className: "text-sm font-medium text-[var(--neutral-700,#374151)]", children: label }),
+    /* @__PURE__ */ jsx52("div", { className: "grid grid-cols-1 gap-3 sm:grid-cols-2", children: PLATFORMS.map(({ key, label: platformLabel, placeholder, icon: Icon2 }) => /* @__PURE__ */ jsx52(
+      Input,
+      {
+        type: "url",
+        label: platformLabel,
+        placeholder,
+        value: value[key] ?? "",
+        onChange: (e) => handleChange(key, e.target.value),
+        leftIcon: /* @__PURE__ */ jsx52(Icon2, { className: "size-4" }),
+        disabled
+      },
+      key
+    )) }),
+    (error || hint) && /* @__PURE__ */ jsx52("p", { className: cn("text-xs", error ? "text-[var(--error,#C9605D)]" : "text-[var(--neutral-500,#6B7280)]"), children: error || hint })
+  ] });
+}
+SocialLinksInput.displayName = "SocialLinksInput";
+
+// src/components/brand-color-picker/BrandColorPicker.tsx
+import { jsx as jsx53, jsxs as jsxs41 } from "react/jsx-runtime";
+var HEX_PATTERN = /^#[0-9a-fA-F]{6}$/;
+function ColorField({
+  label,
+  value,
+  onChange,
+  disabled
+}) {
+  const id = label.toLowerCase().replace(/\s+/g, "-");
+  function handleTextChange(e) {
+    let hex = e.target.value;
+    if (hex && !hex.startsWith("#")) {
+      hex = `#${hex}`;
+    }
+    onChange(hex);
+  }
+  return /* @__PURE__ */ jsxs41("div", { className: "space-y-1.5", children: [
+    /* @__PURE__ */ jsx53("label", { htmlFor: id, className: "block text-sm font-medium text-[var(--neutral-700,#374151)]", children: label }),
+    /* @__PURE__ */ jsxs41("div", { className: "flex items-center gap-2", children: [
+      /* @__PURE__ */ jsx53(
+        "input",
+        {
+          type: "color",
+          value: value || "#000000",
+          onChange: (e) => onChange(e.target.value),
+          disabled,
+          className: cn(
+            "h-9 w-12 cursor-pointer rounded-md border border-[var(--neutral-200,#E5E7EB)] bg-white p-0.5",
+            "disabled:cursor-not-allowed disabled:opacity-50"
+          ),
+          "aria-label": `${label} color picker`
+        }
+      ),
+      /* @__PURE__ */ jsx53(
+        "input",
+        {
+          id,
+          type: "text",
+          value: value ?? "",
+          onChange: handleTextChange,
+          disabled,
+          maxLength: 7,
+          placeholder: "#000000",
+          "aria-invalid": !!value && !HEX_PATTERN.test(value),
+          className: cn(
+            "h-9 w-full rounded-md border bg-white px-3 py-1 text-sm font-mono shadow-xs transition-[color,box-shadow] outline-none",
+            "border-[var(--neutral-200,#E5E7EB)] text-[var(--foreground,#111827)] placeholder:text-[var(--neutral-400,#9CA3AF)]",
+            "focus-visible:border-[var(--brand-primary,#3B5998)] focus-visible:ring-2 focus-visible:ring-[var(--brand-primary,#3B5998)]/20",
+            "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-[var(--neutral-50,#F9FAFB)]",
+            value && !HEX_PATTERN.test(value) && "border-[var(--error,#C9605D)]"
+          )
+        }
+      ),
+      value && HEX_PATTERN.test(value) && /* @__PURE__ */ jsx53(
+        "div",
+        {
+          className: "h-9 w-9 shrink-0 rounded-md border border-[var(--neutral-200,#E5E7EB)]",
+          style: { backgroundColor: value },
+          "aria-hidden": "true"
+        }
+      )
+    ] })
+  ] });
+}
+function BrandColorPicker({
+  value,
+  onChange,
+  label,
+  hint,
+  error,
+  disabled,
+  className
+}) {
+  function handleChange(key, hex) {
+    onChange({ ...value, [key]: hex || null });
+  }
+  return /* @__PURE__ */ jsxs41("div", { className: cn("w-full space-y-3", className), children: [
+    label && /* @__PURE__ */ jsx53("p", { className: "text-sm font-medium text-[var(--neutral-700,#374151)]", children: label }),
+    /* @__PURE__ */ jsxs41("div", { className: "grid grid-cols-1 gap-4 sm:grid-cols-2", children: [
+      /* @__PURE__ */ jsx53(
+        ColorField,
+        {
+          label: "Primary",
+          value: value.primary ?? "",
+          onChange: (hex) => handleChange("primary", hex),
+          disabled
+        }
+      ),
+      /* @__PURE__ */ jsx53(
+        ColorField,
+        {
+          label: "Accent",
+          value: value.accent ?? "",
+          onChange: (hex) => handleChange("accent", hex),
+          disabled
+        }
+      )
+    ] }),
+    (error || hint) && /* @__PURE__ */ jsx53("p", { className: cn("text-xs", error ? "text-[var(--error,#C9605D)]" : "text-[var(--neutral-500,#6B7280)]"), children: error || hint })
+  ] });
+}
+BrandColorPicker.displayName = "BrandColorPicker";
 export {
   APP_ICONS,
   APP_ILLUSTRATIONS,
@@ -4539,6 +4684,7 @@ export {
   AvatarImage,
   Badge,
   BehavioralTag,
+  BrandColorPicker,
   BudgetIcon,
   Button,
   ButtonSpinner,
@@ -4636,6 +4782,7 @@ export {
   SlidePanelClose,
   SlidePanelFooter,
   SlidePanelHeader,
+  SocialLinksInput,
   Spinner,
   StatCard,
   StreakIcon,
