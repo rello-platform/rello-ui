@@ -44,3 +44,7 @@ export * from "./was-this-helpful";
 export * from "./tag-selector";
 export * from "./insight-card";
 export * from "./address-autocomplete";
+
+// Identity field editors
+export * from "./social-links-input";
+export * from "./brand-color-picker";
