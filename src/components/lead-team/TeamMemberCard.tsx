@@ -29,7 +29,7 @@ export function TeamMemberCard({
   ).toUpperCase();
   const title = formatCopy(copy.title, member.firstName, member.lastName);
   const shortTitle = copy.shortTitle;
-  const bio = member.bio ?? formatCopy(copy.bio, member.firstName, member.lastName);
+  const bio = member.bio || formatCopy(copy.bio, member.firstName, member.lastName);
 
   if (variant === "header") {
     return (

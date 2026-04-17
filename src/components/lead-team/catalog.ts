@@ -8,7 +8,7 @@ export const DEFAULT_TEAM_COPY: Record<TeamRole, TeamCopy> = {
   LOAN_OFFICER: {
     title: "{firstName}, your loan officer",
     shortTitle: "Your loan officer",
-    bio: "{firstName} will help you understand your financing options, get pre-approved, and match you to the right loan program for your situation.",
+    bio: "{firstName} specializes in helping people just like you get mortgage-ready. When it\u2019s time to pull the trigger on pre-approval, {firstName} will make the process painless.",
   },
   REAL_ESTATE_AGENT: {
     title: "{firstName}, your amazing real estate agent",
@@ -23,7 +23,7 @@ export const DEFAULT_TEAM_COPY: Record<TeamRole, TeamCopy> = {
   SMART_ASSISTANT: {
     title: "Milo, your smart assistant",
     shortTitle: "Smart assistant",
-    bio: "He\u2019s small, blue, and weirdly passionate about helping you get into a home. Milo never sleeps, never forgets, and somehow makes budgeting feel less painful.",
+    bio: "He\u2019s small, blue, and weirdly passionate about helping you get into a home. Milo never sleeps, never forgets, and somehow makes budgeting feel less painful. We\u2019d promote him but he\u2019s already running the place.",
   },
 };
 

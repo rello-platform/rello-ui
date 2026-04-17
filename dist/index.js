@@ -4672,7 +4672,7 @@ var DEFAULT_TEAM_COPY = {
   LOAN_OFFICER: {
     title: "{firstName}, your loan officer",
     shortTitle: "Your loan officer",
-    bio: "{firstName} will help you understand your financing options, get pre-approved, and match you to the right loan program for your situation."
+    bio: "{firstName} specializes in helping people just like you get mortgage-ready. When it\u2019s time to pull the trigger on pre-approval, {firstName} will make the process painless."
   },
   REAL_ESTATE_AGENT: {
     title: "{firstName}, your amazing real estate agent",
@@ -4687,7 +4687,7 @@ var DEFAULT_TEAM_COPY = {
   SMART_ASSISTANT: {
     title: "Milo, your smart assistant",
     shortTitle: "Smart assistant",
-    bio: "He\u2019s small, blue, and weirdly passionate about helping you get into a home. Milo never sleeps, never forgets, and somehow makes budgeting feel less painful."
+    bio: "He\u2019s small, blue, and weirdly passionate about helping you get into a home. Milo never sleeps, never forgets, and somehow makes budgeting feel less painful. We\u2019d promote him but he\u2019s already running the place."
   }
 };
 function getTeamCopy(role, override) {
@@ -4727,7 +4727,7 @@ function TeamMemberCard({
   const initials = (member.avatarInitials ?? `${member.firstName[0] ?? ""}${member.lastName[0] ?? ""}`).toUpperCase();
   const title = formatCopy(copy.title, member.firstName, member.lastName);
   const shortTitle = copy.shortTitle;
-  const bio = member.bio ?? formatCopy(copy.bio, member.firstName, member.lastName);
+  const bio = member.bio || formatCopy(copy.bio, member.firstName, member.lastName);
   if (variant === "header") {
     return /* @__PURE__ */ jsxs42("div", { className: cn("flex items-center gap-3", className), ...props, children: [
       /* @__PURE__ */ jsxs42(Avatar, { size: "sm", children: [
