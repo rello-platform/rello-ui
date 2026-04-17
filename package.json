@@ -1,6 +1,6 @@
 {
   "name": "@rello-platform/ui",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Shared UI component library for Rello applications",
   "type": "module",
   "main": "./dist/index.js",

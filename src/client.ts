@@ -9,8 +9,12 @@
  * Consumers:
  *   import { Button, Dialog } from "@rello-platform/ui/client";
  *
- * Server-safe utilities, types, constants, and pure helpers live in the
- * root entry `@rello-platform/ui` — NOT here. See src/index.ts.
+ * Server-safe utilities, types, constants, and pure helpers — including
+ * `cn` — live in the root entry `@rello-platform/ui`, NOT here. Keeping
+ * pure values out of the client bundle prevents a class of foot-gun
+ * where a server component imports a pure value from `/client` and
+ * hits the client-reference-proxy bug that Option-D structurally fixed.
+ * See src/index.ts.
  *
  * Why this split exists:
  *   Before v2.0.0 every export was bundled into a single dist/index.js
@@ -24,4 +28,3 @@
 
 export * from "./components";
 export * from "./icons";
-export { cn } from "./lib/cn";

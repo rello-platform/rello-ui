@@ -9,7 +9,6 @@ import * as SwitchPrimitive from '@radix-ui/react-switch';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as ProgressPrimitive from '@radix-ui/react-progress';
-import { ClassValue } from 'clsx';
 
 declare const buttonVariants: (props?: ({
     variant?: "primary" | "secondary" | "accent" | "ghost" | "danger" | "outline" | "link" | null | undefined;
@@ -584,9 +583,6 @@ interface PipelineData {
     qualified: number;
     hot: number;
 }
-declare const STAGES: readonly ["cold", "warming", "engaged", "qualified", "hot"];
-declare const STAGE_LABELS: Record<keyof PipelineData, string>;
-declare const STAGE_COLORS: Record<keyof PipelineData, string>;
 
 interface QuickStat {
     value: string | number;
@@ -922,15 +918,6 @@ interface StructuredAddress {
     lat?: number;
     lng?: number;
 }
-/**
- * Build a `location:` tag slug from structured address parts.
- *
- * Priority:
- *   1. city + state  -> `location:salt-lake-city-ut`
- *   2. zip           -> `location:84092`
- *   3. fallback      -> slugified formattedAddress
- */
-declare function buildLocationTagSlug(address: StructuredAddress): string;
 
 interface AddressAutocompleteProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onSelect"> {
     /** Google Places API key */
@@ -1041,21 +1028,6 @@ interface TeamCopy {
 type TeamCopyOverride = Partial<Record<TeamRole, Partial<TeamCopy>>>;
 type TeamRosterVariant = "full" | "compact" | "header";
 
-/**
- * Default lead-facing copy per display role.
- * Tenant overrides merge over these via `getTeamCopy(role, override)`.
- */
-declare const DEFAULT_TEAM_COPY: Record<TeamRole, TeamCopy>;
-/**
- * Resolve display copy for a role, merging tenant override over defaults.
- * Pure function — no I/O. Caller passes a tenant-scoped override map.
- */
-declare function getTeamCopy(role: TeamRole, override?: TeamCopyOverride): TeamCopy;
-/** Map a Prisma `Agent.role` enum value to the shared `TeamRole` catalog key. */
-declare function agentRoleToTeamRole(role: AgentRole): TeamRole;
-/** Replace {firstName} / {lastName} tokens in a copy template. */
-declare function formatCopy(template: string, firstName: string, lastName: string): string;
-
 interface TeamMemberCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
     member: TeamMember;
     copyOverride?: TeamCopyOverride;
@@ -1072,6 +1044,4 @@ interface TeamRosterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "ch
 }
 declare function TeamRoster({ roster, copyOverride, variant, heading, className, ...props }: TeamRosterProps): react_jsx_runtime.JSX.Element | null;
 
-declare function cn(...inputs: ClassValue[]): string;
-
-export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, AddressAutocomplete, type AddressAutocompleteProps, type AgentRole, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BrandColorPicker, type BrandColorPickerProps, type BrandColors, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DEFAULT_TEAM_COPY, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateProps, type FactorVariant, HarvestHomeIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeStretchIcon, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LoadingOverlay, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, STAGES, STAGE_COLORS, STAGE_LABELS, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, type SocialLinks, SocialLinksInput, type SocialLinksInputProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, type TeamCopy, type TeamCopyOverride, type TeamMember, TeamMemberCard, type TeamMemberCardProps, type TeamRole, TeamRoster, type TeamRosterProps, type TeamRosterVariant, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, agentRoleToTeamRole, badgeVariants, buildLocationTagSlug, buttonVariants, cn, formatCopy, getTeamCopy, useToast };
+export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, AddressAutocomplete, type AddressAutocompleteProps, type AgentRole, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BrandColorPicker, type BrandColorPickerProps, type BrandColors, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateProps, type FactorVariant, HarvestHomeIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeStretchIcon, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LoadingOverlay, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, type SocialLinks, SocialLinksInput, type SocialLinksInputProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, type TeamCopy, type TeamCopyOverride, type TeamMember, TeamMemberCard, type TeamMemberCardProps, type TeamRole, TeamRoster, type TeamRosterProps, type TeamRosterVariant, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, badgeVariants, buttonVariants, useToast };

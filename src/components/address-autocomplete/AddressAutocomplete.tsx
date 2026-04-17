@@ -9,9 +9,6 @@ import { buildLocationTagSlug, type StructuredAddress } from "./slug";
 /*  Types                                                                     */
 /* -------------------------------------------------------------------------- */
 
-export type { StructuredAddress };
-export { buildLocationTagSlug } from "./slug";
-
 /** Autocomplete prediction shown in the dropdown */
 interface Prediction {
   placeId: string;

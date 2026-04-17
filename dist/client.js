@@ -4673,6 +4673,9 @@ function BrandColorPicker({
 }
 BrandColorPicker.displayName = "BrandColorPicker";
 
+// src/components/lead-team/TeamMemberCard.tsx
+import { Phone as Phone2, Mail as Mail2 } from "iconoir-react";
+
 // src/components/lead-team/catalog.ts
 var DEFAULT_TEAM_COPY = {
   LOAN_OFFICER: {
@@ -4706,20 +4709,11 @@ function getTeamCopy(role, override) {
     bio: o.bio ?? def.bio
   };
 }
-var AGENT_ROLE_TO_TEAM_ROLE = {
-  AGENT: "REAL_ESTATE_AGENT",
-  MLO: "LOAN_OFFICER",
-  BROKER: "MANAGING_BROKER"
-};
-function agentRoleToTeamRole(role) {
-  return AGENT_ROLE_TO_TEAM_ROLE[role];
-}
 function formatCopy(template, firstName, lastName) {
   return template.replace(/\{firstName\}/g, firstName).replace(/\{lastName\}/g, lastName);
 }
 
 // src/components/lead-team/TeamMemberCard.tsx
-import { Phone as Phone2, Mail as Mail2 } from "iconoir-react";
 import { jsx as jsx54, jsxs as jsxs42 } from "react/jsx-runtime";
 function TeamMemberCard({
   member,
@@ -4908,7 +4902,6 @@ export {
   CrossHatch,
   DASHBOARD_ICONS,
   DASHBOARD_ILLUSTRATIONS,
-  DEFAULT_TEAM_COPY,
   DailyExerciseIcon,
   DashboardCardIllustration,
   DashboardShell,
@@ -4960,9 +4953,6 @@ export {
   Progress,
   PulseIcon,
   RadialBurst,
-  STAGES,
-  STAGE_COLORS,
-  STAGE_LABELS,
   SavingsIcon,
   SegmentedProgress,
   Select,
@@ -5006,13 +4996,8 @@ export {
   TrackCardIllustration,
   WasThisHelpful,
   WeeklyChallengeIcon,
-  agentRoleToTeamRole,
   badgeVariants,
-  buildLocationTagSlug,
   buttonVariants,
-  cn,
-  formatCopy,
-  getTeamCopy,
   useToast
 };
 //# sourceMappingURL=client.js.map

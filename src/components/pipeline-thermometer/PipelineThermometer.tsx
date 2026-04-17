@@ -173,4 +173,3 @@ function PipelineThermometer({
 }
 
 export { PipelineThermometer };
-export { STAGES, STAGE_COLORS, STAGE_LABELS } from "./stages";
