@@ -20,6 +20,15 @@
 
 export { cn } from "./lib/cn";
 
+/* ─── CVA class-name builders (pure functions) ─── */
+
+export { buttonVariants, type ButtonVariantProps } from "./components/button/variants";
+export {
+  badgeVariants,
+  type BadgeVariant,
+  type BadgeVariantProps,
+} from "./components/badge/variants";
+
 /* ─── Lead-team composition (pure functions + types) ─── */
 
 export {

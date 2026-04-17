@@ -1,6 +1,21 @@
 import { ClassValue } from 'clsx';
+import * as class_variance_authority_types from 'class-variance-authority/types';
+import { VariantProps } from 'class-variance-authority';
 
 declare function cn(...inputs: ClassValue[]): string;
+
+declare const buttonVariants: (props?: ({
+    variant?: "primary" | "secondary" | "accent" | "ghost" | "danger" | "outline" | "link" | null | undefined;
+    size?: "xs" | "sm" | "md" | "lg" | "xl" | "icon" | "icon-sm" | "icon-lg" | null | undefined;
+} & class_variance_authority_types.ClassProp) | undefined) => string;
+type ButtonVariantProps = VariantProps<typeof buttonVariants>;
+
+declare const badgeVariants: (props?: ({
+    variant?: "primary" | "accent" | "default" | "success" | "warning" | "error" | "info" | "hot" | "qualified" | "engaged" | "warming" | "cold" | "LEAD" | "NURTURING" | "APPLICATION" | "PROCESSING" | "CLOSED_WON" | "CLOSED_LOST" | null | undefined;
+    size?: "xs" | "sm" | "md" | "lg" | null | undefined;
+} & class_variance_authority_types.ClassProp) | undefined) => string;
+type BadgeVariantProps = VariantProps<typeof badgeVariants>;
+type BadgeVariant = NonNullable<BadgeVariantProps["variant"]>;
 
 /**
  * Shared lead-team composition model — see audit
@@ -108,4 +123,4 @@ interface StructuredAddress {
  */
 declare function buildLocationTagSlug(address: StructuredAddress): string;
 
-export { type AgentRole, DEFAULT_TEAM_COPY, type PipelineData, STAGES, STAGE_COLORS, STAGE_LABELS, type StructuredAddress, type TeamCopy, type TeamCopyOverride, type TeamMember, type TeamRole, type TeamRosterVariant, agentRoleToTeamRole, buildLocationTagSlug, cn, formatCopy, getTeamCopy };
+export { type AgentRole, type BadgeVariant, type BadgeVariantProps, type ButtonVariantProps, DEFAULT_TEAM_COPY, type PipelineData, STAGES, STAGE_COLORS, STAGE_LABELS, type StructuredAddress, type TeamCopy, type TeamCopyOverride, type TeamMember, type TeamRole, type TeamRosterVariant, agentRoleToTeamRole, badgeVariants, buildLocationTagSlug, buttonVariants, cn, formatCopy, getTeamCopy };
