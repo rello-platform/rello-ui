@@ -2,16 +2,11 @@
 
 import * as React from "react";
 import { cn } from "../../lib/cn";
+import { STAGES, STAGE_LABELS, STAGE_COLORS, type PipelineData } from "./stages";
 
 /* ─── Types ─── */
 
-export interface PipelineData {
-  cold: number;
-  warming: number;
-  engaged: number;
-  qualified: number;
-  hot: number;
-}
+export type { PipelineData };
 
 export interface QuickStat {
   value: string | number;
@@ -29,26 +24,6 @@ export interface PipelineThermometerProps {
   /** Callback when the total badge is clicked */
   onTotalClick?: () => void;
 }
-
-/* ─── Constants ─── */
-
-const STAGES = ["cold", "warming", "engaged", "qualified", "hot"] as const;
-
-const STAGE_LABELS: Record<keyof PipelineData, string> = {
-  cold: "Cold",
-  warming: "Warming",
-  engaged: "Engaged",
-  qualified: "Qualified",
-  hot: "Hot",
-};
-
-const STAGE_COLORS: Record<keyof PipelineData, string> = {
-  cold: "var(--cold)",
-  warming: "var(--warming)",
-  engaged: "var(--engaged)",
-  qualified: "var(--qualified)",
-  hot: "var(--hot)",
-};
 
 const GRADIENT = "linear-gradient(to right, var(--cold), var(--warming), var(--engaged), var(--qualified), var(--hot))";
 
@@ -197,4 +172,5 @@ function PipelineThermometer({
   );
 }
 
-export { PipelineThermometer, STAGE_COLORS, STAGE_LABELS, STAGES };
+export { PipelineThermometer };
+export { STAGES, STAGE_COLORS, STAGE_LABELS } from "./stages";

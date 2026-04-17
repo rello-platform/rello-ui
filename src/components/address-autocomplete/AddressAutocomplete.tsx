@@ -3,24 +3,14 @@
 import * as React from "react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { cn } from "../../lib/cn";
+import { buildLocationTagSlug, type StructuredAddress } from "./slug";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
 /* -------------------------------------------------------------------------- */
 
-/** Structured address returned on selection */
-export interface StructuredAddress {
-  street: string;
-  city: string;
-  state: string;
-  zip: string;
-  county?: string;
-  country: string;
-  formattedAddress: string;
-  placeId: string;
-  lat?: number;
-  lng?: number;
-}
+export type { StructuredAddress };
+export { buildLocationTagSlug } from "./slug";
 
 /** Autocomplete prediction shown in the dropdown */
 interface Prediction {
@@ -44,36 +34,6 @@ export interface AddressAutocompleteProps
   error?: string;
   /** Hint text shown below the input */
   hint?: string;
-}
-
-/* -------------------------------------------------------------------------- */
-/*  Slug helpers (pure functions, no server deps)                             */
-/* -------------------------------------------------------------------------- */
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-}
-
-/**
- * Build a `location:` tag slug from structured address parts.
- *
- * Priority:
- *   1. city + state  -> `location:salt-lake-city-ut`
- *   2. zip           -> `location:84092`
- */
-export function buildLocationTagSlug(address: StructuredAddress): string {
-  if (address.city && address.state) {
-    return `location:${slugify(address.city)}-${address.state.toLowerCase()}`;
-  }
-  if (address.zip) {
-    return `location:${address.zip}`;
-  }
-  return `location:${slugify(address.formattedAddress)}`;
 }
 
 /* -------------------------------------------------------------------------- */
