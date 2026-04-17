@@ -48,3 +48,6 @@ export * from "./address-autocomplete";
 // Identity field editors
 export * from "./social-links-input";
 export * from "./brand-color-picker";
+
+// Lead-facing team composition (audit DISCOVERED-HR-TEAM-COMPOSITION-MODEL-041626)
+export * from "./lead-team";

@@ -4666,6 +4666,203 @@ function BrandColorPicker({
   ] });
 }
 BrandColorPicker.displayName = "BrandColorPicker";
+
+// src/components/lead-team/catalog.ts
+var DEFAULT_TEAM_COPY = {
+  LOAN_OFFICER: {
+    title: "{firstName}, your loan officer",
+    shortTitle: "Your loan officer",
+    bio: "{firstName} will help you understand your financing options, get pre-approved, and match you to the right loan program for your situation."
+  },
+  REAL_ESTATE_AGENT: {
+    title: "{firstName}, your amazing real estate agent",
+    shortTitle: "Your real estate agent",
+    bio: "{firstName} will be with you from day one \u2014 helping you explore neighborhoods, understand the market, and find the perfect home when you\u2019re ready."
+  },
+  MANAGING_BROKER: {
+    title: "{firstName}, your managing broker",
+    shortTitle: "Your managing broker",
+    bio: "{firstName} oversees your team and is here to make sure your home-buying experience runs smoothly from start to finish."
+  },
+  SMART_ASSISTANT: {
+    title: "Milo, your smart assistant",
+    shortTitle: "Smart assistant",
+    bio: "He\u2019s small, blue, and weirdly passionate about helping you get into a home. Milo never sleeps, never forgets, and somehow makes budgeting feel less painful."
+  }
+};
+function getTeamCopy(role, override) {
+  const def = DEFAULT_TEAM_COPY[role];
+  const o = override?.[role];
+  if (!o) return def;
+  return {
+    title: o.title ?? def.title,
+    shortTitle: o.shortTitle ?? def.shortTitle,
+    bio: o.bio ?? def.bio
+  };
+}
+var AGENT_ROLE_TO_TEAM_ROLE = {
+  AGENT: "REAL_ESTATE_AGENT",
+  MLO: "LOAN_OFFICER",
+  BROKER: "MANAGING_BROKER"
+};
+function agentRoleToTeamRole(role) {
+  return AGENT_ROLE_TO_TEAM_ROLE[role];
+}
+function formatCopy(template, firstName, lastName) {
+  return template.replace(/\{firstName\}/g, firstName).replace(/\{lastName\}/g, lastName);
+}
+
+// src/components/lead-team/TeamMemberCard.tsx
+import { Phone as Phone2, Mail as Mail2 } from "iconoir-react";
+import { jsx as jsx54, jsxs as jsxs42 } from "react/jsx-runtime";
+function TeamMemberCard({
+  member,
+  copyOverride,
+  variant = "full",
+  className,
+  ...props
+}) {
+  const copy = getTeamCopy(member.role, copyOverride);
+  const fullName = `${member.firstName} ${member.lastName}`.trim();
+  const initials = (member.avatarInitials ?? `${member.firstName[0] ?? ""}${member.lastName[0] ?? ""}`).toUpperCase();
+  const title = formatCopy(copy.title, member.firstName, member.lastName);
+  const shortTitle = copy.shortTitle;
+  const bio = member.bio ?? formatCopy(copy.bio, member.firstName, member.lastName);
+  if (variant === "header") {
+    return /* @__PURE__ */ jsxs42("div", { className: cn("flex items-center gap-3", className), ...props, children: [
+      /* @__PURE__ */ jsxs42(Avatar, { size: "sm", children: [
+        member.photoUrl ? /* @__PURE__ */ jsx54(AvatarImage, { src: member.photoUrl, alt: fullName }) : null,
+        /* @__PURE__ */ jsx54(AvatarFallback, { children: initials })
+      ] }),
+      /* @__PURE__ */ jsxs42("div", { className: "flex-1 min-w-0", children: [
+        /* @__PURE__ */ jsx54("p", { className: "font-semibold text-sm text-[var(--neutral-900)] truncate", children: fullName }),
+        member.brokerageLogoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          /* @__PURE__ */ jsx54(
+            "img",
+            {
+              src: member.brokerageLogoUrl,
+              alt: member.brokerage ?? "Brokerage",
+              className: "h-4 mt-0.5 max-w-[120px] object-contain object-left"
+            }
+          )
+        ) : member.brokerage ? /* @__PURE__ */ jsx54("p", { className: "text-[var(--neutral-500)] text-xs truncate", children: member.brokerage }) : /* @__PURE__ */ jsx54("p", { className: "text-[var(--neutral-500)] text-xs truncate", children: shortTitle })
+      ] })
+    ] });
+  }
+  if (variant === "compact") {
+    return /* @__PURE__ */ jsxs42(
+      "div",
+      {
+        className: cn(
+          "flex items-start gap-3 p-3 rounded-lg bg-[var(--neutral-50)]",
+          className
+        ),
+        ...props,
+        children: [
+          /* @__PURE__ */ jsxs42(Avatar, { size: "md", children: [
+            member.photoUrl ? /* @__PURE__ */ jsx54(AvatarImage, { src: member.photoUrl, alt: fullName }) : null,
+            /* @__PURE__ */ jsx54(AvatarFallback, { children: initials })
+          ] }),
+          /* @__PURE__ */ jsxs42("div", { className: "flex-1 min-w-0", children: [
+            /* @__PURE__ */ jsx54("p", { className: "font-semibold text-[var(--neutral-900)]", children: fullName }),
+            /* @__PURE__ */ jsx54("p", { className: "text-xs text-[var(--neutral-500)]", children: shortTitle }),
+            member.brokerage ? /* @__PURE__ */ jsx54("p", { className: "text-xs text-[var(--neutral-400)]", children: member.brokerage }) : null,
+            member.showContactRow ? /* @__PURE__ */ jsx54(ContactRow, { phone: member.phone, email: member.email, className: "mt-2" }) : null
+          ] })
+        ]
+      }
+    );
+  }
+  return /* @__PURE__ */ jsxs42("div", { className: cn("flex items-start gap-4", className), ...props, children: [
+    /* @__PURE__ */ jsxs42(Avatar, { size: "lg", children: [
+      member.photoUrl ? /* @__PURE__ */ jsx54(AvatarImage, { src: member.photoUrl, alt: fullName }) : null,
+      /* @__PURE__ */ jsx54(AvatarFallback, { children: initials })
+    ] }),
+    /* @__PURE__ */ jsxs42("div", { className: "space-y-1 flex-1 min-w-0", children: [
+      /* @__PURE__ */ jsx54("p", { className: "font-semibold text-[var(--neutral-900)]", children: title }),
+      /* @__PURE__ */ jsx54("p", { className: "text-sm text-[var(--neutral-600)] leading-relaxed", children: bio }),
+      member.brokerageLogoUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        /* @__PURE__ */ jsx54(
+          "img",
+          {
+            src: member.brokerageLogoUrl,
+            alt: member.brokerage ?? "Brokerage",
+            className: "h-5 mt-1 max-w-[120px] object-contain object-left"
+          }
+        )
+      ) : member.brokerage ? /* @__PURE__ */ jsx54("p", { className: "text-xs text-[var(--neutral-500)]", children: member.brokerage }) : null,
+      member.showContactRow ? /* @__PURE__ */ jsx54(ContactRow, { phone: member.phone, email: member.email, className: "pt-1" }) : null
+    ] })
+  ] });
+}
+function ContactRow({
+  phone,
+  email,
+  className
+}) {
+  if (!phone && !email) return null;
+  return /* @__PURE__ */ jsxs42("div", { className: cn("flex flex-wrap gap-4", className), children: [
+    phone ? /* @__PURE__ */ jsxs42(
+      "a",
+      {
+        href: `tel:${phone}`,
+        className: "inline-flex items-center gap-1.5 text-sm text-[var(--neutral-600)] hover:text-[var(--brand-primary)]",
+        children: [
+          /* @__PURE__ */ jsx54(Phone2, { width: 16, height: 16 }),
+          phone
+        ]
+      }
+    ) : null,
+    email ? /* @__PURE__ */ jsxs42(
+      "a",
+      {
+        href: `mailto:${email}`,
+        className: "inline-flex items-center gap-1.5 text-sm text-[var(--neutral-600)] hover:text-[var(--brand-primary)]",
+        children: [
+          /* @__PURE__ */ jsx54(Mail2, { width: 16, height: 16 }),
+          email
+        ]
+      }
+    ) : null
+  ] });
+}
+
+// src/components/lead-team/TeamRoster.tsx
+import { jsx as jsx55, jsxs as jsxs43 } from "react/jsx-runtime";
+function TeamRoster({
+  roster,
+  copyOverride,
+  variant = "full",
+  heading = "Your home buying team",
+  className,
+  ...props
+}) {
+  if (roster.length === 0) return null;
+  const gap = variant === "header" ? "gap-3" : "gap-5";
+  const dividers = variant === "full";
+  return /* @__PURE__ */ jsxs43("div", { className: cn("flex flex-col", gap, className), ...props, children: [
+    heading ? /* @__PURE__ */ jsx55("h2", { className: "font-semibold text-[var(--neutral-900)]", children: heading }) : null,
+    /* @__PURE__ */ jsx55("div", { className: cn("flex flex-col", gap), children: roster.map((member, i) => /* @__PURE__ */ jsx55(
+      "div",
+      {
+        className: cn(
+          dividers && i < roster.length - 1 ? "pb-5 border-b border-[var(--neutral-100)]" : null
+        ),
+        children: /* @__PURE__ */ jsx55(
+          TeamMemberCard,
+          {
+            member,
+            copyOverride,
+            variant
+          }
+        )
+      },
+      `${member.role}-${member.email ?? i}`
+    )) })
+  ] });
+}
 export {
   APP_ICONS,
   APP_ILLUSTRATIONS,
@@ -4705,6 +4902,7 @@ export {
   CrossHatch,
   DASHBOARD_ICONS,
   DASHBOARD_ILLUSTRATIONS,
+  DEFAULT_TEAM_COPY,
   DailyExerciseIcon,
   DashboardCardIllustration,
   DashboardShell,
@@ -4792,6 +4990,8 @@ export {
   TRACK_ILLUSTRATIONS,
   Table,
   TagSelector,
+  TeamMemberCard,
+  TeamRoster,
   Textarea,
   TimelineIcon,
   Toast,
@@ -4800,10 +5000,13 @@ export {
   TrackCardIllustration,
   WasThisHelpful,
   WeeklyChallengeIcon,
+  agentRoleToTeamRole,
   badgeVariants,
   buildLocationTagSlug,
   buttonVariants,
   cn,
+  formatCopy,
+  getTeamCopy,
   useToast
 };
 //# sourceMappingURL=index.js.map
