@@ -3,7 +3,11 @@
 import * as React from "react";
 import { Badge, type BadgeVariant } from "../badge";
 import { CardIllustration } from "../card-illustration";
-import { AppCardIllustration, APP_ILLUSTRATIONS } from "../card-illustration";
+import {
+  AppCardIllustration,
+  APP_ILLUSTRATIONS,
+  type IllustrationKey,
+} from "../card-illustration";
 import { cn } from "../../lib/cn";
 
 export interface AppCardProps {
@@ -19,7 +23,7 @@ export interface AppCardProps {
   /** Accent color for the branded icon illustration */
   accentColor?: string;
   /** Registry key for full branded illustration (pattern + custom icon) */
-  illustrationKey?: string;
+  illustrationKey?: IllustrationKey;
   onClick?: () => void;
   className?: string;
 }

@@ -1,6 +1,6 @@
 {
   "name": "@rello-platform/ui",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Shared UI component library for Rello applications",
   "type": "module",
   "main": "./dist/index.js",
@@ -53,6 +53,7 @@
     "@radix-ui/react-select": "^2.2.0",
     "@radix-ui/react-slot": "^1.2.0",
     "@radix-ui/react-switch": "^1.2.6",
+    "@rello-platform/slugs": "github:rello-platform/slugs#v0.3.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "iconoir-react": "^7.11.0",

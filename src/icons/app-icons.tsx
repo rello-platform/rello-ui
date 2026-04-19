@@ -325,18 +325,60 @@ export function LeadCaptureFormsIcon({ accent, size = 48, className }: TrackIcon
 }
 
 /* ==========================================
+   THE DISCOVERY — binoculars scanning a target home
+   For The Home Scout (property search / scouting)
+   ========================================== */
+export function HomeScoutIcon({ accent, size = 48, className }: TrackIconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
+      {/* Binocular left lens */}
+      <circle cx="15" cy="16" r="7" stroke={accent} strokeWidth="2" fill={accent} fillOpacity="0.06" />
+      <circle cx="15" cy="16" r="4" stroke={accent} strokeWidth="1" opacity="0.3" fill="none" />
+      <circle cx="15" cy="16" r="1.5" fill={accent} opacity="0.4" />
+      {/* Binocular right lens */}
+      <circle cx="33" cy="16" r="7" stroke={accent} strokeWidth="2" fill={accent} fillOpacity="0.06" />
+      <circle cx="33" cy="16" r="4" stroke={accent} strokeWidth="1" opacity="0.3" fill="none" />
+      <circle cx="33" cy="16" r="1.5" fill={accent} opacity="0.4" />
+      {/* Bridge between lenses */}
+      <line x1="20" y1="16" x2="28" y2="16" stroke={accent} strokeWidth="2" strokeLinecap="round" />
+      {/* Eyepiece tops */}
+      <line x1="12" y1="8" x2="18" y2="8" stroke={accent} strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
+      <line x1="30" y1="8" x2="36" y2="8" stroke={accent} strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
+      {/* Sightlines scanning downward (dashed — in-progress discovery) */}
+      <line x1="15" y1="24" x2="22" y2="36" stroke={accent} strokeWidth="0.8" opacity="0.25" strokeLinecap="round" strokeDasharray="1.5 1.5" />
+      <line x1="33" y1="24" x2="26" y2="36" stroke={accent} strokeWidth="0.8" opacity="0.25" strokeLinecap="round" strokeDasharray="1.5 1.5" />
+      {/* Location ping pulse above the found house */}
+      <circle cx="24" cy="32" r="3" stroke={accent} strokeWidth="0.8" opacity="0.2" fill="none" />
+      <circle cx="24" cy="32" r="1.5" fill={accent} opacity="0.4" />
+      {/* Target house silhouette (what's being scouted) */}
+      <path d="M18 40l6-6 6 6v4H18z" stroke={accent} strokeWidth="2" strokeLinejoin="round" fill={accent} fillOpacity="0.08" />
+      <rect x="22" y="40" width="4" height="4" rx="0.5" stroke={accent} strokeWidth="1" opacity="0.3" />
+      {/* Sparkle */}
+      <circle cx="42" cy="8" r="1" fill={accent} opacity="0.3" />
+      <path d="M40 6l2-2" stroke={accent} strokeWidth="1" opacity="0.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/* ==========================================
    REGISTRY
    ========================================== */
 
 export const APP_ICONS: Record<string, React.ComponentType<TrackIconProps>> = {
   "accountability-tracker": AccountabilityTrackerIcon,
-  drumbeat: DrumbeatIcon,
+  "the-drumbeat": DrumbeatIcon,
   "harvest-home": HarvestHomeIcon,
   "open-house-hub": OpenHouseHubIcon,
+  "home-scout": HomeScoutIcon,
   "home-stretch": HomeStretchIcon,
   "home-ready": HomeReadyIcon,
   "newsletter-studio": NewsletterStudioIcon,
   "market-intel": MarketIntelIcon,
-  oven: OvenIcon,
+  "the-oven": OvenIcon,
   "lead-capture-forms": LeadCaptureFormsIcon,
+
+  // --- Legacy aliases (deploy-skew tolerance — remove in follow-up PR after soak) ---
+  drumbeat: DrumbeatIcon,
+  "the-home-scout": HomeScoutIcon,
+  oven: OvenIcon,
 };

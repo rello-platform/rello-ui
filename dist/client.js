@@ -1827,17 +1827,43 @@ function LeadCaptureFormsIcon({ accent, size = 48, className }) {
     /* @__PURE__ */ jsx25("circle", { cx: "8", cy: "8", r: "0.8", fill: accent, opacity: "0.25" })
   ] });
 }
+function HomeScoutIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs18("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx25("circle", { cx: "15", cy: "16", r: "7", stroke: accent, strokeWidth: "2", fill: accent, fillOpacity: "0.06" }),
+    /* @__PURE__ */ jsx25("circle", { cx: "15", cy: "16", r: "4", stroke: accent, strokeWidth: "1", opacity: "0.3", fill: "none" }),
+    /* @__PURE__ */ jsx25("circle", { cx: "15", cy: "16", r: "1.5", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx25("circle", { cx: "33", cy: "16", r: "7", stroke: accent, strokeWidth: "2", fill: accent, fillOpacity: "0.06" }),
+    /* @__PURE__ */ jsx25("circle", { cx: "33", cy: "16", r: "4", stroke: accent, strokeWidth: "1", opacity: "0.3", fill: "none" }),
+    /* @__PURE__ */ jsx25("circle", { cx: "33", cy: "16", r: "1.5", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx25("line", { x1: "20", y1: "16", x2: "28", y2: "16", stroke: accent, strokeWidth: "2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx25("line", { x1: "12", y1: "8", x2: "18", y2: "8", stroke: accent, strokeWidth: "1.5", strokeLinecap: "round", opacity: "0.5" }),
+    /* @__PURE__ */ jsx25("line", { x1: "30", y1: "8", x2: "36", y2: "8", stroke: accent, strokeWidth: "1.5", strokeLinecap: "round", opacity: "0.5" }),
+    /* @__PURE__ */ jsx25("line", { x1: "15", y1: "24", x2: "22", y2: "36", stroke: accent, strokeWidth: "0.8", opacity: "0.25", strokeLinecap: "round", strokeDasharray: "1.5 1.5" }),
+    /* @__PURE__ */ jsx25("line", { x1: "33", y1: "24", x2: "26", y2: "36", stroke: accent, strokeWidth: "0.8", opacity: "0.25", strokeLinecap: "round", strokeDasharray: "1.5 1.5" }),
+    /* @__PURE__ */ jsx25("circle", { cx: "24", cy: "32", r: "3", stroke: accent, strokeWidth: "0.8", opacity: "0.2", fill: "none" }),
+    /* @__PURE__ */ jsx25("circle", { cx: "24", cy: "32", r: "1.5", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx25("path", { d: "M18 40l6-6 6 6v4H18z", stroke: accent, strokeWidth: "2", strokeLinejoin: "round", fill: accent, fillOpacity: "0.08" }),
+    /* @__PURE__ */ jsx25("rect", { x: "22", y: "40", width: "4", height: "4", rx: "0.5", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx25("circle", { cx: "42", cy: "8", r: "1", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx25("path", { d: "M40 6l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4", strokeLinecap: "round" })
+  ] });
+}
 var APP_ICONS = {
   "accountability-tracker": AccountabilityTrackerIcon,
-  drumbeat: DrumbeatIcon,
+  "the-drumbeat": DrumbeatIcon,
   "harvest-home": HarvestHomeIcon,
   "open-house-hub": OpenHouseHubIcon,
+  "home-scout": HomeScoutIcon,
   "home-stretch": HomeStretchIcon,
   "home-ready": HomeReadyIcon,
   "newsletter-studio": NewsletterStudioIcon,
   "market-intel": MarketIntelIcon,
-  oven: OvenIcon,
-  "lead-capture-forms": LeadCaptureFormsIcon
+  "the-oven": OvenIcon,
+  "lead-capture-forms": LeadCaptureFormsIcon,
+  // --- Legacy aliases (deploy-skew tolerance — remove in follow-up PR after soak) ---
+  drumbeat: DrumbeatIcon,
+  "the-home-scout": HomeScoutIcon,
+  oven: OvenIcon
 };
 
 // src/components/card-illustration/track-illustrations.tsx
@@ -2067,6 +2093,27 @@ function DashboardCardIllustration({
 
 // src/components/card-illustration/app-illustrations.tsx
 import { jsx as jsx28 } from "react/jsx-runtime";
+var theDrumbeatIllustration = {
+  codename: "The Rhythm",
+  section: "The Drumbeat \u2014 automated prospecting sequences",
+  accent: "#C74B3F",
+  pattern: RadialBurst,
+  icon: DrumbeatIcon
+};
+var homeScoutIllustration = {
+  codename: "The Discovery",
+  section: "The Home Scout \u2014 property search & lead-capturing tools",
+  accent: "#3B8DBD",
+  pattern: OrbitalRings,
+  icon: HomeScoutIcon
+};
+var theOvenIllustration = {
+  codename: "The Hearth",
+  section: "The Oven \u2014 client retention & homeowner engagement",
+  accent: "#C75B39",
+  pattern: RadialBurst,
+  icon: OvenIcon
+};
 var APP_ILLUSTRATIONS = {
   "accountability-tracker": {
     codename: "The Checkpoint",
@@ -2075,13 +2122,7 @@ var APP_ILLUSTRATIONS = {
     pattern: ConcentricCircles,
     icon: AccountabilityTrackerIcon
   },
-  drumbeat: {
-    codename: "The Rhythm",
-    section: "The Drumbeat \u2014 automated prospecting sequences",
-    accent: "#C74B3F",
-    pattern: RadialBurst,
-    icon: DrumbeatIcon
-  },
+  "the-drumbeat": theDrumbeatIllustration,
   "harvest-home": {
     codename: "The Harvest",
     section: "Harvest Home \u2014 geographic farming campaigns",
@@ -2096,6 +2137,7 @@ var APP_ILLUSTRATIONS = {
     pattern: DiamondGrid,
     icon: OpenHouseHubIcon
   },
+  "home-scout": homeScoutIllustration,
   "home-stretch": {
     codename: "The Finish Line",
     section: "The Home Stretch \u2014 buyer journey nurture",
@@ -2124,20 +2166,18 @@ var APP_ILLUSTRATIONS = {
     pattern: OrbitalRings,
     icon: MarketIntelIcon
   },
-  oven: {
-    codename: "The Hearth",
-    section: "The Oven \u2014 client retention & homeowner engagement",
-    accent: "#C75B39",
-    pattern: RadialBurst,
-    icon: OvenIcon
-  },
+  "the-oven": theOvenIllustration,
   "lead-capture-forms": {
     codename: "The Funnel",
     section: "Lead Capture Forms \u2014 custom capture forms & funnels",
     accent: "#B8863B",
     pattern: DotGrid,
     icon: LeadCaptureFormsIcon
-  }
+  },
+  // --- Legacy aliases (deploy-skew tolerance — remove in follow-up PR after soak) ---
+  drumbeat: theDrumbeatIllustration,
+  "the-home-scout": homeScoutIllustration,
+  oven: theOvenIllustration
 };
 function AppCardIllustration({
   illustrationKey,
@@ -4940,6 +4980,7 @@ export {
   HarvestHomeIcon,
   HeroActionCard,
   HomeReadyIcon,
+  HomeScoutIcon,
   HomeStretchIcon,
   InlineLoading,
   Input,

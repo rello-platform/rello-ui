@@ -4,6 +4,7 @@ import * as React from "react";
 import { useState } from "react";
 import { DragHandGesture, NavArrowDown } from "iconoir-react";
 import { AppCard, type AppCardProps } from "./AppCard";
+import type { IllustrationKey } from "../card-illustration";
 import { cn } from "../../lib/cn";
 
 const ICON_SM = { width: 16, height: 16, strokeWidth: 1.5 };
@@ -23,7 +24,7 @@ export interface CategoryApp {
   /** Override accent color for this app's icon illustration */
   accentColor?: string;
   /** Registry key for full branded illustration (pattern + custom icon) */
-  illustrationKey?: string;
+  illustrationKey?: IllustrationKey;
 }
 
 export interface CategorySectionProps {

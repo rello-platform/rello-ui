@@ -1,6 +1,7 @@
 import { ClassValue } from 'clsx';
 import * as class_variance_authority_types from 'class-variance-authority/types';
 import { VariantProps } from 'class-variance-authority';
+import { AppSlug } from '@rello-platform/slugs';
 
 declare function cn(...inputs: ClassValue[]): string;
 
@@ -123,4 +124,15 @@ interface StructuredAddress {
  */
 declare function buildLocationTagSlug(address: StructuredAddress): string;
 
-export { type AgentRole, type BadgeVariant, type BadgeVariantProps, type ButtonVariantProps, DEFAULT_TEAM_COPY, type PipelineData, STAGES, STAGE_COLORS, STAGE_LABELS, type StructuredAddress, type TeamCopy, type TeamCopyOverride, type TeamMember, type TeamRole, type TeamRosterVariant, agentRoleToTeamRole, badgeVariants, buildLocationTagSlug, buttonVariants, cn, formatCopy, getTeamCopy };
+/**
+ * illustrationKey namespace — platform apps use canonical `AppSlug` values;
+ * feature-keys are conceptual / "Coming Soon" cards with no corresponding
+ * App table row (per A-030 Option D). Compile-time union keeps new drift
+ * out while the registry object retains legacy aliases for runtime
+ * deploy-skew tolerance.
+ */
+type PlatformIllustrationKey = AppSlug;
+type FeatureIllustrationKey = "accountability-tracker" | "lead-capture-forms";
+type IllustrationKey = PlatformIllustrationKey | FeatureIllustrationKey;
+
+export { type AgentRole, type BadgeVariant, type BadgeVariantProps, type ButtonVariantProps, DEFAULT_TEAM_COPY, type FeatureIllustrationKey, type IllustrationKey, type PipelineData, type PlatformIllustrationKey, STAGES, STAGE_COLORS, STAGE_LABELS, type StructuredAddress, type TeamCopy, type TeamCopyOverride, type TeamMember, type TeamRole, type TeamRosterVariant, agentRoleToTeamRole, badgeVariants, buildLocationTagSlug, buttonVariants, cn, formatCopy, getTeamCopy };

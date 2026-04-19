@@ -62,3 +62,11 @@ export {
   buildLocationTagSlug,
   type StructuredAddress,
 } from "./components/address-autocomplete/slug";
+
+/* ─── App illustration key types (pure type exports) ─── */
+
+export type {
+  PlatformIllustrationKey,
+  FeatureIllustrationKey,
+  IllustrationKey,
+} from "./components/card-illustration/app-illustrations";

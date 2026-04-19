@@ -7,6 +7,7 @@ import {
   DrumbeatIcon,
   HarvestHomeIcon,
   OpenHouseHubIcon,
+  HomeScoutIcon,
   HomeStretchIcon,
   HomeReadyIcon,
   NewsletterStudioIcon,
@@ -23,6 +24,7 @@ import {
   DiamondGrid,
 } from "../survey-step-card/patterns";
 import type { TrackIconProps } from "../../icons";
+import type { AppSlug } from "@rello-platform/slugs";
 
 /* ==========================================
    APP ILLUSTRATION REGISTRY
@@ -45,6 +47,42 @@ export interface AppIllustrationDef {
   icon: React.ComponentType<TrackIconProps>;
 }
 
+/**
+ * illustrationKey namespace — platform apps use canonical `AppSlug` values;
+ * feature-keys are conceptual / "Coming Soon" cards with no corresponding
+ * App table row (per A-030 Option D). Compile-time union keeps new drift
+ * out while the registry object retains legacy aliases for runtime
+ * deploy-skew tolerance.
+ */
+export type PlatformIllustrationKey = AppSlug;
+export type FeatureIllustrationKey = "accountability-tracker" | "lead-capture-forms";
+export type IllustrationKey = PlatformIllustrationKey | FeatureIllustrationKey;
+
+// Canonical definitions — shared between canonical key + legacy alias.
+const theDrumbeatIllustration: AppIllustrationDef = {
+  codename: "The Rhythm",
+  section: "The Drumbeat — automated prospecting sequences",
+  accent: "#C74B3F",
+  pattern: RadialBurst,
+  icon: DrumbeatIcon,
+};
+
+const homeScoutIllustration: AppIllustrationDef = {
+  codename: "The Discovery",
+  section: "The Home Scout — property search & lead-capturing tools",
+  accent: "#3B8DBD",
+  pattern: OrbitalRings,
+  icon: HomeScoutIcon,
+};
+
+const theOvenIllustration: AppIllustrationDef = {
+  codename: "The Hearth",
+  section: "The Oven — client retention & homeowner engagement",
+  accent: "#C75B39",
+  pattern: RadialBurst,
+  icon: OvenIcon,
+};
+
 export const APP_ILLUSTRATIONS: Record<string, AppIllustrationDef> = {
   "accountability-tracker": {
     codename: "The Checkpoint",
@@ -53,13 +91,7 @@ export const APP_ILLUSTRATIONS: Record<string, AppIllustrationDef> = {
     pattern: ConcentricCircles,
     icon: AccountabilityTrackerIcon,
   },
-  drumbeat: {
-    codename: "The Rhythm",
-    section: "The Drumbeat — automated prospecting sequences",
-    accent: "#C74B3F",
-    pattern: RadialBurst,
-    icon: DrumbeatIcon,
-  },
+  "the-drumbeat": theDrumbeatIllustration,
   "harvest-home": {
     codename: "The Harvest",
     section: "Harvest Home — geographic farming campaigns",
@@ -74,6 +106,7 @@ export const APP_ILLUSTRATIONS: Record<string, AppIllustrationDef> = {
     pattern: DiamondGrid,
     icon: OpenHouseHubIcon,
   },
+  "home-scout": homeScoutIllustration,
   "home-stretch": {
     codename: "The Finish Line",
     section: "The Home Stretch — buyer journey nurture",
@@ -102,13 +135,7 @@ export const APP_ILLUSTRATIONS: Record<string, AppIllustrationDef> = {
     pattern: OrbitalRings,
     icon: MarketIntelIcon,
   },
-  oven: {
-    codename: "The Hearth",
-    section: "The Oven — client retention & homeowner engagement",
-    accent: "#C75B39",
-    pattern: RadialBurst,
-    icon: OvenIcon,
-  },
+  "the-oven": theOvenIllustration,
   "lead-capture-forms": {
     codename: "The Funnel",
     section: "Lead Capture Forms — custom capture forms & funnels",
@@ -116,6 +143,11 @@ export const APP_ILLUSTRATIONS: Record<string, AppIllustrationDef> = {
     pattern: DotGrid,
     icon: LeadCaptureFormsIcon,
   },
+
+  // --- Legacy aliases (deploy-skew tolerance — remove in follow-up PR after soak) ---
+  drumbeat: theDrumbeatIllustration,
+  "the-home-scout": homeScoutIllustration,
+  oven: theOvenIllustration,
 };
 
 /* ==========================================
@@ -128,8 +160,8 @@ export const APP_ILLUSTRATIONS: Record<string, AppIllustrationDef> = {
 
 export interface AppCardIllustrationProps
   extends Omit<CardIllustrationProps, "accent" | "pattern" | "icon"> {
-  /** Registry key (e.g. "home-ready", "drumbeat") */
-  illustrationKey: string;
+  /** Registry key — canonical platform slug or feature-key. */
+  illustrationKey: IllustrationKey;
   /** Override accent color */
   accentOverride?: string;
   /** Icon size in px (default 24 for app cards) */

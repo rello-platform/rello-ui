@@ -16,4 +16,7 @@ export {
   APP_ILLUSTRATIONS,
   type AppIllustrationDef,
   type AppCardIllustrationProps,
+  type PlatformIllustrationKey,
+  type FeatureIllustrationKey,
+  type IllustrationKey,
 } from "./app-illustrations";
