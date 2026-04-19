@@ -37,5 +37,6 @@ export {
   MarketIntelIcon,
   OvenIcon,
   LeadCaptureFormsIcon,
+  HomeScoutIcon,
   APP_ICONS,
 } from "./app-icons";
