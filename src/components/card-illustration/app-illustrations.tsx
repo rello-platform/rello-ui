@@ -155,7 +155,7 @@ export const APP_ILLUSTRATIONS: Record<string, AppIllustrationDef> = {
 
    Usage:
      <AppCardIllustration illustrationKey="home-ready" />
-     <AppCardIllustration illustrationKey="oven" size={36} />
+     <AppCardIllustration illustrationKey="the-oven" size={36} />
    ========================================== */
 
 export interface AppCardIllustrationProps
