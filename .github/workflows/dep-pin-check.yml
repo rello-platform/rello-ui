@@ -1,0 +1,26 @@
+name: Dep Pin Check
+# Phase 0 durability gate — invokes shared check script.
+# Spec: PERMISSIONS-CANONICALIZATION.md Phase 0; Locks #1 + #4.
+
+on:
+  pull_request:
+    paths:
+      - 'package.json'
+      - 'scripts/check-floating-refs.sh'
+      - '.github/workflows/dep-pin-check.yml'
+      - '.husky/pre-commit'
+  push:
+    branches: [main]
+    paths:
+      - 'package.json'
+      - 'scripts/check-floating-refs.sh'
+      - '.github/workflows/dep-pin-check.yml'
+      - '.husky/pre-commit'
+
+jobs:
+  no-floating-rello-platform-refs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reject floating @rello-platform/* refs
+        run: bash scripts/check-floating-refs.sh

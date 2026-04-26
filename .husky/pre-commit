@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# Phase 0 durability gate — invokes shared check script.
+# Spec: PERMISSIONS-CANONICALIZATION.md Phase 0; Locks #1 + #4.
+bash scripts/check-floating-refs.sh
