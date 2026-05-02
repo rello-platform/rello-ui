@@ -50,7 +50,7 @@ const iconMap: Record<string, { component: string; context: string }> = {
 };
 
 function IconCell({ name, context }: { name: string; context: string }) {
-  const IconComponent = (Iconoir as Record<string, React.ComponentType<{ width?: number; height?: number; strokeWidth?: number }>>)[name];
+  const IconComponent = (Iconoir as unknown as Record<string, React.ComponentType<{ width?: number; height?: number; strokeWidth?: number }>>)[name];
 
   if (!IconComponent) return null;
 

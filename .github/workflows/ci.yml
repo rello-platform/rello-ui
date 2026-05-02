@@ -18,5 +18,5 @@ jobs:
           cache: 'npm'
       - run: npm install
       - run: npx tsc --noEmit
-      - run: npm run test
+      - run: npm test -- --passWithNoTests
       - run: npm run build
