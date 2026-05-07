@@ -51,3 +51,6 @@ export * from "./brand-color-picker";
 
 // Lead-facing team composition (audit DISCOVERED-HR-TEAM-COMPOSITION-MODEL-041626)
 export * from "./lead-team";
+
+// Softphone-aware dial action (DISCOVERED-PLATFORM-DIAL-BUTTON-EXTRACTION-20260507)
+export * from "./dial-button";

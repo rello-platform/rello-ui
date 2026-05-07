@@ -1060,4 +1060,52 @@ interface TeamRosterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "ch
 }
 declare function TeamRoster({ roster, copyOverride, variant, heading, className, ...props }: TeamRosterProps): react_jsx_runtime.JSX.Element | null;
 
-export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, AddressAutocomplete, type AddressAutocompleteProps, type AgentRole, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BrandColorPicker, type BrandColorPickerProps, type BrandColors, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateProps, type FactorVariant, type FeatureIllustrationKey, HarvestHomeIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeScoutIcon, HomeStretchIcon, type IllustrationKey, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LoadingOverlay, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, type PlatformIllustrationKey, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, type SocialLinks, SocialLinksInput, type SocialLinksInputProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, type TeamCopy, type TeamCopyOverride, type TeamMember, TeamMemberCard, type TeamMemberCardProps, type TeamRole, TeamRoster, type TeamRosterProps, type TeamRosterVariant, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, useToast };
+type DialPath = "softphone" | "tel";
+interface DialButtonProps {
+    /** Lead the call belongs to. Passed to onDial. */
+    leadId: string;
+    /** E.164 or display-formatted phone number. Powers tel: fallback href. */
+    phoneNumber: string;
+    /** Optional phoneId for multi-phone leads. Defaults to "primary". */
+    phoneId?: string;
+    /**
+     * Consumer-injected dial dispatcher. When present AND `entitled === true`,
+     * click is intercepted and onDial is invoked instead of native tel: navigation.
+     * When undefined / null / entitled !== true, the click falls through to the
+     * native <a href="tel:..."> behavior.
+     *
+     * Rello-side consumers wire `useSoftphone().makeCall` here.
+     * HH-side / non-Rello consumers leave undefined → tel: fallback.
+     *
+     * Per Rello-UI anti-pattern (no business logic): this component does NOT
+     * fetch entitlement state, does NOT import useSoftphone, does NOT read env.
+     * All dispatch + entitlement state is consumer-injected.
+     */
+    onDial?: (leadId: string, phoneOverride: {
+        phoneId: string;
+        number: string;
+    }) => Promise<void> | void;
+    /**
+     * Tri-state entitlement signal. `true` → onDial path (if onDial provided).
+     * `false` / `null` / `undefined` → tel: fallback. `null` is the
+     * "checking" state consumers may pass while their entitlement read is
+     * in-flight; it behaves identically to false (tel: fallback) so the button
+     * is never inert.
+     */
+    entitled?: boolean | null;
+    /** Override the tel: href if consumer wants a custom URI scheme. */
+    fallbackHref?: string;
+    /** Fires post-dispatch with which path was taken. Both branches call it. */
+    onContactInitiated?: (path: DialPath) => void;
+    /** Button label. Default "Call". */
+    children?: React.ReactNode;
+    /** Defaults to `Call ${phoneNumber}`. */
+    ariaLabel?: string;
+    /** Disable the button entirely (e.g., DNC scrubbed). */
+    disabled?: boolean;
+    /** Pass-through className for layout. */
+    className?: string;
+}
+declare const DialButton: React.ForwardRefExoticComponent<DialButtonProps & React.RefAttributes<HTMLAnchorElement>>;
+
+export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, AddressAutocomplete, type AddressAutocompleteProps, type AgentRole, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BrandColorPicker, type BrandColorPickerProps, type BrandColors, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, DialButton, type DialButtonProps, type DialPath, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateProps, type FactorVariant, type FeatureIllustrationKey, HarvestHomeIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeScoutIcon, HomeStretchIcon, type IllustrationKey, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LoadingOverlay, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, type PlatformIllustrationKey, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, type SocialLinks, SocialLinksInput, type SocialLinksInputProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, type TeamCopy, type TeamCopyOverride, type TeamMember, TeamMemberCard, type TeamMemberCardProps, type TeamRole, TeamRoster, type TeamRosterProps, type TeamRosterVariant, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, useToast };

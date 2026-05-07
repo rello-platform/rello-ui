@@ -4915,6 +4915,69 @@ function TeamRoster({
     )) })
   ] });
 }
+
+// src/components/dial-button/DialButton.tsx
+import * as React24 from "react";
+import { jsx as jsx56 } from "react/jsx-runtime";
+var DialButton = React24.forwardRef(
+  function DialButton2({
+    leadId,
+    phoneNumber,
+    phoneId = "primary",
+    onDial,
+    entitled,
+    fallbackHref,
+    onContactInitiated,
+    children,
+    ariaLabel,
+    disabled,
+    className
+  }, ref) {
+    const href = fallbackHref ?? `tel:${phoneNumber}`;
+    const handleClick = (e) => {
+      if (disabled) {
+        e.preventDefault();
+        return;
+      }
+      if (onDial && entitled === true) {
+        e.preventDefault();
+        try {
+          const result = onDial(leadId, { phoneId, number: phoneNumber });
+          if (result && typeof result.catch === "function") {
+            result.catch((err) => {
+              console.error("[DialButton] onDial rejected", {
+                leadId,
+                phoneId,
+                error: err instanceof Error ? err.message : String(err)
+              });
+            });
+          }
+          onContactInitiated?.("softphone");
+        } catch (err) {
+          console.error("[DialButton] onDial threw synchronously", {
+            leadId,
+            phoneId,
+            error: err instanceof Error ? err.message : String(err)
+          });
+        }
+        return;
+      }
+      onContactInitiated?.("tel");
+    };
+    return /* @__PURE__ */ jsx56(
+      "a",
+      {
+        ref,
+        href,
+        onClick: handleClick,
+        "aria-label": ariaLabel ?? `Call ${phoneNumber}`,
+        "aria-disabled": disabled || void 0,
+        className,
+        children: /* @__PURE__ */ jsx56(Button, { variant: "primary", disabled, children: children ?? "Call" })
+      }
+    );
+  }
+);
 export {
   APP_ICONS,
   APP_ILLUSTRATIONS,
@@ -4959,6 +5022,7 @@ export {
   DashboardShell,
   DawnIcon,
   DecisionExplanationCard,
+  DialButton,
   Dialog,
   DialogClose,
   DialogContent,
