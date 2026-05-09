@@ -54,3 +54,10 @@ export * from "./lead-team";
 
 // Softphone-aware dial action (DISCOVERED-PLATFORM-DIAL-BUTTON-EXTRACTION-20260507)
 export * from "./dial-button";
+
+// v2.2.0 — DRUMBEAT Wave 0 hoisted shared primitives
+export * from "./error-banner";
+export * from "./multi-feedback-widget";
+export * from "./session-retry-banner";
+export * from "./voice-corpus-input";
+export * from "./wizard-shell";

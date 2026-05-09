@@ -4982,6 +4982,589 @@ var DialButton = React24.forwardRef(
     );
   }
 );
+
+// src/components/error-banner/ErrorBanner.tsx
+import { WarningCircle } from "iconoir-react";
+import { jsx as jsx57, jsxs as jsxs44 } from "react/jsx-runtime";
+function ErrorBanner({
+  message,
+  headline = "Couldn't load this content",
+  onRetry,
+  reason,
+  retryLabel = "Retry",
+  className,
+  ...props
+}) {
+  const isRetryMode = typeof onRetry === "function";
+  const bodyText = isRetryMode ? message : reason ?? message;
+  return /* @__PURE__ */ jsxs44(
+    "div",
+    {
+      role: "alert",
+      className: cn(
+        "rounded-lg border p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-3",
+        className
+      ),
+      style: {
+        borderColor: "var(--error, #dc2626)",
+        backgroundColor: "color-mix(in srgb, var(--error, #dc2626) 8%, transparent)"
+      },
+      ...props,
+      children: [
+        /* @__PURE__ */ jsxs44("div", { className: "flex items-start gap-2 flex-1", children: [
+          /* @__PURE__ */ jsx57(
+            WarningCircle,
+            {
+              width: 18,
+              height: 18,
+              style: { color: "var(--error, #dc2626)", flexShrink: 0, marginTop: 2 }
+            }
+          ),
+          /* @__PURE__ */ jsxs44("div", { children: [
+            /* @__PURE__ */ jsx57("p", { className: "text-sm font-medium", style: { color: "var(--error, #dc2626)" }, children: headline }),
+            bodyText && /* @__PURE__ */ jsx57("p", { className: "text-xs mt-1", style: { color: "var(--neutral-700, #374151)" }, children: bodyText })
+          ] })
+        ] }),
+        isRetryMode && /* @__PURE__ */ jsx57(
+          Button,
+          {
+            variant: "secondary",
+            size: "sm",
+            onClick: onRetry,
+            "aria-label": `${retryLabel} loading`,
+            children: retryLabel
+          }
+        )
+      ]
+    }
+  );
+}
+
+// src/components/multi-feedback-widget/MultiFeedbackWidget.tsx
+import * as React25 from "react";
+import { jsx as jsx58, jsxs as jsxs45 } from "react/jsx-runtime";
+function CheckIcon2() {
+  return /* @__PURE__ */ jsx58("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", strokeWidth: "2", children: /* @__PURE__ */ jsx58("path", { d: "M5 13l4 4L19 7", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round" }) });
+}
+function MultiFeedbackWidget({
+  prompt,
+  options,
+  onSelect,
+  variant = "default",
+  disabled = false,
+  thanksLabel = "Thanks for your feedback!",
+  className,
+  ...props
+}) {
+  const [state, setState] = React25.useState({ kind: "idle" });
+  const [correctionText, setCorrectionText] = React25.useState("");
+  const handleOptionClick = React25.useCallback(
+    (option) => {
+      if (disabled) return;
+      if (option.requiresCorrectionText) {
+        setState({ kind: "awaiting-correction", option });
+        setCorrectionText("");
+        return;
+      }
+      onSelect(option.key);
+      setState({ kind: "submitted", key: option.key });
+    },
+    [disabled, onSelect]
+  );
+  const handleCancel = React25.useCallback(() => {
+    setState({ kind: "idle" });
+    setCorrectionText("");
+  }, []);
+  const handleSubmit = React25.useCallback(() => {
+    if (state.kind !== "awaiting-correction") return;
+    onSelect(state.option.key, correctionText);
+    setState({ kind: "submitted", key: state.option.key });
+  }, [state, correctionText, onSelect]);
+  const isCompact = variant === "compact";
+  const containerClass = cn(
+    "flex flex-col gap-3",
+    variant === "inline" && "border-t mt-4 pt-3",
+    className
+  );
+  const containerStyle = variant === "inline" ? { borderColor: "var(--card-border, #e5e7eb)" } : void 0;
+  if (state.kind === "submitted") {
+    return /* @__PURE__ */ jsxs45(
+      "div",
+      {
+        className: cn("flex items-center gap-1.5", className),
+        style: { color: "var(--success, #10b981)" },
+        ...props,
+        children: [
+          /* @__PURE__ */ jsx58(CheckIcon2, {}),
+          /* @__PURE__ */ jsx58("span", { className: "text-sm font-medium", children: thanksLabel })
+        ]
+      }
+    );
+  }
+  if (state.kind === "awaiting-correction") {
+    return /* @__PURE__ */ jsxs45("div", { className: containerClass, style: containerStyle, ...props, children: [
+      prompt && !isCompact && /* @__PURE__ */ jsx58("p", { className: "text-sm", style: { color: "var(--neutral-600, #4b5563)" }, children: prompt }),
+      /* @__PURE__ */ jsxs45("div", { className: "flex flex-col gap-2", children: [
+        /* @__PURE__ */ jsx58(
+          "p",
+          {
+            className: "text-xs font-medium",
+            style: { color: "var(--neutral-700, #374151)" },
+            children: state.option.label
+          }
+        ),
+        /* @__PURE__ */ jsx58(
+          Textarea,
+          {
+            value: correctionText,
+            onChange: (e) => setCorrectionText(e.target.value),
+            placeholder: "Tell us more (optional)",
+            "aria-label": "Correction text"
+          }
+        ),
+        /* @__PURE__ */ jsxs45("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsx58(Button, { variant: "secondary", size: "sm", onClick: handleCancel, children: "Cancel" }),
+          /* @__PURE__ */ jsx58(Button, { variant: "primary", size: "sm", onClick: handleSubmit, children: "Submit" })
+        ] })
+      ] })
+    ] });
+  }
+  return /* @__PURE__ */ jsxs45("div", { className: containerClass, style: containerStyle, ...props, children: [
+    prompt && !isCompact && /* @__PURE__ */ jsx58("p", { className: "text-sm", style: { color: "var(--neutral-600, #4b5563)" }, children: prompt }),
+    /* @__PURE__ */ jsx58(
+      "div",
+      {
+        className: cn(
+          "flex flex-wrap gap-2",
+          variant === "inline" && "items-center"
+        ),
+        role: "group",
+        "aria-label": prompt ?? "Feedback options",
+        children: options.map((option) => /* @__PURE__ */ jsx58(
+          Button,
+          {
+            variant: "outline",
+            size: isCompact ? "sm" : "md",
+            disabled,
+            onClick: () => handleOptionClick(option),
+            leftIcon: option.icon,
+            children: option.label
+          },
+          option.key
+        ))
+      }
+    )
+  ] });
+}
+
+// src/components/session-retry-banner/SessionRetryBanner.tsx
+import { WarningCircle as WarningCircle2 } from "iconoir-react";
+import { jsx as jsx59, jsxs as jsxs46 } from "react/jsx-runtime";
+function SessionRetryBanner({
+  message,
+  headline = "Couldn't load this section",
+  onRetry,
+  visible = true,
+  retryLabel = "Retry",
+  className,
+  ...props
+}) {
+  if (visible === false) return null;
+  return /* @__PURE__ */ jsxs46(
+    "div",
+    {
+      role: "alert",
+      className: cn(
+        "rounded-lg border p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-3",
+        className
+      ),
+      style: {
+        borderColor: "var(--error, #dc2626)",
+        backgroundColor: "color-mix(in srgb, var(--error, #dc2626) 8%, transparent)"
+      },
+      ...props,
+      children: [
+        /* @__PURE__ */ jsxs46("div", { className: "flex items-start gap-2 flex-1", children: [
+          /* @__PURE__ */ jsx59(
+            WarningCircle2,
+            {
+              width: 18,
+              height: 18,
+              style: { color: "var(--error, #dc2626)", flexShrink: 0, marginTop: 2 }
+            }
+          ),
+          /* @__PURE__ */ jsxs46("div", { children: [
+            /* @__PURE__ */ jsx59("p", { className: "text-sm font-medium", style: { color: "var(--error, #dc2626)" }, children: headline }),
+            /* @__PURE__ */ jsx59("p", { className: "text-xs mt-1", style: { color: "var(--neutral-700, #374151)" }, children: message })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx59(
+          Button,
+          {
+            variant: "secondary",
+            size: "sm",
+            onClick: onRetry,
+            "aria-label": `${retryLabel} loading`,
+            children: retryLabel
+          }
+        )
+      ]
+    }
+  );
+}
+
+// src/components/voice-corpus-input/VoiceCorpusInput.tsx
+import * as React26 from "react";
+import { Trash, Upload } from "iconoir-react";
+import { Fragment as Fragment4, jsx as jsx60, jsxs as jsxs47 } from "react/jsx-runtime";
+function countWords(text) {
+  const trimmed = text.trim();
+  if (!trimmed) return 0;
+  return trimmed.split(/\s+/).length;
+}
+function VoiceCorpusInput({
+  samples,
+  onAdd,
+  onRemove,
+  minSamples = 1,
+  maxSamples = 10,
+  acceptFileUpload = true,
+  acceptedFileTypes = [".txt", ".docx"],
+  placeholder = "Paste a writing sample (a recent email, blog post, social caption\u2026)",
+  minWordsPerSample = 25,
+  className,
+  ...props
+}) {
+  const [draft, setDraft] = React26.useState("");
+  const [uploadError, setUploadError] = React26.useState(null);
+  const fileInputRef = React26.useRef(null);
+  const draftWordCount = React26.useMemo(() => countWords(draft), [draft]);
+  const meetsMinimum = draftWordCount >= minWordsPerSample;
+  const atMax = samples.length >= maxSamples;
+  const handleAdd = React26.useCallback(() => {
+    if (!meetsMinimum || atMax) return;
+    onAdd(draft.trim());
+    setDraft("");
+  }, [meetsMinimum, atMax, onAdd, draft]);
+  const handleFileButtonClick = React26.useCallback(() => {
+    setUploadError(null);
+    fileInputRef.current?.click();
+  }, []);
+  const handleFileChange = React26.useCallback(
+    (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const lower = file.name.toLowerCase();
+      const isTxt = lower.endsWith(".txt");
+      const isDocx = lower.endsWith(".docx");
+      if (file.size === 0) {
+        setUploadError("Empty file \u2014 paste your sample directly or pick another file.");
+        e.target.value = "";
+        return;
+      }
+      if (isDocx) {
+        setUploadError(".docx isn't supported yet \u2014 paste the text directly or upload a .txt file.");
+        e.target.value = "";
+        return;
+      }
+      if (!isTxt) {
+        setUploadError("Use a .txt file or paste the text directly.");
+        e.target.value = "";
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const text = typeof reader.result === "string" ? reader.result : "";
+        if (!text.trim()) {
+          setUploadError("File appears to be empty.");
+          return;
+        }
+        if (samples.length >= maxSamples) {
+          setUploadError(`Already at the maximum of ${maxSamples} samples.`);
+          return;
+        }
+        onAdd(text.trim());
+        setUploadError(null);
+      };
+      reader.onerror = () => {
+        setUploadError("Couldn't read the file. Try pasting the text directly.");
+      };
+      reader.readAsText(file);
+      e.target.value = "";
+    },
+    [onAdd, samples.length, maxSamples]
+  );
+  const helperText = atMax ? `Maximum of ${maxSamples} samples reached.` : !meetsMinimum && draft.length > 0 ? `${draftWordCount} / ${minWordsPerSample} words minimum` : `${draftWordCount} word${draftWordCount === 1 ? "" : "s"}`;
+  return /* @__PURE__ */ jsxs47("div", { className: cn("flex flex-col gap-4", className), ...props, children: [
+    samples.length > 0 && /* @__PURE__ */ jsx60("ul", { className: "flex flex-col gap-2", "aria-label": "Writing samples", children: samples.map((sample) => /* @__PURE__ */ jsxs47(
+      "li",
+      {
+        className: "flex items-start gap-3 rounded-md border p-3",
+        style: {
+          borderColor: "var(--card-border, #e5e7eb)",
+          backgroundColor: "var(--card-background, #ffffff)"
+        },
+        children: [
+          /* @__PURE__ */ jsxs47("div", { className: "flex-1 min-w-0", children: [
+            /* @__PURE__ */ jsx60(
+              "p",
+              {
+                className: "text-sm whitespace-pre-wrap break-words",
+                style: { color: "var(--foreground, #111827)" },
+                children: sample.content
+              }
+            ),
+            /* @__PURE__ */ jsx60("div", { className: "mt-2", children: /* @__PURE__ */ jsxs47(Badge, { variant: "default", size: "sm", children: [
+              sample.wordCount,
+              " word",
+              sample.wordCount === 1 ? "" : "s"
+            ] }) })
+          ] }),
+          /* @__PURE__ */ jsx60(
+            Button,
+            {
+              variant: "ghost",
+              size: "icon-sm",
+              onClick: () => onRemove(sample.id),
+              "aria-label": "Remove sample",
+              children: /* @__PURE__ */ jsx60(Trash, { width: 16, height: 16 })
+            }
+          )
+        ]
+      },
+      sample.id
+    )) }),
+    samples.length < minSamples && /* @__PURE__ */ jsxs47(
+      "p",
+      {
+        className: "text-xs",
+        style: { color: "var(--neutral-500, #6b7280)" },
+        "aria-live": "polite",
+        children: [
+          "Add at least ",
+          minSamples,
+          " sample",
+          minSamples === 1 ? "" : "s",
+          " (",
+          samples.length,
+          " of ",
+          minSamples,
+          ")."
+        ]
+      }
+    ),
+    !atMax && /* @__PURE__ */ jsxs47("div", { className: "flex flex-col gap-2", children: [
+      /* @__PURE__ */ jsx60(
+        Textarea,
+        {
+          value: draft,
+          onChange: (e) => setDraft(e.target.value),
+          placeholder,
+          "aria-label": "New writing sample",
+          disabled: atMax
+        }
+      ),
+      /* @__PURE__ */ jsxs47("div", { className: "flex items-center justify-between gap-3 flex-wrap", children: [
+        /* @__PURE__ */ jsx60(
+          "span",
+          {
+            className: "text-xs",
+            style: { color: "var(--neutral-500, #6b7280)" },
+            "aria-live": "polite",
+            children: helperText
+          }
+        ),
+        /* @__PURE__ */ jsxs47("div", { className: "flex items-center gap-2", children: [
+          acceptFileUpload && /* @__PURE__ */ jsxs47(Fragment4, { children: [
+            /* @__PURE__ */ jsx60(
+              "input",
+              {
+                ref: fileInputRef,
+                type: "file",
+                accept: acceptedFileTypes.join(","),
+                onChange: handleFileChange,
+                className: "hidden",
+                "aria-hidden": "true"
+              }
+            ),
+            /* @__PURE__ */ jsx60(
+              Button,
+              {
+                variant: "outline",
+                size: "sm",
+                onClick: handleFileButtonClick,
+                leftIcon: /* @__PURE__ */ jsx60(Upload, { width: 14, height: 14 }),
+                disabled: atMax,
+                children: "Upload file"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsx60(
+            Button,
+            {
+              variant: "primary",
+              size: "sm",
+              onClick: handleAdd,
+              disabled: !meetsMinimum || atMax,
+              children: "Add sample"
+            }
+          )
+        ] })
+      ] }),
+      uploadError && /* @__PURE__ */ jsx60(
+        "p",
+        {
+          className: "text-xs",
+          style: { color: "var(--error, #dc2626)" },
+          role: "alert",
+          children: uploadError
+        }
+      )
+    ] }),
+    atMax && /* @__PURE__ */ jsxs47(
+      "p",
+      {
+        className: "text-xs",
+        style: { color: "var(--neutral-500, #6b7280)" },
+        children: [
+          "Maximum of ",
+          maxSamples,
+          " samples reached. Remove one to add another."
+        ]
+      }
+    )
+  ] });
+}
+
+// src/components/wizard-shell/WizardShell.tsx
+import * as React27 from "react";
+import { jsx as jsx61, jsxs as jsxs48 } from "react/jsx-runtime";
+function clampStep(currentStep, total) {
+  if (total <= 0) return 0;
+  if (currentStep < 0) return 0;
+  if (currentStep >= total) return total - 1;
+  return currentStep;
+}
+function AutosaveBadge({ status }) {
+  if (status === "idle") return null;
+  if (status === "saving") {
+    return /* @__PURE__ */ jsx61(Badge, { variant: "default", size: "sm", children: "Saving\u2026" });
+  }
+  if (status === "saved") {
+    return /* @__PURE__ */ jsx61(Badge, { variant: "success", size: "sm", children: "Saved" });
+  }
+  return /* @__PURE__ */ jsx61(Badge, { variant: "error", size: "sm", children: "Save failed \u2014 retry" });
+}
+function WizardShell({
+  steps,
+  currentStep,
+  onStepChange,
+  onComplete,
+  autosaveStatus = "idle",
+  children,
+  backLabel = "Back",
+  continueLabel = "Continue",
+  skipLabel = "Skip",
+  completeLabel = "Finish",
+  disableContinue = false,
+  className
+}) {
+  const total = steps.length;
+  const safeStep = clampStep(currentStep, total);
+  const isLastStep = total > 0 && safeStep === total - 1;
+  const activeStep = total > 0 ? steps[safeStep] : void 0;
+  const allowSkip = activeStep?.allowSkip === true;
+  const handleBack = React27.useCallback(() => {
+    if (safeStep > 0) {
+      onStepChange(safeStep - 1);
+    }
+  }, [safeStep, onStepChange]);
+  const handleContinue = React27.useCallback(() => {
+    if (total === 0 || isLastStep) {
+      onComplete();
+      return;
+    }
+    onStepChange(safeStep + 1);
+  }, [total, isLastStep, onComplete, onStepChange, safeStep]);
+  const handleSkip = React27.useCallback(() => {
+    if (isLastStep) {
+      onComplete();
+      return;
+    }
+    onStepChange(safeStep + 1);
+  }, [isLastStep, onComplete, onStepChange, safeStep]);
+  return /* @__PURE__ */ jsxs48(
+    "div",
+    {
+      className: cn(
+        "flex flex-col gap-6 w-full",
+        className
+      ),
+      children: [
+        total > 0 && /* @__PURE__ */ jsxs48("div", { className: "flex items-center gap-3", children: [
+          /* @__PURE__ */ jsx61(
+            SegmentedProgress,
+            {
+              segments: [{ value: safeStep + 1, color: "var(--brand-primary, #2563eb)" }],
+              total,
+              size: "sm",
+              className: "flex-1"
+            }
+          ),
+          /* @__PURE__ */ jsxs48(
+            "span",
+            {
+              className: "text-xs whitespace-nowrap",
+              style: { color: "var(--neutral-500, #6b7280)" },
+              "aria-live": "polite",
+              children: [
+                "Step ",
+                safeStep + 1,
+                " of ",
+                total
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsx61(AutosaveBadge, { status: autosaveStatus })
+        ] }),
+        activeStep && /* @__PURE__ */ jsxs48("div", { className: "flex flex-col gap-1", children: [
+          /* @__PURE__ */ jsx61(
+            "h2",
+            {
+              className: "text-lg font-semibold",
+              style: { color: "var(--foreground, #111827)" },
+              children: activeStep.label
+            }
+          ),
+          activeStep.description && /* @__PURE__ */ jsx61(
+            "p",
+            {
+              className: "text-sm",
+              style: { color: "var(--neutral-500, #6b7280)" },
+              children: activeStep.description
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsx61("div", { className: "min-h-[120px]", children }),
+        /* @__PURE__ */ jsxs48("div", { className: "flex items-center justify-between gap-3 pt-4 border-t", style: { borderColor: "var(--card-border, #e5e7eb)" }, children: [
+          /* @__PURE__ */ jsx61("div", { children: safeStep > 0 && /* @__PURE__ */ jsx61(Button, { variant: "ghost", onClick: handleBack, children: backLabel }) }),
+          /* @__PURE__ */ jsxs48("div", { className: "flex items-center gap-2", children: [
+            allowSkip && !isLastStep && /* @__PURE__ */ jsx61(Button, { variant: "ghost", onClick: handleSkip, children: skipLabel }),
+            /* @__PURE__ */ jsx61(
+              Button,
+              {
+                variant: "primary",
+                onClick: handleContinue,
+                disabled: disableContinue,
+                children: isLastStep || total === 0 ? completeLabel : continueLabel
+              }
+            )
+          ] })
+        ] })
+      ]
+    }
+  );
+}
 export {
   APP_ICONS,
   APP_ILLUSTRATIONS,
@@ -5045,6 +5628,7 @@ export {
   DrumbeatIcon,
   DtiIcon,
   EmptyState,
+  ErrorBanner,
   HarvestHomeIcon,
   HeroActionCard,
   HomeReadyIcon,
@@ -5059,6 +5643,7 @@ export {
   MarketIntelIcon,
   MiniKanban,
   MortgageTermsIcon,
+  MultiFeedbackWidget,
   NeighborhoodIcon,
   NewsRow,
   NewsletterStudioIcon,
@@ -5087,6 +5672,7 @@ export {
   SelectTrigger,
   SelectValue,
   SelfPacedIcon,
+  SessionRetryBanner,
   SignalIcon,
   Skeleton,
   SkeletonCircle,
@@ -5115,8 +5701,11 @@ export {
   ToastProvider,
   TodaySchedule,
   TrackCardIllustration,
+  VoiceCorpusInput,
   WasThisHelpful,
   WeeklyChallengeIcon,
+  WizardShell,
+  countWords,
   useToast
 };
 //# sourceMappingURL=client.js.map

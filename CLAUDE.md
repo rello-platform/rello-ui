@@ -116,23 +116,45 @@ src/components/<kebab-case-name>/
 
 ## Version-pin canonical form for consumers
 
-**LOCKED FORM (verified across all 5 spokes 2026-05-08):**
+**LOCKED FORM (corrected 2026-05-09 per platform precedent):**
 
 ```jsonc
-"@rello-platform/ui": "github:rello-platform/rello-ui#<commit-sha>"
+"@rello-platform/ui": "github:rello-platform/rello-ui#v<X.Y.Z>"
 ```
 
-Current shared SHA across Drumbeat, Harvest-Home, Newsletter-Studio, Rello, Open-House-Hub: `e35cf395e4dfc83cb8238aaa9479b7ff64cf43d4`.
+**Tag form `#v<X.Y.Z>` is canonical.** Platform precedent across `@rello-platform/*` deps in
+every spoke shows tag form is the dominant convention (5 of 7 deps in `~/The-Drumbeat/package.json`
+as of 2026-05-09: `api-client#v2.11.0`, `permissions#v0.18.0`, `sentry-init#v0.1.0`,
+`slugs#v0.4.0`, `eslint-config#v0.7.0`). Per `feedback-verify-platform-precedent-before-workstream-override`,
+platform-wide convention binds when a workstream doc contradicts. The `dep-pin-check.sh` script
+accepts both `#v<X.Y.Z>` (semver tag) and `#<40-char-hex-sha>` (full commit SHA) — tag form is
+preferred for tagged releases; full-SHA form remains acceptable for pre-release / mid-flight pins
+that have not yet been tagged.
 
-**Tag-form `#v<version>` is NOT used.** Per `feedback-npm-github-tag-stale-resolve` — npm's GitHub-tag resolver caches tag→commit mappings and stale-resolves; commit-SHA pins are immutable and always resolve correctly.
+Per `feedback-npm-github-tag-stale-resolve`: when bumping a tag-form dep, use the explicit-ref
+form `npm install <pkg>@github:org/repo#v<X.Y.Z>` to force re-resolve (bare `npm install` may
+report "up to date" against a stale lockfile-cached SHA). This is the operational discipline,
+NOT a reason to switch the pin form to raw SHA.
+
+**Pre-2026-05-09 history:** an earlier version of this section locked SHA-form as the only
+canonical form. That guidance was inconsistent with platform precedent (5-of-7 sibling deps
+already used tag form). Corrected as part of v2.3.0 ship — DRUMBEAT Wave 0 normalized
+Drumbeat's `@rello-platform/ui` pin from raw SHA to `#v2.3.0` tag form.
 
 **Spoke update sweep when Rello-UI ships a new version:**
 
-1. Confirm the merged commit on `origin/main` of `kellydavidsansom/Rello-UI` (or `rello-platform/rello-ui` — same repo, see § Repo identity) is the SHA you want spokes to land on.
-2. For each spoke (`~/The-Drumbeat`, `~/Harvest-Home`, `~/Newsletter-Studio`, `~/Rello`, `~/Open-House-Hub`, plus any spoke not yet listed): edit `package.json` `@rello-platform/ui` value to `github:rello-platform/rello-ui#<NEW-SHA>`, run `npm install`, run `npm run build` (or the spoke's typecheck-equivalent), commit `chore(deps): bump @rello-platform/ui to <SHA>`, push to that spoke's main.
-3. **Coordinated wave** — sweep all spokes in the same Build-KA fan-out wave; do not ship Rello-UI v2.X to one spoke and v2.Y to another for any duration.
+1. Confirm the new tag (e.g. `v2.3.0`) is published — `git ls-remote origin "refs/tags/v<X.Y.Z>"`
+   returns a SHA, and the GitHub Packages publish workflow is green (`gh run list --workflow=publish.yml`).
+2. For each spoke (`~/The-Drumbeat`, `~/Harvest-Home`, `~/Newsletter-Studio`, `~/Rello`,
+   `~/Open-House-Hub`, plus any spoke not yet listed): edit `package.json` `@rello-platform/ui`
+   value to `github:rello-platform/rello-ui#v<X.Y.Z>`, run `npm install <pkg>@github:rello-platform/rello-ui#v<X.Y.Z>`
+   (explicit-ref form to force re-resolve), run `npm run build` / `npx next build` /
+   the spoke's typecheck-equivalent, commit `chore(deps): bump @rello-platform/ui to v<X.Y.Z>`,
+   push to that spoke's main.
+3. **Coordinated wave** — sweep all spokes in the same Build-KA fan-out wave; do not ship
+   Rello-UI v2.X to one spoke and v2.Y to another for any duration.
 
-**Drift detection:** run `for repo in ~/The-Drumbeat ~/Harvest-Home ~/Newsletter-Studio ~/Rello ~/Open-House-Hub; do grep '"@rello-platform/ui"' $repo/package.json; done` — every line must show the same SHA. Different SHAs = wave incomplete.
+**Drift detection:** run `for repo in ~/The-Drumbeat ~/Harvest-Home ~/Newsletter-Studio ~/Rello ~/Open-House-Hub; do grep '"@rello-platform/ui"' $repo/package.json; done` — every line must show the same `#v<X.Y.Z>` (or matching SHA for in-flight bumps). Mixed forms or different versions = wave incomplete.
 
 ## Build verification axes
 
@@ -197,7 +219,7 @@ Platform Class-Level Rules (A–L) auto-bind via universal CLAUDE.md. Rules most
 
 Auto-loaded per universal CLAUDE.md. Most load-bearing for Rello-UI work:
 
-- `feedback-npm-github-tag-stale-resolve` — explicit-ref form for GitHub deps; SHA-pin canonical (this repo's spoke pin form).
+- `feedback-npm-github-tag-stale-resolve` — explicit-ref form (`<pkg>@github:org/repo#v<X.Y.Z>`) for GitHub-tag deps to force lockfile re-resolve when bumping versions; this repo's spokes pin via tag form per § Version-pin canonical form.
 - `feedback-two-machine-home-paths` — `~/` not hardcoded `/Users/<name>/` in any path reference (CLAUDE.md, scripts, docs).
 - `feedback-discovered-gh-repo-existence-check-must-verify-canonical-org-first` — **Rello-UI carve-out:** this repo is at `rello-platform/rello-ui`, NOT `kellydavidsansom/Rello-UI`. Verified 2026-05-08 via `git remote -v`, `gh repo view`, and `package.json` `repository.url`. The general "canonical-org is `kellydavidsansom`" rule does NOT apply to shared platform packages published to `npm.pkg.github.com` under the `@rello-platform/*` scope — those live under `rello-platform`. Cross-reference `feedback-rello-platform-package-publishes-to-github-packages`.
 - `feedback-pre-delete-verification-checks-all-dependency-classes` — Rule J applicability; grep all 11 spoke dirs before any export delete.

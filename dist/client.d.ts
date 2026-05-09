@@ -1116,4 +1116,81 @@ interface DialButtonProps {
 }
 declare const DialButton: React.ForwardRefExoticComponent<DialButtonProps & React.RefAttributes<HTMLAnchorElement>>;
 
-export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, AddressAutocomplete, type AddressAutocompleteProps, type AgentRole, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BrandColorPicker, type BrandColorPickerProps, type BrandColors, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, DialButton, type DialButtonProps, type DialPath, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateProps, type FactorVariant, type FeatureIllustrationKey, HarvestHomeIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeScoutIcon, HomeStretchIcon, type IllustrationKey, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LoadingOverlay, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, type PlatformIllustrationKey, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, type SocialLinks, SocialLinksInput, type SocialLinksInputProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, type TeamCopy, type TeamCopyOverride, type TeamMember, TeamMemberCard, type TeamMemberCardProps, type TeamRole, TeamRoster, type TeamRosterProps, type TeamRosterVariant, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, useToast };
+interface ErrorBannerProps extends React.HTMLAttributes<HTMLDivElement> {
+    message?: string;
+    headline?: string;
+    onRetry?: () => void;
+    reason?: string;
+    retryLabel?: string;
+}
+declare function ErrorBanner({ message, headline, onRetry, reason, retryLabel, className, ...props }: ErrorBannerProps): react_jsx_runtime.JSX.Element;
+
+interface MultiFeedbackOption {
+    key: string;
+    label: string;
+    requiresCorrectionText?: boolean;
+    icon?: React.ReactNode;
+}
+type MultiFeedbackVariant = "default" | "compact" | "inline";
+interface MultiFeedbackWidgetProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
+    prompt?: string;
+    options: ReadonlyArray<MultiFeedbackOption>;
+    onSelect: (key: string, correctionText?: string) => void;
+    variant?: MultiFeedbackVariant;
+    disabled?: boolean;
+    thanksLabel?: string;
+}
+declare function MultiFeedbackWidget({ prompt, options, onSelect, variant, disabled, thanksLabel, className, ...props }: MultiFeedbackWidgetProps): react_jsx_runtime.JSX.Element;
+
+interface SessionRetryBannerProps extends React.HTMLAttributes<HTMLDivElement> {
+    message: string;
+    headline?: string;
+    onRetry: () => void;
+    visible?: boolean;
+    retryLabel?: string;
+}
+declare function SessionRetryBanner({ message, headline, onRetry, visible, retryLabel, className, ...props }: SessionRetryBannerProps): react_jsx_runtime.JSX.Element | null;
+
+interface VoiceCorpusSample {
+    id: string;
+    content: string;
+    wordCount: number;
+}
+interface VoiceCorpusInputProps extends React.HTMLAttributes<HTMLDivElement> {
+    samples: ReadonlyArray<VoiceCorpusSample>;
+    onAdd: (content: string) => void;
+    onRemove: (id: string) => void;
+    minSamples?: number;
+    maxSamples?: number;
+    acceptFileUpload?: boolean;
+    acceptedFileTypes?: ReadonlyArray<string>;
+    placeholder?: string;
+    minWordsPerSample?: number;
+}
+declare function countWords(text: string): number;
+declare function VoiceCorpusInput({ samples, onAdd, onRemove, minSamples, maxSamples, acceptFileUpload, acceptedFileTypes, placeholder, minWordsPerSample, className, ...props }: VoiceCorpusInputProps): react_jsx_runtime.JSX.Element;
+
+interface WizardStep {
+    id: string;
+    label: string;
+    description?: string;
+    allowSkip?: boolean;
+}
+type WizardAutosaveStatus = "idle" | "saving" | "saved" | "error";
+interface WizardShellProps {
+    steps: ReadonlyArray<WizardStep>;
+    currentStep: number;
+    onStepChange: (nextStep: number) => void;
+    onComplete: () => void;
+    autosaveStatus?: WizardAutosaveStatus;
+    children: React.ReactNode;
+    backLabel?: string;
+    continueLabel?: string;
+    skipLabel?: string;
+    completeLabel?: string;
+    disableContinue?: boolean;
+    className?: string;
+}
+declare function WizardShell({ steps, currentStep, onStepChange, onComplete, autosaveStatus, children, backLabel, continueLabel, skipLabel, completeLabel, disableContinue, className, }: WizardShellProps): react_jsx_runtime.JSX.Element;
+
+export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, AddressAutocomplete, type AddressAutocompleteProps, type AgentRole, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BrandColorPicker, type BrandColorPickerProps, type BrandColors, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, type Column, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, DialButton, type DialButtonProps, type DialPath, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateProps, ErrorBanner, type ErrorBannerProps, type FactorVariant, type FeatureIllustrationKey, HarvestHomeIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeScoutIcon, HomeStretchIcon, type IllustrationKey, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LoadingOverlay, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, type MultiFeedbackOption, type MultiFeedbackVariant, MultiFeedbackWidget, type MultiFeedbackWidgetProps, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, type PlatformIllustrationKey, PreApprovalIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SessionRetryBanner, type SessionRetryBannerProps, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, type SocialLinks, SocialLinksInput, type SocialLinksInputProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, type TeamCopy, type TeamCopyOverride, type TeamMember, TeamMemberCard, type TeamMemberCardProps, type TeamRole, TeamRoster, type TeamRosterProps, type TeamRosterVariant, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, VoiceCorpusInput, type VoiceCorpusInputProps, type VoiceCorpusSample, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, type WizardAutosaveStatus, WizardShell, type WizardShellProps, type WizardStep, countWords, useToast };
