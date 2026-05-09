@@ -542,6 +542,14 @@ interface DashboardNavItem {
     label: string;
     href?: string;
     onClick?: () => void;
+    /**
+     * Override for the rendered button's `aria-label`. Defaults to `label`.
+     * Use when the visible `label` is hidden in the collapsed sidebar (icon-only)
+     * and the icon alone does not convey the destination — falling back to
+     * `label` ensures every nav button carries an accessible name even when
+     * the visible text is not in the DOM.
+     */
+    ariaLabel?: string;
 }
 interface DashboardNavGroup {
     label?: string | null;

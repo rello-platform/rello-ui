@@ -13,6 +13,14 @@ export interface DashboardNavItem {
   label: string;
   href?: string;
   onClick?: () => void;
+  /**
+   * Override for the rendered button's `aria-label`. Defaults to `label`.
+   * Use when the visible `label` is hidden in the collapsed sidebar (icon-only)
+   * and the icon alone does not convey the destination — falling back to
+   * `label` ensures every nav button carries an accessible name even when
+   * the visible text is not in the DOM.
+   */
+  ariaLabel?: string;
 }
 
 export interface DashboardNavGroup {
@@ -104,7 +112,9 @@ function Sidebar({
                 <button
                   key={item.label}
                   onClick={() => onNavClick?.(item)}
-                  className="w-full flex items-center gap-2.5 py-2.5 transition-colors"
+                  aria-label={item.ariaLabel ?? item.label}
+                  aria-current={isActive ? "page" : undefined}
+                  className="w-full flex items-center gap-2.5 py-2.5 min-h-[44px] transition-colors"
                   style={{
                     paddingLeft: hovered ? 14 : 16,
                     paddingRight: 14,
@@ -194,8 +204,10 @@ function MobileNav({
                       onNavClick?.(item);
                       onClose();
                     }}
+                    aria-label={item.ariaLabel ?? item.label}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "flex items-center gap-3 w-full px-5 py-2.5 text-sm transition-colors",
+                      "flex items-center gap-3 w-full px-5 py-2.5 min-h-[44px] text-sm transition-colors",
                       isActive
                         ? "bg-[var(--brand-primary-light)] text-[var(--brand-primary)] font-semibold"
                         : "text-[var(--neutral-600)] hover:bg-[var(--neutral-50)]"
@@ -252,7 +264,7 @@ function DashboardShell({
         <div className={cn("flex items-start gap-3 md:gap-4 max-w-xl", headerClassName)}>
           {/* Mobile hamburger */}
           <button
-            className="md:hidden p-2 -ml-2 rounded-lg text-[var(--neutral-500)] hover:bg-[var(--neutral-50)]"
+            className="md:hidden -ml-2 rounded-lg text-[var(--neutral-500)] hover:bg-[var(--neutral-50)] inline-flex items-center justify-center min-h-[44px] min-w-[44px]"
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Open menu"
           >
