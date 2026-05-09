@@ -2403,7 +2403,7 @@ function Sidebar({
       onMouseEnter: () => onHover(true),
       onMouseLeave: () => onHover(false),
       children: /* @__PURE__ */ jsx33("div", { className: "py-2", children: navGroups.map((group, gi) => /* @__PURE__ */ jsxs22("div", { children: [
-        group.label && hovered && /* @__PURE__ */ jsx33("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-400)] px-4 pt-3 pb-1", children: group.label }),
+        group.label && hovered && /* @__PURE__ */ jsx33("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600)] px-4 pt-3 pb-1", children: group.label }),
         group.items.map((item) => {
           const isActive = item.label === activeNavLabel;
           return /* @__PURE__ */ jsxs22(
@@ -2461,7 +2461,7 @@ function MobileNav({
       ] })
     ] }),
     /* @__PURE__ */ jsx33(SlidePanelBody, { children: /* @__PURE__ */ jsx33("nav", { className: "py-2", children: navGroups.map((group, gi) => /* @__PURE__ */ jsxs22("div", { children: [
-      group.label && /* @__PURE__ */ jsx33("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-400)] px-5 pt-3 pb-1", children: group.label }),
+      group.label && /* @__PURE__ */ jsx33("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600)] px-5 pt-3 pb-1", children: group.label }),
       group.items.map((item) => {
         const isActive = item.label === activeNavLabel;
         return /* @__PURE__ */ jsxs22(
@@ -2568,7 +2568,7 @@ function DashboardShell({
                 children: [
                   /* @__PURE__ */ jsxs22("div", { className: "text-right hidden md:block", children: [
                     /* @__PURE__ */ jsx33("p", { className: "text-xs font-medium text-[var(--foreground)]", children: agentName }),
-                    agentSubtitle && /* @__PURE__ */ jsx33("p", { className: "text-[10px] text-[var(--neutral-400)]", children: agentSubtitle })
+                    agentSubtitle && /* @__PURE__ */ jsx33("p", { className: "text-[10px] text-[var(--neutral-600)]", children: agentSubtitle })
                   ] }),
                   /* @__PURE__ */ jsx33(
                     "div",

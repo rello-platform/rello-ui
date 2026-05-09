@@ -102,7 +102,7 @@ function Sidebar({
         {navGroups.map((group, gi) => (
           <div key={gi}>
             {group.label && hovered && (
-              <p className="text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-400)] px-4 pt-3 pb-1">
+              <p className="text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600)] px-4 pt-3 pb-1">
                 {group.label}
               </p>
             )}
@@ -191,7 +191,7 @@ function MobileNav({
           {navGroups.map((group, gi) => (
             <div key={gi}>
               {group.label && (
-                <p className="text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-400)] px-5 pt-3 pb-1">
+                <p className="text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600)] px-5 pt-3 pb-1">
                   {group.label}
                 </p>
               )}
@@ -311,7 +311,7 @@ function DashboardShell({
           <div className="text-right hidden md:block">
             <p className="text-xs font-medium text-[var(--foreground)]">{agentName}</p>
             {agentSubtitle && (
-              <p className="text-[10px] text-[var(--neutral-400)]">{agentSubtitle}</p>
+              <p className="text-[10px] text-[var(--neutral-600)]">{agentSubtitle}</p>
             )}
           </div>
           <div
