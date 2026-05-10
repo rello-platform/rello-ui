@@ -174,7 +174,7 @@ function MobileNav({
       <div className="flex items-center gap-3 px-5 py-4 border-b border-[var(--card-border)]">
         <div
           className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold"
-          style={{ background: "var(--brand-primary-light)", color: "var(--brand-primary)" }}
+          style={{ background: "var(--brand-primary-light)", color: "var(--neutral-900, #111827)" }}
         >
           {agentInitials}
         </div>
@@ -318,7 +318,7 @@ function DashboardShell({
             className="size-9 rounded-full flex items-center justify-center text-xs font-semibold"
             style={{
               backgroundColor: "var(--brand-primary-light)",
-              color: "var(--brand-primary)",
+              color: "var(--neutral-900, #111827)",
             }}
           >
             {agentInitials}
