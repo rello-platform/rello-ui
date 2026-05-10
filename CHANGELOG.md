@@ -5,6 +5,28 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.4.0 — 2026-05-10
+
+### Added — DRUMBEAT RELLO-UPSELL Phase 4 PR-1
+
+- **`RelloUpsellNudge`** (`@rello-platform/ui/client`) — ghost-styled, never-modal,
+  dismissible upgrade-to-Rello nudge primitive. Six-seam upgrade pattern shipped by
+  `SPEC-DRUM-RELLO-UPSELL` §Component primitive decision. Props per §Desired State:
+  `seam`, `headline`, `body`, `ctaLabel?`, `onClick`, `onDismiss`, `icon?`. No business
+  logic — consumer wires entitlement read, embedded-mode suppression, telemetry, and
+  session-scoped dismiss persistence at the Drumbeat-side `<RelloUpsellSeam>` wrapper.
+  Sibling spokes (HH / SCOUT / OHH / PFP / NS / CO-MARKETING) adopt the same primitive
+  per `feedback-per-app-rebuilds-inherit-platform-admin-rebuild-precedent`.
+
+### Notes
+
+- Component ships through `src/client.ts` only (carries `"use client"` semantics).
+- Prop interface co-located in `src/components/rello-upsell-nudge/index.ts` per Rule E.
+- ARIA: `role="region"`, `aria-label="Rello upgrade option"`; dismiss button
+  `aria-label="Dismiss upgrade nudge"`; Escape-key dismisses while focus is inside.
+- 44px-minimum touch target on both CTA and dismiss × controls.
+- Composes existing `Button` primitive — no new third-party deps.
+
 ## v2.3.0 — 2026-05-09
 
 ### Added — DRUMBEAT Wave 0 hoisted shared primitives

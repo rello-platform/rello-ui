@@ -61,3 +61,6 @@ export * from "./multi-feedback-widget";
 export * from "./session-retry-banner";
 export * from "./voice-corpus-input";
 export * from "./wizard-shell";
+
+// v2.4.0 — DRUMBEAT RELLO-UPSELL Phase 4 PR-1 (SPEC-DRUM-RELLO-UPSELL §Component primitive decision)
+export * from "./rello-upsell-nudge";
