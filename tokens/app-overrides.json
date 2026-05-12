@@ -139,6 +139,26 @@
       "appTitleColor": "#142726",
       "appSubtitleColor": "#4F6461"
     },
+    "pathfinder-pro": {
+      "name": "PathfinderPro",
+      "primary": "#1E3A5F",
+      "accent": "#3B82F6",
+      "pageBackground": "#F8FAFB",
+      "cardBackground": "#FFFFFF",
+      "cardBorder": "#E5E7EB",
+      "primaryText": "#111827",
+      "secondaryText": "#6B7280",
+      "tertiaryText": "#9CA3AF",
+      "heroCardBackground": "#1E3A5F",
+      "heroCardBorder": "#152E4D",
+      "heroCardTitle": "#FFFFFF",
+      "heroCardBodyText": "#BFDBFE",
+      "rowBackground": "#F9FAFB",
+      "rowBorder": "#E5E7EB",
+      "notes": "MLO power-user pre-qual workspace — Deep Navy + Bright Blue financial-precision palette",
+      "appTitleColor": "#1E3A5F",
+      "appSubtitleColor": "#6B7280"
+    },
     "newsletter-studio": {
       "name": "Newsletter Studio",
       "primary": "#6366F1",
