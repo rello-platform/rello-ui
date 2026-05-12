@@ -26,6 +26,17 @@ export interface DashboardNavItem {
 export interface DashboardNavGroup {
   label?: string | null;
   items: DashboardNavItem[];
+  /**
+   * When true, this group is pinned to the bottom of the sidebar. Multiple
+   * pinned groups stack in source-order against the bottom of the rail.
+   * Implementation uses flex column + `margin-top: auto` on the first
+   * pinned group, so unpinned groups pack at the top and pinned groups
+   * pack at the bottom regardless of how many nav items each contains.
+   *
+   * Use this for "Settings" / "Sign out" / "Return to Rello" footer slots
+   * in consumer apps. Defaults to false (top-packed nav).
+   */
+  pinToBottom?: boolean;
 }
 
 export interface DashboardShellProps {
@@ -87,20 +98,29 @@ function Sidebar({
   hovered: boolean;
   onHover: (h: boolean) => void;
 }) {
+  // Find the FIRST pinToBottom group — that index gets `margin-top: auto`,
+  // which pushes it (and every subsequent group) to the bottom of the
+  // flex column. Pinned groups stack in source order against the bottom.
+  const firstPinnedIdx = navGroups.findIndex((g) => g.pinToBottom === true);
+
   return (
     <div
-      className="rounded-xl flex-shrink-0 overflow-hidden transition-all duration-300 hidden md:block"
+      className="rounded-xl flex-shrink-0 overflow-hidden transition-all duration-300 hidden md:flex flex-col"
       style={{
         width: hovered ? 190 : 60,
         backgroundColor: "var(--card-background)",
         border: "1px solid var(--card-border)",
+        minHeight: "100%",
       }}
       onMouseEnter={() => onHover(true)}
       onMouseLeave={() => onHover(false)}
     >
-      <div className="py-2">
+      <div className="py-2 flex flex-col flex-1 min-h-0">
         {navGroups.map((group, gi) => (
-          <div key={gi}>
+          <div
+            key={gi}
+            style={gi === firstPinnedIdx ? { marginTop: "auto" } : undefined}
+          >
             {group.label && hovered && (
               <p className="text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600)] px-4 pt-3 pb-1">
                 {group.label}
@@ -187,9 +207,11 @@ function MobileNav({
       </div>
 
       <SlidePanelBody>
-        <nav className="py-2">
-          {navGroups.map((group, gi) => (
-            <div key={gi}>
+        <nav className="py-2 flex flex-col min-h-full">
+          {navGroups.map((group, gi) => {
+            const firstPinnedIdx = navGroups.findIndex((g) => g.pinToBottom === true);
+            return (
+            <div key={gi} style={gi === firstPinnedIdx ? { marginTop: "auto" } : undefined}>
               {group.label && (
                 <p className="text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600)] px-5 pt-3 pb-1">
                   {group.label}
@@ -222,7 +244,8 @@ function MobileNav({
                 );
               })}
             </div>
-          ))}
+            );
+          })}
         </nav>
       </SlidePanelBody>
     </SlidePanel>

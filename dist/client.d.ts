@@ -554,6 +554,17 @@ interface DashboardNavItem {
 interface DashboardNavGroup {
     label?: string | null;
     items: DashboardNavItem[];
+    /**
+     * When true, this group is pinned to the bottom of the sidebar. Multiple
+     * pinned groups stack in source-order against the bottom of the rail.
+     * Implementation uses flex column + `margin-top: auto` on the first
+     * pinned group, so unpinned groups pack at the top and pinned groups
+     * pack at the bottom regardless of how many nav items each contains.
+     *
+     * Use this for "Settings" / "Sign out" / "Return to Rello" footer slots
+     * in consumer apps. Defaults to false (top-packed nav).
+     */
+    pinToBottom?: boolean;
 }
 interface DashboardShellProps {
     /** Logo element (top-left, beside title) */
