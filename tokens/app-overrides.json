@@ -21,7 +21,6 @@
   "apps": {
     "rello": {
       "name": "Rello",
-      "primary": "#C05621",
       "accent": "#FDBA74",
       "pageBackground": "#FAF8F5",
       "cardBackground": "#FFFFFF",
