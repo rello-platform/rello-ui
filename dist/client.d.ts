@@ -550,6 +550,20 @@ interface DashboardNavItem {
      * the visible text is not in the DOM.
      */
     ariaLabel?: string;
+    /**
+     * Visual variant for the rendered nav button. Defaults to undefined
+     * (matches sibling nav items: transparent background, active-page highlight).
+     * Use `primary` / `accent` / `danger` for prominent footer-action buttons
+     * (e.g. "Return to Rello", "Sign out") that need visual differentiation
+     * from regular nav items. Variant-styled items render with their background
+     * color always applied (no active-page highlight) since they represent
+     * actions, not pages within the app.
+     *
+     * Variant names mirror the shared `buttonVariants` palette in
+     * `../button/variants.ts` so consumers can reason about visual hierarchy
+     * consistently between <Button> and nav items.
+     */
+    variant?: "primary" | "accent" | "danger";
 }
 interface DashboardNavGroup {
     label?: string | null;

@@ -21,6 +21,20 @@ export interface DashboardNavItem {
    * the visible text is not in the DOM.
    */
   ariaLabel?: string;
+  /**
+   * Visual variant for the rendered nav button. Defaults to undefined
+   * (matches sibling nav items: transparent background, active-page highlight).
+   * Use `primary` / `accent` / `danger` for prominent footer-action buttons
+   * (e.g. "Return to Rello", "Sign out") that need visual differentiation
+   * from regular nav items. Variant-styled items render with their background
+   * color always applied (no active-page highlight) since they represent
+   * actions, not pages within the app.
+   *
+   * Variant names mirror the shared `buttonVariants` palette in
+   * `../button/variants.ts` so consumers can reason about visual hierarchy
+   * consistently between <Button> and nav items.
+   */
+  variant?: "primary" | "accent" | "danger";
 }
 
 export interface DashboardNavGroup {
@@ -127,22 +141,34 @@ function Sidebar({
               </p>
             )}
             {group.items.map((item) => {
-              const isActive = item.label === activeNavLabel;
+              const variant = item.variant;
+              const isActive = variant === undefined && item.label === activeNavLabel;
+              const variantBg = variant
+                ? {
+                    primary: "var(--brand-primary)",
+                    accent: "var(--brand-accent)",
+                    danger: "var(--error)",
+                  }[variant]
+                : undefined;
+              const isProminent = isActive || variant !== undefined;
               return (
                 <button
                   key={item.label}
                   onClick={() => onNavClick?.(item)}
                   aria-label={item.ariaLabel ?? item.label}
                   aria-current={isActive ? "page" : undefined}
-                  className="w-full flex items-center gap-2.5 py-2.5 min-h-[44px] transition-colors"
+                  className={cn(
+                    "w-full flex items-center gap-2.5 py-2.5 min-h-[44px] transition-colors",
+                    variant && "hover:opacity-90"
+                  )}
                   style={{
                     paddingLeft: hovered ? 14 : 16,
                     paddingRight: 14,
-                    backgroundColor: isActive ? "var(--brand-primary)" : "transparent",
-                    color: isActive ? "#fff" : "var(--neutral-600)",
-                    borderRadius: isActive ? 10 : 0,
-                    margin: isActive ? "2px 6px" : "0",
-                    width: isActive ? "calc(100% - 12px)" : "100%",
+                    backgroundColor: variantBg ?? (isActive ? "var(--brand-primary)" : "transparent"),
+                    color: isProminent ? "#fff" : "var(--neutral-600)",
+                    borderRadius: isProminent ? 10 : 0,
+                    margin: isProminent ? "2px 6px" : "0",
+                    width: isProminent ? "calc(100% - 12px)" : "100%",
                   }}
                 >
                   <div className="size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5">
@@ -218,7 +244,15 @@ function MobileNav({
                 </p>
               )}
               {group.items.map((item) => {
-                const isActive = item.label === activeNavLabel;
+                const variant = item.variant;
+                const isActive = variant === undefined && item.label === activeNavLabel;
+                const variantClass = variant
+                  ? {
+                      primary: "bg-[var(--brand-primary)] text-white hover:opacity-90",
+                      accent: "bg-[var(--brand-accent)] text-white hover:opacity-90",
+                      danger: "bg-[var(--error)] text-white hover:opacity-90",
+                    }[variant]
+                  : null;
                 return (
                   <button
                     key={item.label}
@@ -230,9 +264,10 @@ function MobileNav({
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
                       "flex items-center gap-3 w-full px-5 py-2.5 min-h-[44px] text-sm transition-colors",
-                      isActive
-                        ? "bg-[var(--brand-primary-light)] text-[var(--brand-primary)] font-semibold"
-                        : "text-[var(--neutral-600)] hover:bg-[var(--neutral-50)]"
+                      variantClass ??
+                        (isActive
+                          ? "bg-[var(--brand-primary-light)] text-[var(--brand-primary)] font-semibold"
+                          : "text-[var(--neutral-600)] hover:bg-[var(--neutral-50)]")
                     )}
                     style={{ fontFamily: "var(--font-app-subtitle, var(--font-body))" }}
                   >
