@@ -5689,6 +5689,99 @@ function RelloUpsellNudge({
     }
   );
 }
+
+// src/components/card-tooltip/CardTooltip.tsx
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import { InfoCircle } from "iconoir-react";
+import { jsx as jsx63, jsxs as jsxs50 } from "react/jsx-runtime";
+var POPOVER_CLASS = cn(
+  "z-50 max-w-xs select-text rounded-md border px-3 py-2 text-sm shadow-lg",
+  "bg-white",
+  "border-[var(--neutral-200,#e5e7eb)]",
+  "text-[var(--neutral-900,#111827)]",
+  // Radix data-state-driven fade; prefers-reduced-motion disables it.
+  "data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0",
+  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
+  "motion-reduce:animate-none motion-reduce:transition-none"
+);
+var ARROW_FILL = "var(--neutral-200, #e5e7eb)";
+var TRIGGER_CLASS = cn(
+  // 44×44 touch target (w-11 h-11 = 2.75rem each = 44px).
+  "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full",
+  "bg-transparent",
+  "text-[var(--neutral-400,#94a3b8)]",
+  "transition-colors duration-150",
+  "hover:text-[var(--brand-primary,#2563eb)]",
+  "focus-visible:text-[var(--brand-primary,#2563eb)]",
+  "focus-visible:outline-2 focus-visible:outline-offset-2",
+  "focus-visible:outline-[var(--brand-primary,#2563eb)]",
+  "focus:outline-none",
+  "cursor-pointer"
+);
+var WRAPPER_RELATIVE_CLASS = "relative";
+var WRAPPER_ICON_POSITION_CLASS = "absolute right-2 top-2";
+function CardTooltipIcon({
+  text,
+  placement = "top",
+  ariaLabel = "More info",
+  className
+}) {
+  if (text === "") return null;
+  return /* @__PURE__ */ jsxs50(TooltipPrimitive.Root, { children: [
+    /* @__PURE__ */ jsx63(TooltipPrimitive.Trigger, { asChild: true, children: /* @__PURE__ */ jsx63(
+      "button",
+      {
+        type: "button",
+        "aria-label": ariaLabel,
+        className: cn(TRIGGER_CLASS, className),
+        children: /* @__PURE__ */ jsx63(
+          InfoCircle,
+          {
+            width: 16,
+            height: 16,
+            strokeWidth: 2,
+            "aria-hidden": "true"
+          }
+        )
+      }
+    ) }),
+    /* @__PURE__ */ jsx63(TooltipPrimitive.Portal, { children: /* @__PURE__ */ jsxs50(
+      TooltipPrimitive.Content,
+      {
+        side: placement,
+        sideOffset: 6,
+        className: POPOVER_CLASS,
+        children: [
+          text,
+          /* @__PURE__ */ jsx63(TooltipPrimitive.Arrow, { width: 10, height: 5, style: { fill: ARROW_FILL } })
+        ]
+      }
+    ) })
+  ] });
+}
+CardTooltipIcon.displayName = "CardTooltipIcon";
+function CardTooltip({
+  text,
+  placement,
+  ariaLabel,
+  children
+}) {
+  return /* @__PURE__ */ jsxs50("div", { className: WRAPPER_RELATIVE_CLASS, children: [
+    children,
+    text !== "" && /* @__PURE__ */ jsx63("div", { className: WRAPPER_ICON_POSITION_CLASS, children: /* @__PURE__ */ jsx63(
+      CardTooltipIcon,
+      {
+        text,
+        placement,
+        ariaLabel
+      }
+    ) })
+  ] });
+}
+CardTooltip.displayName = "CardTooltip";
+
+// src/components/card-tooltip/index.ts
+import * as Tooltip from "@radix-ui/react-tooltip";
 export {
   APP_ICONS,
   APP_ILLUSTRATIONS,
@@ -5719,6 +5812,8 @@ export {
   CardIllustration,
   CardLoader,
   CardTitle,
+  CardTooltip,
+  CardTooltipIcon,
   CategorySection,
   CelebrationIcon,
   Checkbox,
@@ -5825,6 +5920,7 @@ export {
   Toast,
   ToastProvider,
   TodaySchedule,
+  Tooltip,
   TrackCardIllustration,
   VoiceCorpusInput,
   WasThisHelpful,
