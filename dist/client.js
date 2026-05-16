@@ -1635,11 +1635,1181 @@ function AtlasIcon({ accent, size = 48, className }) {
     /* @__PURE__ */ jsx24("circle", { cx: "8", cy: "10", r: "0.8", fill: accent, opacity: "0.2" })
   ] });
 }
+function MyPipelineIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "40", x2: "42", y2: "40", stroke: accent, strokeWidth: "1", opacity: "0.15", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "32", x2: "42", y2: "32", stroke: accent, strokeWidth: "0.5", opacity: "0.08" }),
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "24", x2: "42", y2: "24", stroke: accent, strokeWidth: "0.5", opacity: "0.08" }),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "8",
+        y: "14",
+        width: "8",
+        height: "26",
+        rx: "1.5",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "20",
+        y: "20",
+        width: "8",
+        height: "20",
+        rx: "1.5",
+        fill: accent,
+        fillOpacity: "0.08",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "32",
+        y: "26",
+        width: "8",
+        height: "14",
+        rx: "1.5",
+        fill: accent,
+        fillOpacity: "0.06",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("path", { d: "M16 22l4 0", stroke: accent, strokeWidth: "1", opacity: "0.35", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M19 21l1 1-1 1", stroke: accent, strokeWidth: "1", opacity: "0.35", strokeLinecap: "round", strokeLinejoin: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M28 28l4 0", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M31 27l1 1-1 1", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round", strokeLinejoin: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "12", cy: "11", r: "1.5", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "17", r: "1.5", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "36", cy: "23", r: "1.5", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx24("path", { d: "M38 9l3-3", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M41 6l0 2", stroke: accent, strokeWidth: "1", opacity: "0.25", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M41 6l-2 0", stroke: accent, strokeWidth: "1", opacity: "0.25", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "8", r: "0.8", fill: accent, opacity: "0.2" })
+  ] });
+}
+function ActionsIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("circle", { cx: "22", cy: "24", r: "18", stroke: accent, strokeWidth: "0.5", opacity: "0.08", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "22", cy: "24", r: "14", stroke: accent, strokeWidth: "0.5", opacity: "0.1", fill: "none" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M24 6 L14 26 L22 26 L20 42 L32 22 L24 22 Z",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round",
+        strokeLinecap: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("path", { d: "M22 14l-3 8", stroke: accent, strokeWidth: "1", opacity: "0.25", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "8", cy: "20", r: "1.2", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "28", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "40", cy: "16", r: "1.2", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "42", cy: "24", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "12", cy: "38", r: "1", fill: accent, opacity: "0.18" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "36", cy: "36", r: "5", fill: accent, fillOpacity: "0.15", stroke: accent, strokeWidth: "1.5", opacity: "0.5" }),
+    /* @__PURE__ */ jsx24("path", { d: "M33.5 36l1.8 1.8 3.2-3.5", stroke: accent, strokeWidth: "1.2", opacity: "0.7", strokeLinecap: "round", strokeLinejoin: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "40", cy: "8", r: "0.8", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("path", { d: "M38 6l2 2", stroke: accent, strokeWidth: "1", opacity: "0.35", strokeLinecap: "round" })
+  ] });
+}
+function BrainIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "24", r: "20", stroke: accent, strokeWidth: "0.5", opacity: "0.08", fill: "none" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M22 10c-5 0-9 4-9 9 0 2 .5 3.5 1.5 5-1 1.5-1.5 3-1.5 4.5 0 4 3.5 7.5 9 7.5V10z",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M26 10c5 0 9 4 9 9 0 2-.5 3.5-1.5 5 1 1.5 1.5 3 1.5 4.5 0 4-3.5 7.5-9 7.5V10z",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("line", { x1: "24", y1: "11", x2: "24", y2: "35", stroke: accent, strokeWidth: "1", opacity: "0.25", strokeDasharray: "2 2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M17 16c2 1 3 3 3 5", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M16 24c1.5 0 3 1.5 4 3", stroke: accent, strokeWidth: "1", opacity: "0.25", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M31 16c-2 1-3 3-3 5", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M32 24c-1.5 0-3 1.5-4 3", stroke: accent, strokeWidth: "1", opacity: "0.25", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "20", cy: "18", r: "1.2", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "28", cy: "22", r: "1.2", fill: accent, opacity: "0.35" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "20", cy: "28", r: "1", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "28", cy: "30", r: "1.2", fill: accent, opacity: "0.35" }),
+    /* @__PURE__ */ jsx24("path", { d: "M20 18c2 1 6 3 8 4", stroke: accent, strokeWidth: "0.8", opacity: "0.2", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M24 4l0 3", stroke: accent, strokeWidth: "1", opacity: "0.4", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M21 5l1 1.5", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M27 5l-1 1.5", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "42", cy: "40", r: "0.8", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx24("path", { d: "M40 38l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function FlowIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "14", x2: "14", y2: "14", stroke: accent, strokeWidth: "1", opacity: "0.12", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "36", x2: "14", y2: "36", stroke: accent, strokeWidth: "1", opacity: "0.1", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "18", x2: "14", y2: "18", stroke: accent, strokeWidth: "0.8", opacity: "0.08", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "32", x2: "14", y2: "32", stroke: accent, strokeWidth: "0.8", opacity: "0.08", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M6 24 L38 24",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M34 18 L42 24 L34 30",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        fill: accent,
+        fillOpacity: "0.1"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "12", cy: "24", r: "3.5", fill: accent, fillOpacity: "0.15", stroke: accent, strokeWidth: "1.5", opacity: "0.7" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "22", cy: "24", r: "3.5", fill: accent, fillOpacity: "0.1", stroke: accent, strokeWidth: "1.5", opacity: "0.5" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "32", cy: "24", r: "3.5", fill: accent, fillOpacity: "0.08", stroke: accent, strokeWidth: "1.5", opacity: "0.35" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "12", cy: "24", r: "1", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "22", cy: "24", r: "1", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "32", cy: "24", r: "1", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M42 12c-2 1-3 2-3 3", stroke: accent, strokeWidth: "1", opacity: "0.25", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "40", r: "0.8", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx24("path", { d: "M4 38l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function DocsIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "42", x2: "44", y2: "42", stroke: accent, strokeWidth: "0.5", opacity: "0.1" }),
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "38", x2: "14", y2: "38", stroke: accent, strokeWidth: "0.5", opacity: "0.08" }),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "12",
+        y: "14",
+        width: "20",
+        height: "26",
+        rx: "1.5",
+        fill: accent,
+        fillOpacity: "0.06",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.3",
+        transform: "rotate(-8 22 27)"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "14",
+        y: "12",
+        width: "20",
+        height: "26",
+        rx: "1.5",
+        fill: accent,
+        fillOpacity: "0.08",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.5",
+        transform: "rotate(-3 24 25)"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "14",
+        y: "10",
+        width: "20",
+        height: "26",
+        rx: "1.5",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2"
+      }
+    ),
+    /* @__PURE__ */ jsx24("line", { x1: "17", y1: "16", x2: "29", y2: "16", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "17", y1: "20", x2: "27", y2: "20", stroke: accent, strokeWidth: "1", opacity: "0.25", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "17", y1: "24", x2: "28", y2: "24", stroke: accent, strokeWidth: "1", opacity: "0.2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("rect", { x: "17", y: "29", width: "14", height: "2", rx: "1", stroke: accent, strokeWidth: "0.8", opacity: "0.3", fill: "none" }),
+    /* @__PURE__ */ jsx24("rect", { x: "17", y: "29", width: "9", height: "2", rx: "1", fill: accent, opacity: "0.5" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M31 8c1.5 0 2.5 1 2.5 2.5v3c0 1-1 2-2 2s-2-1-2-2v-2.5",
+        stroke: accent,
+        strokeWidth: "1",
+        opacity: "0.4",
+        strokeLinecap: "round",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "40", cy: "10", r: "1.8", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "8", cy: "8", r: "0.8", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M6 6l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function RateAlertIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("path", { d: "M14 8c0-3 4-5 10-5s10 2 10 5", stroke: accent, strokeWidth: "1", opacity: "0.15", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M10 6c1-3 6-5 14-5s13 2 14 5", stroke: accent, strokeWidth: "0.8", opacity: "0.1", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M24 8c-6 0-10 4-10 10v8l-3 4h26l-3-4v-8c0-6-4-10-10-10z",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("path", { d: "M22 6 v-2 h4 v2", stroke: accent, strokeWidth: "1.5", opacity: "0.5", strokeLinecap: "round", strokeLinejoin: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M22 32a2 2 0 0 0 4 0", stroke: accent, strokeWidth: "1.5", opacity: "0.5", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "36", cy: "12", r: "3", fill: accent, opacity: "0.7" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "36", cy: "12", r: "5", stroke: accent, strokeWidth: "1", opacity: "0.25", fill: "none" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M8 42 L14 40 L20 41 L26 36 L32 38 L40 34",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.4",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "26", cy: "36", r: "1.2", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "40", cy: "34", r: "1.5", fill: accent, opacity: "0.5" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "10", r: "0.8", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M4 8l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function PreQualIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "40", x2: "44", y2: "40", stroke: accent, strokeWidth: "1", opacity: "0.2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "32", x2: "44", y2: "32", stroke: accent, strokeWidth: "0.5", opacity: "0.08" }),
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "24", x2: "44", y2: "24", stroke: accent, strokeWidth: "0.5", opacity: "0.08" }),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "6",
+        y: "30",
+        width: "12",
+        height: "10",
+        rx: "1",
+        fill: accent,
+        fillOpacity: "0.08",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "18",
+        y: "22",
+        width: "12",
+        height: "18",
+        rx: "1",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "30",
+        y: "14",
+        width: "12",
+        height: "26",
+        rx: "1",
+        fill: accent,
+        fillOpacity: "0.12",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M33 19l2.5 2.5 5-5",
+        stroke: accent,
+        strokeWidth: "2",
+        opacity: "0.8",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "12", cy: "27", r: "1", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "19", r: "1.2", fill: accent, opacity: "0.35" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "36", cy: "11", r: "1.5", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("line", { x1: "14", y1: "26", x2: "22", y2: "20", stroke: accent, strokeWidth: "0.8", opacity: "0.15", strokeDasharray: "1.5 2" }),
+    /* @__PURE__ */ jsx24("line", { x1: "26", y1: "18", x2: "34", y2: "12", stroke: accent, strokeWidth: "0.8", opacity: "0.15", strokeDasharray: "1.5 2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M36 6l0 3", stroke: accent, strokeWidth: "1", opacity: "0.4", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "8", cy: "10", r: "0.8", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx24("path", { d: "M6 8l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function LoanVolumeIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "40", x2: "44", y2: "40", stroke: accent, strokeWidth: "1", opacity: "0.2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "32", x2: "44", y2: "32", stroke: accent, strokeWidth: "0.5", opacity: "0.08" }),
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "24", x2: "44", y2: "24", stroke: accent, strokeWidth: "0.5", opacity: "0.08" }),
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "16", x2: "44", y2: "16", stroke: accent, strokeWidth: "0.5", opacity: "0.06" }),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "6",
+        y: "28",
+        width: "7",
+        height: "12",
+        rx: "1",
+        fill: accent,
+        fillOpacity: "0.08",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.5",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "14",
+        y: "22",
+        width: "7",
+        height: "18",
+        rx: "1",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.65",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "22",
+        y: "16",
+        width: "7",
+        height: "24",
+        rx: "1",
+        fill: accent,
+        fillOpacity: "0.12",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "30",
+        y: "10",
+        width: "7",
+        height: "30",
+        rx: "1",
+        fill: accent,
+        fillOpacity: "0.14",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("ellipse", { cx: "40", cy: "14", rx: "4", ry: "1.3", fill: accent, fillOpacity: "0.2", stroke: accent, strokeWidth: "1", opacity: "0.5" }),
+    /* @__PURE__ */ jsx24("ellipse", { cx: "40", cy: "11", rx: "4", ry: "1.3", fill: accent, fillOpacity: "0.15", stroke: accent, strokeWidth: "1", opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("ellipse", { cx: "40", cy: "8", rx: "4", ry: "1.3", fill: accent, fillOpacity: "0.1", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("path", { d: "M40 6.5l0 3", stroke: accent, strokeWidth: "0.8", opacity: "0.5", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M38.8 7.5c0-.5.5-.8 1.2-.8s1.2.3 1.2.8-.5.6-1.2.7-1.2.2-1.2.7.5.8 1.2.8 1.2-.3 1.2-.8", stroke: accent, strokeWidth: "0.6", opacity: "0.5", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "10", r: "0.8", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M4 8l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function ClosingIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "42", x2: "34", y2: "42", stroke: accent, strokeWidth: "0.5", opacity: "0.08" }),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "6",
+        y: "10",
+        width: "28",
+        height: "28",
+        rx: "2",
+        fill: accent,
+        fillOpacity: "0.08",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "16", x2: "34", y2: "16", stroke: accent, strokeWidth: "1.5", opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("line", { x1: "12", y1: "7", x2: "12", y2: "12", stroke: accent, strokeWidth: "1.5", opacity: "0.5", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "28", y1: "7", x2: "28", y2: "12", stroke: accent, strokeWidth: "1.5", opacity: "0.5", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "13", y1: "20", x2: "13", y2: "36", stroke: accent, strokeWidth: "0.5", opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("line", { x1: "20", y1: "20", x2: "20", y2: "36", stroke: accent, strokeWidth: "0.5", opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("line", { x1: "27", y1: "20", x2: "27", y2: "36", stroke: accent, strokeWidth: "0.5", opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "24", x2: "34", y2: "24", stroke: accent, strokeWidth: "0.5", opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "30", x2: "34", y2: "30", stroke: accent, strokeWidth: "0.5", opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "10", cy: "21", r: "0.8", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "17", cy: "21", r: "0.8", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "21", r: "0.8", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "10", cy: "27", r: "0.8", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "27", r: "0.8", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "31", cy: "27", r: "0.8", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "10", cy: "33", r: "0.8", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "17", cy: "33", r: "0.8", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "17", cy: "27", r: "3", fill: accent, fillOpacity: "0.25", stroke: accent, strokeWidth: "1.2", opacity: "0.7" }),
+    /* @__PURE__ */ jsx24("path", { d: "M15.5 27l1.2 1.2 2.2-2.4", stroke: accent, strokeWidth: "1", opacity: "0.8", strokeLinecap: "round", strokeLinejoin: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "38", cy: "12", r: "3", stroke: accent, strokeWidth: "1.5", opacity: "0.6", fill: "none" }),
+    /* @__PURE__ */ jsx24("line", { x1: "40.5", y1: "14", x2: "44", y2: "17.5", stroke: accent, strokeWidth: "1.5", opacity: "0.55", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "42.5", y1: "16", x2: "43.5", y2: "15", stroke: accent, strokeWidth: "1.2", opacity: "0.5", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "42", cy: "38", r: "0.8", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx24("path", { d: "M40 36l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function HRAssessmentsIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "44", x2: "44", y2: "44", stroke: accent, strokeWidth: "0.5", opacity: "0.1" }),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "10",
+        y: "8",
+        width: "26",
+        height: "34",
+        rx: "2",
+        fill: accent,
+        fillOpacity: "0.08",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("rect", { x: "18", y: "4", width: "10", height: "6", rx: "1", fill: accent, fillOpacity: "0.2", stroke: accent, strokeWidth: "1.5", opacity: "0.5", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M17 22 L23 17 L29 22 L29 28 L17 28 Z",
+        fill: accent,
+        fillOpacity: "0.15",
+        stroke: accent,
+        strokeWidth: "1.2",
+        opacity: "0.6",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("line", { x1: "23", y1: "17", x2: "23", y2: "22", stroke: accent, strokeWidth: "0.6", opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("rect", { x: "21.5", y: "24", width: "3", height: "4", stroke: accent, strokeWidth: "0.6", opacity: "0.4", fill: "none" }),
+    /* @__PURE__ */ jsx24("rect", { x: "14", y: "32", width: "6", height: "2.5", rx: "1.2", fill: accent, fillOpacity: "0.35" }),
+    /* @__PURE__ */ jsx24("rect", { x: "21", y: "32", width: "6", height: "2.5", rx: "1.2", fill: accent, fillOpacity: "0.22" }),
+    /* @__PURE__ */ jsx24("rect", { x: "28", y: "32", width: "6", height: "2.5", rx: "1.2", fill: accent, fillOpacity: "0.12" }),
+    /* @__PURE__ */ jsx24("line", { x1: "14", y1: "37", x2: "32", y2: "37", stroke: accent, strokeWidth: "0.8", opacity: "0.15", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "14", y1: "39.5", x2: "28", y2: "39.5", stroke: accent, strokeWidth: "0.8", opacity: "0.12", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "40", cy: "12", r: "2.5", stroke: accent, strokeWidth: "1", opacity: "0.35", fill: accent, fillOpacity: "0.1" }),
+    /* @__PURE__ */ jsx24("path", { d: "M38.8 12l1 1 1.7-1.8", stroke: accent, strokeWidth: "1", opacity: "0.5", strokeLinecap: "round", strokeLinejoin: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "14", r: "0.8", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M4 12l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function HSProgressIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("path", { d: "M4 38c4-1 8 0 12-1", stroke: accent, strokeWidth: "0.5", opacity: "0.1", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M32 12c4-1 8 0 12-1", stroke: accent, strokeWidth: "0.5", opacity: "0.08", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M6 40 C 10 32, 18 34, 20 26 S 28 14, 36 12 L 42 8",
+        stroke: accent,
+        strokeWidth: "2",
+        opacity: "0.6",
+        strokeLinecap: "round",
+        strokeDasharray: "1 0",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M42 8 L 44 6",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.4",
+        strokeLinecap: "round",
+        strokeDasharray: "2 2",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M6 40 C 10 32, 18 34, 20 26 S 28 14, 36 12",
+        stroke: accent,
+        strokeWidth: "5",
+        opacity: "0.08",
+        strokeLinecap: "round",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24("line", { x1: "10", y1: "36", x2: "10", y2: "28", stroke: accent, strokeWidth: "1.2", opacity: "0.7", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M10 28 L15 30 L10 32 Z", fill: accent, fillOpacity: "0.4", stroke: accent, strokeWidth: "0.8", opacity: "0.6", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "22", y1: "26", x2: "22", y2: "18", stroke: accent, strokeWidth: "1.2", opacity: "0.55", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M22 18 L27 20 L22 22 Z", fill: accent, fillOpacity: "0.3", stroke: accent, strokeWidth: "0.8", opacity: "0.5", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "36", y1: "12", x2: "36", y2: "4", stroke: accent, strokeWidth: "1.2", opacity: "0.45", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M36 4 L41 6 L36 8 Z", fill: accent, fillOpacity: "0.25", stroke: accent, strokeWidth: "0.8", opacity: "0.45", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "10", cy: "36", r: "1.2", fill: accent, opacity: "0.5" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "22", cy: "26", r: "1.2", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "36", cy: "12", r: "1.2", fill: accent, opacity: "0.35" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "10", r: "0.8", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M4 8l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function OpenHouseIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "40", x2: "44", y2: "40", stroke: accent, strokeWidth: "1", opacity: "0.2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "42", x2: "14", y2: "42", stroke: accent, strokeWidth: "0.5", opacity: "0.1", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "34", y1: "42", x2: "42", y2: "42", stroke: accent, strokeWidth: "0.5", opacity: "0.1", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M10 40 L10 22 L24 12 L38 22 L38 40 Z",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M8 23 L24 11 L40 23",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        fill: "none",
+        opacity: "0.6"
+      }
+    ),
+    /* @__PURE__ */ jsx24("rect", { x: "20", y: "28", width: "8", height: "12", stroke: accent, strokeWidth: "1.5", opacity: "0.4", fill: "none", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M20 28 L 16 30 L 16 41 L 20 40 Z",
+        fill: accent,
+        fillOpacity: "0.18",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.7",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "18", cy: "35", r: "0.8", fill: accent, opacity: "0.6" }),
+    /* @__PURE__ */ jsx24("rect", { x: "13", y: "26", width: "4", height: "4", rx: "0.5", stroke: accent, strokeWidth: "1", opacity: "0.35", fill: accent, fillOpacity: "0.1" }),
+    /* @__PURE__ */ jsx24("rect", { x: "31", y: "26", width: "4", height: "4", rx: "0.5", stroke: accent, strokeWidth: "1", opacity: "0.35", fill: accent, fillOpacity: "0.1" }),
+    /* @__PURE__ */ jsx24("line", { x1: "38", y1: "10", x2: "38", y2: "22", stroke: accent, strokeWidth: "1.2", opacity: "0.6", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M38 10 L46 12 L42 14 L46 16 L38 16 Z", fill: accent, fillOpacity: "0.3", stroke: accent, strokeWidth: "1", opacity: "0.6", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "10", r: "0.8", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx24("path", { d: "M4 8l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function MailboxIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "42", x2: "44", y2: "42", stroke: accent, strokeWidth: "1", opacity: "0.2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M8 42v-2", stroke: accent, strokeWidth: "0.6", opacity: "0.2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M12 42v-1.5", stroke: accent, strokeWidth: "0.6", opacity: "0.18", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M36 42v-2", stroke: accent, strokeWidth: "0.6", opacity: "0.18", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M40 42v-1.5", stroke: accent, strokeWidth: "0.6", opacity: "0.15", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "20", y1: "42", x2: "20", y2: "26", stroke: accent, strokeWidth: "2", opacity: "0.5", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M10 26 L10 18 a8 4 0 0 1 16 0 L26 26 Z",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("line", { x1: "14", y1: "22", x2: "22", y2: "22", stroke: accent, strokeWidth: "1", opacity: "0.4", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "14", y1: "24", x2: "20", y2: "24", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "22", cy: "23.5", r: "0.8", fill: accent, opacity: "0.5" }),
+    /* @__PURE__ */ jsx24("line", { x1: "26", y1: "14", x2: "26", y2: "22", stroke: accent, strokeWidth: "1.5", opacity: "0.6", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M26 14 L33 16 L26 18 Z", fill: accent, fillOpacity: "0.4", stroke: accent, strokeWidth: "1", opacity: "0.7", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx24("rect", { x: "28", y: "20", width: "10", height: "7", rx: "0.5", fill: accent, fillOpacity: "0.15", stroke: accent, strokeWidth: "1.2", opacity: "0.6", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M28 20 L33 24 L38 20", stroke: accent, strokeWidth: "1", opacity: "0.5", strokeLinecap: "round", strokeLinejoin: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "40", cy: "20", r: "2", fill: accent, opacity: "0.55" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "10", r: "0.8", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M4 8l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function FollowupIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("circle", { cx: "22", cy: "24", r: "18", stroke: accent, strokeWidth: "0.5", opacity: "0.08", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "22", cy: "24", r: "14", stroke: accent, strokeWidth: "0.5", opacity: "0.1", fill: "none" }),
+    /* @__PURE__ */ jsx24(
+      "circle",
+      {
+        cx: "22",
+        cy: "24",
+        r: "10",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2"
+      }
+    ),
+    /* @__PURE__ */ jsx24("line", { x1: "22", y1: "15", x2: "22", y2: "16.5", stroke: accent, strokeWidth: "1", opacity: "0.5", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "22", y1: "31.5", x2: "22", y2: "33", stroke: accent, strokeWidth: "1", opacity: "0.4", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "13", y1: "24", x2: "14.5", y2: "24", stroke: accent, strokeWidth: "1", opacity: "0.4", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "29.5", y1: "24", x2: "31", y2: "24", stroke: accent, strokeWidth: "1", opacity: "0.4", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "22", y1: "24", x2: "22", y2: "18", stroke: accent, strokeWidth: "1.5", opacity: "0.7", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "22", y1: "24", x2: "27", y2: "26", stroke: accent, strokeWidth: "1.5", opacity: "0.7", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "22", cy: "24", r: "1", fill: accent, opacity: "0.8" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M34 12 a 14 14 0 0 1 4 16",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.5",
+        strokeLinecap: "round",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24("path", { d: "M37 26 L 38 28 L 40 27", stroke: accent, strokeWidth: "1.2", opacity: "0.5", strokeLinecap: "round", strokeLinejoin: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "38", cy: "10", r: "2.5", fill: accent, opacity: "0.6" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "38", cy: "10", r: "4", stroke: accent, strokeWidth: "1", opacity: "0.2", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "40", r: "0.8", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx24("path", { d: "M4 38l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function AppGridIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "6", r: "0.6", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "44", cy: "6", r: "0.6", fill: accent, opacity: "0.12" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "44", cy: "42", r: "0.6", fill: accent, opacity: "0.12" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "42", r: "0.6", fill: accent, opacity: "0.15" }),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "10",
+        y: "10",
+        width: "12",
+        height: "12",
+        rx: "2.5",
+        fill: accent,
+        fillOpacity: "0.12",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "16", cy: "16", r: "1.5", fill: accent, opacity: "0.5" }),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "26",
+        y: "10",
+        width: "12",
+        height: "12",
+        rx: "2.5",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("path", { d: "M30 16l2 2 4-4", stroke: accent, strokeWidth: "1.2", opacity: "0.6", strokeLinecap: "round", strokeLinejoin: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "10",
+        y: "26",
+        width: "12",
+        height: "12",
+        rx: "2.5",
+        fill: accent,
+        fillOpacity: "0.08",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("line", { x1: "13", y1: "30", x2: "19", y2: "30", stroke: accent, strokeWidth: "1", opacity: "0.4", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "13", y1: "33", x2: "17", y2: "33", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "26",
+        y: "26",
+        width: "12",
+        height: "12",
+        rx: "2.5",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "32", cy: "32", r: "2", stroke: accent, strokeWidth: "1", opacity: "0.45", fill: accent, fillOpacity: "0.15" }),
+    /* @__PURE__ */ jsx24("line", { x1: "22", y1: "16", x2: "26", y2: "16", stroke: accent, strokeWidth: "0.8", opacity: "0.3", strokeDasharray: "1 1.5" }),
+    /* @__PURE__ */ jsx24("line", { x1: "16", y1: "22", x2: "16", y2: "26", stroke: accent, strokeWidth: "0.8", opacity: "0.3", strokeDasharray: "1 1.5" }),
+    /* @__PURE__ */ jsx24("line", { x1: "32", y1: "22", x2: "32", y2: "26", stroke: accent, strokeWidth: "0.8", opacity: "0.25", strokeDasharray: "1 1.5" }),
+    /* @__PURE__ */ jsx24("line", { x1: "22", y1: "32", x2: "26", y2: "32", stroke: accent, strokeWidth: "0.8", opacity: "0.25", strokeDasharray: "1 1.5" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "20", cy: "12", r: "1.8", fill: accent, opacity: "0.7" }),
+    /* @__PURE__ */ jsx24("path", { d: "M40 4l0 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M39 5l2 0", stroke: accent, strokeWidth: "1", opacity: "0.25", strokeLinecap: "round" })
+  ] });
+}
+function FunnelIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "8", x2: "44", y2: "8", stroke: accent, strokeWidth: "0.5", opacity: "0.08" }),
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "44", x2: "42", y2: "44", stroke: accent, strokeWidth: "0.5", opacity: "0.1" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M8 10 L40 10 L28 24 L28 36 L20 36 L20 24 Z",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("line", { x1: "11", y1: "14", x2: "37", y2: "14", stroke: accent, strokeWidth: "1", opacity: "0.35", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "15", y1: "18", x2: "33", y2: "18", stroke: accent, strokeWidth: "1", opacity: "0.25", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "19", y1: "22", x2: "29", y2: "22", stroke: accent, strokeWidth: "1", opacity: "0.2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "20", y1: "24", x2: "20", y2: "36", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("line", { x1: "28", y1: "24", x2: "28", y2: "36", stroke: accent, strokeWidth: "1", opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("path", { d: "M24 38c-1 1-1 2 0 2.5s1-1.5 0-2.5z", fill: accent, fillOpacity: "0.5", stroke: accent, strokeWidth: "0.8", opacity: "0.6" }),
+    /* @__PURE__ */ jsx24("path", { d: "M22 42c-.6.6-.6 1.2 0 1.5s.6-.9 0-1.5z", fill: accent, fillOpacity: "0.35", stroke: accent, strokeWidth: "0.6", opacity: "0.5" }),
+    /* @__PURE__ */ jsx24("path", { d: "M26 43c-.5.5-.5 1 0 1.3s.5-.8 0-1.3z", fill: accent, fillOpacity: "0.3", stroke: accent, strokeWidth: "0.6", opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "14", cy: "7", r: "1", fill: accent, opacity: "0.35" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "20", cy: "6", r: "1.2", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "28", cy: "6", r: "1.2", fill: accent, opacity: "0.35" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "34", cy: "7", r: "1", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("path", { d: "M42 14l-2 0", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M42 22l-2 0", stroke: accent, strokeWidth: "1", opacity: "0.25", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "42", cy: "40", r: "0.8", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx24("path", { d: "M40 38l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function TrophyIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "44", x2: "42", y2: "44", stroke: accent, strokeWidth: "1", opacity: "0.15", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "10", y1: "42", x2: "38", y2: "42", stroke: accent, strokeWidth: "0.5", opacity: "0.1", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M16 12 L32 12 L31 24 a7 7 0 0 1 -14 0 Z",
+        fill: accent,
+        fillOpacity: "0.12",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M16 14 a4 4 0 0 0 0 8",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.55",
+        strokeLinecap: "round",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M32 14 a4 4 0 0 1 0 8",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.55",
+        strokeLinecap: "round",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24("line", { x1: "24", y1: "31", x2: "24", y2: "36", stroke: accent, strokeWidth: "2", opacity: "0.6", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("rect", { x: "18", y: "36", width: "12", height: "3", rx: "0.5", fill: accent, fillOpacity: "0.2", stroke: accent, strokeWidth: "1.5", opacity: "0.6", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx24("rect", { x: "16", y: "39", width: "16", height: "2", rx: "0.5", fill: accent, fillOpacity: "0.15", stroke: accent, strokeWidth: "1.2", opacity: "0.5", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "22", y1: "16", x2: "22", y2: "22", stroke: accent, strokeWidth: "1.2", opacity: "0.5", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "20", y1: "17", x2: "22", y2: "16", stroke: accent, strokeWidth: "1.2", opacity: "0.5", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M24 4 L25.5 7 L29 7.5 L26.5 10 L27 13 L24 11.5 L21 13 L21.5 10 L19 7.5 L22.5 7 Z",
+        fill: accent,
+        fillOpacity: "0.4",
+        stroke: accent,
+        strokeWidth: "1",
+        opacity: "0.7",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "38", cy: "10", r: "0.8", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("path", { d: "M36 8l2 2", stroke: accent, strokeWidth: "1", opacity: "0.35", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "10", cy: "10", r: "0.6", fill: accent, opacity: "0.2" })
+  ] });
+}
+function TeamPipelineIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "42", x2: "44", y2: "42", stroke: accent, strokeWidth: "1", opacity: "0.15", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "38", x2: "14", y2: "38", stroke: accent, strokeWidth: "0.5", opacity: "0.08" }),
+    /* @__PURE__ */ jsx24("line", { x1: "34", y1: "38", x2: "44", y2: "38", stroke: accent, strokeWidth: "0.5", opacity: "0.08" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "10", cy: "16", r: "3.5", fill: accent, fillOpacity: "0.18", stroke: accent, strokeWidth: "1.5", opacity: "0.6" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M4 36 c0 -5 3 -8 6 -8 s6 3 6 8",
+        fill: accent,
+        fillOpacity: "0.12",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.55",
+        strokeLinejoin: "round",
+        strokeLinecap: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "18", cy: "14", r: "3", fill: accent, fillOpacity: "0.15", stroke: accent, strokeWidth: "1.5", opacity: "0.5" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M13 36 c0 -4 2 -7 5 -7 s5 3 5 7",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.45",
+        strokeLinejoin: "round",
+        strokeLinecap: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "rect",
+      {
+        x: "28",
+        y: "10",
+        width: "14",
+        height: "28",
+        rx: "2",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("rect", { x: "31", y: "14", width: "8", height: "4", rx: "0.8", fill: accent, fillOpacity: "0.3", stroke: accent, strokeWidth: "0.8", opacity: "0.55" }),
+    /* @__PURE__ */ jsx24("rect", { x: "31", y: "20", width: "8", height: "4", rx: "0.8", fill: accent, fillOpacity: "0.22", stroke: accent, strokeWidth: "0.8", opacity: "0.45" }),
+    /* @__PURE__ */ jsx24("rect", { x: "31", y: "26", width: "8", height: "4", rx: "0.8", fill: accent, fillOpacity: "0.16", stroke: accent, strokeWidth: "0.8", opacity: "0.35" }),
+    /* @__PURE__ */ jsx24("rect", { x: "31", y: "32", width: "8", height: "3", rx: "0.8", fill: accent, fillOpacity: "0.1", stroke: accent, strokeWidth: "0.8", opacity: "0.25" }),
+    /* @__PURE__ */ jsx24("path", { d: "M22 24c2 0 4 -1 6 -2", stroke: accent, strokeWidth: "0.8", opacity: "0.25", strokeDasharray: "1.5 1.5", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "8", r: "0.8", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M4 6l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function LeadPoolIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "24", r: "20", stroke: accent, strokeWidth: "0.5", opacity: "0.06", fill: "none" }),
+    /* @__PURE__ */ jsx24(
+      "circle",
+      {
+        cx: "24",
+        cy: "16",
+        r: "10",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        opacity: "0.85"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "circle",
+      {
+        cx: "17",
+        cy: "28",
+        r: "10",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        opacity: "0.7"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "circle",
+      {
+        cx: "31",
+        cy: "28",
+        r: "10",
+        fill: accent,
+        fillOpacity: "0.1",
+        stroke: accent,
+        strokeWidth: "2",
+        opacity: "0.55"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "24", r: "1.2", fill: accent, opacity: "0.55" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "22", cy: "22", r: "0.9", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "26", cy: "22", r: "0.9", fill: accent, opacity: "0.45" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "26", r: "0.8", fill: accent, opacity: "0.35" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "20", cy: "20", r: "0.7", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "28", cy: "20", r: "0.7", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "30", r: "0.7", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "10", r: "0.8", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "12", cy: "32", r: "0.8", fill: accent, opacity: "0.22" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "36", cy: "32", r: "0.8", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M40 8c1 1 2 1 3 0", stroke: accent, strokeWidth: "0.8", opacity: "0.3", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M39 11c1.5 1.5 3.5 1.5 5 0", stroke: accent, strokeWidth: "0.8", opacity: "0.2", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "10", r: "0.8", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M4 8l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function RoutingIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "24", x2: "10", y2: "24", stroke: accent, strokeWidth: "0.5", opacity: "0.1", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "40", x2: "44", y2: "40", stroke: accent, strokeWidth: "0.5", opacity: "0.08", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M6 24 L22 24",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "24", r: "4", fill: accent, fillOpacity: "0.2", stroke: accent, strokeWidth: "2" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "24", r: "1.2", fill: accent, opacity: "0.7" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M27 22 L40 12",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        fill: "none",
+        opacity: "0.8"
+      }
+    ),
+    /* @__PURE__ */ jsx24("path", { d: "M40 12 L36 12 M40 12 L40 16", stroke: accent, strokeWidth: "2", strokeLinecap: "round", opacity: "0.8" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M27 26 L40 36",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        fill: "none",
+        opacity: "0.55"
+      }
+    ),
+    /* @__PURE__ */ jsx24("path", { d: "M40 36 L36 36 M40 36 L40 32", stroke: accent, strokeWidth: "2", strokeLinecap: "round", opacity: "0.55" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "42", cy: "10", r: "1.5", fill: accent, opacity: "0.45" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "42", cy: "38", r: "1.5", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("path", { d: "M28 24 L40 24", stroke: accent, strokeWidth: "1", opacity: "0.15", strokeDasharray: "2 2", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M16 18l-2 -2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M16 30l-2 2", stroke: accent, strokeWidth: "1", opacity: "0.25", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "8", cy: "8", r: "0.8", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M6 6l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function TeamActivityIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "42", x2: "44", y2: "42", stroke: accent, strokeWidth: "1", opacity: "0.15", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M4 36 L10 36 L12 32 L14 38 L16 30 L20 36 L44 36",
+        stroke: accent,
+        strokeWidth: "1",
+        opacity: "0.18",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "14", cy: "26", r: "3.5", fill: accent, fillOpacity: "0.15", stroke: accent, strokeWidth: "1.5", opacity: "0.55" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M8 42 c0 -5 3 -8 6 -8 s6 3 6 8",
+        fill: accent,
+        fillOpacity: "0.12",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.5",
+        strokeLinejoin: "round",
+        strokeLinecap: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "32", cy: "26", r: "3.5", fill: accent, fillOpacity: "0.15", stroke: accent, strokeWidth: "1.5", opacity: "0.55" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M26 42 c0 -5 3 -8 6 -8 s6 3 6 8",
+        fill: accent,
+        fillOpacity: "0.12",
+        stroke: accent,
+        strokeWidth: "1.5",
+        opacity: "0.5",
+        strokeLinejoin: "round",
+        strokeLinecap: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M19 8 a 5 5 0 0 1 10 0 c 0 2 -1 3 -2 4 v 2 h -6 v -2 c -1 -1 -2 -2 -2 -4 z",
+        fill: accent,
+        fillOpacity: "0.2",
+        stroke: accent,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("line", { x1: "24", y1: "3", x2: "24", y2: "4.5", stroke: accent, strokeWidth: "1", opacity: "0.4", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "20.5", y1: "4", x2: "21.5", y2: "5", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "27.5", y1: "4", x2: "26.5", y2: "5", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "22", y1: "15", x2: "16", y2: "22", stroke: accent, strokeWidth: "0.8", opacity: "0.3", strokeDasharray: "1.5 1.5", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "26", y1: "15", x2: "30", y2: "22", stroke: accent, strokeWidth: "0.8", opacity: "0.3", strokeDasharray: "1.5 1.5", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "20", cy: "18", r: "0.9", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "28", cy: "18", r: "0.9", fill: accent, opacity: "0.4" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "6", cy: "14", r: "0.8", fill: accent, opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("path", { d: "M4 12l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
+function TeamDawnIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("line", { x1: "4", y1: "34", x2: "44", y2: "34", stroke: accent, strokeWidth: "1.5", opacity: "0.2" }),
+    /* @__PURE__ */ jsx24("line", { x1: "6", y1: "36", x2: "42", y2: "36", stroke: accent, strokeWidth: "0.5", opacity: "0.1" }),
+    /* @__PURE__ */ jsx24("path", { d: "M16 34a8 8 0 0 1 16 0", fill: accent, opacity: "0.1" }),
+    /* @__PURE__ */ jsx24("path", { d: "M16 34a8 8 0 0 1 16 0", stroke: accent, strokeWidth: "2", fill: "none" }),
+    [15, 45, 75, 105, 135, 165].map((angle) => {
+      const rad = angle * Math.PI / 180;
+      return /* @__PURE__ */ jsx24(
+        "line",
+        {
+          x1: 24 + Math.cos(rad) * 10.5,
+          y1: 34 - Math.sin(rad) * 10.5,
+          x2: 24 + Math.cos(rad) * 13.5,
+          y2: 34 - Math.sin(rad) * 13.5,
+          stroke: accent,
+          strokeWidth: "1.2",
+          strokeLinecap: "round",
+          opacity: "0.3"
+        },
+        angle
+      );
+    }),
+    /* @__PURE__ */ jsx24("circle", { cx: "18", cy: "30", r: "2", fill: accent, opacity: "0.65" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M14 42 c0 -4 2 -6 4 -6 s4 2 4 6",
+        fill: accent,
+        opacity: "0.6",
+        stroke: accent,
+        strokeWidth: "1",
+        strokeLinejoin: "round",
+        strokeLinecap: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "30", cy: "30", r: "2", fill: accent, opacity: "0.55" }),
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M26 42 c0 -4 2 -6 4 -6 s4 2 4 6",
+        fill: accent,
+        opacity: "0.5",
+        stroke: accent,
+        strokeWidth: "1",
+        strokeLinejoin: "round",
+        strokeLinecap: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx24("line", { x1: "20", y1: "33", x2: "28", y2: "33", stroke: accent, strokeWidth: "0.8", opacity: "0.25", strokeDasharray: "1.5 1.5", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M6 30c2-1 3 0 5-1", stroke: accent, strokeWidth: "0.8", opacity: "0.18", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M38 30c2-1 3 0 5-1", stroke: accent, strokeWidth: "0.8", opacity: "0.15", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "40", cy: "12", r: "1.2", fill: accent, opacity: "0.3" }),
+    /* @__PURE__ */ jsx24("path", { d: "M38 10l2-2", stroke: accent, strokeWidth: "1", opacity: "0.4", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "8", cy: "14", r: "0.8", fill: accent, opacity: "0.2" })
+  ] });
+}
 var DASHBOARD_ICONS = {
   dawn: DawnIcon,
   signal: SignalIcon,
   pulse: PulseIcon,
-  atlas: AtlasIcon
+  atlas: AtlasIcon,
+  "my-pipeline": MyPipelineIcon,
+  actions: ActionsIcon,
+  brain: BrainIcon,
+  flow: FlowIcon,
+  docs: DocsIcon,
+  "rate-alert": RateAlertIcon,
+  "pre-qual": PreQualIcon,
+  "loan-volume": LoanVolumeIcon,
+  closing: ClosingIcon,
+  "hr-assessments": HRAssessmentsIcon,
+  "hs-progress": HSProgressIcon,
+  "open-house": OpenHouseIcon,
+  mailbox: MailboxIcon,
+  followup: FollowupIcon,
+  "app-grid": AppGridIcon,
+  funnel: FunnelIcon,
+  trophy: TrophyIcon,
+  "team-pipeline": TeamPipelineIcon,
+  "lead-pool": LeadPoolIcon,
+  routing: RoutingIcon,
+  "team-activity": TeamActivityIcon,
+  "team-dawn": TeamDawnIcon
 };
 
 // src/icons/app-icons.tsx
@@ -2066,6 +3236,161 @@ var DASHBOARD_ILLUSTRATIONS = {
     accent: "#4A7B5E",
     pattern: DotGrid,
     icon: AtlasIcon
+  },
+  "my-pipeline": {
+    codename: "The Ledger",
+    section: "My Pipeline Card",
+    accent: "#3B6BB5",
+    pattern: DotGrid,
+    icon: MyPipelineIcon
+  },
+  actions: {
+    codename: "The Spark",
+    section: "Quick Actions Panel Card",
+    accent: "#D4943A",
+    pattern: RadialBurst,
+    icon: ActionsIcon
+  },
+  brain: {
+    codename: "The Oracle",
+    section: "Milo Insights Summary Card",
+    accent: "#7C5DBA",
+    pattern: ConcentricCircles,
+    icon: BrainIcon
+  },
+  flow: {
+    codename: "The Current",
+    section: "Pipeline Movement Card",
+    accent: "#3F9D7A",
+    pattern: OrbitalRings,
+    icon: FlowIcon
+  },
+  docs: {
+    codename: "The Stack",
+    section: "Docs Pending Card",
+    accent: "#C46A3A",
+    pattern: DiamondGrid,
+    icon: DocsIcon
+  },
+  "rate-alert": {
+    codename: "The Beacon",
+    section: "Rate Alerts Card",
+    accent: "#C24A4A",
+    pattern: CrossHatch,
+    icon: RateAlertIcon
+  },
+  "pre-qual": {
+    codename: "The Ascent",
+    section: "Pre-Qual Pipeline Card",
+    accent: "#5B9EA6",
+    pattern: ConcentricCircles,
+    icon: PreQualIcon
+  },
+  "loan-volume": {
+    codename: "The Vault",
+    section: "Loan Volume Card",
+    accent: "#2E7A50",
+    pattern: DotGrid,
+    icon: LoanVolumeIcon
+  },
+  closing: {
+    codename: "The Keystone",
+    section: "Closing This Month Card",
+    accent: "#2C4A6B",
+    pattern: DiamondGrid,
+    icon: ClosingIcon
+  },
+  "hr-assessments": {
+    codename: "The Assay",
+    section: "HR Assessments Card",
+    accent: "#4A5599",
+    pattern: OrbitalRings,
+    icon: HRAssessmentsIcon
+  },
+  "hs-progress": {
+    codename: "The Trail",
+    section: "HS Progress Card",
+    accent: "#B8546A",
+    pattern: CrossHatch,
+    icon: HSProgressIcon
+  },
+  "open-house": {
+    codename: "The Threshold",
+    section: "Open House Check-ins Card",
+    accent: "#D4A93A",
+    pattern: RadialBurst,
+    icon: OpenHouseIcon
+  },
+  mailbox: {
+    codename: "The Post",
+    section: "Unread Messages Card",
+    accent: "#5A6B82",
+    pattern: ConcentricCircles,
+    icon: MailboxIcon
+  },
+  followup: {
+    codename: "The Cadence",
+    section: "Needs Follow-up Card",
+    accent: "#D67A5A",
+    pattern: OrbitalRings,
+    icon: FollowupIcon
+  },
+  "app-grid": {
+    codename: "The Constellation",
+    section: "Spoke App Status Cards",
+    accent: "#6B82A0",
+    pattern: DotGrid,
+    icon: AppGridIcon
+  },
+  funnel: {
+    codename: "The Sieve",
+    section: "Conversion Funnel Card",
+    accent: "#8A5DB5",
+    pattern: DiamondGrid,
+    icon: FunnelIcon
+  },
+  trophy: {
+    codename: "The Laurel",
+    section: "Agent Performance Card",
+    accent: "#D4B83A",
+    pattern: RadialBurst,
+    icon: TrophyIcon
+  },
+  "team-pipeline": {
+    codename: "The Conclave",
+    section: "Broker Agent Pipeline Card",
+    accent: "#3A4F8C",
+    pattern: CrossHatch,
+    icon: TeamPipelineIcon
+  },
+  "lead-pool": {
+    codename: "The Spring",
+    section: "Lead Pools Card",
+    accent: "#3FA3A8",
+    pattern: ConcentricCircles,
+    icon: LeadPoolIcon
+  },
+  routing: {
+    codename: "The Junction",
+    section: "Leads Needing Routing Card",
+    accent: "#C26B3A",
+    pattern: OrbitalRings,
+    icon: RoutingIcon
+  },
+  "team-activity": {
+    codename: "The Choir",
+    section: "Milo Team Activity Card",
+    accent: "#9B5DB5",
+    pattern: DiamondGrid,
+    icon: TeamActivityIcon
+  },
+  "team-dawn": {
+    codename: "The Vigil",
+    section: "Team Before 9 Card",
+    accent: "#C49A52",
+    pattern: RadialBurst,
+    icon: TeamDawnIcon,
+    dark: true
   }
 };
 function DashboardCardIllustration({
@@ -5786,9 +7111,11 @@ export {
   APP_ICONS,
   APP_ILLUSTRATIONS,
   AccountabilityTrackerIcon,
+  ActionsIcon,
   AddressAutocomplete,
   AppCard,
   AppCardIllustration,
+  AppGridIcon,
   AppHeader,
   AppHeaderAction,
   AppHeaderDivider,
@@ -5800,6 +7127,7 @@ export {
   AvatarImage,
   Badge,
   BehavioralTag,
+  BrainIcon,
   BrandColorPicker,
   BudgetIcon,
   Button,
@@ -5817,6 +7145,7 @@ export {
   CategorySection,
   CelebrationIcon,
   Checkbox,
+  ClosingIcon,
   ConcentricCircles,
   ConversionScore,
   CreditScoreIcon,
@@ -5840,6 +7169,7 @@ export {
   DialogTitle,
   DialogTrigger,
   DiamondGrid,
+  DocsIcon,
   DotGrid,
   DownPaymentIcon,
   DragHint,
@@ -5848,6 +7178,11 @@ export {
   DtiIcon,
   EmptyState,
   ErrorBanner,
+  FlowIcon,
+  FollowupIcon,
+  FunnelIcon,
+  HRAssessmentsIcon,
+  HSProgressIcon,
   HarvestHomeIcon,
   HeroActionCard,
   HomeReadyIcon,
@@ -5858,15 +7193,20 @@ export {
   InsightCard,
   Label2 as Label,
   LeadCaptureFormsIcon,
+  LeadPoolIcon,
   LoadingOverlay,
+  LoanVolumeIcon,
+  MailboxIcon,
   MarketIntelIcon,
   MiniKanban,
   MortgageTermsIcon,
   MultiFeedbackWidget,
+  MyPipelineIcon,
   NeighborhoodIcon,
   NewsRow,
   NewsletterStudioIcon,
   OpenHouseHubIcon,
+  OpenHouseIcon,
   OrbitalRings,
   OvenIcon,
   PATTERNS,
@@ -5875,10 +7215,13 @@ export {
   Pagination,
   PipelineThermometer,
   PreApprovalIcon,
+  PreQualIcon,
   Progress,
   PulseIcon,
   RadialBurst,
+  RateAlertIcon,
   RelloUpsellNudge,
+  RoutingIcon,
   SavingsIcon,
   SegmentedProgress,
   Select,
@@ -5913,7 +7256,10 @@ export {
   TRACK_ILLUSTRATIONS,
   Table,
   TagSelector,
+  TeamActivityIcon,
+  TeamDawnIcon,
   TeamMemberCard,
+  TeamPipelineIcon,
   TeamRoster,
   Textarea,
   TimelineIcon,
@@ -5922,6 +7268,7 @@ export {
   TodaySchedule,
   Tooltip,
   TrackCardIllustration,
+  TrophyIcon,
   VoiceCorpusInput,
   WasThisHelpful,
   WeeklyChallengeIcon,

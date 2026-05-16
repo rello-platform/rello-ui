@@ -5,6 +5,19 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.8.0 — 2026-05-15
+
+**Additions — Dashboard Illustration Expansion (22 new icons + 22 new entries)**
+
+- `src/icons/dashboard-icons.tsx` — 22 new icon function exports, in-style with the existing 4 (DawnIcon / SignalIcon / PulseIcon / AtlasIcon). 48×48 viewBox, 5-layer composition, single-accent theming. New icons: `MyPipelineIcon`, `ActionsIcon`, `BrainIcon`, `FlowIcon`, `DocsIcon`, `RateAlertIcon`, `PreQualIcon`, `LoanVolumeIcon`, `ClosingIcon`, `HRAssessmentsIcon`, `HSProgressIcon`, `OpenHouseIcon`, `MailboxIcon`, `FollowupIcon`, `AppGridIcon`, `FunnelIcon`, `TrophyIcon`, `TeamPipelineIcon`, `LeadPoolIcon`, `RoutingIcon`, `TeamActivityIcon`, `TeamDawnIcon`.
+- `src/icons/index.ts` — 22 new names added to the dashboard-icons re-export.
+- `src/components/card-illustration/dashboard-illustrations.tsx` — 22 new entries in `DASHBOARD_ILLUSTRATIONS`: `my-pipeline`, `actions`, `brain`, `flow`, `docs`, `rate-alert`, `pre-qual`, `loan-volume`, `closing`, `hr-assessments`, `hs-progress`, `open-house`, `mailbox`, `followup`, `app-grid`, `funnel`, `trophy`, `team-pipeline`, `lead-pool`, `routing`, `team-activity`, `team-dawn`. Each entry: codename (in "The X" pattern) + section + accent hex + pattern (cycled across the existing 6 primitives) + icon ref + optional `dark` flag.
+- Cohesion: no consecutive entry shares pattern + accent-hue family. `team-dawn` is the sibling-variant of `before-9` for the Team Before 9 surface; same horizon-and-sun motif, distinguishable via smaller sun + two-figure silhouettes.
+
+**Why:** Resolves `DISCOVERED-DASHBOARD-CARD-CHROME-DRIFT-2026-05-15.md`. Honors Kelly's stated unique-illustration-per-card visual contract. Additive surface only — no breaking changes.
+
+**Consumer note:** All 22 new illustration keys are available immediately after pin bump. Rello consumer refit ships in a paired PR (see `BUILD-|-FEATURE-ADDS/DASHBOARD-CARD-CHROME-AND-VISUAL-INTEREST/` build spec).
+
 ## v2.4.0 — 2026-05-10
 
 ### Added — DRUMBEAT RELLO-UPSELL Phase 4 PR-1
