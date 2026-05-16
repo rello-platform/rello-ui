@@ -1267,7 +1267,7 @@ var CardIllustration = React16.forwardRef(
               children: pattern
             }
           ),
-          icon && /* @__PURE__ */ jsx22("div", { className: "relative", children: icon })
+          icon && /* @__PURE__ */ jsx22("div", { className: "relative flex items-center justify-center", children: icon })
         ]
       }
     );

@@ -81,8 +81,13 @@ const CardIllustration = React.forwardRef<HTMLDivElement, CardIllustrationProps>
             {pattern}
           </svg>
         )}
-        {/* Layer 3 — Primary icon */}
-        {icon && <div className="relative">{icon}</div>}
+        {/* Layer 3 — Primary icon. Wrapper is flex-centered (not just the
+            outer container) to neutralize the line-box descender that SVG's
+            default `display: inline` introduces — otherwise the icon visually
+            shifts up by a few pixels inside the bounding box. */}
+        {icon && (
+          <div className="relative flex items-center justify-center">{icon}</div>
+        )}
       </div>
     );
   },

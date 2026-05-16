@@ -5,6 +5,28 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.8.1 — 2026-05-16
+
+**Fix — `CardIllustration` icon centering**
+
+- `src/components/card-illustration/CardIllustration.tsx` — wrap Layer 3
+  icon in `<div className="relative flex items-center justify-center">`
+  instead of `<div className="relative">`. The wrapper now flex-centers
+  the SVG within itself, neutralizing the line-box descender that SVG's
+  default `display: inline` introduces. Without this, the icon sat at the
+  top of the wrapper (above the descender space), making it visually
+  shift up by a few pixels inside the 88px bounding box.
+
+**Why:** Visible-UI bug reported by Kelly 2026-05-16 against The Oven
+dashboard after the v2.8.0 chrome refit landed — illustrations were
+clearly not centered in their tinted-tile bounding boxes. Affects every
+consumer of `CardIllustration`, `DashboardCardIllustration`,
+`TrackCardIllustration`, and `AppCardIllustration` (all share the same
+underlying primitive).
+
+**Consumer note:** Patch-only fix, no API changes. Spokes on v2.8.0
+(Rello, The Oven as of 2026-05-16) should bump pin to v2.8.1.
+
 ## v2.8.0 — 2026-05-15
 
 **Additions — Dashboard Illustration Expansion (22 new icons + 22 new entries)**
