@@ -5,6 +5,22 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.9.0 — 2026-05-17
+
+**Tuned — DashboardCardIllustration defaults (smaller + lighter)**
+
+- `DashboardCardIllustration` defaults updated to match the canonical Rello dashboard chrome:
+  - `size` default 88 → 56
+  - `iconSize` default 48 → 28
+  - `bgOpacity` default 0.14 → 0.08
+- Cards passing explicit values continue to render at those values — explicit always wins.
+- CardIllustration (the underlying primitive) defaults unchanged; only the Dashboard variant.
+- TrackCardIllustration + AppCardIllustration unaffected.
+
+**Why:** Rello dashboard cards that don't pass explicit size/iconSize/bgOpacity rendered larger + denser than the canonical lock established by the Hero cards + Welcome modal tiles (all use 56/28/0.08). Tuning the defaults normalizes the un-touched refit cards automatically without per-card edits.
+
+**Consumer note:** No code change required at consumer side beyond pin bump. Cards that omit the props pick up the new defaults; cards that pass explicit values are unaffected.
+
 ## v2.8.1 — 2026-05-16
 
 **Fix — `CardIllustration` icon centering**

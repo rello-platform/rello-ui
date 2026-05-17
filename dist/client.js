@@ -3396,7 +3396,9 @@ var DASHBOARD_ILLUSTRATIONS = {
 function DashboardCardIllustration({
   illustrationKey,
   accentOverride,
-  iconSize = 48,
+  iconSize = 28,
+  size = 56,
+  bgOpacity = 0.08,
   ...props
 }) {
   const def = DASHBOARD_ILLUSTRATIONS[illustrationKey];
@@ -3409,6 +3411,8 @@ function DashboardCardIllustration({
     {
       accent,
       dark: def.dark,
+      size,
+      bgOpacity,
       pattern: /* @__PURE__ */ jsx27(PatternComp, { accent }),
       icon: /* @__PURE__ */ jsx27(IconComp, { accent: def.dark ? "#fff" : accent, size: iconSize }),
       ...props

@@ -264,14 +264,16 @@ export interface DashboardCardIllustrationProps
   illustrationKey: string;
   /** Override accent color */
   accentOverride?: string;
-  /** Icon size in px (default 48) */
+  /** Icon size in px (default 28) */
   iconSize?: number;
 }
 
 export function DashboardCardIllustration({
   illustrationKey,
   accentOverride,
-  iconSize = 48,
+  iconSize = 28,
+  size = 56,
+  bgOpacity = 0.08,
   ...props
 }: DashboardCardIllustrationProps) {
   const def = DASHBOARD_ILLUSTRATIONS[illustrationKey];
@@ -285,6 +287,8 @@ export function DashboardCardIllustration({
     <CardIllustration
       accent={accent}
       dark={def.dark}
+      size={size}
+      bgOpacity={bgOpacity}
       pattern={<PatternComp accent={accent} />}
       icon={<IconComp accent={def.dark ? "#fff" : accent} size={iconSize} />}
       {...props}

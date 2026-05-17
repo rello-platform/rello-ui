@@ -481,10 +481,10 @@ interface DashboardCardIllustrationProps extends Omit<CardIllustrationProps, "ac
     illustrationKey: string;
     /** Override accent color */
     accentOverride?: string;
-    /** Icon size in px (default 48) */
+    /** Icon size in px (default 28) */
     iconSize?: number;
 }
-declare function DashboardCardIllustration({ illustrationKey, accentOverride, iconSize, ...props }: DashboardCardIllustrationProps): react_jsx_runtime.JSX.Element | null;
+declare function DashboardCardIllustration({ illustrationKey, accentOverride, iconSize, size, bgOpacity, ...props }: DashboardCardIllustrationProps): react_jsx_runtime.JSX.Element | null;
 
 interface AppIllustrationDef {
     /** Creative codename */
