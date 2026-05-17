@@ -1233,6 +1233,7 @@ var CardIllustration = React16.forwardRef(
     className,
     accent,
     size = 88,
+    sizeOverride,
     radius = 18,
     bgOpacity = 0.14,
     pattern,
@@ -1244,14 +1245,14 @@ var CardIllustration = React16.forwardRef(
   }, ref) => {
     const containerBg = dark ? `rgba(255, 255, 255, ${0.06})` : `${accent}${Math.round(bgOpacity * 255).toString(16).padStart(2, "0")}`;
     const pOpacity = dark ? Math.min(patternOpacity * 2.5, 0.2) : patternOpacity;
+    const dimensionStyle = sizeOverride ? { width: sizeOverride, height: sizeOverride } : { width: size, height: size };
     return /* @__PURE__ */ jsxs15(
       "div",
       {
         ref,
         className: cn("relative flex items-center justify-center overflow-hidden shrink-0", className),
         style: {
-          width: size,
-          height: size,
+          ...dimensionStyle,
           borderRadius: radius,
           backgroundColor: containerBg,
           ...style
@@ -3393,11 +3394,12 @@ var DASHBOARD_ILLUSTRATIONS = {
     dark: true
   }
 };
+var RESPONSIVE_SIZE = "clamp(48px, calc(40px + 3vw), 88px)";
 function DashboardCardIllustration({
   illustrationKey,
   accentOverride,
   iconSize = 28,
-  size = 56,
+  size,
   bgOpacity = 0.08,
   ...props
 }) {
@@ -3411,7 +3413,7 @@ function DashboardCardIllustration({
     {
       accent,
       dark: def.dark,
-      size,
+      ...size !== void 0 ? { size } : { sizeOverride: RESPONSIVE_SIZE },
       bgOpacity,
       pattern: /* @__PURE__ */ jsx27(PatternComp, { accent }),
       icon: /* @__PURE__ */ jsx27(IconComp, { accent: def.dark ? "#fff" : accent, size: iconSize }),

@@ -12,6 +12,8 @@ export interface CardIllustrationProps extends React.HTMLAttributes<HTMLDivEleme
   accent: string;
   /** Container size in px (default 88) */
   size?: number;
+  /** CSS-expression size override (e.g. `clamp(48px, 6vw, 88px)`). Wins over `size` (number) when present. */
+  sizeOverride?: string;
   /** Border radius in px (default 18) */
   radius?: number;
   /** Container background opacity 0-1 (default 0.14) */
@@ -41,6 +43,7 @@ const CardIllustration = React.forwardRef<HTMLDivElement, CardIllustrationProps>
       className,
       accent,
       size = 88,
+      sizeOverride,
       radius = 18,
       bgOpacity = 0.14,
       pattern,
@@ -58,13 +61,16 @@ const CardIllustration = React.forwardRef<HTMLDivElement, CardIllustrationProps>
       : `${accent}${Math.round((bgOpacity * 255)).toString(16).padStart(2, "0")}`;
     const pOpacity = dark ? Math.min(patternOpacity * 2.5, 0.2) : patternOpacity;
 
+    const dimensionStyle: React.CSSProperties = sizeOverride
+      ? { width: sizeOverride, height: sizeOverride }
+      : { width: size, height: size };
+
     return (
       <div
         ref={ref}
         className={cn("relative flex items-center justify-center overflow-hidden shrink-0", className)}
         style={{
-          width: size,
-          height: size,
+          ...dimensionStyle,
           borderRadius: radius,
           backgroundColor: containerBg,
           ...style,

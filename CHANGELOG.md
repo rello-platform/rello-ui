@@ -5,6 +5,22 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.10.0 — 2026-05-17
+
+**DashboardCardIllustration default is now viewport-responsive**
+
+- Default size (when prop omitted): `clamp(48px, calc(40px + 3vw), 88px)`
+  - 320px viewport → ~49px
+  - 1024px viewport → ~71px
+  - 1440px+ viewport → 88px (capped)
+- Explicit `size={N}` (number) callers unaffected — explicit always wins.
+
+**New prop on CardIllustration:** `sizeOverride?: string` — CSS-expression dimension override (used by DashboardCardIllustration to inject the clamp). Track + App variants unchanged.
+
+**Why:** Fixed-pixel illustration sizes don't adapt to screen width. Kelly UX lock 2026-05-17: large on desktop, smaller on mobile. The clamp range matches the canonical pre-v2.9.0 88px on wide desktops while shrinking gracefully.
+
+**Consumer note:** Rello cards passing explicit `size={56}` continue rendering at 56px. Paired Rello-side dispatch removes those explicit values so they inherit the responsive default.
+
 ## v2.9.0 — 2026-05-17
 
 **Tuned — DashboardCardIllustration defaults (smaller + lighter)**

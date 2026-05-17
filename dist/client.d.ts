@@ -343,6 +343,8 @@ interface CardIllustrationProps extends React.HTMLAttributes<HTMLDivElement> {
     accent: string;
     /** Container size in px (default 88) */
     size?: number;
+    /** CSS-expression size override (e.g. `clamp(48px, 6vw, 88px)`). Wins over `size` (number) when present. */
+    sizeOverride?: string;
     /** Border radius in px (default 18) */
     radius?: number;
     /** Container background opacity 0-1 (default 0.14) */

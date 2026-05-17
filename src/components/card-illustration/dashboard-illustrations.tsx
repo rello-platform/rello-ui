@@ -268,11 +268,13 @@ export interface DashboardCardIllustrationProps
   iconSize?: number;
 }
 
+const RESPONSIVE_SIZE = "clamp(48px, calc(40px + 3vw), 88px)";
+
 export function DashboardCardIllustration({
   illustrationKey,
   accentOverride,
   iconSize = 28,
-  size = 56,
+  size,
   bgOpacity = 0.08,
   ...props
 }: DashboardCardIllustrationProps) {
@@ -287,7 +289,9 @@ export function DashboardCardIllustration({
     <CardIllustration
       accent={accent}
       dark={def.dark}
-      size={size}
+      {...(size !== undefined
+        ? { size }
+        : { sizeOverride: RESPONSIVE_SIZE })}
       bgOpacity={bgOpacity}
       pattern={<PatternComp accent={accent} />}
       icon={<IconComp accent={def.dark ? "#fff" : accent} size={iconSize} />}
