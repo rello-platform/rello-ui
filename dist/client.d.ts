@@ -639,9 +639,16 @@ interface DashboardShellProps {
     headerRightSlot?: React.ReactNode;
     /** Extra className for the header left area (logo + title) — useful for animations */
     headerClassName?: string;
+    /**
+     * Optional ReactNode rendered at the very bottom of the sidebar, below the
+     * last pinned nav group. Use for footer-action elements that need bespoke
+     * visual treatment outside the `variant` system (e.g. hardcoded brand colors,
+     * raw <button> shapes). Renders unchanged — caller owns all styling.
+     */
+    footerCustom?: React.ReactNode;
     className?: string;
 }
-declare function DashboardShell({ logo, appTitle, appSubtitle, highlightText, agentName, agentInitials, agentSubtitle, navGroups, activeNavLabel, onNavClick, heroContent, rightCard, children, headerActions, headerRightSlot, headerClassName, className, }: DashboardShellProps): react_jsx_runtime.JSX.Element;
+declare function DashboardShell({ logo, appTitle, appSubtitle, highlightText, agentName, agentInitials, agentSubtitle, navGroups, activeNavLabel, onNavClick, heroContent, rightCard, children, headerActions, headerRightSlot, headerClassName, footerCustom, className, }: DashboardShellProps): react_jsx_runtime.JSX.Element;
 
 /**
  * Pure pipeline stage constants.

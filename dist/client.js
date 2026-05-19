@@ -3720,7 +3720,8 @@ function Sidebar({
   activeNavLabel,
   onNavClick,
   hovered,
-  onHover
+  onHover,
+  footerCustom
 }) {
   const firstPinnedIdx = navGroups.findIndex((g) => g.pinToBottom === true);
   return /* @__PURE__ */ jsx33(
@@ -3735,52 +3736,55 @@ function Sidebar({
       },
       onMouseEnter: () => onHover(true),
       onMouseLeave: () => onHover(false),
-      children: /* @__PURE__ */ jsx33("div", { className: "py-2 flex flex-col flex-1 min-h-0", children: navGroups.map((group, gi) => /* @__PURE__ */ jsxs22(
-        "div",
-        {
-          style: gi === firstPinnedIdx ? { marginTop: "auto" } : void 0,
-          children: [
-            group.label && hovered && /* @__PURE__ */ jsx33("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600)] px-4 pt-3 pb-1", children: group.label }),
-            group.items.map((item) => {
-              const variant = item.variant;
-              const isActive = variant === void 0 && item.label === activeNavLabel;
-              const variantBg = variant ? {
-                primary: "var(--brand-primary)",
-                accent: "var(--brand-accent)",
-                danger: "var(--error)"
-              }[variant] : void 0;
-              const isProminent = isActive || variant !== void 0;
-              return /* @__PURE__ */ jsxs22(
-                "button",
-                {
-                  onClick: () => onNavClick?.(item),
-                  "aria-label": item.ariaLabel ?? item.label,
-                  "aria-current": isActive ? "page" : void 0,
-                  className: cn(
-                    "w-full flex items-center gap-2.5 py-2.5 min-h-[44px] transition-colors",
-                    variant && "hover:opacity-90"
-                  ),
-                  style: {
-                    paddingLeft: hovered ? 14 : 16,
-                    paddingRight: 14,
-                    backgroundColor: variantBg ?? (isActive ? "var(--brand-primary)" : "transparent"),
-                    color: isProminent ? "#fff" : "var(--neutral-600)",
-                    borderRadius: isProminent ? 10 : 0,
-                    margin: isProminent ? "2px 6px" : "0",
-                    width: isProminent ? "calc(100% - 12px)" : "100%"
+      children: /* @__PURE__ */ jsxs22("div", { className: "py-2 flex flex-col flex-1 min-h-0", children: [
+        navGroups.map((group, gi) => /* @__PURE__ */ jsxs22(
+          "div",
+          {
+            style: gi === firstPinnedIdx ? { marginTop: "auto" } : void 0,
+            children: [
+              group.label && hovered && /* @__PURE__ */ jsx33("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600)] px-4 pt-3 pb-1", children: group.label }),
+              group.items.map((item) => {
+                const variant = item.variant;
+                const isActive = variant === void 0 && item.label === activeNavLabel;
+                const variantBg = variant ? {
+                  primary: "var(--brand-primary)",
+                  accent: "var(--brand-accent)",
+                  danger: "var(--error)"
+                }[variant] : void 0;
+                const isProminent = isActive || variant !== void 0;
+                return /* @__PURE__ */ jsxs22(
+                  "button",
+                  {
+                    onClick: () => onNavClick?.(item),
+                    "aria-label": item.ariaLabel ?? item.label,
+                    "aria-current": isActive ? "page" : void 0,
+                    className: cn(
+                      "w-full flex items-center gap-2.5 py-2.5 min-h-[44px] transition-colors",
+                      variant && "hover:opacity-90"
+                    ),
+                    style: {
+                      paddingLeft: hovered ? 14 : 16,
+                      paddingRight: 14,
+                      backgroundColor: variantBg ?? (isActive ? "var(--brand-primary)" : "transparent"),
+                      color: isProminent ? "#fff" : "var(--neutral-600)",
+                      borderRadius: isProminent ? 10 : 0,
+                      margin: isProminent ? "2px 6px" : "0",
+                      width: isProminent ? "calc(100% - 12px)" : "100%"
+                    },
+                    children: [
+                      /* @__PURE__ */ jsx33("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
+                      hovered && /* @__PURE__ */ jsx33("span", { className: "text-xs font-medium whitespace-nowrap", style: { fontFamily: "var(--font-app-subtitle, var(--font-body))" }, children: item.label })
+                    ]
                   },
-                  children: [
-                    /* @__PURE__ */ jsx33("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
-                    hovered && /* @__PURE__ */ jsx33("span", { className: "text-xs font-medium whitespace-nowrap", style: { fontFamily: "var(--font-app-subtitle, var(--font-body))" }, children: item.label })
-                  ]
-                },
-                item.label
-              );
-            })
-          ]
-        },
-        gi
-      )) })
+                  item.label
+                );
+              })
+            ]
+          },
+          gi
+        )),
+        footerCustom
+      ] })
     }
   );
 }
@@ -3792,7 +3796,8 @@ function MobileNav({
   onNavClick,
   agentName,
   agentInitials,
-  agentSubtitle
+  agentSubtitle,
+  footerCustom
 }) {
   return /* @__PURE__ */ jsxs22(SlidePanel, { isOpen: open, onClose, position: "left", width: "280px", children: [
     /* @__PURE__ */ jsx33(SlidePanelHeader, { children: /* @__PURE__ */ jsx33("span", { className: "font-semibold text-[var(--neutral-900)]", children: "Menu" }) }),
@@ -3810,42 +3815,45 @@ function MobileNav({
         agentSubtitle && /* @__PURE__ */ jsx33("div", { className: "text-xs text-[var(--neutral-500)]", children: agentSubtitle })
       ] })
     ] }),
-    /* @__PURE__ */ jsx33(SlidePanelBody, { children: /* @__PURE__ */ jsx33("nav", { className: "py-2 flex flex-col min-h-full", children: navGroups.map((group, gi) => {
-      const firstPinnedIdx = navGroups.findIndex((g) => g.pinToBottom === true);
-      return /* @__PURE__ */ jsxs22("div", { style: gi === firstPinnedIdx ? { marginTop: "auto" } : void 0, children: [
-        group.label && /* @__PURE__ */ jsx33("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600)] px-5 pt-3 pb-1", children: group.label }),
-        group.items.map((item) => {
-          const variant = item.variant;
-          const isActive = variant === void 0 && item.label === activeNavLabel;
-          const variantClass = variant ? {
-            primary: "bg-[var(--brand-primary)] text-white hover:opacity-90",
-            accent: "bg-[var(--brand-accent)] text-white hover:opacity-90",
-            danger: "bg-[var(--error)] text-white hover:opacity-90"
-          }[variant] : null;
-          return /* @__PURE__ */ jsxs22(
-            "button",
-            {
-              onClick: () => {
-                onNavClick?.(item);
-                onClose();
+    /* @__PURE__ */ jsx33(SlidePanelBody, { children: /* @__PURE__ */ jsxs22("nav", { className: "py-2 flex flex-col min-h-full", children: [
+      navGroups.map((group, gi) => {
+        const firstPinnedIdx = navGroups.findIndex((g) => g.pinToBottom === true);
+        return /* @__PURE__ */ jsxs22("div", { style: gi === firstPinnedIdx ? { marginTop: "auto" } : void 0, children: [
+          group.label && /* @__PURE__ */ jsx33("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600)] px-5 pt-3 pb-1", children: group.label }),
+          group.items.map((item) => {
+            const variant = item.variant;
+            const isActive = variant === void 0 && item.label === activeNavLabel;
+            const variantClass = variant ? {
+              primary: "bg-[var(--brand-primary)] text-white hover:opacity-90",
+              accent: "bg-[var(--brand-accent)] text-white hover:opacity-90",
+              danger: "bg-[var(--error)] text-white hover:opacity-90"
+            }[variant] : null;
+            return /* @__PURE__ */ jsxs22(
+              "button",
+              {
+                onClick: () => {
+                  onNavClick?.(item);
+                  onClose();
+                },
+                "aria-label": item.ariaLabel ?? item.label,
+                "aria-current": isActive ? "page" : void 0,
+                className: cn(
+                  "flex items-center gap-3 w-full px-5 py-2.5 min-h-[44px] text-sm transition-colors",
+                  variantClass ?? (isActive ? "bg-[var(--brand-primary-light)] text-[var(--brand-primary)] font-semibold" : "text-[var(--neutral-600)] hover:bg-[var(--neutral-50)]")
+                ),
+                style: { fontFamily: "var(--font-app-subtitle, var(--font-body))" },
+                children: [
+                  /* @__PURE__ */ jsx33("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
+                  item.label
+                ]
               },
-              "aria-label": item.ariaLabel ?? item.label,
-              "aria-current": isActive ? "page" : void 0,
-              className: cn(
-                "flex items-center gap-3 w-full px-5 py-2.5 min-h-[44px] text-sm transition-colors",
-                variantClass ?? (isActive ? "bg-[var(--brand-primary-light)] text-[var(--brand-primary)] font-semibold" : "text-[var(--neutral-600)] hover:bg-[var(--neutral-50)]")
-              ),
-              style: { fontFamily: "var(--font-app-subtitle, var(--font-body))" },
-              children: [
-                /* @__PURE__ */ jsx33("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
-                item.label
-              ]
-            },
-            item.label
-          );
-        })
-      ] }, gi);
-    }) }) })
+              item.label
+            );
+          })
+        ] }, gi);
+      }),
+      footerCustom
+    ] }) })
   ] });
 }
 function DashboardShell({
@@ -3865,6 +3873,7 @@ function DashboardShell({
   headerActions,
   headerRightSlot,
   headerClassName,
+  footerCustom,
   className
 }) {
   const [sidebarHovered, setSidebarHovered] = useState3(false);
@@ -3954,7 +3963,8 @@ function DashboardShell({
               activeNavLabel,
               onNavClick,
               hovered: sidebarHovered,
-              onHover: setSidebarHovered
+              onHover: setSidebarHovered,
+              footerCustom
             }
           ),
           /* @__PURE__ */ jsxs22("div", { className: "flex-1 min-w-0 flex flex-col gap-4", children: [
@@ -3975,7 +3985,8 @@ function DashboardShell({
             onNavClick,
             agentName,
             agentInitials,
-            agentSubtitle
+            agentSubtitle,
+            footerCustom
           }
         )
       ]

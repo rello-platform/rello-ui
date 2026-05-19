@@ -94,6 +94,14 @@ export interface DashboardShellProps {
   /** Extra className for the header left area (logo + title) — useful for animations */
   headerClassName?: string;
 
+  /**
+   * Optional ReactNode rendered at the very bottom of the sidebar, below the
+   * last pinned nav group. Use for footer-action elements that need bespoke
+   * visual treatment outside the `variant` system (e.g. hardcoded brand colors,
+   * raw <button> shapes). Renders unchanged — caller owns all styling.
+   */
+  footerCustom?: React.ReactNode;
+
   className?: string;
 }
 
@@ -105,12 +113,14 @@ function Sidebar({
   onNavClick,
   hovered,
   onHover,
+  footerCustom,
 }: {
   navGroups: DashboardNavGroup[];
   activeNavLabel?: string;
   onNavClick?: (item: DashboardNavItem) => void;
   hovered: boolean;
   onHover: (h: boolean) => void;
+  footerCustom?: React.ReactNode;
 }) {
   // Find the FIRST pinToBottom group — that index gets `margin-top: auto`,
   // which pushes it (and every subsequent group) to the bottom of the
@@ -184,6 +194,7 @@ function Sidebar({
             })}
           </div>
         ))}
+        {footerCustom}
       </div>
     </div>
   );
@@ -200,6 +211,7 @@ function MobileNav({
   agentName,
   agentInitials,
   agentSubtitle,
+  footerCustom,
 }: {
   open: boolean;
   onClose: () => void;
@@ -209,6 +221,7 @@ function MobileNav({
   agentName: string;
   agentInitials: string;
   agentSubtitle?: string;
+  footerCustom?: React.ReactNode;
 }) {
   return (
     <SlidePanel isOpen={open} onClose={onClose} position="left" width="280px">
@@ -281,6 +294,7 @@ function MobileNav({
             </div>
             );
           })}
+          {footerCustom}
         </nav>
       </SlidePanelBody>
     </SlidePanel>
@@ -306,6 +320,7 @@ function DashboardShell({
   headerActions,
   headerRightSlot,
   headerClassName,
+  footerCustom,
   className,
 }: DashboardShellProps) {
   const [sidebarHovered, setSidebarHovered] = useState(false);
@@ -401,6 +416,7 @@ function DashboardShell({
           onNavClick={onNavClick}
           hovered={sidebarHovered}
           onHover={setSidebarHovered}
+          footerCustom={footerCustom}
         />
 
         {/* Content area */}
@@ -428,6 +444,7 @@ function DashboardShell({
         agentName={agentName}
         agentInitials={agentInitials}
         agentSubtitle={agentSubtitle}
+        footerCustom={footerCustom}
       />
     </div>
   );

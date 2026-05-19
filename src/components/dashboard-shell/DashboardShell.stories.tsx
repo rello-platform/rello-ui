@@ -89,3 +89,19 @@ export const NoRightCard: Story = {
     rightCard: undefined,
   },
 };
+
+export const WithFooterCustomReturnToRello: Story = {
+  args: {
+    ...Default.args,
+    footerCustom: (
+      <button
+        type="button"
+        onClick={() => { window.location.href = "/mlo"; }}
+        className="flex items-center justify-center gap-2 w-full px-3 py-3 mx-3 mb-3 mt-auto rounded-lg text-sm font-semibold text-white transition-colors min-h-[44px]"
+        style={{ backgroundColor: "#c05621" }}
+      >
+        ← Return to Rello
+      </button>
+    ),
+  },
+};
