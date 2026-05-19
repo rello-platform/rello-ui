@@ -158,11 +158,11 @@ Drumbeat's `@rello-platform/ui` pin from raw SHA to `#v2.3.0` tag form.
 
 ## Build verification axes
 
-Rello-UI is a **library, not a Railway-deployed service**. The platform's universal three-axis build verification (`tsc + next build + Railway deploy-watch` per `feedback-build-verification-third-axis-railway-deploy-watch`) substitutes the third axis with **consumer-install verification**:
+Rello-UI is a **library, not a Railway-deployed service**. The platform's universal three-axis build verification (post-2026-05-18 GH-Actions retirement: husky pre-push hook + Railway deploy + `/api/health.commit` smoke — see universal CLAUDE.md §Build verification) substitutes the deploy/health axes with **consumer-install verification**:
 
-1. **`npx tsc --noEmit`** — zero new errors. Strict TypeScript; every component exports a typed prop interface that consumers import.
+1. **`npx tsc --noEmit`** — zero new errors. Strict TypeScript; every component exports a typed prop interface that consumers import. (axis-1 equivalent — gated by husky pre-push in repos that have it; rello-ui currently relies on the npm-publish-time check + consumer-install verification below.)
 2. **`npm run build`** — `dist/` regenerates cleanly. Both entries (`dist/index.js`, `dist/client.js`) emit; only `dist/client.js` carries the `"use client"` banner. No regression vs prior `dist/`.
-3. **Consumer-install verification (Rello-UI's third axis):** in a temp worktree of any sibling spoke (e.g. `~/The-Drumbeat-rui-test/`), update the spoke's `package.json` to pin `github:rello-platform/rello-ui#<NEW-SHA>` (the SHA your push will produce — known after `git push` SHA-match). Run `npm install`. Confirm clean resolve, no peer-dep warnings beyond known noise. If the spoke's `next build` is also reasonable to run (Drumbeat is a good candidate — uses many Rello-UI components), run it. Any consumer-install regression → halt.
+3. **Consumer-install verification (Rello-UI's substitute for the deploy/health axes):** in a temp worktree of any sibling spoke (e.g. `~/The-Drumbeat-rui-test/`), update the spoke's `package.json` to pin `github:rello-platform/rello-ui#<NEW-SHA>` (the SHA your push will produce — known after `git push` SHA-match). Run `npm install`. Confirm clean resolve, no peer-dep warnings beyond known noise. If the spoke's `next build` is also reasonable to run (Drumbeat is a good candidate — uses many Rello-UI components), run it. Any consumer-install regression → halt.
 
 `tsc` and `build` are local; consumer-install is the structural substitute for "did this actually deploy."
 
@@ -171,7 +171,7 @@ Rello-UI is a **library, not a Railway-deployed service**. The platform's univer
 - **Husky pre-commit:** `bash scripts/check-floating-refs.sh` (Phase 0 durability gate per `PERMISSIONS-CANONICALIZATION.md` Locks #1 + #4).
 - **NEVER skip hooks** unless Kelly has explicitly authorized in-session. Per universal CLAUDE.md: `--no-verify`, `--no-gpg-sign`, etc. are forbidden by default. If the hook fails, fix the underlying issue and create a NEW commit (never `--amend` after a hook failure — the commit didn't happen, so amend would modify the previous commit).
 - **No `console.log` in source** per `feedback_cli_stdout_not_console_log` (CLI scripts use `process.stdout.write`; library source uses `console.error` / `console.warn` for genuine error paths only). Pre-commit blocks on `console.log`.
-- **CI workflows:** `.github/workflows/ci.yml` (typecheck + build + test), `.github/workflows/dep-pin-check.yml` (dependency pin discipline), `.github/workflows/publish.yml` (GitHub Packages publish on tag push).
+- **CI workflows:** `.github/workflows/publish.yml` (GitHub Packages publish on `v*` tag push) — RETAINED as carve-out per `PLATFORM-RETIRE-GH-ACTIONS-LOCAL-HUSKY-MIGRATION` 2026-05-18 (free-tier-bounded; replacing locally would require a GH PAT with `write:packages`). `ci.yml` (typecheck + build + test) and `dep-pin-check.yml` (dependency pin discipline) were retired in Phase 2 of the same workstream — verification now lives in the husky pre-push hook + consumer-install axis above.
 
 ## Class-Level Rules applicability
 
