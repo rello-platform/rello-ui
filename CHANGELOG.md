@@ -5,6 +5,34 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.12.0 — 2026-05-19
+
+**DashboardShell.footerCustom is now collapse-aware (render-prop form)**
+
+`footerCustom` accepts a function in addition to a ReactNode:
+
+```ts
+footerCustom?:
+  | React.ReactNode
+  | ((state: { collapsed: boolean }) => React.ReactNode);
+```
+
+When passed as a function, the Sidebar invokes it with `{ collapsed: !hovered }` so consumers can swap shapes between the 60px collapsed icon-rail and the 190px hovered/expanded pill. MobileNav always invokes the function with `collapsed: false` (the slide panel is always full-width at 280px).
+
+**Why:** Drumbeat is the only spoke with a collapsible icon-rail. The v2.11.0 raw-ReactNode form forced consumers to either render a full-width pill that wrapped text inside the 60px rail, or reach into rello-ui DOM internals via a `ResizeObserver` hack to derive collapsed state. The render-prop variant is the clean structural fix.
+
+**Consumer note:** Backwards-compatible — passing a `ReactNode` continues to work unchanged. Migrate to the function form only when you need shape-swap on collapse (currently Drumbeat). New Storybook story `WithFooterCustomCollapseAware` demonstrates the icon-square ⇄ full-pill swap.
+
+## v2.11.0 — 2026-05-18
+
+**DashboardShell.footerCustom slot (raw-element rendering)**
+
+Adds `footerCustom?: React.ReactNode` to `DashboardShell` for downstream apps that need to render footer-action elements outside the `variant` system (hardcoded brand colors, bespoke shapes). The slot renders unchanged at the very bottom of the sidebar — caller owns all styling.
+
+Use case: cross-app "Return to Rello" pill, locked to HR's `#c05621` warm-orange visual. The existing nav-item `variant` props (`primary` / `accent` / `danger`) bind to per-app brand CSS variables, so they can't express the platform-wide visual lock; `footerCustom` lets the consumer pass a raw `<button>` with hardcoded color.
+
+**Consumer note:** Additive — existing apps unaffected. New Storybook story `WithFooterCustomReturnToRello` demonstrates the canonical shape.
+
 ## v2.10.0 — 2026-05-17
 
 **DashboardCardIllustration default is now viewport-responsive**

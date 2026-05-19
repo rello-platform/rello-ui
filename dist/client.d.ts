@@ -640,12 +640,22 @@ interface DashboardShellProps {
     /** Extra className for the header left area (logo + title) — useful for animations */
     headerClassName?: string;
     /**
-     * Optional ReactNode rendered at the very bottom of the sidebar, below the
+     * Optional content rendered at the very bottom of the sidebar, below the
      * last pinned nav group. Use for footer-action elements that need bespoke
      * visual treatment outside the `variant` system (e.g. hardcoded brand colors,
      * raw <button> shapes). Renders unchanged — caller owns all styling.
+     *
+     * Accepts either:
+     * - `React.ReactNode` — rendered as-is regardless of sidebar state.
+     * - `(state: { collapsed: boolean }) => React.ReactNode` — render-prop form
+     *   that receives the live sidebar collapsed state, letting consumers swap
+     *   between an icon-only shape (collapsed rail, ~60px wide) and a full-width
+     *   shape (hovered, 190px wide). MobileNav always invokes with
+     *   `collapsed: false` since the mobile panel is always at full width.
      */
-    footerCustom?: React.ReactNode;
+    footerCustom?: React.ReactNode | ((state: {
+        collapsed: boolean;
+    }) => React.ReactNode);
     className?: string;
 }
 declare function DashboardShell({ logo, appTitle, appSubtitle, highlightText, agentName, agentInitials, agentSubtitle, navGroups, activeNavLabel, onNavClick, heroContent, rightCard, children, headerActions, headerRightSlot, headerClassName, footerCustom, className, }: DashboardShellProps): react_jsx_runtime.JSX.Element;

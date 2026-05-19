@@ -105,3 +105,41 @@ export const WithFooterCustomReturnToRello: Story = {
     ),
   },
 };
+
+/**
+ * Render-prop footerCustom (v2.12.0+) — receives `{ collapsed }` reflecting
+ * the live Sidebar hover state. Use when the consumer app has a collapsible
+ * icon-rail (currently only Drumbeat across the platform) and needs to swap
+ * between an icon-only shape and a full-width pill.
+ *
+ * Collapsed rail (60px) → 44px-square orange icon button.
+ * Hovered / expanded (190px) → full-width HR-locked pill with label.
+ */
+export const WithFooterCustomCollapseAware: Story = {
+  args: {
+    ...Default.args,
+    footerCustom: ({ collapsed }: { collapsed: boolean }) =>
+      collapsed ? (
+        <button
+          type="button"
+          aria-label="Return to Rello"
+          title="Return to Rello"
+          onClick={() => { window.location.href = "/mlo"; }}
+          className="flex items-center justify-center mx-auto mb-3 rounded-lg text-white transition-colors size-11"
+          style={{ backgroundColor: "#c05621" }}
+        >
+          <FastArrowRight {...ICON} className="rotate-180" aria-hidden="true" />
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => { window.location.href = "/mlo"; }}
+          className="flex items-center justify-center gap-2 w-[calc(100%-24px)] px-3 py-3 mx-3 mb-3 rounded-lg text-sm font-semibold text-white transition-colors min-h-[44px]"
+          style={{ backgroundColor: "#c05621" }}
+        >
+          <FastArrowRight {...ICON} className="rotate-180" aria-hidden="true" />
+          Return to Rello
+        </button>
+      ),
+  },
+};

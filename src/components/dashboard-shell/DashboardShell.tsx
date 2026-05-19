@@ -95,12 +95,22 @@ export interface DashboardShellProps {
   headerClassName?: string;
 
   /**
-   * Optional ReactNode rendered at the very bottom of the sidebar, below the
+   * Optional content rendered at the very bottom of the sidebar, below the
    * last pinned nav group. Use for footer-action elements that need bespoke
    * visual treatment outside the `variant` system (e.g. hardcoded brand colors,
    * raw <button> shapes). Renders unchanged — caller owns all styling.
+   *
+   * Accepts either:
+   * - `React.ReactNode` — rendered as-is regardless of sidebar state.
+   * - `(state: { collapsed: boolean }) => React.ReactNode` — render-prop form
+   *   that receives the live sidebar collapsed state, letting consumers swap
+   *   between an icon-only shape (collapsed rail, ~60px wide) and a full-width
+   *   shape (hovered, 190px wide). MobileNav always invokes with
+   *   `collapsed: false` since the mobile panel is always at full width.
    */
-  footerCustom?: React.ReactNode;
+  footerCustom?:
+    | React.ReactNode
+    | ((state: { collapsed: boolean }) => React.ReactNode);
 
   className?: string;
 }
@@ -120,12 +130,18 @@ function Sidebar({
   onNavClick?: (item: DashboardNavItem) => void;
   hovered: boolean;
   onHover: (h: boolean) => void;
-  footerCustom?: React.ReactNode;
+  footerCustom?:
+    | React.ReactNode
+    | ((state: { collapsed: boolean }) => React.ReactNode);
 }) {
   // Find the FIRST pinToBottom group — that index gets `margin-top: auto`,
   // which pushes it (and every subsequent group) to the bottom of the
   // flex column. Pinned groups stack in source order against the bottom.
   const firstPinnedIdx = navGroups.findIndex((g) => g.pinToBottom === true);
+  const resolvedFooter =
+    typeof footerCustom === "function"
+      ? footerCustom({ collapsed: !hovered })
+      : footerCustom;
 
   return (
     <div
@@ -194,7 +210,7 @@ function Sidebar({
             })}
           </div>
         ))}
-        {footerCustom}
+        {resolvedFooter}
       </div>
     </div>
   );
@@ -221,8 +237,17 @@ function MobileNav({
   agentName: string;
   agentInitials: string;
   agentSubtitle?: string;
-  footerCustom?: React.ReactNode;
+  footerCustom?:
+    | React.ReactNode
+    | ((state: { collapsed: boolean }) => React.ReactNode);
 }) {
+  // Mobile slide-panel is always at full width (280px); invoke render-prop
+  // footerCustom with collapsed=false so consumers can reuse the same
+  // function form they pass to the desktop sidebar.
+  const resolvedFooter =
+    typeof footerCustom === "function"
+      ? footerCustom({ collapsed: false })
+      : footerCustom;
   return (
     <SlidePanel isOpen={open} onClose={onClose} position="left" width="280px">
       <SlidePanelHeader>
@@ -294,7 +319,7 @@ function MobileNav({
             </div>
             );
           })}
-          {footerCustom}
+          {resolvedFooter}
         </nav>
       </SlidePanelBody>
     </SlidePanel>

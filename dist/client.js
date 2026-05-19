@@ -3724,6 +3724,7 @@ function Sidebar({
   footerCustom
 }) {
   const firstPinnedIdx = navGroups.findIndex((g) => g.pinToBottom === true);
+  const resolvedFooter = typeof footerCustom === "function" ? footerCustom({ collapsed: !hovered }) : footerCustom;
   return /* @__PURE__ */ jsx33(
     "div",
     {
@@ -3783,7 +3784,7 @@ function Sidebar({
           },
           gi
         )),
-        footerCustom
+        resolvedFooter
       ] })
     }
   );
@@ -3799,6 +3800,7 @@ function MobileNav({
   agentSubtitle,
   footerCustom
 }) {
+  const resolvedFooter = typeof footerCustom === "function" ? footerCustom({ collapsed: false }) : footerCustom;
   return /* @__PURE__ */ jsxs22(SlidePanel, { isOpen: open, onClose, position: "left", width: "280px", children: [
     /* @__PURE__ */ jsx33(SlidePanelHeader, { children: /* @__PURE__ */ jsx33("span", { className: "font-semibold text-[var(--neutral-900)]", children: "Menu" }) }),
     /* @__PURE__ */ jsxs22("div", { className: "flex items-center gap-3 px-5 py-4 border-b border-[var(--card-border)]", children: [
@@ -3852,7 +3854,7 @@ function MobileNav({
           })
         ] }, gi);
       }),
-      footerCustom
+      resolvedFooter
     ] }) })
   ] });
 }
