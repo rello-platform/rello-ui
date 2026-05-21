@@ -3713,8 +3713,9 @@ PageContainer.displayName = "PageContainer";
 
 // src/components/dashboard-shell/DashboardShell.tsx
 import { useState as useState3 } from "react";
+import Link from "next/link";
 import { Menu } from "iconoir-react";
-import { jsx as jsx33, jsxs as jsxs22 } from "react/jsx-runtime";
+import { Fragment as Fragment4, jsx as jsx33, jsxs as jsxs22 } from "react/jsx-runtime";
 function Sidebar({
   navGroups,
   activeNavLabel,
@@ -3731,8 +3732,8 @@ function Sidebar({
       className: "rounded-xl flex-shrink-0 overflow-hidden transition-all duration-300 hidden md:flex flex-col",
       style: {
         width: hovered ? 190 : 60,
-        backgroundColor: "var(--card-background)",
-        border: "1px solid var(--card-border)",
+        backgroundColor: "var(--card-background, #FFFFFF)",
+        border: "1px solid var(--card-border, #D1D5DB)",
         minHeight: "100%"
       },
       onMouseEnter: () => onHover(true),
@@ -3743,39 +3744,64 @@ function Sidebar({
           {
             style: gi === firstPinnedIdx ? { marginTop: "auto" } : void 0,
             children: [
-              group.label && hovered && /* @__PURE__ */ jsx33("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600)] px-4 pt-3 pb-1", children: group.label }),
+              group.label && hovered && /* @__PURE__ */ jsx33("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600,#525B62)] px-4 pt-3 pb-1", children: group.label }),
               group.items.map((item) => {
                 const variant = item.variant;
                 const isActive = variant === void 0 && item.label === activeNavLabel;
                 const variantBg = variant ? {
-                  primary: "var(--brand-primary)",
-                  accent: "var(--brand-accent)",
-                  danger: "var(--error)"
+                  primary: "var(--brand-primary, #3B5998)",
+                  accent: "var(--brand-accent, #C9785D)",
+                  danger: "var(--error, #C9605D)"
                 }[variant] : void 0;
                 const isProminent = isActive || variant !== void 0;
-                return /* @__PURE__ */ jsxs22(
-                  "button",
+                const sharedClassName = cn(
+                  "w-full flex items-center gap-2.5 py-2.5 min-h-[44px] transition-colors",
+                  variant && "hover:opacity-90"
+                );
+                const sharedStyle = {
+                  paddingLeft: hovered ? 14 : 16,
+                  paddingRight: 14,
+                  backgroundColor: variantBg ?? (isActive ? "var(--brand-primary, #3B5998)" : "transparent"),
+                  color: isProminent ? "#fff" : "var(--neutral-600, #525B62)",
+                  borderRadius: isProminent ? 10 : 0,
+                  margin: isProminent ? "2px 6px" : "0",
+                  width: isProminent ? "calc(100% - 12px)" : "100%"
+                };
+                const inner = /* @__PURE__ */ jsxs22(Fragment4, { children: [
+                  /* @__PURE__ */ jsx33("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
+                  hovered && /* @__PURE__ */ jsx33(
+                    "span",
+                    {
+                      className: "text-xs font-medium whitespace-nowrap",
+                      style: {
+                        fontFamily: "var(--font-app-subtitle, var(--font-body, system-ui, sans-serif))"
+                      },
+                      children: item.label
+                    }
+                  )
+                ] });
+                return item.href ? /* @__PURE__ */ jsx33(
+                  Link,
                   {
+                    href: item.href,
                     onClick: () => onNavClick?.(item),
                     "aria-label": item.ariaLabel ?? item.label,
                     "aria-current": isActive ? "page" : void 0,
-                    className: cn(
-                      "w-full flex items-center gap-2.5 py-2.5 min-h-[44px] transition-colors",
-                      variant && "hover:opacity-90"
-                    ),
-                    style: {
-                      paddingLeft: hovered ? 14 : 16,
-                      paddingRight: 14,
-                      backgroundColor: variantBg ?? (isActive ? "var(--brand-primary)" : "transparent"),
-                      color: isProminent ? "#fff" : "var(--neutral-600)",
-                      borderRadius: isProminent ? 10 : 0,
-                      margin: isProminent ? "2px 6px" : "0",
-                      width: isProminent ? "calc(100% - 12px)" : "100%"
-                    },
-                    children: [
-                      /* @__PURE__ */ jsx33("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
-                      hovered && /* @__PURE__ */ jsx33("span", { className: "text-xs font-medium whitespace-nowrap", style: { fontFamily: "var(--font-app-subtitle, var(--font-body))" }, children: item.label })
-                    ]
+                    className: sharedClassName,
+                    style: sharedStyle,
+                    children: inner
+                  },
+                  item.label
+                ) : /* @__PURE__ */ jsx33(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: () => onNavClick?.(item),
+                    "aria-label": item.ariaLabel ?? item.label,
+                    "aria-current": isActive ? "page" : void 0,
+                    className: sharedClassName,
+                    style: sharedStyle,
+                    children: inner
                   },
                   item.label
                 );
@@ -3802,52 +3828,73 @@ function MobileNav({
 }) {
   const resolvedFooter = typeof footerCustom === "function" ? footerCustom({ collapsed: false }) : footerCustom;
   return /* @__PURE__ */ jsxs22(SlidePanel, { isOpen: open, onClose, position: "left", width: "280px", children: [
-    /* @__PURE__ */ jsx33(SlidePanelHeader, { children: /* @__PURE__ */ jsx33("span", { className: "font-semibold text-[var(--neutral-900)]", children: "Menu" }) }),
-    /* @__PURE__ */ jsxs22("div", { className: "flex items-center gap-3 px-5 py-4 border-b border-[var(--card-border)]", children: [
+    /* @__PURE__ */ jsx33(SlidePanelHeader, { children: /* @__PURE__ */ jsx33("span", { className: "font-semibold text-[var(--neutral-900,#2D3339)]", children: "Menu" }) }),
+    /* @__PURE__ */ jsxs22("div", { className: "flex items-center gap-3 px-5 py-4 border-b border-[var(--card-border,#D1D5DB)]", children: [
       /* @__PURE__ */ jsx33(
         "div",
         {
           className: "w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold",
-          style: { background: "var(--brand-primary-light)", color: "var(--neutral-900, #111827)" },
+          style: { background: "var(--brand-primary-light, rgba(59, 89, 152, 0.15))", color: "var(--neutral-900, #2D3339)" },
           children: agentInitials
         }
       ),
       /* @__PURE__ */ jsxs22("div", { children: [
-        /* @__PURE__ */ jsx33("div", { className: "font-medium text-sm text-[var(--neutral-900)]", children: agentName }),
-        agentSubtitle && /* @__PURE__ */ jsx33("div", { className: "text-xs text-[var(--neutral-500)]", children: agentSubtitle })
+        /* @__PURE__ */ jsx33("div", { className: "font-medium text-sm text-[var(--neutral-900,#2D3339)]", children: agentName }),
+        agentSubtitle && /* @__PURE__ */ jsx33("div", { className: "text-xs text-[var(--neutral-500,#646F77)]", children: agentSubtitle })
       ] })
     ] }),
     /* @__PURE__ */ jsx33(SlidePanelBody, { children: /* @__PURE__ */ jsxs22("nav", { className: "py-2 flex flex-col min-h-full", children: [
       navGroups.map((group, gi) => {
         const firstPinnedIdx = navGroups.findIndex((g) => g.pinToBottom === true);
         return /* @__PURE__ */ jsxs22("div", { style: gi === firstPinnedIdx ? { marginTop: "auto" } : void 0, children: [
-          group.label && /* @__PURE__ */ jsx33("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600)] px-5 pt-3 pb-1", children: group.label }),
+          group.label && /* @__PURE__ */ jsx33("p", { className: "text-[9px] font-semibold uppercase tracking-wider text-[var(--neutral-600,#525B62)] px-5 pt-3 pb-1", children: group.label }),
           group.items.map((item) => {
             const variant = item.variant;
             const isActive = variant === void 0 && item.label === activeNavLabel;
             const variantClass = variant ? {
-              primary: "bg-[var(--brand-primary)] text-white hover:opacity-90",
-              accent: "bg-[var(--brand-accent)] text-white hover:opacity-90",
-              danger: "bg-[var(--error)] text-white hover:opacity-90"
+              primary: "bg-[var(--brand-primary,#3B5998)] text-white hover:opacity-90",
+              accent: "bg-[var(--brand-accent,#C9785D)] text-white hover:opacity-90",
+              danger: "bg-[var(--error,#C9605D)] text-white hover:opacity-90"
             }[variant] : null;
-            return /* @__PURE__ */ jsxs22(
-              "button",
+            const sharedClassName = cn(
+              "flex items-center gap-3 w-full px-5 py-2.5 min-h-[44px] text-sm transition-colors",
+              variantClass ?? (isActive ? "bg-[var(--brand-primary-light,rgba(59,89,152,0.15))] text-[var(--brand-primary,#3B5998)] font-semibold" : "text-[var(--neutral-600,#525B62)] hover:bg-[var(--neutral-50,#FAFBFC)]")
+            );
+            const sharedStyle = {
+              fontFamily: "var(--font-app-subtitle, var(--font-body, system-ui, sans-serif))"
+            };
+            const inner = /* @__PURE__ */ jsxs22(Fragment4, { children: [
+              /* @__PURE__ */ jsx33("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
+              item.label
+            ] });
+            return item.href ? /* @__PURE__ */ jsx33(
+              Link,
               {
+                href: item.href,
                 onClick: () => {
                   onNavClick?.(item);
                   onClose();
                 },
                 "aria-label": item.ariaLabel ?? item.label,
                 "aria-current": isActive ? "page" : void 0,
-                className: cn(
-                  "flex items-center gap-3 w-full px-5 py-2.5 min-h-[44px] text-sm transition-colors",
-                  variantClass ?? (isActive ? "bg-[var(--brand-primary-light)] text-[var(--brand-primary)] font-semibold" : "text-[var(--neutral-600)] hover:bg-[var(--neutral-50)]")
-                ),
-                style: { fontFamily: "var(--font-app-subtitle, var(--font-body))" },
-                children: [
-                  /* @__PURE__ */ jsx33("div", { className: "size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5", children: item.icon }),
-                  item.label
-                ]
+                className: sharedClassName,
+                style: sharedStyle,
+                children: inner
+              },
+              item.label
+            ) : /* @__PURE__ */ jsx33(
+              "button",
+              {
+                type: "button",
+                onClick: () => {
+                  onNavClick?.(item);
+                  onClose();
+                },
+                "aria-label": item.ariaLabel ?? item.label,
+                "aria-current": isActive ? "page" : void 0,
+                className: sharedClassName,
+                style: sharedStyle,
+                children: inner
               },
               item.label
             );
@@ -3884,14 +3931,15 @@ function DashboardShell({
     "div",
     {
       className: cn("min-h-screen", className),
-      style: { backgroundColor: "var(--background)" },
+      style: { backgroundColor: "var(--background, #FAFBFC)" },
       children: [
         /* @__PURE__ */ jsxs22("div", { className: "flex items-start justify-between px-4 md:px-6 pt-4 md:pt-6", children: [
           /* @__PURE__ */ jsxs22("div", { className: cn("flex items-start gap-3 md:gap-4 max-w-xl", headerClassName), children: [
             /* @__PURE__ */ jsx33(
               "button",
               {
-                className: "md:hidden -ml-2 rounded-lg text-[var(--neutral-500)] hover:bg-[var(--neutral-50)] inline-flex items-center justify-center min-h-[44px] min-w-[44px]",
+                type: "button",
+                className: "md:hidden -ml-2 rounded-lg text-[var(--neutral-500,#646F77)] hover:bg-[var(--neutral-50,#FAFBFC)] inline-flex items-center justify-center min-h-[44px] min-w-[44px]",
                 onClick: () => setMobileMenuOpen(true),
                 "aria-label": "Open menu",
                 children: /* @__PURE__ */ jsx33(Menu, { width: 20, height: 20, strokeWidth: 1.5 })
@@ -3903,7 +3951,7 @@ function DashboardShell({
                 "h1",
                 {
                   className: "text-2xl md:text-3xl font-bold tracking-tight leading-tight",
-                  style: { color: "var(--app-title-color, var(--foreground))", fontFamily: "var(--font-app-title, var(--font-heading))" },
+                  style: { color: "var(--app-title-color, var(--foreground, #2D3339))", fontFamily: "var(--font-app-title, var(--font-heading, system-ui, sans-serif))" },
                   children: appTitle
                 }
               ),
@@ -3911,7 +3959,7 @@ function DashboardShell({
                 "p",
                 {
                   className: "text-sm md:text-base font-bold",
-                  style: { color: "var(--foreground)", fontFamily: "var(--font-app-subtitle, var(--font-body))" },
+                  style: { color: "var(--foreground, #2D3339)", fontFamily: "var(--font-app-subtitle, var(--font-body, system-ui, sans-serif))" },
                   children: appSubtitle
                 }
               ),
@@ -3919,7 +3967,7 @@ function DashboardShell({
                 "p",
                 {
                   className: "text-sm leading-relaxed mt-1.5 hidden md:block",
-                  style: { color: "var(--neutral-600)", fontFamily: "var(--font-app-subtitle, var(--font-body))" },
+                  style: { color: "var(--neutral-600, #525B62)", fontFamily: "var(--font-app-subtitle, var(--font-body, system-ui, sans-serif))" },
                   children: highlightText
                 }
               )
@@ -3932,21 +3980,21 @@ function DashboardShell({
               {
                 className: "rounded-xl px-3 md:px-4 py-2 md:py-2.5 flex items-center gap-3 shrink-0",
                 style: {
-                  backgroundColor: "var(--card-background)",
-                  border: "1px solid var(--card-border)"
+                  backgroundColor: "var(--card-background, #FFFFFF)",
+                  border: "1px solid var(--card-border, #D1D5DB)"
                 },
                 children: [
                   /* @__PURE__ */ jsxs22("div", { className: "text-right hidden md:block", children: [
-                    /* @__PURE__ */ jsx33("p", { className: "text-xs font-medium text-[var(--foreground)]", children: agentName }),
-                    agentSubtitle && /* @__PURE__ */ jsx33("p", { className: "text-[10px] text-[var(--neutral-600)]", children: agentSubtitle })
+                    /* @__PURE__ */ jsx33("p", { className: "text-xs font-medium text-[var(--foreground,#2D3339)]", children: agentName }),
+                    agentSubtitle && /* @__PURE__ */ jsx33("p", { className: "text-[10px] text-[var(--neutral-600,#525B62)]", children: agentSubtitle })
                   ] }),
                   /* @__PURE__ */ jsx33(
                     "div",
                     {
                       className: "size-9 rounded-full flex items-center justify-center text-xs font-semibold",
                       style: {
-                        backgroundColor: "var(--brand-primary-light)",
-                        color: "var(--neutral-900, #111827)"
+                        backgroundColor: "var(--brand-primary-light, rgba(59, 89, 152, 0.15))",
+                        color: "var(--neutral-900, #2D3339)"
                       },
                       children: agentInitials
                     }
@@ -6588,7 +6636,7 @@ function SessionRetryBanner({
 // src/components/voice-corpus-input/VoiceCorpusInput.tsx
 import * as React26 from "react";
 import { Trash, Upload } from "iconoir-react";
-import { Fragment as Fragment4, jsx as jsx60, jsxs as jsxs47 } from "react/jsx-runtime";
+import { Fragment as Fragment5, jsx as jsx60, jsxs as jsxs47 } from "react/jsx-runtime";
 function countWords(text) {
   const trimmed = text.trim();
   if (!trimmed) return 0;
@@ -6747,7 +6795,7 @@ function VoiceCorpusInput({
           }
         ),
         /* @__PURE__ */ jsxs47("div", { className: "flex items-center gap-2", children: [
-          acceptFileUpload && /* @__PURE__ */ jsxs47(Fragment4, { children: [
+          acceptFileUpload && /* @__PURE__ */ jsxs47(Fragment5, { children: [
             /* @__PURE__ */ jsx60(
               "input",
               {

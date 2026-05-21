@@ -566,6 +566,19 @@ declare const PageContainer: React.ForwardRefExoticComponent<PageContainerProps 
 interface DashboardNavItem {
     icon: React.ReactNode;
     label: string;
+    /**
+     * Destination URL. When present, the nav item renders as a Next.js
+     * `<Link href={href}>` so right-click "Open in new tab/window",
+     * middle-click, Cmd-click, and Cmd-Shift-click all work browser-native.
+     * The optional `onNavClick(item)` callback still fires on click as an
+     * analytics-side-effect hook (does NOT preventDefault — `<Link>` handles
+     * navigation).
+     *
+     * When `href` is absent, the item renders as a `<button>` and only the
+     * `onNavClick(item)` callback fires — use this shape for action items
+     * (e.g. `variant: 'danger'` "Sign out", `variant: 'primary'` modal triggers)
+     * where there is no destination URL.
+     */
     href?: string;
     onClick?: () => void;
     /**

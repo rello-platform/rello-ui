@@ -24,7 +24,7 @@ export default defineConfig([
     splitting: false,
     sourcemap: true,
     clean: true,
-    external: ["react", "react-dom"],
+    external: ["react", "react-dom", "next", "next/link"],
   },
   {
     entry: { client: "src/client.ts" },
@@ -33,7 +33,7 @@ export default defineConfig([
     splitting: false,
     sourcemap: true,
     clean: false,
-    external: ["react", "react-dom"],
+    external: ["react", "react-dom", "next", "next/link"],
     banner: { js: '"use client";' },
   },
 ]);

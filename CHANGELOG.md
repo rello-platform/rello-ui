@@ -5,6 +5,34 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.13.0 — 2026-05-21
+
+**DashboardShell nav items migrate from `<button>` to `<Link>` for right-click "Open in new tab/window"**
+
+Sidebar + mobile nav items now render as Next.js `<Link href={item.href}>` when `href` is present, instead of `<button onClick={...}>`. Right-click "Open in new tab/window", middle-click, Cmd-click, and Cmd-Shift-click all work browser-native — the multi-window MLO / RE-agent workflow no longer requires copy-pasting URLs.
+
+```ts
+// Type contract — href stays optional (backwards-compatible)
+interface DashboardNavItem {
+  icon: React.ReactNode;
+  label: string;
+  href?: string;                 // when present → renders <Link>
+  onClick?: () => void;
+  ariaLabel?: string;
+  variant?: "primary" | "accent" | "danger";
+}
+```
+
+When `href` is absent, the item renders as a `<button>` and `onNavClick(item)` is the only handler — preserves the variant action-button pattern (`variant: "danger"` "Sign out", etc.).
+
+**`onNavClick` semantics change:** Previously consumers passed `onNavClick={(item) => router.push(item.href)}` to do navigation. The `<Link>` now handles navigation itself. `onNavClick` still fires from the `<Link>` `onClick` handler (no `preventDefault`) and should be used for analytics-side-effects only. Consumers that currently use it for `router.push` should drop the push call — keeping it produces a benign double-navigation but is wasted work.
+
+**Peer dependency:** `next` is added as an optional peer dependency (`>=14.0.0`). All Rello-ecosystem consumers are Next.js apps; non-Next consumers that import `DashboardShell` will fail at module-resolve time. `next/link` is marked external in the build so the consumer's own Next.js install provides it.
+
+**Plus:** ~22 `var(--token)` sites in `DashboardShell.tsx` gained hex fallbacks per `~/.claude/CLAUDE.md` Design-system invariant — every CSS var now degrades gracefully when its token is missing.
+
+**Migration:** Spokes that always pass `href` on every nav item need no code changes — bump `@rello-platform/ui` to `2.13.0` and right-click works. Spokes that omit `href` on some nav items (action buttons) continue to render those as `<button>` unchanged. Coordinated per-spoke sweep tracked in `RELLO II SPEC-RIGHT-CLICK-NAVIGATION-FULL-BUILD.md` Wave 2.
+
 ## v2.12.0 — 2026-05-19
 
 **DashboardShell.footerCustom is now collapse-aware (render-prop form)**
