@@ -67,3 +67,6 @@ export * from "./rello-upsell-nudge";
 
 // v2.7.0 — ADMIN PAGE GUIDANCE Phase 1 (CardTooltipIcon + CardTooltip wrapper + Tooltip namespace)
 export * from "./card-tooltip";
+
+// v2.14.0 — PER-APP-BILLING-PANELS CR-2 (shared revenue-only billing panel; mounts billing-client getUsageSummary)
+export * from "./spend-panel";

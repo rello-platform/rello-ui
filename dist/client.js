@@ -7174,6 +7174,242 @@ CardTooltip.displayName = "CardTooltip";
 
 // src/components/card-tooltip/index.ts
 import * as Tooltip from "@radix-ui/react-tooltip";
+
+// src/components/spend-panel/SpendPanel.tsx
+import { Fragment as Fragment6, jsx as jsx64, jsxs as jsxs51 } from "react/jsx-runtime";
+var COLOR = {
+  foreground: "var(--foreground, #2D3339)",
+  muted: "var(--neutral-500, #646F77)",
+  faint: "var(--neutral-400, #98A1AA)",
+  border: "var(--card-border, #D1D5DB)",
+  track: "var(--neutral-100, #D1D5DB)",
+  brand: "var(--brand-primary, #3B5998)",
+  error: "var(--error, #C9605D)"
+};
+var currencyFmt = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD"
+});
+var numberFmt = new Intl.NumberFormat("en-US");
+function formatCents(cents) {
+  if (cents == null || !Number.isFinite(cents)) return "\u2014";
+  return currencyFmt.format(cents / 100);
+}
+function formatQuantity(n) {
+  return Number.isFinite(n) ? numberFmt.format(n) : "0";
+}
+function AllotmentBar({ allotment }) {
+  const { metricName, included, used, remaining, overageCents } = allotment;
+  const over = used > included;
+  const pct = included > 0 ? Math.min(Math.max(used / included * 100, 0), 100) : 0;
+  const fillColor = over ? COLOR.error : COLOR.brand;
+  return /* @__PURE__ */ jsxs51("div", { className: "flex flex-col gap-1.5", children: [
+    /* @__PURE__ */ jsxs51("div", { className: "flex items-baseline justify-between gap-2", children: [
+      /* @__PURE__ */ jsx64(
+        "span",
+        {
+          className: "text-sm font-medium",
+          style: { color: COLOR.foreground },
+          children: metricName
+        }
+      ),
+      /* @__PURE__ */ jsxs51("span", { className: "text-xs tabular-nums", style: { color: COLOR.muted }, children: [
+        formatQuantity(used),
+        " / ",
+        formatQuantity(included)
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx64(
+      "div",
+      {
+        role: "progressbar",
+        "aria-valuemin": 0,
+        "aria-valuemax": included,
+        "aria-valuenow": Math.min(used, included),
+        "aria-label": `${metricName}: ${formatQuantity(used)} of ${formatQuantity(
+          included
+        )} used`,
+        className: "h-2 w-full overflow-hidden rounded-full",
+        style: { backgroundColor: COLOR.track },
+        children: /* @__PURE__ */ jsx64(
+          "div",
+          {
+            className: "h-full rounded-full transition-all duration-300",
+            style: { width: `${pct}%`, backgroundColor: fillColor }
+          }
+        )
+      }
+    ),
+    /* @__PURE__ */ jsx64("div", { className: "flex items-center justify-between gap-2 text-xs", children: over ? /* @__PURE__ */ jsxs51("span", { style: { color: COLOR.error }, children: [
+      formatQuantity(used - included),
+      " over plan",
+      overageCents != null ? ` \xB7 ${formatCents(overageCents)}` : ""
+    ] }) : /* @__PURE__ */ jsxs51("span", { style: { color: COLOR.muted }, children: [
+      formatQuantity(remaining),
+      " remaining"
+    ] }) })
+  ] });
+}
+function rowKey(row) {
+  return `${row.metric}::${row.service ?? "\u2014"}`;
+}
+function SpendPanel({ data, onManageBilling, className }) {
+  const {
+    appName,
+    period,
+    totalRevenueCents,
+    totalRevenueKnown,
+    recordCount,
+    rows,
+    allotments,
+    portalAvailable
+  } = data;
+  const isEmpty = rows.length === 0 && allotments.length === 0;
+  const showPortal = portalAvailable && typeof onManageBilling === "function";
+  return /* @__PURE__ */ jsxs51(Card, { className: cn("flex flex-col gap-5", className), children: [
+    /* @__PURE__ */ jsxs51("div", { className: "flex flex-wrap items-start justify-between gap-3", children: [
+      /* @__PURE__ */ jsxs51("div", { children: [
+        /* @__PURE__ */ jsx64(
+          "h3",
+          {
+            className: "text-lg font-semibold",
+            style: { color: COLOR.foreground },
+            children: "Usage & spend"
+          }
+        ),
+        /* @__PURE__ */ jsxs51("p", { className: "text-sm", style: { color: COLOR.muted }, children: [
+          appName,
+          " \xB7 ",
+          period.label
+        ] })
+      ] }),
+      showPortal && /* @__PURE__ */ jsx64(
+        Button,
+        {
+          variant: "outline",
+          size: "lg",
+          className: "min-h-[44px]",
+          onClick: onManageBilling,
+          children: "Manage billing"
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsx64(
+      StatCard,
+      {
+        label: "Total this period",
+        value: totalRevenueKnown ? formatCents(totalRevenueCents) : "\u2014",
+        subtitle: recordCount === 1 ? "1 metered event" : `${recordCount} metered events`
+      }
+    ),
+    isEmpty ? /* @__PURE__ */ jsx64(
+      EmptyState,
+      {
+        title: "No usage yet this period",
+        description: "$0 this month \u2014 nothing has been metered yet. Charges will appear here as you use the app."
+      }
+    ) : /* @__PURE__ */ jsxs51(Fragment6, { children: [
+      allotments.length > 0 && /* @__PURE__ */ jsxs51(
+        "section",
+        {
+          "aria-label": "Plan allotments",
+          className: "flex flex-col gap-4",
+          children: [
+            /* @__PURE__ */ jsx64(
+              "h4",
+              {
+                className: "text-sm font-semibold",
+                style: { color: COLOR.foreground },
+                children: "Plan allotments"
+              }
+            ),
+            allotments.map((a) => /* @__PURE__ */ jsx64(AllotmentBar, { allotment: a }, a.metric))
+          ]
+        }
+      ),
+      rows.length > 0 && /* @__PURE__ */ jsxs51("section", { "aria-label": "Usage breakdown", className: "flex flex-col gap-2", children: [
+        /* @__PURE__ */ jsx64(
+          "h4",
+          {
+            className: "text-sm font-semibold",
+            style: { color: COLOR.foreground },
+            children: "Breakdown"
+          }
+        ),
+        /* @__PURE__ */ jsx64("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxs51("table", { className: "w-full border-collapse text-sm", children: [
+          /* @__PURE__ */ jsxs51("caption", { className: "sr-only", children: [
+            "Per-metric usage and revenue for ",
+            appName,
+            ", ",
+            period.label
+          ] }),
+          /* @__PURE__ */ jsx64("thead", { children: /* @__PURE__ */ jsxs51(
+            "tr",
+            {
+              className: "text-left",
+              style: { color: COLOR.muted },
+              children: [
+                /* @__PURE__ */ jsx64("th", { scope: "col", className: "py-2 pr-3 font-medium", children: "Metric" }),
+                /* @__PURE__ */ jsx64("th", { scope: "col", className: "py-2 pr-3 font-medium", children: "Service" }),
+                /* @__PURE__ */ jsx64(
+                  "th",
+                  {
+                    scope: "col",
+                    className: "py-2 pr-3 text-right font-medium",
+                    children: "Quantity"
+                  }
+                ),
+                /* @__PURE__ */ jsx64("th", { scope: "col", className: "py-2 text-right font-medium", children: "Revenue" })
+              ]
+            }
+          ) }),
+          /* @__PURE__ */ jsx64("tbody", { children: rows.map((row) => /* @__PURE__ */ jsxs51(
+            "tr",
+            {
+              className: "border-t",
+              style: { borderColor: COLOR.border },
+              children: [
+                /* @__PURE__ */ jsx64(
+                  "th",
+                  {
+                    scope: "row",
+                    className: "py-2 pr-3 text-left font-normal",
+                    style: { color: COLOR.foreground },
+                    children: row.metricName
+                  }
+                ),
+                /* @__PURE__ */ jsx64("td", { className: "py-2 pr-3", style: { color: COLOR.muted }, children: row.service ?? "\u2014" }),
+                /* @__PURE__ */ jsxs51(
+                  "td",
+                  {
+                    className: "py-2 pr-3 text-right tabular-nums",
+                    style: { color: COLOR.foreground },
+                    children: [
+                      formatQuantity(row.quantity),
+                      row.unit ? /* @__PURE__ */ jsxs51("span", { style: { color: COLOR.faint }, children: [
+                        " ",
+                        row.unit
+                      ] }) : null
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsx64(
+                  "td",
+                  {
+                    className: "py-2 text-right tabular-nums",
+                    style: { color: COLOR.foreground },
+                    children: row.revenueKnown ? formatCents(row.revenueCents) : "\u2014"
+                  }
+                )
+              ]
+            },
+            rowKey(row)
+          )) })
+        ] }) })
+      ] })
+    ] })
+  ] });
+}
 export {
   APP_ICONS,
   APP_ILLUSTRATIONS,
@@ -7314,6 +7550,7 @@ export {
   SlidePanelFooter,
   SlidePanelHeader,
   SocialLinksInput,
+  SpendPanel,
   Spinner,
   StatCard,
   StreakIcon,
