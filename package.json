@@ -91,7 +91,7 @@
     "tsup": "^8.0.0",
     "typescript": "^5",
     "vite": "^6.4.1",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.6"
   },
   "engines": {
     "node": ">=22 <23"
