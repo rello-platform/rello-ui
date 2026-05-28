@@ -43,3 +43,12 @@ export const ArchivedState: Story = {
     description: "Leads you archive will appear here for future reference.",
   },
 };
+
+export const WithHrefAction: Story = {
+  name: "With href action (anchor CTA)",
+  args: {
+    title: "No leads in your pipeline yet",
+    description: "Start a new pre-qual to begin filling your pipeline.",
+    action: { label: "Start a pre-qual", href: "/dashboard/pre-approval" },
+  },
+};

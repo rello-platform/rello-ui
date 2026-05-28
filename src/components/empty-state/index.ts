@@ -1,1 +1,6 @@
-export { EmptyState, type EmptyStateProps } from "./EmptyState";
+export {
+  EmptyState,
+  type EmptyStateProps,
+  type EmptyStateAction,
+  type EmptyStateLinkProps,
+} from "./EmptyState";

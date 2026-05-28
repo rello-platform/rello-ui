@@ -416,13 +416,31 @@ function CardLoader({ message }) {
 
 // src/components/empty-state/EmptyState.tsx
 import { jsx as jsx13, jsxs as jsxs8 } from "react/jsx-runtime";
-function EmptyState({ icon, title, description, action, className }) {
-  return /* @__PURE__ */ jsxs8("div", { className: cn("flex flex-col items-center justify-center py-12 px-4 text-center", className), children: [
-    icon && /* @__PURE__ */ jsx13("div", { className: "size-16 rounded-full bg-[var(--neutral-100)] flex items-center justify-center mb-4", children: /* @__PURE__ */ jsx13("div", { className: "text-[var(--neutral-400)]", children: icon }) }),
-    /* @__PURE__ */ jsx13("h3", { className: "text-lg font-semibold text-[var(--foreground)] mb-1", children: title }),
-    description && /* @__PURE__ */ jsx13("p", { className: "text-sm text-[var(--neutral-500)] max-w-sm mb-4", children: description }),
-    action && /* @__PURE__ */ jsx13(Button, { onClick: action.onClick, children: action.label })
-  ] });
+function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+  linkAs,
+  className
+}) {
+  const LinkComp = linkAs;
+  return /* @__PURE__ */ jsxs8(
+    "div",
+    {
+      role: "status",
+      className: cn(
+        "flex flex-col items-center justify-center py-12 px-4 text-center",
+        className
+      ),
+      children: [
+        icon && /* @__PURE__ */ jsx13("div", { className: "size-16 rounded-full bg-[var(--neutral-100,#F3F4F6)] flex items-center justify-center mb-4", children: /* @__PURE__ */ jsx13("div", { className: "text-[var(--neutral-400,#9CA3AF)]", children: icon }) }),
+        /* @__PURE__ */ jsx13("h3", { className: "text-lg font-semibold text-[var(--foreground,#111827)] mb-1", children: title }),
+        description && /* @__PURE__ */ jsx13("p", { className: "text-sm text-[var(--neutral-500,#6B7280)] max-w-sm mb-4", children: description }),
+        action && action.href ? /* @__PURE__ */ jsx13(Button, { asChild: true, children: LinkComp ? /* @__PURE__ */ jsx13(LinkComp, { href: action.href, children: action.label }) : /* @__PURE__ */ jsx13("a", { href: action.href, children: action.label }) }) : action ? /* @__PURE__ */ jsx13(Button, { onClick: action.onClick, children: action.label }) : null
+      ]
+    }
+  );
 }
 
 // src/components/pagination/Pagination.tsx
