@@ -70,3 +70,6 @@ export * from "./card-tooltip";
 
 // v2.14.0 — PER-APP-BILLING-PANELS CR-2 (shared revenue-only billing panel; mounts billing-client getUsageSummary)
 export * from "./spend-panel";
+
+// v2.15.0 — RELLO II T4 hoist (canonical underline tab bar; 12 Rello consumers + future spokes)
+export * from "./underline-tab-bar";

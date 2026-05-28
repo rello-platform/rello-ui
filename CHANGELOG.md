@@ -5,6 +5,43 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.15.0 — 2026-05-28
+
+**UnderlineTabBar — canonical hoist (RELLO II T4)**
+
+Hoisted Rello CRM's `UnderlineTabBar` primitive into `@rello-platform/ui/client` per
+RELLO II CONSOLIDATED-GATED-LOCKS-260526 Block D #3. Rello had 12 in-app consumers
+(leads pipeline, settings hubs, conversations, today, team, daily-plan, brand-white-label,
+PageHeader composite, HubTabBar wrapper) all importing from a single source file —
+hoisting makes the primitive available to every other spoke + future RELLO II surfaces
+without copy-paste.
+
+```ts
+import { UnderlineTabBar, type UnderlineTab } from "@rello-platform/ui/client";
+```
+
+Surface:
+
+- **Button mode** (`onChange` driven) — caller wires URL state (`router.replace`) and/or
+  analytics side-effects.
+- **Link mode** (per-tab `href`) — tab renders as `<Link href={href} scroll={false}>` so
+  middle-click + right-click + cmd-click open in a new tab natively. `onChange` still
+  fires via the Link's `onClick` so analytics side-effects survive the migration.
+- Bold-on-active (icon stroke + label weight heavier on active tab), `border-b-2`
+  brand-primary on active, horizontal-scroll overflow with mobile fade gradient at scroll
+  edges, ArrowLeft/Right/Home/End keyboard nav, 44px minimum touch targets, design-token
+  fallbacks throughout (`var(--brand-primary, #2563eb)`, `var(--neutral-200, #e5e7eb)`, …).
+- Optional `count` badge (rendered only when `> 0`), optional `hidden` / `disabled` per
+  tab, optional `replace` (paired with `href` → `router.replace` semantics for tab
+  surfaces that don't want each tab visit to push a history entry).
+- WAI-ARIA tabs pattern (`role="tablist"` + `role="tab"` + `aria-selected` +
+  `aria-controls={"tabpanel-" + id}`); `ariaLabel` required.
+
+**Consumer note:** zero behavior change relative to the in-repo Rello copy this hoist
+replaces. Mechanical refactor. The Rello pin bump to `#v2.15.0` lands in the same wave;
+all 12 import sites swap from `@/components/ui/UnderlineTabBar` to
+`@rello-platform/ui/client` and the local copy is deleted.
+
 ## v2.13.0 — 2026-05-21
 
 **DashboardShell nav items migrate from `<button>` to `<Link>` for right-click "Open in new tab/window"**
