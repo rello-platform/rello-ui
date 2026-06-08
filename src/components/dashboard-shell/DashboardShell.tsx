@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu } from "iconoir-react";
 import { SlidePanel, SlidePanelHeader, SlidePanelBody } from "../slide-panel";
+import { Avatar, AvatarImage, AvatarFallback } from "../avatar";
 import { cn } from "../../lib/cn";
 
 /* ─── Types ─── */
@@ -81,6 +82,8 @@ export interface DashboardShellProps {
   agentName: string;
   /** Two-letter initials for the avatar circle */
   agentInitials: string;
+  /** Optional headshot URL; falls back to agentInitials when absent or on image load error. */
+  agentPhotoUrl?: string | null;
   /** Role/title shown below agent name */
   agentSubtitle?: string;
 
@@ -267,6 +270,7 @@ function MobileNav({
   onNavClick,
   agentName,
   agentInitials,
+  agentPhotoUrl,
   agentSubtitle,
   footerCustom,
 }: {
@@ -277,6 +281,8 @@ function MobileNav({
   onNavClick?: (item: DashboardNavItem) => void;
   agentName: string;
   agentInitials: string;
+  /** Optional headshot URL; falls back to agentInitials when absent or on image load error. */
+  agentPhotoUrl?: string | null;
   agentSubtitle?: string;
   footerCustom?:
     | React.ReactNode
@@ -297,12 +303,17 @@ function MobileNav({
 
       {/* Profile */}
       <div className="flex items-center gap-3 px-5 py-4 border-b border-[var(--card-border,#D1D5DB)]">
-        <div
-          className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold"
-          style={{ background: "var(--brand-primary-light, rgba(59, 89, 152, 0.15))", color: "var(--neutral-900, #2D3339)" }}
-        >
-          {agentInitials}
-        </div>
+        <Avatar className="w-9 h-9">
+          {agentPhotoUrl ? (
+            <AvatarImage src={agentPhotoUrl} alt={agentName} className="object-cover" />
+          ) : null}
+          <AvatarFallback
+            className="text-xs font-semibold"
+            style={{ background: "var(--brand-primary-light, rgba(59, 89, 152, 0.15))", color: "var(--neutral-900, #2D3339)" }}
+          >
+            {agentInitials}
+          </AvatarFallback>
+        </Avatar>
         <div>
           <div className="font-medium text-sm text-[var(--neutral-900,#2D3339)]">{agentName}</div>
           {agentSubtitle && (
@@ -402,6 +413,7 @@ function DashboardShell({
   highlightText,
   agentName,
   agentInitials,
+  agentPhotoUrl,
   agentSubtitle,
   navGroups,
   activeNavLabel,
@@ -480,15 +492,20 @@ function DashboardShell({
               <p className="text-[10px] text-[var(--neutral-600,#525B62)]">{agentSubtitle}</p>
             )}
           </div>
-          <div
-            className="size-9 rounded-full flex items-center justify-center text-xs font-semibold"
-            style={{
-              backgroundColor: "var(--brand-primary-light, rgba(59, 89, 152, 0.15))",
-              color: "var(--neutral-900, #2D3339)",
-            }}
-          >
-            {agentInitials}
-          </div>
+          <Avatar className="size-9">
+            {agentPhotoUrl ? (
+              <AvatarImage src={agentPhotoUrl} alt={agentName} className="object-cover" />
+            ) : null}
+            <AvatarFallback
+              className="text-xs font-semibold"
+              style={{
+                backgroundColor: "var(--brand-primary-light, rgba(59, 89, 152, 0.15))",
+                color: "var(--neutral-900, #2D3339)",
+              }}
+            >
+              {agentInitials}
+            </AvatarFallback>
+          </Avatar>
         </div>
         </div>
       </div>
@@ -536,6 +553,7 @@ function DashboardShell({
         onNavClick={onNavClick}
         agentName={agentName}
         agentInitials={agentInitials}
+        agentPhotoUrl={agentPhotoUrl}
         agentSubtitle={agentSubtitle}
         footerCustom={footerCustom}
       />

@@ -3841,6 +3841,7 @@ function MobileNav({
   onNavClick,
   agentName,
   agentInitials,
+  agentPhotoUrl,
   agentSubtitle,
   footerCustom
 }) {
@@ -3848,14 +3849,17 @@ function MobileNav({
   return /* @__PURE__ */ jsxs22(SlidePanel, { isOpen: open, onClose, position: "left", width: "280px", children: [
     /* @__PURE__ */ jsx33(SlidePanelHeader, { children: /* @__PURE__ */ jsx33("span", { className: "font-semibold text-[var(--neutral-900,#2D3339)]", children: "Menu" }) }),
     /* @__PURE__ */ jsxs22("div", { className: "flex items-center gap-3 px-5 py-4 border-b border-[var(--card-border,#D1D5DB)]", children: [
-      /* @__PURE__ */ jsx33(
-        "div",
-        {
-          className: "w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold",
-          style: { background: "var(--brand-primary-light, rgba(59, 89, 152, 0.15))", color: "var(--neutral-900, #2D3339)" },
-          children: agentInitials
-        }
-      ),
+      /* @__PURE__ */ jsxs22(Avatar, { className: "w-9 h-9", children: [
+        agentPhotoUrl ? /* @__PURE__ */ jsx33(AvatarImage, { src: agentPhotoUrl, alt: agentName, className: "object-cover" }) : null,
+        /* @__PURE__ */ jsx33(
+          AvatarFallback,
+          {
+            className: "text-xs font-semibold",
+            style: { background: "var(--brand-primary-light, rgba(59, 89, 152, 0.15))", color: "var(--neutral-900, #2D3339)" },
+            children: agentInitials
+          }
+        )
+      ] }),
       /* @__PURE__ */ jsxs22("div", { children: [
         /* @__PURE__ */ jsx33("div", { className: "font-medium text-sm text-[var(--neutral-900,#2D3339)]", children: agentName }),
         agentSubtitle && /* @__PURE__ */ jsx33("div", { className: "text-xs text-[var(--neutral-500,#646F77)]", children: agentSubtitle })
@@ -3930,6 +3934,7 @@ function DashboardShell({
   highlightText,
   agentName,
   agentInitials,
+  agentPhotoUrl,
   agentSubtitle,
   navGroups,
   activeNavLabel,
@@ -4006,17 +4011,20 @@ function DashboardShell({
                     /* @__PURE__ */ jsx33("p", { className: "text-xs font-medium text-[var(--foreground,#2D3339)]", children: agentName }),
                     agentSubtitle && /* @__PURE__ */ jsx33("p", { className: "text-[10px] text-[var(--neutral-600,#525B62)]", children: agentSubtitle })
                   ] }),
-                  /* @__PURE__ */ jsx33(
-                    "div",
-                    {
-                      className: "size-9 rounded-full flex items-center justify-center text-xs font-semibold",
-                      style: {
-                        backgroundColor: "var(--brand-primary-light, rgba(59, 89, 152, 0.15))",
-                        color: "var(--neutral-900, #2D3339)"
-                      },
-                      children: agentInitials
-                    }
-                  )
+                  /* @__PURE__ */ jsxs22(Avatar, { className: "size-9", children: [
+                    agentPhotoUrl ? /* @__PURE__ */ jsx33(AvatarImage, { src: agentPhotoUrl, alt: agentName, className: "object-cover" }) : null,
+                    /* @__PURE__ */ jsx33(
+                      AvatarFallback,
+                      {
+                        className: "text-xs font-semibold",
+                        style: {
+                          backgroundColor: "var(--brand-primary-light, rgba(59, 89, 152, 0.15))",
+                          color: "var(--neutral-900, #2D3339)"
+                        },
+                        children: agentInitials
+                      }
+                    )
+                  ] })
                 ]
               }
             )
@@ -4053,6 +4061,7 @@ function DashboardShell({
             onNavClick,
             agentName,
             agentInitials,
+            agentPhotoUrl,
             agentSubtitle,
             footerCustom
           }
