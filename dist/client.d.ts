@@ -653,6 +653,8 @@ interface DashboardShellProps {
     agentName: string;
     /** Two-letter initials for the avatar circle */
     agentInitials: string;
+    /** Optional headshot URL; falls back to agentInitials when absent or on image load error. */
+    agentPhotoUrl?: string | null;
     /** Role/title shown below agent name */
     agentSubtitle?: string;
     /** Sidebar navigation groups */
@@ -692,7 +694,7 @@ interface DashboardShellProps {
     }) => React.ReactNode);
     className?: string;
 }
-declare function DashboardShell({ logo, appTitle, appSubtitle, highlightText, agentName, agentInitials, agentSubtitle, navGroups, activeNavLabel, onNavClick, heroContent, rightCard, children, headerActions, headerRightSlot, headerClassName, footerCustom, className, }: DashboardShellProps): react_jsx_runtime.JSX.Element;
+declare function DashboardShell({ logo, appTitle, appSubtitle, highlightText, agentName, agentInitials, agentPhotoUrl, agentSubtitle, navGroups, activeNavLabel, onNavClick, heroContent, rightCard, children, headerActions, headerRightSlot, headerClassName, footerCustom, className, }: DashboardShellProps): react_jsx_runtime.JSX.Element;
 
 /**
  * Pure pipeline stage constants.
