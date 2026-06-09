@@ -38,7 +38,7 @@
     "build-storybook": "storybook build",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "peerDependencies": {
     "next": ">=14.0.0",
