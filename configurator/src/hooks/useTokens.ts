@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import type { TokenState } from "../types/tokens";
+import { postJson } from "../lib/api";
 
 export function useTokens() {
   const [tokens, setTokens] = useState<TokenState | null>(null);
@@ -87,11 +88,7 @@ export function useTokens() {
     if (!tokens) return;
     setSubmitting(true);
     try {
-      const res = await fetch("/api/tokens/commit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tokens, message }),
-      });
+      const res = await postJson("/api/tokens/commit", { tokens, message });
       const data = await res.json();
       if (data.success) {
         setOriginal(structuredClone(tokens));

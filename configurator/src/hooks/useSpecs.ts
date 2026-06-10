@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { postJson } from "../lib/api";
 
 export interface ParamDef {
   value: number | string;
@@ -70,11 +71,7 @@ export function useSpecs() {
     if (!specs) return;
     setSubmitting(true);
     try {
-      const res = await fetch("/api/specs/commit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ specs, message }),
-      });
+      const res = await postJson("/api/specs/commit", { specs, message });
       const data = await res.json();
       if (data.success) {
         setOriginal(structuredClone(specs));
