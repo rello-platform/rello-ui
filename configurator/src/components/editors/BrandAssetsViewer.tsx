@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import type { AssetFile } from "../../hooks/useAssets";
+import { postJson, MissingSecretError } from "../../lib/api";
 
 const APP_FOLDERS: Array<{ key: string; label: string; folder: string }> = [
   { key: "milo", label: "Milo Smart Assistant", folder: "milo" },
@@ -30,13 +31,20 @@ function UploadButton({ folder, onUploaded }: { folder: string; onUploaded: () =
     try {
       const buffer = await file.arrayBuffer();
       const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
-      const res = await fetch("/api/assets/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ folder, fileName: file.name, content: base64 }),
-      });
-      const data = await res.json();
-      if (data.success) onUploaded();
+      const res = await postJson("/api/assets/upload", { folder, fileName: file.name, content: base64 });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        onUploaded();
+      } else {
+        window.alert(`Upload failed: ${data.error || res.statusText || "unknown error"}`);
+      }
+    } catch (err) {
+      if (err instanceof MissingSecretError) {
+        window.alert(err.message);
+      } else {
+        console.error("Asset upload failed:", err);
+        window.alert("Upload failed — see console for details.");
+      }
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = "";
@@ -60,10 +68,24 @@ export function BrandAssetsViewer({ files, selectedAsset, onSelect, onRefresh }:
     if (!confirm(`Delete ${path.split("/").pop()}?`)) return;
     setDeleting(path);
     try {
-      const res = await fetch("/api/assets/delete", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ path }) });
-      const data = await res.json();
-      if (data.success) { onSelect(null); onRefresh(); }
-    } finally { setDeleting(null); }
+      const res = await postJson("/api/assets/delete", { path });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        onSelect(null);
+        onRefresh();
+      } else {
+        window.alert(`Delete failed: ${data.error || res.statusText || "unknown error"}`);
+      }
+    } catch (err) {
+      if (err instanceof MissingSecretError) {
+        window.alert(err.message);
+      } else {
+        console.error("Asset delete failed:", err);
+        window.alert("Delete failed — see console for details.");
+      }
+    } finally {
+      setDeleting(null);
+    }
   };
 
   const getFilesForFolder = (folder: string) => {

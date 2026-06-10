@@ -16,6 +16,8 @@ import { useAppLayouts } from "./hooks/useAppLayouts";
 import { BrandAssetsViewer } from "./components/editors/BrandAssetsViewer";
 import { AppLayoutEditor } from "./components/editors/AppLayoutEditor";
 import { AppShellPreview } from "./components/preview/AppShellPreview";
+import { OperatorSecretControl } from "./components/OperatorSecretControl";
+import { MissingSecretError } from "./lib/api";
 
 type Tab = "tokens" | "specs" | "apps" | "assets" | "layouts";
 
@@ -67,18 +69,31 @@ export function App() {
 
   const handleSubmit = async () => {
     const msg = submitMessage || undefined;
-    const result = tab === "tokens"
-      ? await submitTokens(msg)
-      : tab === "specs"
-      ? await submitSpecs(msg)
-      : tab === "apps"
-      ? await submitOverrides(msg)
-      : tab === "layouts"
-      ? await submitLayouts(msg)
-      : undefined;
-    setSubmitResult({ ...result, action: "committed" });
-    setSubmitMessage("");
-    setPreviewing(false);
+    try {
+      const result = tab === "tokens"
+        ? await submitTokens(msg)
+        : tab === "specs"
+        ? await submitSpecs(msg)
+        : tab === "apps"
+        ? await submitOverrides(msg)
+        : tab === "layouts"
+        ? await submitLayouts(msg)
+        : undefined;
+      if (!result || result.success !== true) {
+        window.alert(`Commit failed: ${result?.error || "unknown error"}`);
+        return;
+      }
+      setSubmitResult({ ...result, action: "committed" });
+      setSubmitMessage("");
+      setPreviewing(false);
+    } catch (err) {
+      if (err instanceof MissingSecretError) {
+        window.alert(err.message);
+        return;
+      }
+      console.error("Commit failed:", err);
+      window.alert("Commit failed — see console for details.");
+    }
   };
 
   const handleResetToDefault = () => {
@@ -154,6 +169,8 @@ export function App() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* Operator-secret gate (PKG-H1) — writes require an unlocked secret */}
+          <OperatorSecretControl />
           {isDirty && (
             <span className="text-xs text-[var(--warning)] font-medium mr-1">Unsaved changes</span>
           )}

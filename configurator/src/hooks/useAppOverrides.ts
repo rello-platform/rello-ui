@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { postJson } from "../lib/api";
 
 export const COLOR_FIELDS = [
   { key: "primary", label: "Primary Brand" },
@@ -72,11 +73,7 @@ export function useAppOverrides() {
     if (!overrides) return;
     setSubmitting(true);
     try {
-      const res = await fetch("/api/app-overrides/commit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ overrides, message }),
-      });
+      const res = await postJson("/api/app-overrides/commit", { overrides, message });
       const data = await res.json();
       if (data.success) {
         setOriginal(structuredClone(overrides));

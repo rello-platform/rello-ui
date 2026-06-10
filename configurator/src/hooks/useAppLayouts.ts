@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { postJson } from "../lib/api";
 
 export interface NavItem {
   icon: string;
@@ -57,7 +58,7 @@ export function useAppLayouts() {
     if (!layouts) return;
     setSubmitting(true);
     try {
-      const res = await fetch("/api/app-layouts/commit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ layouts, message }) });
+      const res = await postJson("/api/app-layouts/commit", { layouts, message });
       const data = await res.json();
       if (data.success) setOriginal(structuredClone(layouts));
       return data;

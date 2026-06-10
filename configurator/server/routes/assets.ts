@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Octokit } from "octokit";
+import { buildSafeAssetPath, assertSafeAssetPath, UnsafePathError } from "../lib/safe-path.js";
 
 const owner = process.env.GITHUB_OWNER || "kellydavidsansom";
 const repo = process.env.GITHUB_REPO || "rello-ui";
@@ -104,7 +105,18 @@ assetRoutes.post("/assets/upload", async (req, res) => {
       return;
     }
 
-    const filePath = `assets/${folder}/${fileName}`;
+    // PKG-M1: reject any folder/fileName that could escape assets/ via `..`,
+    // an absolute path, NUL, or backslash before touching GitHub.
+    let filePath: string;
+    try {
+      filePath = buildSafeAssetPath(folder, fileName);
+    } catch (e) {
+      if (e instanceof UnsafePathError) {
+        res.status(400).json({ error: e.message });
+        return;
+      }
+      throw e;
+    }
     const commitMessage = message || `Add ${fileName} to ${folder} via Configurator`;
 
     const octokit = getOctokit();
@@ -137,10 +149,18 @@ assetRoutes.post("/assets/upload", async (req, res) => {
 // Delete an asset
 assetRoutes.post("/assets/delete", async (req, res) => {
   try {
-    const { path, message } = req.body as { path: string; message?: string };
-    if (!path || !path.startsWith("assets/")) {
-      res.status(400).json({ error: "Invalid asset path" });
-      return;
+    const { path: rawPath, message } = req.body as { path: string; message?: string };
+    // PKG-M1: startsWith("assets/") is satisfied by `assets/../../x` before the
+    // GitHub API normalizes it. Require a fully-normalized path under assets/.
+    let path: string;
+    try {
+      path = assertSafeAssetPath(rawPath);
+    } catch (e) {
+      if (e instanceof UnsafePathError) {
+        res.status(400).json({ error: e.message });
+        return;
+      }
+      throw e;
     }
 
     const octokit = getOctokit();
