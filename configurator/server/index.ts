@@ -7,7 +7,7 @@ import { specRoutes } from "./routes/specs.js";
 import { appOverrideRoutes } from "./routes/app-overrides.js";
 import { assetRoutes } from "./routes/assets.js";
 import { appLayoutRoutes } from "./routes/app-layouts.js";
-import { buildCorsOptions } from "./lib/cors-config.js";
+import { buildCorsOptionsDelegate } from "./lib/cors-config.js";
 import { requireOperator } from "./lib/auth.js";
 import { rateLimit } from "./lib/rate-limit.js";
 
@@ -17,8 +17,11 @@ const app = express();
 // Trust the proxy (Railway) so req.ip is the real client for rate limiting.
 app.set("trust proxy", 1);
 
-// Explicit CORS allowlist (PKG-H1) — wildcard cors() removed.
-app.use(cors(buildCorsOptions()));
+// Explicit CORS allowlist (PKG-H1) — wildcard cors() removed. Delegate form:
+// same-origin is resolved per-request from Host + X-Forwarded-Proto, because
+// browsers send Origin on CORS-mode requests (module scripts, fetch) even
+// same-origin — a static allowlist alone 403s the SPA's own bundle.
+app.use(cors(buildCorsOptionsDelegate()));
 
 // Default JSON body limit lowered to 1mb (PKG-L2). Asset uploads carry base64
 // image payloads, so that single route is parsed with a dedicated 8mb limit.
