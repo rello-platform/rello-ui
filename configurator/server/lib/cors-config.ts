@@ -1,4 +1,5 @@
-import type { CorsOptions } from "cors";
+import type { CorsOptions, CorsOptionsDelegate } from "cors";
+import type { Request } from "express";
 
 /**
  * Explicit CORS allowlist for the Configurator server (SECURITY AUDIT PKG-H1).
@@ -10,10 +11,16 @@ import type { CorsOptions } from "cors";
  * is only needed for local dev (Vite dev server on a different port).
  *
  * Allowed origins resolve from `CONFIGURATOR_ALLOWED_ORIGINS` (comma-separated)
- * plus a small set of localhost dev defaults. Requests with no Origin header
- * (same-origin browser requests, curl, server-to-server) are allowed — CORS
- * only governs cross-origin browser reads; auth (requireOperator) governs
- * writes regardless of origin.
+ * plus a small set of localhost dev defaults, plus — structurally — the
+ * request's OWN origin. Browsers send an `Origin` header on every CORS-mode
+ * request even when it is same-origin: `<script type="module" crossorigin>`,
+ * `<link crossorigin>`, and all `fetch()` calls (whose default mode is
+ * "cors"). An allowlist that ignores this 403s the deployed SPA's own JS/CSS
+ * bundle and API reads, blanking the page (prod outage 2026-06-11). Same-origin
+ * is decided per-request against `Host` + `X-Forwarded-Proto` (Railway proxy;
+ * `trust proxy` is set in index.ts), so no env var has to restate the deploy
+ * URL. A forged Origin matching Host gains nothing: non-browser clients are
+ * never CORS-constrained anyway, and writes are auth-gated regardless.
  */
 
 const LOCALHOST_DEV_DEFAULTS = [
@@ -37,24 +44,35 @@ export function getAllowedOrigins(): string[] {
   return [...new Set([...fromEnv, ...LOCALHOST_DEV_DEFAULTS])];
 }
 
-export function buildCorsOptions(): CorsOptions {
+/**
+ * True when the request's Origin header points back at this server — i.e. the
+ * browser is loading the configurator's own assets / calling its own API.
+ * Compares against `${req.protocol}://${Host}`; `req.protocol` honors
+ * `X-Forwarded-Proto` because index.ts sets `trust proxy`.
+ */
+export function isSameOrigin(req: Request, origin: string): boolean {
+  const host = req.headers.host;
+  if (!host) {
+    return false;
+  }
+  return origin.toLowerCase() === `${req.protocol}://${host}`.toLowerCase();
+}
+
+export function buildCorsOptionsDelegate(): CorsOptionsDelegate<Request> {
   const allowed = getAllowedOrigins();
-  return {
-    origin(origin, callback) {
-      // No Origin header ⇒ not a cross-origin browser request (same-origin
-      // fetch, curl, native). Allow; writes are still auth-gated.
-      if (!origin) {
-        callback(null, true);
-        return;
-      }
-      if (allowed.includes(origin)) {
-        callback(null, true);
-        return;
-      }
-      callback(new Error(`Origin ${origin} is not allowed by Configurator CORS policy`));
-    },
+  const base: Omit<CorsOptions, "origin"> = {
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization", "x-configurator-secret"],
     methods: ["GET", "POST", "OPTIONS"],
+  };
+  return (req, callback) => {
+    const origin = req.headers.origin;
+    // No Origin header ⇒ not a CORS-constrained client (curl, server-to-server,
+    // non-CORS-mode browser loads). Allow; writes are still auth-gated.
+    if (!origin || isSameOrigin(req, origin) || allowed.includes(origin)) {
+      callback(null, { ...base, origin: true });
+      return;
+    }
+    callback(new Error(`Origin ${origin} is not allowed by Configurator CORS policy`));
   };
 }
