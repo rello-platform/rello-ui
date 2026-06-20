@@ -1510,6 +1510,76 @@ export function TeamDawnIcon({ accent, size = 48, className }: TrackIconProps) {
 }
 
 /* ==========================================
+   THE TENDING — growing sprout in soil with nurture droplets
+   For Client Nurture card
+   ========================================== */
+export function TendingIcon({ accent, size = 48, className }: TrackIconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
+      {/* Soil line */}
+      <line x1="6" y1="38" x2="42" y2="38" stroke={accent} strokeWidth="1.5" opacity="0.2" strokeLinecap="round" />
+      {/* Soil mound */}
+      <path d="M14 38c2-3 6-4 10-4s8 1 10 4" stroke={accent} strokeWidth="1" opacity="0.15" strokeLinecap="round" fill="none" />
+      {/* Soil texture flecks */}
+      <circle cx="16" cy="40" r="0.6" fill={accent} opacity="0.15" />
+      <circle cx="24" cy="41" r="0.6" fill={accent} opacity="0.12" />
+      <circle cx="32" cy="40" r="0.6" fill={accent} opacity="0.13" />
+      {/* Main stem */}
+      <path
+        d="M24 38 C24 30, 24 24, 24 16"
+        stroke={accent}
+        strokeWidth="2"
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Left leaf — lower, broad */}
+      <path
+        d="M24 28 C18 28, 13 25, 11 19 C17 19, 22 22, 24 28 Z"
+        fill={accent}
+        fillOpacity="0.12"
+        stroke={accent}
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      {/* Left leaf vein */}
+      <path d="M24 28 C20 26, 16 23, 13 20" stroke={accent} strokeWidth="0.8" opacity="0.3" strokeLinecap="round" fill="none" />
+      {/* Right leaf — upper, reaching */}
+      <path
+        d="M24 22 C30 22, 35 18, 37 12 C31 12, 26 16, 24 22 Z"
+        fill={accent}
+        fillOpacity="0.1"
+        stroke={accent}
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      {/* Right leaf vein */}
+      <path d="M24 22 C28 20, 32 16, 35 13" stroke={accent} strokeWidth="0.8" opacity="0.25" strokeLinecap="round" fill="none" />
+      {/* New bud at crown — fresh growth */}
+      <path
+        d="M24 16 c-2 -2 -2 -5 0 -7 c2 2 2 5 0 7 Z"
+        fill={accent}
+        fillOpacity="0.2"
+        stroke={accent}
+        strokeWidth="1.5"
+        opacity="0.7"
+        strokeLinejoin="round"
+      />
+      {/* Crown node dot */}
+      <circle cx="24" cy="16" r="1.2" fill={accent} opacity="0.5" />
+      {/* Nurture droplets descending — care/watering */}
+      <path d="M14 8 c-1.2 1.5 -1.2 3 0 3 s1.2 -1.5 0 -3 Z" fill={accent} fillOpacity="0.3" stroke={accent} strokeWidth="0.8" opacity="0.5" strokeLinejoin="round" />
+      <path d="M34 6 c-1 1.3 -1 2.6 0 2.6 s1 -1.3 0 -2.6 Z" fill={accent} fillOpacity="0.25" stroke={accent} strokeWidth="0.7" opacity="0.4" strokeLinejoin="round" />
+      {/* Growth ascent dots */}
+      <circle cx="29" cy="30" r="1" fill={accent} opacity="0.25" />
+      <circle cx="19" cy="14" r="0.9" fill={accent} opacity="0.2" />
+      {/* Sparkle — new-growth shimmer */}
+      <circle cx="40" cy="20" r="0.8" fill={accent} opacity="0.25" />
+      <path d="M38 18l2 2" stroke={accent} strokeWidth="1" opacity="0.3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/* ==========================================
    REGISTRY
    ========================================== */
 
@@ -1540,4 +1610,5 @@ export const DASHBOARD_ICONS: Record<string, React.ComponentType<TrackIconProps>
   routing: RoutingIcon,
   "team-activity": TeamActivityIcon,
   "team-dawn": TeamDawnIcon,
+  "client-nurture": TendingIcon,
 };
