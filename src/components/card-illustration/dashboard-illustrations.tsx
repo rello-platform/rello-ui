@@ -29,6 +29,7 @@ import {
   RoutingIcon,
   TeamActivityIcon,
   TeamDawnIcon,
+  TendingIcon,
 } from "../../icons";
 import {
   RadialBurst,
@@ -247,6 +248,13 @@ export const DASHBOARD_ILLUSTRATIONS: Record<string, DashboardIllustrationDef> =
     pattern: RadialBurst,
     icon: TeamDawnIcon,
     dark: true,
+  },
+  "client-nurture": {
+    codename: "The Tending",
+    section: "Client Nurture Card",
+    accent: "#5B9E6E",
+    pattern: ConcentricCircles,
+    icon: TendingIcon,
   },
 };
 

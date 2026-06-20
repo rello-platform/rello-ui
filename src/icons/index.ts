@@ -45,6 +45,7 @@ export {
   RoutingIcon,
   TeamActivityIcon,
   TeamDawnIcon,
+  TendingIcon,
   DASHBOARD_ICONS,
 } from "./dashboard-icons";
 
