@@ -3474,6 +3474,13 @@ var DASHBOARD_ILLUSTRATIONS = {
     icon: TeamDawnIcon,
     dark: true
   },
+  "home-scout": {
+    codename: "The Discovery",
+    section: "Home Scout Card",
+    accent: "#3B8DBD",
+    pattern: OrbitalRings,
+    icon: HomeScoutIcon
+  },
   "client-nurture": {
     codename: "The Tending",
     section: "Client Nurture Card",
