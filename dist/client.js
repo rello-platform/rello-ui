@@ -3481,6 +3481,13 @@ var DASHBOARD_ILLUSTRATIONS = {
     pattern: OrbitalRings,
     icon: HomeScoutIcon
   },
+  "newsletter-studio": {
+    codename: "The Press",
+    section: "Newsletter Studio Card",
+    accent: "#7B5EA7",
+    pattern: CrossHatch,
+    icon: NewsletterStudioIcon
+  },
   "client-nurture": {
     codename: "The Tending",
     section: "Client Nurture Card",

@@ -19,6 +19,7 @@ import {
   HRAssessmentsIcon,
   HSProgressIcon,
   HomeScoutIcon,
+  NewsletterStudioIcon,
   OpenHouseIcon,
   MailboxIcon,
   FollowupIcon,
@@ -256,6 +257,13 @@ export const DASHBOARD_ILLUSTRATIONS: Record<string, DashboardIllustrationDef> =
     accent: "#3B8DBD",
     pattern: OrbitalRings,
     icon: HomeScoutIcon,
+  },
+  "newsletter-studio": {
+    codename: "The Press",
+    section: "Newsletter Studio Card",
+    accent: "#7B5EA7",
+    pattern: CrossHatch,
+    icon: NewsletterStudioIcon,
   },
   "client-nurture": {
     codename: "The Tending",
