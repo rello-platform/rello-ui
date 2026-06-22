@@ -5,6 +5,25 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.20.1 — 2026-06-22
+
+**Fix: "Five Before 9" (`before-9`) dashboard illustration rendered washed-out / broken on light cards**
+
+The `before-9` entry in `DASHBOARD_ILLUSTRATIONS` was the only illustration flagged
+`dark: true`. The dark branch in `CardIllustration` renders the icon white (`#fff`)
+inside a near-invisible white-tinted container (`rgba(255,255,255,0.06)`) — correct
+only on a dark card surface. Every Rello dashboard hero-card surface is LIGHT
+(`var(--hero-card-background, var(--card-background))`), so on `/mlo` the Dawn
+illustration showed as a faded/ghosted ("broken") graphic while its siblings
+(`conversations`, `market-intel`, `neighborhood-intel` — all light) rendered crisp
+accent-colored icons in accent-tinted tiles.
+
+Fix: drop the `dark: true` flag from `before-9` so it renders the accent (`#D4943A`)
+Dawn icon in an accent-tinted container, consistent with every other dashboard card.
+The `DawnIcon` SVG and `RadialBurst` pattern were already valid vectors — the defect
+was purely in the dark-mode rendering branch being applied on a light surface.
+(Finding 13B / smoke BUG-09.) No API/export surface change; patch-level.
+
 ## v2.15.0 — 2026-05-28
 
 **UnderlineTabBar — canonical hoist (RELLO II T4)**

@@ -73,7 +73,16 @@ export const DASHBOARD_ILLUSTRATIONS: Record<string, DashboardIllustrationDef> =
     accent: "#D4943A",
     pattern: RadialBurst,
     icon: DawnIcon,
-    dark: true,
+    // NOTE: `dark` intentionally omitted (was `dark: true` ≤ v2.20.0).
+    // The dark branch in CardIllustration renders the icon white (#fff) on a
+    // near-invisible white-tinted container — correct only on a dark card
+    // surface. Every Rello dashboard hero-card surface is LIGHT
+    // (var(--hero-card-background, var(--card-background))), so dark mode made
+    // the Dawn illustration render washed-out / "broken" while every sibling
+    // (conversations / market-intel / neighborhood-intel — all light) rendered
+    // a crisp accent-colored icon in an accent-tinted tile. Dropping the flag
+    // makes before-9 render the accent (#D4943A) Dawn icon consistently with
+    // its siblings. (Finding 13B / smoke BUG-09.)
   },
   conversations: {
     codename: "The Signal",
