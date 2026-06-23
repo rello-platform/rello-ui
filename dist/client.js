@@ -2864,6 +2864,19 @@ function TendingIcon({ accent, size = 48, className }) {
     /* @__PURE__ */ jsx24("path", { d: "M38 18l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
   ] });
 }
+function BroadcastIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("path", { d: "M34 11a15 15 0 0 1 0 20", stroke: accent, strokeWidth: "2.4", strokeLinecap: "round", opacity: "0.5", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M39 6a22 22 0 0 1 0 30", stroke: accent, strokeWidth: "2.4", strokeLinecap: "round", opacity: "0.26", fill: "none" }),
+    /* @__PURE__ */ jsx24("ellipse", { cx: "19", cy: "16", rx: "13", ry: "5.4", fill: accent, opacity: "0.22" }),
+    /* @__PURE__ */ jsx24("path", { d: "M6 16v14c0 3 5.8 5.4 13 5.4s13-2.4 13-5.4V16", fill: accent, opacity: "0.9" }),
+    /* @__PURE__ */ jsx24("ellipse", { cx: "19", cy: "16", rx: "13", ry: "5.4", fill: "#fff" }),
+    /* @__PURE__ */ jsx24("ellipse", { cx: "19", cy: "16", rx: "13", ry: "5.4", fill: accent, opacity: "0.18" }),
+    /* @__PURE__ */ jsx24("path", { d: "M9 18l3 9M19 19v10M29 18l-3 9", stroke: "#fff", strokeWidth: "1.6", opacity: "0.7", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "40", cy: "37", r: "3.2", fill: accent }),
+    /* @__PURE__ */ jsx24("circle", { cx: "40", cy: "37", r: "6.4", stroke: accent, strokeWidth: "1.6", fill: "none", opacity: "0.4" })
+  ] });
+}
 var DASHBOARD_ICONS = {
   dawn: DawnIcon,
   signal: SignalIcon,
@@ -2891,7 +2904,8 @@ var DASHBOARD_ICONS = {
   routing: RoutingIcon,
   "team-activity": TeamActivityIcon,
   "team-dawn": TeamDawnIcon,
-  "client-nurture": TendingIcon
+  "client-nurture": TendingIcon,
+  "the-drumbeat": BroadcastIcon
 };
 
 // src/icons/app-icons.tsx
@@ -3503,6 +3517,13 @@ var DASHBOARD_ILLUSTRATIONS = {
     accent: "#5B9E6E",
     pattern: ConcentricCircles,
     icon: TendingIcon
+  },
+  "the-drumbeat": {
+    codename: "The Broadcast",
+    section: "The Drumbeat Card",
+    accent: "#D4506A",
+    pattern: RadialBurst,
+    icon: BroadcastIcon
   }
 };
 var RESPONSIVE_SIZE = "clamp(48px, calc(40px + 3vw), 88px)";
@@ -7708,6 +7729,7 @@ export {
   BehavioralTag,
   BrainIcon,
   BrandColorPicker,
+  BroadcastIcon,
   BudgetIcon,
   Button,
   ButtonSpinner,
