@@ -33,6 +33,7 @@ import {
   TeamDawnIcon,
   TendingIcon,
   BroadcastIcon,
+  CompassIcon,
 } from "../../icons";
 import {
   RadialBurst,
@@ -288,6 +289,13 @@ export const DASHBOARD_ILLUSTRATIONS: Record<string, DashboardIllustrationDef> =
     accent: "#D4506A",
     pattern: RadialBurst,
     icon: BroadcastIcon,
+  },
+  "home-ready": {
+    codename: "The Compass",
+    section: "HomeReady Card",
+    accent: "#3B5998",
+    pattern: ConcentricCircles,
+    icon: CompassIcon,
   },
 };
 
