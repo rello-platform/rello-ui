@@ -1605,6 +1605,38 @@ export function BroadcastIcon({ accent, size = 48, className }: TrackIconProps) 
 }
 
 /* ==========================================
+   THE COMPASS — readiness gauge with needle + north pointer
+   For HomeReady Card
+   ========================================== */
+export function CompassIcon({ accent, size = 48, className }: TrackIconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
+      {/* Gauge track — full semicircle, faint */}
+      <path d="M8 30a16 16 0 0 1 32 0" stroke={accent} strokeWidth="3" strokeLinecap="round" opacity="0.25" fill="none" />
+      {/* Filled arc — progress toward ready */}
+      <path d="M8 30a16 16 0 0 1 8-13.9" stroke={accent} strokeWidth="3" strokeLinecap="round" fill="none" />
+      {/* Tick marks along the arc */}
+      <line x1="11" y1="22" x2="13.2" y2="23.3" stroke={accent} strokeWidth="1" opacity="0.3" strokeLinecap="round" />
+      <line x1="24" y1="14" x2="24" y2="16.5" stroke={accent} strokeWidth="1" opacity="0.35" strokeLinecap="round" />
+      <line x1="37" y1="22" x2="34.8" y2="23.3" stroke={accent} strokeWidth="1" opacity="0.3" strokeLinecap="round" />
+      {/* Needle pointing up toward ready */}
+      <path d="M24 30l9-12" stroke={accent} strokeWidth="2.6" strokeLinecap="round" />
+      {/* Center pivot */}
+      <circle cx="24" cy="30" r="3.2" fill={accent} />
+      <circle cx="24" cy="30" r="5.2" stroke={accent} strokeWidth="1" opacity="0.25" fill="none" />
+      {/* North pointer */}
+      <path d="M20 14l4-5 4 5z" fill={accent} opacity="0.9" />
+      {/* Micro-detail: ready marker */}
+      <circle cx="33" cy="18" r="2" fill={accent} />
+      <circle cx="33" cy="18" r="3.6" stroke={accent} strokeWidth="0.9" opacity="0.3" fill="none" />
+      {/* Sparkle */}
+      <circle cx="8" cy="10" r="0.8" fill={accent} opacity="0.25" />
+      <path d="M6 8l2 2" stroke={accent} strokeWidth="1" opacity="0.3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/* ==========================================
    REGISTRY
    ========================================== */
 
@@ -1637,4 +1669,5 @@ export const DASHBOARD_ICONS: Record<string, React.ComponentType<TrackIconProps>
   "team-dawn": TeamDawnIcon,
   "client-nurture": TendingIcon,
   "the-drumbeat": BroadcastIcon,
+  "home-ready": CompassIcon,
 };

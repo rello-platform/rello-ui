@@ -202,13 +202,16 @@ Each consumer app gets one branded illustration for its card on the dashboard an
 
 | Field | Value |
 |-------|-------|
-| **Section** | HomeReady / Buyer Qualification |
-| **Accent Color** | Teal `#5B9EA6` |
+| **Registry key** | `home-ready` |
+| **Section** | HomeReady Card |
+| **Accent Color** | Navy `#3B5998` |
 | **Pattern** | Concentric circles |
-| **Icon Concept** | Compass needle pointing upward with gauge arc, house silhouette at north |
-| **Micro-Detail** | Small sparkle at the needle tip |
+| **Icon Concept** | Readiness gauge / compass — semicircle gauge arc with a filled progress arc, a needle pointing up toward "ready", a center pivot dot, and a small north pointer |
+| **Micro-Detail** | Tiny "ready" marker (ringed dot) at the upper-right of the gauge |
 | **Tier** | Tier 2 Feature Card |
-| **Status** | 🔲 To Build |
+| **Status** | ✅ Built (v2.22.0) |
+
+> Supersedes the earlier teal `#5B9EA6` "The Compass" plan — shipped as navy `#3B5998` to match HomeReady brand. Icon is `CompassIcon` in `src/icons/dashboard-icons.tsx`; registry key `home-ready`. Distinct from the existing `hr-assessments` "The Assay" entry.
 
 ---
 
@@ -495,7 +498,7 @@ These only appear on the Broker dashboard, not MLO.
 | 6 | The Thermometer | Pipeline Scoring | Deep Teal | Hexagons | 🔲 To Build |
 | 7 | The Radar | Hot Leads | Burnt Sienna | Dashed orbits | 🔲 To Build |
 | 8 | The Agenda | Today's Schedule | Slate Blue | Dot grid | 🔲 To Build |
-| 9 | The Compass | HomeReady | Teal | Concentric circles | 🔲 To Build |
+| 9 | The Compass | HomeReady | Navy `#3B5998` | Concentric circles | ✅ Built |
 | 10 | The Finish Line | HomeStretch | Forest | Concentric circles | 🔲 To Build |
 | 11 | The Hearth | The Oven | Warm Taupe | Wave lines | 🔲 To Build |
 | 12 | The Press | Newsletter Studio | Soft Indigo | Dot grid | 🔲 To Build |

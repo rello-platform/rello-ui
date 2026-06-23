@@ -2877,6 +2877,23 @@ function BroadcastIcon({ accent, size = 48, className }) {
     /* @__PURE__ */ jsx24("circle", { cx: "40", cy: "37", r: "6.4", stroke: accent, strokeWidth: "1.6", fill: "none", opacity: "0.4" })
   ] });
 }
+function CompassIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("path", { d: "M8 30a16 16 0 0 1 32 0", stroke: accent, strokeWidth: "3", strokeLinecap: "round", opacity: "0.25", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M8 30a16 16 0 0 1 8-13.9", stroke: accent, strokeWidth: "3", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("line", { x1: "11", y1: "22", x2: "13.2", y2: "23.3", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "24", y1: "14", x2: "24", y2: "16.5", stroke: accent, strokeWidth: "1", opacity: "0.35", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("line", { x1: "37", y1: "22", x2: "34.8", y2: "23.3", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M24 30l9-12", stroke: accent, strokeWidth: "2.6", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "30", r: "3.2", fill: accent }),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "30", r: "5.2", stroke: accent, strokeWidth: "1", opacity: "0.25", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M20 14l4-5 4 5z", fill: accent, opacity: "0.9" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "33", cy: "18", r: "2", fill: accent }),
+    /* @__PURE__ */ jsx24("circle", { cx: "33", cy: "18", r: "3.6", stroke: accent, strokeWidth: "0.9", opacity: "0.3", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "8", cy: "10", r: "0.8", fill: accent, opacity: "0.25" }),
+    /* @__PURE__ */ jsx24("path", { d: "M6 8l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
+  ] });
+}
 var DASHBOARD_ICONS = {
   dawn: DawnIcon,
   signal: SignalIcon,
@@ -2905,7 +2922,8 @@ var DASHBOARD_ICONS = {
   "team-activity": TeamActivityIcon,
   "team-dawn": TeamDawnIcon,
   "client-nurture": TendingIcon,
-  "the-drumbeat": BroadcastIcon
+  "the-drumbeat": BroadcastIcon,
+  "home-ready": CompassIcon
 };
 
 // src/icons/app-icons.tsx
@@ -3524,6 +3542,13 @@ var DASHBOARD_ILLUSTRATIONS = {
     accent: "#D4506A",
     pattern: RadialBurst,
     icon: BroadcastIcon
+  },
+  "home-ready": {
+    codename: "The Compass",
+    section: "HomeReady Card",
+    accent: "#3B5998",
+    pattern: ConcentricCircles,
+    icon: CompassIcon
   }
 };
 var RESPONSIVE_SIZE = "clamp(48px, calc(40px + 3vw), 88px)";
@@ -7747,6 +7772,7 @@ export {
   CelebrationIcon,
   Checkbox,
   ClosingIcon,
+  CompassIcon,
   ConcentricCircles,
   ConversionScore,
   CreditScoreIcon,

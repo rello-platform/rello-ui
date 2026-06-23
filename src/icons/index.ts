@@ -47,6 +47,7 @@ export {
   TeamDawnIcon,
   TendingIcon,
   BroadcastIcon,
+  CompassIcon,
   DASHBOARD_ICONS,
 } from "./dashboard-icons";
 
