@@ -1666,6 +1666,33 @@ export function PathfinderIcon({ accent, size = 48, className }: TrackIconProps)
 }
 
 /* ==========================================
+   THE HARVEST — magnifier over a field of lead-dots with one highlighted, + a wheat sprig
+   For Harvest Home Card (DARK variant — goldenrod card background)
+   ========================================== */
+export function HarvestIcon({ accent, size = 48, className }: TrackIconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
+      {/* Field of leads — faint row of data points */}
+      <g opacity="0.55">
+        <circle cx="12" cy="34" r="2" fill={accent} />
+        <circle cx="20" cy="36" r="2" fill={accent} />
+        <circle cx="28" cy="34" r="2" fill={accent} />
+      </g>
+      {/* Magnifier lens — discovery */}
+      <circle cx="29" cy="20" r="9" stroke={accent} strokeWidth="2.6" fill="none" />
+      {/* Highlighted hot lead — warm micro-detail (enrichment surfaced the match) */}
+      <circle cx="29" cy="20" r="2.6" fill="#FFD27A" />
+      <circle cx="29" cy="20" r="4.4" stroke={accent} strokeWidth="0.9" opacity="0.3" fill="none" />
+      {/* Magnifier handle */}
+      <path d="M36 27l7 7" stroke={accent} strokeWidth="2.8" strokeLinecap="round" />
+      {/* Wheat sprig — the harvest */}
+      <path d="M9 26c2-4 2-8 2-8" stroke={accent} strokeWidth="1.8" strokeLinecap="round" opacity="0.8" />
+      <path d="M11 22l-2.4-1.2M11 22l2.4-1.2M11 19l-2.4-1.2M11 19l2.4-1.2" stroke={accent} strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+    </svg>
+  );
+}
+
+/* ==========================================
    REGISTRY
    ========================================== */
 
@@ -1700,4 +1727,5 @@ export const DASHBOARD_ICONS: Record<string, React.ComponentType<TrackIconProps>
   "the-drumbeat": BroadcastIcon,
   "home-ready": CompassIcon,
   "pathfinder-pro": PathfinderIcon,
+  "harvest-home": HarvestIcon,
 };

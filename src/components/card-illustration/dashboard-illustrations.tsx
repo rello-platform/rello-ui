@@ -35,6 +35,7 @@ import {
   BroadcastIcon,
   CompassIcon,
   PathfinderIcon,
+  HarvestIcon,
 } from "../../icons";
 import {
   RadialBurst,
@@ -304,6 +305,14 @@ export const DASHBOARD_ILLUSTRATIONS: Record<string, DashboardIllustrationDef> =
     accent: "#3B82F6",
     pattern: OrbitalRings,
     icon: PathfinderIcon,
+  },
+  "harvest-home": {
+    codename: "The Harvest",
+    section: "Harvest Home Card",
+    accent: "#B8860B",
+    pattern: OrbitalRings,
+    icon: HarvestIcon,
+    dark: true,
   },
 };
 

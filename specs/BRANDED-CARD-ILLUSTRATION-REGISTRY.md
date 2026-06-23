@@ -288,17 +288,21 @@ Each consumer app gets one branded illustration for its card on the dashboard an
 
 ---
 
-#### 14. Harvest Home — "The Fields"
+#### 14. Harvest Home — "The Harvest"
 
 | Field | Value |
 |-------|-------|
-| **Section** | Harvest Home / Lead Discovery & Enrichment |
-| **Accent Color** | Terracotta `#C27052` |
-| **Pattern** | Dashed orbits |
-| **Icon Concept** | Magnifying glass over a field/grid of data points with some highlighted, wheat/harvest accent |
-| **Micro-Detail** | Sparkle on highlighted data points |
+| **Registry key** | `harvest-home` |
+| **Section** | Harvest Home Card |
+| **Accent Color** | Goldenrod `#B8860B` |
+| **Pattern** | Orbital rings (dashed-orbit / discovery feel) |
+| **Variant** | **Dark** (`dark: true`) — the HH dashboard card has a goldenrod-tinted background, so CardIllustration renders the dark adaptation (white-translucent container, stroke-style icon) |
+| **Icon Concept** | Magnifier over a field of lead-dots with one highlighted, plus a small wheat sprig — lead discovery + enrichment + harvest |
+| **Micro-Detail** | Highlighted hot lead rendered in fixed warm `#FFD27A` inside the magnifier lens |
 | **Tier** | Tier 2 Feature Card |
-| **Status** | 🔲 To Build |
+| **Status** | ✅ Built (v2.24.0) |
+
+> Icon is `HarvestIcon` in `src/icons/dashboard-icons.tsx`; registry key `harvest-home`. **Supersedes the earlier terracotta `#C27052` "The Fields" plan** — shipped as goldenrod `#B8860B` with `dark: true` to read correctly on Harvest Home's colored card background. All strokes/fills flow from the `#B8860B` accent except the highlighted lead dot, which uses fixed warm `#FFD27A` as the micro-detail.
 
 ---
 
@@ -521,7 +525,7 @@ These only appear on the Broker dashboard, not MLO.
 | 11 | The Hearth | The Oven | Warm Taupe | Wave lines | 🔲 To Build |
 | 12 | The Press | Newsletter Studio | Soft Indigo | Dot grid | 🔲 To Build |
 | 13 | The Welcome Mat | Open House Hub | Dusty Mauve | Orbital rings | 🔲 To Build |
-| 14 | The Fields | Harvest Home | Terracotta | Dashed orbits | 🔲 To Build |
+| 14 | The Harvest | Harvest Home | Goldenrod `#B8860B` (dark) | Orbital rings | ✅ Built |
 | 15 | The Signal | Phone App | Amber Gold | Orbital rings | 🔲 To Build |
 | 16 | Command Center | Marketing Hub | Lavender | Dot grid | 🔲 To Build |
 | 17 | The Observatory | MarketIntel (full app) | Steel Blue | Dot grid | 🔲 To Build |
@@ -613,7 +617,7 @@ Cards 18–21: The Runway (Closing Copilot), The Blueprint (Report Builder), The
 *Built-in Rello features getting their visual identity.*
 
 ### Phase 4 — New Apps
-Cards 13–17: The Welcome Mat (Open House Hub), The Fields (Harvest Home), The Signal (Phone App), Command Center (Marketing Hub), The Observatory (MarketIntel full app)
+Cards 13–17: The Welcome Mat (Open House Hub), The Harvest (Harvest Home), The Signal (Phone App), Command Center (Marketing Hub), The Observatory (MarketIntel full app)
 *New and upgrading apps in Wave 3-4 of the ecosystem roadmap.*
 
 ### Phase 5 — Admin & Broker
