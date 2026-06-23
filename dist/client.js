@@ -2915,6 +2915,21 @@ function PathfinderIcon({ accent, size = 48, className }) {
     /* @__PURE__ */ jsx24("path", { d: "M36 12l10 3-10 4z", fill: "#2E9E6A" })
   ] });
 }
+function HarvestIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsxs17("g", { opacity: "0.55", children: [
+      /* @__PURE__ */ jsx24("circle", { cx: "12", cy: "34", r: "2", fill: accent }),
+      /* @__PURE__ */ jsx24("circle", { cx: "20", cy: "36", r: "2", fill: accent }),
+      /* @__PURE__ */ jsx24("circle", { cx: "28", cy: "34", r: "2", fill: accent })
+    ] }),
+    /* @__PURE__ */ jsx24("circle", { cx: "29", cy: "20", r: "9", stroke: accent, strokeWidth: "2.6", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "29", cy: "20", r: "2.6", fill: "#FFD27A" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "29", cy: "20", r: "4.4", stroke: accent, strokeWidth: "0.9", opacity: "0.3", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M36 27l7 7", stroke: accent, strokeWidth: "2.8", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M9 26c2-4 2-8 2-8", stroke: accent, strokeWidth: "1.8", strokeLinecap: "round", opacity: "0.8" }),
+    /* @__PURE__ */ jsx24("path", { d: "M11 22l-2.4-1.2M11 22l2.4-1.2M11 19l-2.4-1.2M11 19l2.4-1.2", stroke: accent, strokeWidth: "1.2", strokeLinecap: "round", opacity: "0.6" })
+  ] });
+}
 var DASHBOARD_ICONS = {
   dawn: DawnIcon,
   signal: SignalIcon,
@@ -2945,7 +2960,8 @@ var DASHBOARD_ICONS = {
   "client-nurture": TendingIcon,
   "the-drumbeat": BroadcastIcon,
   "home-ready": CompassIcon,
-  "pathfinder-pro": PathfinderIcon
+  "pathfinder-pro": PathfinderIcon,
+  "harvest-home": HarvestIcon
 };
 
 // src/icons/app-icons.tsx
@@ -3578,6 +3594,14 @@ var DASHBOARD_ILLUSTRATIONS = {
     accent: "#3B82F6",
     pattern: OrbitalRings,
     icon: PathfinderIcon
+  },
+  "harvest-home": {
+    codename: "The Harvest",
+    section: "Harvest Home Card",
+    accent: "#B8860B",
+    pattern: OrbitalRings,
+    icon: HarvestIcon,
+    dark: true
   }
 };
 var RESPONSIVE_SIZE = "clamp(48px, calc(40px + 3vw), 88px)";
@@ -7840,6 +7864,7 @@ export {
   HRAssessmentsIcon,
   HSProgressIcon,
   HarvestHomeIcon,
+  HarvestIcon,
   HeroActionCard,
   HomeReadyIcon,
   HomeScoutIcon,

@@ -49,6 +49,7 @@ export {
   BroadcastIcon,
   CompassIcon,
   PathfinderIcon,
+  HarvestIcon,
   DASHBOARD_ICONS,
 } from "./dashboard-icons";
 
