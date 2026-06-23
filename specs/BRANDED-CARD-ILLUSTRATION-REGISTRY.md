@@ -507,6 +507,7 @@ These only appear on the Broker dashboard, not MLO.
 | 18 | The Runway | Closing Copilot | Deep Teal | Hexagons | 🔲 To Build |
 | 19 | The Blueprint | Report Builder | Soft Navy | Concentric circles | 🔲 To Build |
 | 20 | The Web | Referral Network | Dusty Rose | Wave lines | 🔲 To Build |
+| 21 | The Broadcast | The Drumbeat Card | `#D4506A` Rose | Radial burst | ✅ Built |
 | 21 | The Tracker | Lead Source Attribution | Cool Gray | Concentric circles | 🔲 To Build |
 | 22 | The Brain | Milo Engine | Soft Navy | Concentric circles | 🔲 To Build |
 | 23 | The Mill | Content Engine | Cool Gray | Dot grid | 🔲 To Build |

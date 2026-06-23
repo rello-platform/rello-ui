@@ -32,6 +32,7 @@ import {
   TeamActivityIcon,
   TeamDawnIcon,
   TendingIcon,
+  BroadcastIcon,
 } from "../../icons";
 import {
   RadialBurst,
@@ -280,6 +281,13 @@ export const DASHBOARD_ILLUSTRATIONS: Record<string, DashboardIllustrationDef> =
     accent: "#5B9E6E",
     pattern: ConcentricCircles,
     icon: TendingIcon,
+  },
+  "the-drumbeat": {
+    codename: "The Broadcast",
+    section: "The Drumbeat Card",
+    accent: "#D4506A",
+    pattern: RadialBurst,
+    icon: BroadcastIcon,
   },
 };
 

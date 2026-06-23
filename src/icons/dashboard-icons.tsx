@@ -1580,6 +1580,31 @@ export function TendingIcon({ accent, size = 48, className }: TrackIconProps) {
 }
 
 /* ==========================================
+   THE BROADCAST — drum with radiating sound arcs + pulse ring
+   For The Drumbeat card
+   ========================================== */
+export function BroadcastIcon({ accent, size = 48, className }: TrackIconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
+      {/* Broadcast arcs (top-right) — radiating sound */}
+      <path d="M34 11a15 15 0 0 1 0 20" stroke={accent} strokeWidth="2.4" strokeLinecap="round" opacity="0.5" fill="none" />
+      <path d="M39 6a22 22 0 0 1 0 30" stroke={accent} strokeWidth="2.4" strokeLinecap="round" opacity="0.26" fill="none" />
+      {/* Drum body */}
+      <ellipse cx="19" cy="16" rx="13" ry="5.4" fill={accent} opacity="0.22" />
+      <path d="M6 16v14c0 3 5.8 5.4 13 5.4s13-2.4 13-5.4V16" fill={accent} opacity="0.9" />
+      {/* Drum head */}
+      <ellipse cx="19" cy="16" rx="13" ry="5.4" fill="#fff" />
+      <ellipse cx="19" cy="16" rx="13" ry="5.4" fill={accent} opacity="0.18" />
+      {/* Tension lines */}
+      <path d="M9 18l3 9M19 19v10M29 18l-3 9" stroke="#fff" strokeWidth="1.6" opacity="0.7" strokeLinecap="round" />
+      {/* Pulse micro-detail */}
+      <circle cx="40" cy="37" r="3.2" fill={accent} />
+      <circle cx="40" cy="37" r="6.4" stroke={accent} strokeWidth="1.6" fill="none" opacity="0.4" />
+    </svg>
+  );
+}
+
+/* ==========================================
    REGISTRY
    ========================================== */
 
@@ -1611,4 +1636,5 @@ export const DASHBOARD_ICONS: Record<string, React.ComponentType<TrackIconProps>
   "team-activity": TeamActivityIcon,
   "team-dawn": TeamDawnIcon,
   "client-nurture": TendingIcon,
+  "the-drumbeat": BroadcastIcon,
 };
