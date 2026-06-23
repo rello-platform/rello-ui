@@ -34,6 +34,7 @@ import {
   TendingIcon,
   BroadcastIcon,
   CompassIcon,
+  PathfinderIcon,
 } from "../../icons";
 import {
   RadialBurst,
@@ -296,6 +297,13 @@ export const DASHBOARD_ILLUSTRATIONS: Record<string, DashboardIllustrationDef> =
     accent: "#3B5998",
     pattern: ConcentricCircles,
     icon: CompassIcon,
+  },
+  "pathfinder-pro": {
+    codename: "The Pathfinder",
+    section: "PathfinderPro Card",
+    accent: "#3B82F6",
+    pattern: OrbitalRings,
+    icon: PathfinderIcon,
   },
 };
 

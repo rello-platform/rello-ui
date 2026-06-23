@@ -48,6 +48,7 @@ export {
   TendingIcon,
   BroadcastIcon,
   CompassIcon,
+  PathfinderIcon,
   DASHBOARD_ICONS,
 } from "./dashboard-icons";
 
