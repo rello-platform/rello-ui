@@ -215,6 +215,23 @@ Each consumer app gets one branded illustration for its card on the dashboard an
 
 ---
 
+#### 9b. PathfinderPro — "The Pathfinder"
+
+| Field | Value |
+|-------|-------|
+| **Registry key** | `pathfinder-pro` |
+| **Section** | PathfinderPro Card |
+| **Accent Color** | Blue `#3B82F6` |
+| **Pattern** | Orbital rings |
+| **Icon Concept** | Route-to-flag — a winding dotted route with waypoint dots leading up to a flag, evoking pathfinding toward the loan / closing |
+| **Micro-Detail** | Success-green `#2E9E6A` flag at the route's destination tip |
+| **Tier** | Tier 2 Feature Card |
+| **Status** | ✅ Built (v2.23.0) |
+
+> Icon is `PathfinderIcon` in `src/icons/dashboard-icons.tsx`; registry key `pathfinder-pro`. OrbitalRings reads as outward progress toward the destination. The flag tip uses fixed success-green `#2E9E6A` as the micro-detail (mirroring CompassIcon's green ready-marker); all other strokes/fills flow from the `#3B82F6` accent.
+
+---
+
 #### 10. HomeStretch — "The Finish Line"
 
 | Field | Value |
@@ -499,6 +516,7 @@ These only appear on the Broker dashboard, not MLO.
 | 7 | The Radar | Hot Leads | Burnt Sienna | Dashed orbits | 🔲 To Build |
 | 8 | The Agenda | Today's Schedule | Slate Blue | Dot grid | 🔲 To Build |
 | 9 | The Compass | HomeReady | Navy `#3B5998` | Concentric circles | ✅ Built |
+| 9b | The Pathfinder | PathfinderPro Card | Blue `#3B82F6` | Orbital rings | ✅ Built |
 | 10 | The Finish Line | HomeStretch | Forest | Concentric circles | 🔲 To Build |
 | 11 | The Hearth | The Oven | Warm Taupe | Wave lines | 🔲 To Build |
 | 12 | The Press | Newsletter Studio | Soft Indigo | Dot grid | 🔲 To Build |

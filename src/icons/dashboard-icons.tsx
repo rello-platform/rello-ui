@@ -1637,6 +1637,35 @@ export function CompassIcon({ accent, size = 48, className }: TrackIconProps) {
 }
 
 /* ==========================================
+   THE PATHFINDER — winding route with waypoint dots leading up to a flag
+   For PathfinderPro Card
+   ========================================== */
+export function PathfinderIcon({ accent, size = 48, className }: TrackIconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
+      {/* Dotted route — winding path toward the destination */}
+      <path
+        d="M10 38 Q18 30 22 30 T32 20 36 12"
+        stroke={accent}
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeDasharray="1 5"
+        opacity="0.7"
+        fill="none"
+      />
+      {/* Waypoint dots along the route */}
+      <circle cx="10" cy="38" r="3" fill={accent} opacity="0.5" />
+      <circle cx="22" cy="30" r="3" fill={accent} opacity="0.7" />
+      <circle cx="31" cy="21" r="3" fill={accent} />
+      {/* Flagpole */}
+      <path d="M36 12v16" stroke={accent} strokeWidth="2.4" strokeLinecap="round" />
+      {/* Flag — success-green micro-detail (the loan / closing reached) */}
+      <path d="M36 12l10 3-10 4z" fill="#2E9E6A" />
+    </svg>
+  );
+}
+
+/* ==========================================
    REGISTRY
    ========================================== */
 
@@ -1670,4 +1699,5 @@ export const DASHBOARD_ICONS: Record<string, React.ComponentType<TrackIconProps>
   "client-nurture": TendingIcon,
   "the-drumbeat": BroadcastIcon,
   "home-ready": CompassIcon,
+  "pathfinder-pro": PathfinderIcon,
 };

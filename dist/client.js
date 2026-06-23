@@ -2894,6 +2894,27 @@ function CompassIcon({ accent, size = 48, className }) {
     /* @__PURE__ */ jsx24("path", { d: "M6 8l2 2", stroke: accent, strokeWidth: "1", opacity: "0.3", strokeLinecap: "round" })
   ] });
 }
+function PathfinderIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24(
+      "path",
+      {
+        d: "M10 38 Q18 30 22 30 T32 20 36 12",
+        stroke: accent,
+        strokeWidth: "2.6",
+        strokeLinecap: "round",
+        strokeDasharray: "1 5",
+        opacity: "0.7",
+        fill: "none"
+      }
+    ),
+    /* @__PURE__ */ jsx24("circle", { cx: "10", cy: "38", r: "3", fill: accent, opacity: "0.5" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "22", cy: "30", r: "3", fill: accent, opacity: "0.7" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "31", cy: "21", r: "3", fill: accent }),
+    /* @__PURE__ */ jsx24("path", { d: "M36 12v16", stroke: accent, strokeWidth: "2.4", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M36 12l10 3-10 4z", fill: "#2E9E6A" })
+  ] });
+}
 var DASHBOARD_ICONS = {
   dawn: DawnIcon,
   signal: SignalIcon,
@@ -2923,7 +2944,8 @@ var DASHBOARD_ICONS = {
   "team-dawn": TeamDawnIcon,
   "client-nurture": TendingIcon,
   "the-drumbeat": BroadcastIcon,
-  "home-ready": CompassIcon
+  "home-ready": CompassIcon,
+  "pathfinder-pro": PathfinderIcon
 };
 
 // src/icons/app-icons.tsx
@@ -3549,6 +3571,13 @@ var DASHBOARD_ILLUSTRATIONS = {
     accent: "#3B5998",
     pattern: ConcentricCircles,
     icon: CompassIcon
+  },
+  "pathfinder-pro": {
+    codename: "The Pathfinder",
+    section: "PathfinderPro Card",
+    accent: "#3B82F6",
+    pattern: OrbitalRings,
+    icon: PathfinderIcon
   }
 };
 var RESPONSIVE_SIZE = "clamp(48px, calc(40px + 3vw), 88px)";
@@ -7840,6 +7869,7 @@ export {
   PageContainer,
   PageLoader,
   Pagination,
+  PathfinderIcon,
   PipelineThermometer,
   PreApprovalIcon,
   PreQualIcon,
