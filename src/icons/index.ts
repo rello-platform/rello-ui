@@ -50,6 +50,7 @@ export {
   CompassIcon,
   PathfinderIcon,
   HarvestIcon,
+  WelcomeMatIcon,
   DASHBOARD_ICONS,
 } from "./dashboard-icons";
 
