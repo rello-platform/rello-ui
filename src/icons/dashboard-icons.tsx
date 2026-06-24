@@ -1744,6 +1744,29 @@ export function HearthIcon({ accent, size = 48, className }: TrackIconProps) {
 }
 
 /* ==========================================
+   THE FINISH LINE — rising path with milestone dots leading to a checkered finish flag
+   For Home Stretch Card (LIGHT card — no dark variant). The home stretch to mortgage-ready.
+   ========================================== */
+export function FinishLineIcon({ accent, size = 48, className }: TrackIconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
+      {/* Rising path */}
+      <path d="M7 40q6-2 10-9t10-13" stroke={accent} strokeWidth="2.4" strokeLinecap="round" fill="none" />
+      {/* Milestone dots */}
+      <circle cx="9" cy="39" r="2.6" fill={accent} />
+      <circle cx="17" cy="31" r="2.6" fill={accent} />
+      <circle cx="23" cy="21" r="2.6" fill={accent} />
+      {/* Flagpole */}
+      <path d="M30 10v18" stroke={accent} strokeWidth="2.4" strokeLinecap="round" />
+      {/* Checkered finish flag (2 squares) */}
+      <path d="M30 10h5v3.5h-5zM35 13.5h5V17h-5z" fill={accent} />
+      {/* Reached-the-finish ember micro-detail */}
+      <circle cx="30" cy="30" r="2.4" fill="#2E9E6A" />
+    </svg>
+  );
+}
+
+/* ==========================================
    REGISTRY
    ========================================== */
 
@@ -1781,4 +1804,5 @@ export const DASHBOARD_ICONS: Record<string, React.ComponentType<TrackIconProps>
   "harvest-home": HarvestIcon,
   "open-house-hub": WelcomeMatIcon,
   "the-oven": HearthIcon,
+  "home-stretch": FinishLineIcon,
 };

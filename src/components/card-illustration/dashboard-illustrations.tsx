@@ -38,6 +38,7 @@ import {
   HarvestIcon,
   WelcomeMatIcon,
   HearthIcon,
+  FinishLineIcon,
 } from "../../icons";
 import {
   RadialBurst,
@@ -329,6 +330,13 @@ export const DASHBOARD_ILLUSTRATIONS: Record<string, DashboardIllustrationDef> =
     accent: "#B85C38",
     pattern: RadialBurst,
     icon: HearthIcon,
+  },
+  "home-stretch": {
+    codename: "The Finish Line",
+    section: "Home Stretch Card",
+    accent: "#3D7A80",
+    pattern: ConcentricCircles,
+    icon: FinishLineIcon,
   },
 };
 
