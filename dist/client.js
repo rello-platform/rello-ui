@@ -2944,6 +2944,19 @@ function WelcomeMatIcon({ accent, size = 48, className }) {
     /* @__PURE__ */ jsx24("path", { d: "M16 38c0-4 2.5-7 5-7s5 3 5 7", fill: accent })
   ] });
 }
+function HearthIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("rect", { x: "9", y: "14", width: "30", height: "26", rx: "3", stroke: accent, strokeWidth: "2.4", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M15 30a9 9 0 0 1 18 0z", fill: accent, fillOpacity: "0.25" }),
+    /* @__PURE__ */ jsx24("path", { d: "M20 30v-5l4-4 4 4v5", stroke: accent, strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "24", cy: "29", r: "2.4", fill: "#D9472B" }),
+    /* @__PURE__ */ jsxs17("g", { stroke: accent, strokeWidth: "1.8", strokeLinecap: "round", opacity: "0.6", children: [
+      /* @__PURE__ */ jsx24("path", { d: "M18 11q2-3 0-6" }),
+      /* @__PURE__ */ jsx24("path", { d: "M24 11q2-3 0-6" }),
+      /* @__PURE__ */ jsx24("path", { d: "M30 11q2-3 0-6" })
+    ] })
+  ] });
+}
 var DASHBOARD_ICONS = {
   dawn: DawnIcon,
   signal: SignalIcon,
@@ -2976,7 +2989,8 @@ var DASHBOARD_ICONS = {
   "home-ready": CompassIcon,
   "pathfinder-pro": PathfinderIcon,
   "harvest-home": HarvestIcon,
-  "open-house-hub": WelcomeMatIcon
+  "open-house-hub": WelcomeMatIcon,
+  "the-oven": HearthIcon
 };
 
 // src/icons/app-icons.tsx
@@ -3624,6 +3638,13 @@ var DASHBOARD_ILLUSTRATIONS = {
     accent: "#A67B8A",
     pattern: ConcentricCircles,
     icon: WelcomeMatIcon
+  },
+  "the-oven": {
+    codename: "The Hearth",
+    section: "The Oven Card",
+    accent: "#B85C38",
+    pattern: RadialBurst,
+    icon: HearthIcon
   }
 };
 var RESPONSIVE_SIZE = "clamp(48px, calc(40px + 3vw), 88px)";
@@ -7887,6 +7908,7 @@ export {
   HSProgressIcon,
   HarvestHomeIcon,
   HarvestIcon,
+  HearthIcon,
   HeroActionCard,
   HomeReadyIcon,
   HomeScoutIcon,

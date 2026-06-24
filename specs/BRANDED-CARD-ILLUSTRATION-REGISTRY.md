@@ -250,13 +250,15 @@ Each consumer app gets one branded illustration for its card on the dashboard an
 
 | Field | Value |
 |-------|-------|
-| **Section** | The Oven / Post-Close Intelligence |
-| **Accent Color** | Warm Taupe `#9E8B7E` |
-| **Pattern** | Wave lines |
-| **Icon Concept** | Oven/hearth with warm glow radiating outward, house shape in the opening |
-| **Micro-Detail** | Heat waves rising from the top |
+| **Section** | The Oven Card |
+| **Accent Color** | Ember `#B85C38` |
+| **Pattern** | Radial burst (`RadialBurst`) |
+| **Icon Concept** | Oven/hearth opening with a warm glow inside, a small house shape in the opening, heat waves rising |
+| **Micro-Detail** | Warm ember dot (fixed `#D9472B`) at the heart of the glow |
 | **Tier** | Tier 2 Feature Card |
-| **Status** | 🔲 To Build |
+| **Status** | ✅ Built (v2.26.0) |
+
+> Icon is `HearthIcon` in `src/icons/dashboard-icons.tsx`; registry key `the-oven` (LIGHT card — no `dark` flag). All strokes/fills flow from the `#B85C38` accent except the ember micro-detail, which uses fixed warm `#D9472B`. **Supersedes the planned Warm Taupe `#9E8B7E` + wave-lines plan** — shipped as ember `#B85C38` with `RadialBurst` (radiating warmth reads as the hearth glow).
 
 ---
 
@@ -540,7 +542,7 @@ These only appear on the Broker dashboard, not MLO.
 | 9 | The Compass | HomeReady | Navy `#3B5998` | Concentric circles | ✅ Built |
 | 9b | The Pathfinder | PathfinderPro Card | Blue `#3B82F6` | Orbital rings | ✅ Built |
 | 10 | The Finish Line | HomeStretch | Forest | Concentric circles | 🔲 To Build |
-| 11 | The Hearth | The Oven | Warm Taupe | Wave lines | 🔲 To Build |
+| 11 | The Hearth | The Oven (`the-oven`) | Ember `#B85C38` | Radial burst | ✅ Built |
 | 12 | The Press | Newsletter Studio | Soft Indigo | Dot grid | 🔲 To Build |
 | 13 | The Welcome Mat | Open House Hub (`open-house-hub`) | Dusty Mauve `#A67B8A` | Concentric circles | ✅ Built |
 | 14 | The Harvest | Harvest Home | Goldenrod `#B8860B` (dark) | Orbital rings | ✅ Built |
