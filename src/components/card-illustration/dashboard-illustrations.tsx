@@ -36,6 +36,7 @@ import {
   CompassIcon,
   PathfinderIcon,
   HarvestIcon,
+  WelcomeMatIcon,
 } from "../../icons";
 import {
   RadialBurst,
@@ -313,6 +314,13 @@ export const DASHBOARD_ILLUSTRATIONS: Record<string, DashboardIllustrationDef> =
     pattern: OrbitalRings,
     icon: HarvestIcon,
     dark: true,
+  },
+  "open-house-hub": {
+    codename: "The Welcome Mat",
+    section: "Open House Hub Card",
+    accent: "#A67B8A",
+    pattern: ConcentricCircles,
+    icon: WelcomeMatIcon,
   },
 };
 

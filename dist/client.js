@@ -2930,6 +2930,20 @@ function HarvestIcon({ accent, size = 48, className }) {
     /* @__PURE__ */ jsx24("path", { d: "M11 22l-2.4-1.2M11 22l2.4-1.2M11 19l-2.4-1.2M11 19l2.4-1.2", stroke: accent, strokeWidth: "1.2", strokeLinecap: "round", opacity: "0.6" })
   ] });
 }
+function WelcomeMatIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("rect", { x: "14", y: "10", width: "16", height: "28", rx: "1.5", stroke: accent, strokeWidth: "2.4", fill: "none" }),
+    /* @__PURE__ */ jsx24("path", { d: "M30 12l8 4v22h-8z", fill: accent, fillOpacity: "0.22", stroke: accent, strokeWidth: "2", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "33.5", cy: "26", r: "1.4", fill: accent }),
+    /* @__PURE__ */ jsxs17("g", { stroke: accent, strokeWidth: "1.8", strokeLinecap: "round", opacity: "0.55", children: [
+      /* @__PURE__ */ jsx24("path", { d: "M40 16l4-2" }),
+      /* @__PURE__ */ jsx24("path", { d: "M41 22h5" }),
+      /* @__PURE__ */ jsx24("path", { d: "M40 28l4 2" })
+    ] }),
+    /* @__PURE__ */ jsx24("circle", { cx: "21", cy: "22", r: "3", fill: accent }),
+    /* @__PURE__ */ jsx24("path", { d: "M16 38c0-4 2.5-7 5-7s5 3 5 7", fill: accent })
+  ] });
+}
 var DASHBOARD_ICONS = {
   dawn: DawnIcon,
   signal: SignalIcon,
@@ -2961,7 +2975,8 @@ var DASHBOARD_ICONS = {
   "the-drumbeat": BroadcastIcon,
   "home-ready": CompassIcon,
   "pathfinder-pro": PathfinderIcon,
-  "harvest-home": HarvestIcon
+  "harvest-home": HarvestIcon,
+  "open-house-hub": WelcomeMatIcon
 };
 
 // src/icons/app-icons.tsx
@@ -3602,6 +3617,13 @@ var DASHBOARD_ILLUSTRATIONS = {
     pattern: OrbitalRings,
     icon: HarvestIcon,
     dark: true
+  },
+  "open-house-hub": {
+    codename: "The Welcome Mat",
+    section: "Open House Hub Card",
+    accent: "#A67B8A",
+    pattern: ConcentricCircles,
+    icon: WelcomeMatIcon
   }
 };
 var RESPONSIVE_SIZE = "clamp(48px, calc(40px + 3vw), 88px)";
@@ -7957,6 +7979,7 @@ export {
   VoiceCorpusInput,
   WasThisHelpful,
   WeeklyChallengeIcon,
+  WelcomeMatIcon,
   WizardShell,
   countWords,
   useToast

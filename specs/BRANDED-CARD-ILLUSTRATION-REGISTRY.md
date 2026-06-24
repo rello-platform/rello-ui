@@ -306,6 +306,24 @@ Each consumer app gets one branded illustration for its card on the dashboard an
 
 ---
 
+#### 14b. Open House Hub — "The Welcome Mat"
+
+| Field | Value |
+|-------|-------|
+| **Registry key** | `open-house-hub` |
+| **Section** | Open House Hub Card |
+| **Accent Color** | Dusty mauve `#A67B8A` |
+| **Pattern** | Concentric circles (welcome / inward feel) |
+| **Variant** | Light (no `dark` flag) — the OHH dashboard card is a white-background surface, so CardIllustration renders the accent-colored icon in an accent-tinted tile |
+| **Icon Concept** | An open door with welcome rays streaming out and a small visitor figure stepping through — open-house sign-in / welcome |
+| **Micro-Detail** | All strokes/fills flow from the `#A67B8A` accent; the open door panel uses a 0.22-opacity accent fill |
+| **Tier** | Tier 2 Feature Card |
+| **Status** | ✅ Built (v2.25.0) |
+
+> Icon is `WelcomeMatIcon` in `src/icons/dashboard-icons.tsx`; registry key `open-house-hub` (distinct from the legacy `open-house` "The Threshold" check-ins card, which is untouched). Light card — no `dark: true`. Every stroke/fill derives from the `#A67B8A` accent.
+
+---
+
 #### 15. Phone App — "The Signal"
 
 | Field | Value |
@@ -524,7 +542,7 @@ These only appear on the Broker dashboard, not MLO.
 | 10 | The Finish Line | HomeStretch | Forest | Concentric circles | 🔲 To Build |
 | 11 | The Hearth | The Oven | Warm Taupe | Wave lines | 🔲 To Build |
 | 12 | The Press | Newsletter Studio | Soft Indigo | Dot grid | 🔲 To Build |
-| 13 | The Welcome Mat | Open House Hub | Dusty Mauve | Orbital rings | 🔲 To Build |
+| 13 | The Welcome Mat | Open House Hub (`open-house-hub`) | Dusty Mauve `#A67B8A` | Concentric circles | ✅ Built |
 | 14 | The Harvest | Harvest Home | Goldenrod `#B8860B` (dark) | Orbital rings | ✅ Built |
 | 15 | The Signal | Phone App | Amber Gold | Orbital rings | 🔲 To Build |
 | 16 | Command Center | Marketing Hub | Lavender | Dot grid | 🔲 To Build |

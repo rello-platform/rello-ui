@@ -1693,6 +1693,32 @@ export function HarvestIcon({ accent, size = 48, className }: TrackIconProps) {
 }
 
 /* ==========================================
+   THE WELCOME MAT — open door with welcome rays streaming out + a visitor stepping through
+   For Open House Hub Card (LIGHT card — no dark variant)
+   ========================================== */
+export function WelcomeMatIcon({ accent, size = 48, className }: TrackIconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
+      {/* Door frame */}
+      <rect x="14" y="10" width="16" height="28" rx="1.5" stroke={accent} strokeWidth="2.4" fill="none" />
+      {/* Open door panel — swung outward */}
+      <path d="M30 12l8 4v22h-8z" fill={accent} fillOpacity="0.22" stroke={accent} strokeWidth="2" strokeLinejoin="round" />
+      {/* Door knob */}
+      <circle cx="33.5" cy="26" r="1.4" fill={accent} />
+      {/* Welcome rays streaming out */}
+      <g stroke={accent} strokeWidth="1.8" strokeLinecap="round" opacity="0.55">
+        <path d="M40 16l4-2" />
+        <path d="M41 22h5" />
+        <path d="M40 28l4 2" />
+      </g>
+      {/* Visitor stepping through the threshold */}
+      <circle cx="21" cy="22" r="3" fill={accent} />
+      <path d="M16 38c0-4 2.5-7 5-7s5 3 5 7" fill={accent} />
+    </svg>
+  );
+}
+
+/* ==========================================
    REGISTRY
    ========================================== */
 
@@ -1728,4 +1754,5 @@ export const DASHBOARD_ICONS: Record<string, React.ComponentType<TrackIconProps>
   "home-ready": CompassIcon,
   "pathfinder-pro": PathfinderIcon,
   "harvest-home": HarvestIcon,
+  "open-house-hub": WelcomeMatIcon,
 };
