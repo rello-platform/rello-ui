@@ -52,6 +52,7 @@ export {
   HarvestIcon,
   WelcomeMatIcon,
   HearthIcon,
+  FinishLineIcon,
   DASHBOARD_ICONS,
 } from "./dashboard-icons";
 

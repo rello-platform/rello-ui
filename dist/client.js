@@ -2957,6 +2957,17 @@ function HearthIcon({ accent, size = 48, className }) {
     ] })
   ] });
 }
+function FinishLineIcon({ accent, size = 48, className }) {
+  return /* @__PURE__ */ jsxs17("svg", { width: size, height: size, viewBox: "0 0 48 48", fill: "none", className, children: [
+    /* @__PURE__ */ jsx24("path", { d: "M7 40q6-2 10-9t10-13", stroke: accent, strokeWidth: "2.4", strokeLinecap: "round", fill: "none" }),
+    /* @__PURE__ */ jsx24("circle", { cx: "9", cy: "39", r: "2.6", fill: accent }),
+    /* @__PURE__ */ jsx24("circle", { cx: "17", cy: "31", r: "2.6", fill: accent }),
+    /* @__PURE__ */ jsx24("circle", { cx: "23", cy: "21", r: "2.6", fill: accent }),
+    /* @__PURE__ */ jsx24("path", { d: "M30 10v18", stroke: accent, strokeWidth: "2.4", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx24("path", { d: "M30 10h5v3.5h-5zM35 13.5h5V17h-5z", fill: accent }),
+    /* @__PURE__ */ jsx24("circle", { cx: "30", cy: "30", r: "2.4", fill: "#2E9E6A" })
+  ] });
+}
 var DASHBOARD_ICONS = {
   dawn: DawnIcon,
   signal: SignalIcon,
@@ -2990,7 +3001,8 @@ var DASHBOARD_ICONS = {
   "pathfinder-pro": PathfinderIcon,
   "harvest-home": HarvestIcon,
   "open-house-hub": WelcomeMatIcon,
-  "the-oven": HearthIcon
+  "the-oven": HearthIcon,
+  "home-stretch": FinishLineIcon
 };
 
 // src/icons/app-icons.tsx
@@ -3645,6 +3657,13 @@ var DASHBOARD_ILLUSTRATIONS = {
     accent: "#B85C38",
     pattern: RadialBurst,
     icon: HearthIcon
+  },
+  "home-stretch": {
+    codename: "The Finish Line",
+    section: "Home Stretch Card",
+    accent: "#3D7A80",
+    pattern: ConcentricCircles,
+    icon: FinishLineIcon
   }
 };
 var RESPONSIVE_SIZE = "clamp(48px, calc(40px + 3vw), 88px)";
@@ -7901,6 +7920,7 @@ export {
   DtiIcon,
   EmptyState,
   ErrorBanner,
+  FinishLineIcon,
   FlowIcon,
   FollowupIcon,
   FunnelIcon,

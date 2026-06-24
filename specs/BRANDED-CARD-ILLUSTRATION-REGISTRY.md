@@ -326,6 +326,24 @@ Each consumer app gets one branded illustration for its card on the dashboard an
 
 ---
 
+#### 14c. Home Stretch — "The Finish Line"
+
+| Field | Value |
+|-------|-------|
+| **Registry key** | `home-stretch` |
+| **Section** | Home Stretch Card |
+| **Accent Color** | Deep teal `#3D7A80` |
+| **Pattern** | Concentric circles (`ConcentricCircles`) |
+| **Variant** | Light (no `dark` flag) — the Home Stretch dashboard card is a white-background surface, so CardIllustration renders the accent-colored icon in an accent-tinted tile |
+| **Icon Concept** | A rising path with milestone dots leading up to a checkered finish flag — the home stretch to mortgage-ready |
+| **Micro-Detail** | Reached-the-finish dot at the flag base, fixed success green `#2E9E6A` |
+| **Tier** | Tier 2 Feature Card |
+| **Status** | ✅ Built (v2.27.0) |
+
+> Icon is `FinishLineIcon` in `src/icons/dashboard-icons.tsx`; registry key `home-stretch`. This is the **full Home Stretch app card** — distinct from the legacy `hs-progress` "The Trail" (`#B8546A`) icon used for the OLD narrow progress card, which is left untouched. Light card — no `dark: true`. Every stroke/fill derives from the `#3D7A80` accent except the reached-the-finish micro-detail, which uses fixed success green `#2E9E6A`.
+
+---
+
 #### 15. Phone App — "The Signal"
 
 | Field | Value |
@@ -541,7 +559,7 @@ These only appear on the Broker dashboard, not MLO.
 | 8 | The Agenda | Today's Schedule | Slate Blue | Dot grid | 🔲 To Build |
 | 9 | The Compass | HomeReady | Navy `#3B5998` | Concentric circles | ✅ Built |
 | 9b | The Pathfinder | PathfinderPro Card | Blue `#3B82F6` | Orbital rings | ✅ Built |
-| 10 | The Finish Line | HomeStretch | Forest | Concentric circles | 🔲 To Build |
+| 10 | The Finish Line | Home Stretch (`home-stretch`, full app card) | Deep teal `#3D7A80` | Concentric circles | ✅ Built (v2.27.0) |
 | 11 | The Hearth | The Oven (`the-oven`) | Ember `#B85C38` | Radial burst | ✅ Built |
 | 12 | The Press | Newsletter Studio | Soft Indigo | Dot grid | 🔲 To Build |
 | 13 | The Welcome Mat | Open House Hub (`open-house-hub`) | Dusty Mauve `#A67B8A` | Concentric circles | ✅ Built |
