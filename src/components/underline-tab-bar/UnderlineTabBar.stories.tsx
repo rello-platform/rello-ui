@@ -43,6 +43,52 @@ export const LinkMode: Story = {
   },
 };
 
+export const Overflow: Story = {
+  name: "Overflow (narrow container → scroll chevrons + edge fades)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Reproduces the clipped-sub-tab finding: many tabs in a constrained-width " +
+          "container overflow horizontally. Edge fade gradients + clickable scroll " +
+          "chevrons appear on whichever side(s) have hidden tabs (at ALL breakpoints), " +
+          "so a clipped tab like 'Trust / Escrow' is always discoverable. Resize the " +
+          "container / canvas to watch the affordances appear and disappear.",
+      },
+    },
+  },
+  render: () => {
+    const [active, setActive] = useState("buys");
+    const tabs: UnderlineTab[] = [
+      { id: "buys", label: "Buys" },
+      { id: "sells", label: "Sells", count: 2 },
+      { id: "closings", label: "Closings" },
+      { id: "trust", label: "Trust / Escrow" },
+      { id: "wire", label: "Wire Tracking", count: 1 },
+      { id: "docs", label: "Documents" },
+      { id: "disbursements", label: "Disbursements" },
+      { id: "reconciliation", label: "Reconciliation" },
+    ];
+    return (
+      <div
+        style={{ maxWidth: 480, border: "1px dashed #cbd5e1", padding: 8 }}
+      >
+        <UnderlineTabBar
+          tabs={tabs}
+          activeTab={active}
+          ariaLabel="Closings sub-sections"
+          onChange={setActive}
+        />
+      </div>
+    );
+  },
+  args: {
+    tabs: baseTabs,
+    activeTab: "buys",
+    ariaLabel: "Closings sub-sections",
+  },
+};
+
 export const Controlled: Story = {
   name: "Controlled (state in parent)",
   render: (args) => {
