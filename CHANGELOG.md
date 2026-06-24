@@ -5,6 +5,31 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.28.0 — 2026-06-24
+
+**Fix: `UnderlineTabBar` — overflowing tab rows were silently clipped at desktop widths (no scroll affordance)**
+
+The two scroll-edge fade gradients were classed `sm:hidden` — they only rendered
+below the `sm` breakpoint (<640px). The scroll container is `overflow-x-auto
+no-scrollbar`, so at desktop widths (≥640px) an overflowing tab row had ZERO visual
+affordance: no fade, no scrollbar, no arrow. Tabs hidden off the right edge (e.g.
+Closings' "Trust / Escrow" sub-tab clipped at ~1073px) were reachable by scroll/keyboard
+but undiscoverable.
+
+Fix (presentation-only, additive — no public API change): the component now detects
+its own scroll state via a `ref` on the scroll container + a `scroll` listener and a
+`ResizeObserver` (cleaned up on unmount), computing `canScrollLeft` / `canScrollRight`.
+Edge fade gradients now render at ALL breakpoints, gated on the scroll-state booleans
+instead of `sm:hidden`. Clickable scroll-chevron buttons (left/right, `aria-label`
+"Scroll tabs left/right", 44px min touch target, focus-visible outline) appear on
+whichever side has hidden tabs and scroll by ~one tab-width per click. The existing
+ArrowLeft/Right/Home/End roving-tabindex keyboard nav is unchanged. `UnderlineTab` /
+`UnderlineTabBarProps` are byte-for-byte identical — minor (additive behavior), not major.
+
+Added `UnderlineTabBar.test.tsx` (6 tests asserting the affordance appears on overflow,
+hides when the row fits, appears on both edges mid-scroll, scrolls on chevron click,
+updates on scroll, and keyboard nav still cycles) + an `Overflow` Storybook story.
+
 ## v2.20.1 — 2026-06-22
 
 **Fix: "Five Before 9" (`before-9`) dashboard illustration rendered washed-out / broken on light cards**

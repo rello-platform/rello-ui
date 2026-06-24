@@ -7693,8 +7693,10 @@ function SpendPanel({ data, onManageBilling, className }) {
 }
 
 // src/components/underline-tab-bar/UnderlineTabBar.tsx
+import * as React28 from "react";
 import Link2 from "next/link";
 import clsx2 from "clsx";
+import { NavArrowLeft as NavArrowLeft2, NavArrowRight as NavArrowRight2 } from "iconoir-react";
 import { Fragment as Fragment7, jsx as jsx65, jsxs as jsxs52 } from "react/jsx-runtime";
 function UnderlineTabBar({
   tabs,
@@ -7708,6 +7710,42 @@ function UnderlineTabBar({
     0,
     visibleTabs.findIndex((t) => t.id === activeTab)
   );
+  const scrollRef = React28.useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = React28.useState(false);
+  const [canScrollRight, setCanScrollRight] = React28.useState(false);
+  const updateScrollState = React28.useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const { scrollLeft, clientWidth, scrollWidth } = el;
+    setCanScrollLeft(scrollLeft > 0);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
+  }, []);
+  React28.useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener("scroll", updateScrollState, { passive: true });
+    let observer;
+    if (typeof ResizeObserver !== "undefined") {
+      observer = new ResizeObserver(() => updateScrollState());
+      observer.observe(el);
+      if (el.firstElementChild) observer.observe(el.firstElementChild);
+    }
+    return () => {
+      el.removeEventListener("scroll", updateScrollState);
+      observer?.disconnect();
+    };
+  }, [updateScrollState, visibleTabs.length]);
+  function scrollByDirection(direction) {
+    const el = scrollRef.current;
+    if (!el) return;
+    const firstTab = el.querySelector('[role="tab"]');
+    const step = firstTab?.offsetWidth ? firstTab.offsetWidth + 24 : Math.max(120, Math.round(el.clientWidth * 0.8));
+    el.scrollBy({
+      left: direction === "left" ? -step : step,
+      behavior: "smooth"
+    });
+  }
   function handleKeyDown(e) {
     if (visibleTabs.length === 0) return;
     let nextIndex = activeIndex;
@@ -7752,97 +7790,128 @@ function UnderlineTabBar({
         className
       ),
       children: [
-        /* @__PURE__ */ jsx65(
-          "div",
-          {
-            "aria-hidden": true,
-            className: "absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[var(--background,#ffffff)] to-transparent pointer-events-none z-10 sm:hidden"
-          }
-        ),
-        /* @__PURE__ */ jsx65(
-          "div",
-          {
-            "aria-hidden": true,
-            className: "absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-[var(--background,#ffffff)] to-transparent pointer-events-none z-10 sm:hidden"
-          }
-        ),
-        /* @__PURE__ */ jsx65("div", { className: "flex gap-2 sm:gap-4 md:gap-6 -mb-px overflow-x-auto no-scrollbar px-1 -mx-1", children: visibleTabs.map((tab) => {
-          const isActive = tab.id === activeTab;
-          const tabClassName = clsx2(
-            "inline-flex items-center gap-2",
-            "pb-3 pt-3 px-1",
-            "text-xs sm:text-sm",
-            "border-b-2 transition-colors",
-            "whitespace-nowrap flex-shrink-0",
-            "min-h-[44px]",
-            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-primary,#2563eb)]",
-            isActive ? "border-[var(--brand-primary,#2563eb)] text-[var(--neutral-900,#111827)] font-semibold" : "border-transparent text-[var(--neutral-500,#6b7280)] hover:text-[var(--neutral-700,#374151)] font-medium",
-            tab.disabled && "opacity-40 cursor-not-allowed pointer-events-none"
-          );
-          const inner = /* @__PURE__ */ jsxs52(Fragment7, { children: [
-            tab.icon && /* @__PURE__ */ jsx65(
-              "span",
-              {
-                "aria-hidden": true,
-                className: clsx2(
-                  "inline-flex shrink-0",
-                  isActive && "[&>svg]:stroke-[2]"
-                ),
-                children: tab.icon
-              }
-            ),
-            /* @__PURE__ */ jsx65("span", { children: tab.label }),
-            typeof tab.count === "number" && tab.count > 0 && /* @__PURE__ */ jsx65(
-              "span",
-              {
-                className: clsx2(
-                  "inline-flex items-center justify-center",
-                  "rounded-full px-1.5 min-w-[20px] h-5 text-[10px]",
-                  isActive ? "bg-[var(--brand-primary,#2563eb)] text-white" : "bg-[var(--neutral-100,#f3f4f6)] text-[var(--neutral-700,#374151)]"
-                ),
-                "aria-label": `${tab.count} pending`,
-                children: tab.count
-              }
-            )
-          ] });
-          if (tab.href && !tab.disabled) {
-            return /* @__PURE__ */ jsx65(
-              Link2,
-              {
-                href: tab.href,
-                scroll: false,
-                replace: tab.replace ?? false,
-                role: "tab",
-                id: `tab-${tab.id}`,
-                "aria-selected": isActive,
-                "aria-controls": `tabpanel-${tab.id}`,
-                tabIndex: isActive ? 0 : -1,
-                onClick: () => onChange?.(tab.id),
-                onKeyDown: handleKeyDown,
-                className: tabClassName,
-                children: inner
-              },
-              tab.id
-            );
-          }
-          return /* @__PURE__ */ jsx65(
+        canScrollLeft && /* @__PURE__ */ jsxs52(Fragment7, { children: [
+          /* @__PURE__ */ jsx65(
+            "div",
+            {
+              "aria-hidden": true,
+              className: "absolute left-0 top-0 bottom-px w-8 bg-gradient-to-r from-[var(--background,#ffffff)] to-transparent pointer-events-none z-10"
+            }
+          ),
+          /* @__PURE__ */ jsx65(
             "button",
             {
-              role: "tab",
               type: "button",
-              id: `tab-${tab.id}`,
-              "aria-selected": isActive,
-              "aria-controls": `tabpanel-${tab.id}`,
-              tabIndex: isActive ? 0 : -1,
-              disabled: tab.disabled,
-              onClick: () => !tab.disabled && onChange?.(tab.id),
-              onKeyDown: handleKeyDown,
-              className: tabClassName,
-              children: inner
-            },
-            tab.id
-          );
-        }) })
+              "aria-label": "Scroll tabs left",
+              onClick: () => scrollByDirection("left"),
+              className: "absolute left-0 top-0 bottom-px z-20 inline-flex items-center justify-center w-9 min-h-[44px] text-[var(--neutral-500,#6b7280)] hover:text-[var(--neutral-900,#111827)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-primary,#2563eb)]",
+              children: /* @__PURE__ */ jsx65(NavArrowLeft2, { "aria-hidden": true, width: 20, height: 20 })
+            }
+          )
+        ] }),
+        canScrollRight && /* @__PURE__ */ jsxs52(Fragment7, { children: [
+          /* @__PURE__ */ jsx65(
+            "div",
+            {
+              "aria-hidden": true,
+              className: "absolute right-0 top-0 bottom-px w-8 bg-gradient-to-l from-[var(--background,#ffffff)] to-transparent pointer-events-none z-10"
+            }
+          ),
+          /* @__PURE__ */ jsx65(
+            "button",
+            {
+              type: "button",
+              "aria-label": "Scroll tabs right",
+              onClick: () => scrollByDirection("right"),
+              className: "absolute right-0 top-0 bottom-px z-20 inline-flex items-center justify-center w-9 min-h-[44px] text-[var(--neutral-500,#6b7280)] hover:text-[var(--neutral-900,#111827)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-primary,#2563eb)]",
+              children: /* @__PURE__ */ jsx65(NavArrowRight2, { "aria-hidden": true, width: 20, height: 20 })
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsx65(
+          "div",
+          {
+            ref: scrollRef,
+            className: "flex gap-2 sm:gap-4 md:gap-6 -mb-px overflow-x-auto no-scrollbar px-1 -mx-1",
+            children: visibleTabs.map((tab) => {
+              const isActive = tab.id === activeTab;
+              const tabClassName = clsx2(
+                "inline-flex items-center gap-2",
+                "pb-3 pt-3 px-1",
+                "text-xs sm:text-sm",
+                "border-b-2 transition-colors",
+                "whitespace-nowrap flex-shrink-0",
+                "min-h-[44px]",
+                "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-primary,#2563eb)]",
+                isActive ? "border-[var(--brand-primary,#2563eb)] text-[var(--neutral-900,#111827)] font-semibold" : "border-transparent text-[var(--neutral-500,#6b7280)] hover:text-[var(--neutral-700,#374151)] font-medium",
+                tab.disabled && "opacity-40 cursor-not-allowed pointer-events-none"
+              );
+              const inner = /* @__PURE__ */ jsxs52(Fragment7, { children: [
+                tab.icon && /* @__PURE__ */ jsx65(
+                  "span",
+                  {
+                    "aria-hidden": true,
+                    className: clsx2(
+                      "inline-flex shrink-0",
+                      isActive && "[&>svg]:stroke-[2]"
+                    ),
+                    children: tab.icon
+                  }
+                ),
+                /* @__PURE__ */ jsx65("span", { children: tab.label }),
+                typeof tab.count === "number" && tab.count > 0 && /* @__PURE__ */ jsx65(
+                  "span",
+                  {
+                    className: clsx2(
+                      "inline-flex items-center justify-center",
+                      "rounded-full px-1.5 min-w-[20px] h-5 text-[10px]",
+                      isActive ? "bg-[var(--brand-primary,#2563eb)] text-white" : "bg-[var(--neutral-100,#f3f4f6)] text-[var(--neutral-700,#374151)]"
+                    ),
+                    "aria-label": `${tab.count} pending`,
+                    children: tab.count
+                  }
+                )
+              ] });
+              if (tab.href && !tab.disabled) {
+                return /* @__PURE__ */ jsx65(
+                  Link2,
+                  {
+                    href: tab.href,
+                    scroll: false,
+                    replace: tab.replace ?? false,
+                    role: "tab",
+                    id: `tab-${tab.id}`,
+                    "aria-selected": isActive,
+                    "aria-controls": `tabpanel-${tab.id}`,
+                    tabIndex: isActive ? 0 : -1,
+                    onClick: () => onChange?.(tab.id),
+                    onKeyDown: handleKeyDown,
+                    className: tabClassName,
+                    children: inner
+                  },
+                  tab.id
+                );
+              }
+              return /* @__PURE__ */ jsx65(
+                "button",
+                {
+                  role: "tab",
+                  type: "button",
+                  id: `tab-${tab.id}`,
+                  "aria-selected": isActive,
+                  "aria-controls": `tabpanel-${tab.id}`,
+                  tabIndex: isActive ? 0 : -1,
+                  disabled: tab.disabled,
+                  onClick: () => !tab.disabled && onChange?.(tab.id),
+                  onKeyDown: handleKeyDown,
+                  className: tabClassName,
+                  children: inner
+                },
+                tab.id
+              );
+            })
+          }
+        )
       ]
     }
   );
