@@ -1719,6 +1719,31 @@ export function WelcomeMatIcon({ accent, size = 48, className }: TrackIconProps)
 }
 
 /* ==========================================
+   THE HEARTH — oven/hearth opening with a warm glow inside, a small house shape, and heat waves rising
+   For The Oven Card (LIGHT card — no dark variant). Post-close warmth / keeping clients warm.
+   ========================================== */
+export function HearthIcon({ accent, size = 48, className }: TrackIconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
+      {/* Oven body */}
+      <rect x="9" y="14" width="30" height="26" rx="3" stroke={accent} strokeWidth="2.4" fill="none" />
+      {/* Warm glow inside the opening */}
+      <path d="M15 30a9 9 0 0 1 18 0z" fill={accent} fillOpacity="0.25" />
+      {/* House shape inside the opening */}
+      <path d="M20 30v-5l4-4 4 4v5" stroke={accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      {/* Ember — warm micro-detail */}
+      <circle cx="24" cy="29" r="2.4" fill="#D9472B" />
+      {/* Heat waves rising */}
+      <g stroke={accent} strokeWidth="1.8" strokeLinecap="round" opacity="0.6">
+        <path d="M18 11q2-3 0-6" />
+        <path d="M24 11q2-3 0-6" />
+        <path d="M30 11q2-3 0-6" />
+      </g>
+    </svg>
+  );
+}
+
+/* ==========================================
    REGISTRY
    ========================================== */
 
@@ -1755,4 +1780,5 @@ export const DASHBOARD_ICONS: Record<string, React.ComponentType<TrackIconProps>
   "pathfinder-pro": PathfinderIcon,
   "harvest-home": HarvestIcon,
   "open-house-hub": WelcomeMatIcon,
+  "the-oven": HearthIcon,
 };

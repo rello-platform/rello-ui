@@ -37,6 +37,7 @@ import {
   PathfinderIcon,
   HarvestIcon,
   WelcomeMatIcon,
+  HearthIcon,
 } from "../../icons";
 import {
   RadialBurst,
@@ -321,6 +322,13 @@ export const DASHBOARD_ILLUSTRATIONS: Record<string, DashboardIllustrationDef> =
     accent: "#A67B8A",
     pattern: ConcentricCircles,
     icon: WelcomeMatIcon,
+  },
+  "the-oven": {
+    codename: "The Hearth",
+    section: "The Oven Card",
+    accent: "#B85C38",
+    pattern: RadialBurst,
+    icon: HearthIcon,
   },
 };
 

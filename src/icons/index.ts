@@ -51,6 +51,7 @@ export {
   PathfinderIcon,
   HarvestIcon,
   WelcomeMatIcon,
+  HearthIcon,
   DASHBOARD_ICONS,
 } from "./dashboard-icons";
 
