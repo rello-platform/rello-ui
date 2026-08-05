@@ -1,4 +1,13 @@
 #!/usr/bin/env sh
+
+# LOAD-BEARING. This hook had NO `set -e` and relied on husky's `_/h` wrapper
+# invoking it as `sh -e "$s"`. core.hooksPath now points at the TRACKED `.husky`
+# so linked worktrees get hooks at all, which means git execs this file directly
+# and the wrapper's `-e` is gone. Without this line a failing `npx lint-staged`
+# would NOT abort the commit — the hook would carry on and exit with the status
+# of the LAST command. Checked per repo; do not assume.
+set -e
+
 # Phase 0 durability gate — invokes shared check script.
 # Spec: PERMISSIONS-CANONICALIZATION.md Phase 0; Locks #1 + #4.
 bash scripts/check-floating-refs.sh
