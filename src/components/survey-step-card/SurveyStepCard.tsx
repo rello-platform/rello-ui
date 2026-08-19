@@ -1,6 +1,23 @@
 "use client";
 
 import * as React from "react";
+import { alphaTint, hexAlphaToPercent } from "../../lib/alpha-tint";
+
+/* ==========================================
+   ACCENT TINTS
+   ========================================== */
+
+/**
+ * The two translucent shades of the step accent, as percentages.
+ *
+ * These were hex-alpha suffixes (`${accent}14`, `${accent}66`) until the accent
+ * prop was widened to accept a CSS custom property — concatenating onto
+ * `var(--brand-accent, #333)` produces a non-color and drops the declaration.
+ * Derived from the original bytes rather than typed by hand, so the rendered
+ * pixels are unchanged: 0x14 is 7.84%, NOT 14%.
+ */
+const TINT_PCT = hexAlphaToPercent(0x14);
+const GRADIENT_START_PCT = hexAlphaToPercent(0x66);
 import { cn } from "../../lib/cn";
 
 /* ==========================================
@@ -93,7 +110,13 @@ export type SurveyInputType = "text" | "textarea" | "currency" | "percentage" | 
 export interface SurveyQuestion {
   /** Unique key for the question (used for tracking selections) */
   key: string;
-  /** Accent color hex for this step (e.g. "#5B9EA6") */
+  /**
+   * Accent color for this step. Any CSS color value — a literal hex
+   * (`"#5B9EA6"`) or a custom property (`"var(--brand-accent, #5B9EA6)"`) both
+   * work, so a caller can bind a step to per-tenant branding without resolving
+   * the hex first. Every tint below goes through `alphaTint`, never a hex-alpha
+   * suffix, which is what makes the `var(...)` form viable.
+   */
   accent: string;
   /** Question text displayed as the heading */
   question: string;
@@ -158,7 +181,7 @@ function IllustrationBox({
   return (
     <div
       className="relative flex items-center justify-center overflow-hidden shrink-0"
-      style={{ width: 88, height: 88, borderRadius: 18, backgroundColor: `${accent}14` }}
+      style={{ width: 88, height: 88, borderRadius: 18, backgroundColor: alphaTint(accent, TINT_PCT) }}
     >
       {pattern && (
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 88 88" style={{ opacity: 0.07 }}>
@@ -207,7 +230,7 @@ function GradientProgress({
           className="h-full rounded-full transition-all duration-500 ease-out"
           style={{
             width: `${value}%`,
-            background: `linear-gradient(90deg, ${accent}66 0%, ${accent} 100%)`,
+            background: `linear-gradient(90deg, ${alphaTint(accent, GRADIENT_START_PCT)} 0%, ${accent} 100%)`,
           }}
         />
       </div>
@@ -238,7 +261,7 @@ function OptionButton({
       className="py-3 px-4 text-left rounded-xl border-2 transition-all duration-150 text-sm font-medium"
       style={{
         borderColor: isSelected ? accent : "var(--neutral-200)",
-        backgroundColor: isSelected ? `${accent}14` : "white",
+        backgroundColor: isSelected ? alphaTint(accent, TINT_PCT) : "white",
         color: isSelected ? accent : "var(--neutral-700)",
       }}
     >
@@ -327,7 +350,7 @@ function TextInputArea({
           className={inputClasses}
           style={{
             borderColor: localValue ? question.accent : "var(--neutral-200)",
-            backgroundColor: localValue ? `${question.accent}14` : "white",
+            backgroundColor: localValue ? alphaTint(question.accent, TINT_PCT) : "white",
             color: "var(--neutral-700)",
             resize: "none",
           }}
@@ -343,7 +366,7 @@ function TextInputArea({
           className={inputClasses}
           style={{
             borderColor: localValue ? question.accent : "var(--neutral-200)",
-            backgroundColor: localValue ? `${question.accent}14` : "white",
+            backgroundColor: localValue ? alphaTint(question.accent, TINT_PCT) : "white",
             color: "var(--neutral-700)",
           }}
         />

@@ -507,7 +507,23 @@ Progress.displayName = ProgressPrimitive.Root.displayName;
 
 // src/components/survey-step-card/SurveyStepCard.tsx
 import * as React12 from "react";
+
+// src/lib/alpha-tint.ts
+function hexAlphaToPercent(byte) {
+  if (!Number.isFinite(byte)) return 0;
+  const clamped = Math.min(255, Math.max(0, byte));
+  return clamped / 255 * 100;
+}
+function alphaTint(color, percent) {
+  const pct = Number.isFinite(percent) ? Math.min(100, Math.max(0, percent)) : 0;
+  const rounded = Math.round(pct * 1e4) / 1e4;
+  return `color-mix(in srgb, ${color} ${rounded}%, transparent)`;
+}
+
+// src/components/survey-step-card/SurveyStepCard.tsx
 import { jsx as jsx17, jsxs as jsxs11 } from "react/jsx-runtime";
+var TINT_PCT = hexAlphaToPercent(20);
+var GRADIENT_START_PCT = hexAlphaToPercent(102);
 function formatLive(value, inputType) {
   switch (inputType) {
     case "currency": {
@@ -583,7 +599,7 @@ function IllustrationBox({
     "div",
     {
       className: "relative flex items-center justify-center overflow-hidden shrink-0",
-      style: { width: 88, height: 88, borderRadius: 18, backgroundColor: `${accent}14` },
+      style: { width: 88, height: 88, borderRadius: 18, backgroundColor: alphaTint(accent, TINT_PCT) },
       children: [
         pattern && /* @__PURE__ */ jsx17("svg", { className: "absolute inset-0 w-full h-full", viewBox: "0 0 88 88", style: { opacity: 0.07 }, children: pattern }),
         illustration && /* @__PURE__ */ jsx17("div", { className: "relative", children: illustration })
@@ -616,7 +632,7 @@ function GradientProgress({
         className: "h-full rounded-full transition-all duration-500 ease-out",
         style: {
           width: `${value}%`,
-          background: `linear-gradient(90deg, ${accent}66 0%, ${accent} 100%)`
+          background: `linear-gradient(90deg, ${alphaTint(accent, GRADIENT_START_PCT)} 0%, ${accent} 100%)`
         }
       }
     ) }),
@@ -640,7 +656,7 @@ function OptionButton({
       className: "py-3 px-4 text-left rounded-xl border-2 transition-all duration-150 text-sm font-medium",
       style: {
         borderColor: isSelected ? accent : "var(--neutral-200)",
-        backgroundColor: isSelected ? `${accent}14` : "white",
+        backgroundColor: isSelected ? alphaTint(accent, TINT_PCT) : "white",
         color: isSelected ? accent : "var(--neutral-700)"
       },
       children: option
@@ -703,7 +719,7 @@ function TextInputArea({
         className: inputClasses,
         style: {
           borderColor: localValue ? question.accent : "var(--neutral-200)",
-          backgroundColor: localValue ? `${question.accent}14` : "white",
+          backgroundColor: localValue ? alphaTint(question.accent, TINT_PCT) : "white",
           color: "var(--neutral-700)",
           resize: "none"
         }
@@ -720,7 +736,7 @@ function TextInputArea({
         className: inputClasses,
         style: {
           borderColor: localValue ? question.accent : "var(--neutral-200)",
-          backgroundColor: localValue ? `${question.accent}14` : "white",
+          backgroundColor: localValue ? alphaTint(question.accent, TINT_PCT) : "white",
           color: "var(--neutral-700)"
         }
       }
@@ -1261,7 +1277,7 @@ var CardIllustration = React16.forwardRef(
     style,
     ...props
   }, ref) => {
-    const containerBg = dark ? `rgba(255, 255, 255, ${0.06})` : `${accent}${Math.round(bgOpacity * 255).toString(16).padStart(2, "0")}`;
+    const containerBg = dark ? `rgba(255, 255, 255, ${0.06})` : alphaTint(accent, bgOpacity * 100);
     const pOpacity = dark ? Math.min(patternOpacity * 2.5, 0.2) : patternOpacity;
     const dimensionStyle = sizeOverride ? { width: sizeOverride, height: sizeOverride } : { width: size, height: size };
     return /* @__PURE__ */ jsxs15(

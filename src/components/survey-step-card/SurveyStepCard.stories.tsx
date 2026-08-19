@@ -1,3 +1,4 @@
+import type * as React from "react";
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { SurveyStepCard, type SurveyQuestion, type SurveyInputType } from "./SurveyStepCard";
@@ -345,6 +346,63 @@ export const LiveFormatting: Story = {
         >
           Reset
         </button>
+      </div>
+    );
+  },
+};
+
+/**
+ * `SurveyQuestion.accent` takes a CSS custom property, not just a literal hex.
+ *
+ * The card below is handed `"var(--brand-accent, …)"` and reads the value off
+ * the wrapper — the shape a spoke needs to bind a survey to `Tenant.brandAccent`
+ * without threading a resolved hex through its own context first. Every tinted
+ * surface (illustration box, progress gradient, selected option, filled input)
+ * resolves from that one variable.
+ *
+ * Before v2.29.0 those tints were hex-alpha suffixes, so this call shape
+ * rendered them all as `transparent` — a suffix appended to a `var(...)` is
+ * invalid at computed-value time and resets the property to its initial value.
+ * Change the wrapper's `--brand-accent` in the Controls panel to watch every
+ * tint follow.
+ */
+export const AccentFromCssVariable: Story = {
+  name: "Accent — CSS variable",
+  render: () => {
+    const [step, setStep] = useState(0);
+    const [selections, setSelections] = useState<Record<string, string>>({});
+    const accent = "var(--brand-accent, #5B9EA6)";
+    const questions: SurveyQuestion[] = [
+      {
+        key: "goal",
+        accent,
+        question: "What brings you here today?",
+        helper: "Every tint on this card comes from one CSS variable.",
+        options: ["Buying", "Selling", "Refinancing", "Just looking"],
+        illustration: <HomeIcon accent={accent} />,
+        pattern: <ConcentricCircles accent={accent} />,
+      },
+      {
+        key: "timing",
+        accent,
+        question: "When are you hoping to move?",
+        options: ["ASAP", "3 months", "6 months", "Someday"],
+        illustration: <LocationIcon accent={accent} />,
+        pattern: <DotGrid accent={accent} />,
+      },
+    ];
+    return (
+      <div
+        style={{ ["--brand-accent" as string]: "#2A6F97" } as React.CSSProperties}
+        className="w-[520px]"
+      >
+        <SurveyStepCard
+          questions={questions}
+          step={step}
+          onStepChange={setStep}
+          selections={selections}
+          onSelect={(key, value) => setSelections((s) => ({ ...s, [key]: value }))}
+        />
       </div>
     );
   },

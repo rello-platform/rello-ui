@@ -202,7 +202,13 @@ type SurveyInputType = "text" | "textarea" | "currency" | "percentage" | "phone"
 interface SurveyQuestion {
     /** Unique key for the question (used for tracking selections) */
     key: string;
-    /** Accent color hex for this step (e.g. "#5B9EA6") */
+    /**
+     * Accent color for this step. Any CSS color value — a literal hex
+     * (`"#5B9EA6"`) or a custom property (`"var(--brand-accent, #5B9EA6)"`) both
+     * work, so a caller can bind a step to per-tenant branding without resolving
+     * the hex first. Every tint below goes through `alphaTint`, never a hex-alpha
+     * suffix, which is what makes the `var(...)` form viable.
+     */
     accent: string;
     /** Question text displayed as the heading */
     question: string;
@@ -360,7 +366,11 @@ declare const SkeletonText: React.ForwardRefExoticComponent<SkeletonTextProps & 
 declare function SkeletonStyles(): null;
 
 interface CardIllustrationProps extends React.HTMLAttributes<HTMLDivElement> {
-    /** Accent color hex (e.g. "#5B9EA6") */
+    /**
+     * Accent color. Any CSS color value — a literal hex (`"#5B9EA6"`) or a custom
+     * property (`"var(--brand-accent, #5B9EA6)"`) both work, so a caller can bind
+     * this to per-tenant branding without resolving the hex first.
+     */
     accent: string;
     /** Container size in px (default 88) */
     size?: number;

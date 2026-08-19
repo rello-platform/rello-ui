@@ -2,13 +2,18 @@
 
 import * as React from "react";
 import { cn } from "../../lib/cn";
+import { alphaTint } from "../../lib/alpha-tint";
 
 /* ==========================================
    TYPES
    ========================================== */
 
 export interface CardIllustrationProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Accent color hex (e.g. "#5B9EA6") */
+  /**
+   * Accent color. Any CSS color value — a literal hex (`"#5B9EA6"`) or a custom
+   * property (`"var(--brand-accent, #5B9EA6)"`) both work, so a caller can bind
+   * this to per-tenant branding without resolving the hex first.
+   */
   accent: string;
   /** Container size in px (default 88) */
   size?: number;
@@ -56,9 +61,14 @@ const CardIllustration = React.forwardRef<HTMLDivElement, CardIllustrationProps>
     ref,
   ) => {
     // Dark mode adjustments per spec
+    // `alphaTint`, not a hex-alpha suffix: the suffix is string concatenation and
+    // silently invalidates the declaration when `accent` is a `var(...)`. See
+    // src/lib/alpha-tint.ts. This also drops a rounding artifact — the old path
+    // quantised bgOpacity to an 8-bit alpha byte, so the documented default of
+    // 0.14 actually rendered at 0x24/255 = 14.12%.
     const containerBg = dark
       ? `rgba(255, 255, 255, ${0.06})`
-      : `${accent}${Math.round((bgOpacity * 255)).toString(16).padStart(2, "0")}`;
+      : alphaTint(accent, bgOpacity * 100);
     const pOpacity = dark ? Math.min(patternOpacity * 2.5, 0.2) : patternOpacity;
 
     const dimensionStyle: React.CSSProperties = sizeOverride
