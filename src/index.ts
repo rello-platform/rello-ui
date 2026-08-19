@@ -20,6 +20,15 @@
 
 export { cn } from "./lib/cn";
 
+/**
+ * Alpha tinting. `alphaTint(color, percent)` is the ONE mechanism this package
+ * uses to express a translucent shade of a caller-supplied color, and the reason
+ * `accent` props accept a CSS custom property as well as a literal hex. Exported
+ * so consumers can tint the same way in their own surfaces instead of
+ * reintroducing hex-alpha concatenation. See src/lib/alpha-tint.ts.
+ */
+export { alphaTint, hexAlphaToPercent } from "./lib/alpha-tint";
+
 /* ─── CVA class-name builders (pure functions) ─── */
 
 export { buttonVariants, type ButtonVariantProps } from "./components/button/variants";

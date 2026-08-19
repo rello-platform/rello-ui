@@ -1,3 +1,4 @@
+import type * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { CardIllustration } from "./CardIllustration";
 import { TrackCardIllustration, TRACK_ILLUSTRATIONS } from "./track-illustrations";
@@ -121,6 +122,40 @@ export const FullRegistry: Story = {
           </div>
         </div>
       ))}
+    </div>
+  ),
+};
+
+/**
+ * `accent` takes a CSS custom property, not just a literal hex.
+ *
+ * Both tiles below render the identical tint. The left one is handed
+ * `"#2A6F97"`; the right one is handed `"var(--brand-accent, …)"` and reads the
+ * value off the wrapper — which is how a spoke binds a component to
+ * `Tenant.brandAccent` without resolving the hex in application code first.
+ * Before v2.29.0 the right-hand tile rendered untinted, because the container
+ * background was built by concatenating a hex-alpha suffix onto the prop.
+ */
+export const AccentFromCssVariable: Story = {
+  name: "Accent — hex vs CSS variable",
+  render: () => (
+    <div className="flex gap-8 items-start">
+      <div className="flex flex-col items-center gap-2">
+        <CardIllustration accent="#2A6F97" icon={<span className="text-2xl">🏠</span>} />
+        <code className="text-[10px] text-[var(--neutral-500)]">accent=&quot;#2A6F97&quot;</code>
+      </div>
+      <div
+        className="flex flex-col items-center gap-2"
+        style={{ ["--brand-accent" as string]: "#2A6F97" } as React.CSSProperties}
+      >
+        <CardIllustration
+          accent="var(--brand-accent, #5B9EA6)"
+          icon={<span className="text-2xl">🏠</span>}
+        />
+        <code className="text-[10px] text-[var(--neutral-500)]">
+          accent=&quot;var(--brand-accent, …)&quot;
+        </code>
+      </div>
     </div>
   ),
 };

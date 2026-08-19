@@ -5,6 +5,18 @@ function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
+// src/lib/alpha-tint.ts
+function hexAlphaToPercent(byte) {
+  if (!Number.isFinite(byte)) return 0;
+  const clamped = Math.min(255, Math.max(0, byte));
+  return clamped / 255 * 100;
+}
+function alphaTint(color, percent) {
+  const pct = Number.isFinite(percent) ? Math.min(100, Math.max(0, percent)) : 0;
+  const rounded = Math.round(pct * 1e4) / 1e4;
+  return `color-mix(in srgb, ${color} ${rounded}%, transparent)`;
+}
+
 // src/components/button/variants.ts
 import { cva } from "class-variance-authority";
 var buttonVariants = cva(
@@ -157,11 +169,13 @@ export {
   STAGE_COLORS,
   STAGE_LABELS,
   agentRoleToTeamRole,
+  alphaTint,
   badgeVariants,
   buildLocationTagSlug,
   buttonVariants,
   cn,
   formatCopy,
-  getTeamCopy
+  getTeamCopy,
+  hexAlphaToPercent
 };
 //# sourceMappingURL=index.js.map
