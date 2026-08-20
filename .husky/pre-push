@@ -58,6 +58,63 @@ if [ ! -d node_modules ]; then
   exit 1
 fi
 
+# ── GUARD 0c — RELEASE-TAG / package.json VERSION AGREEMENT ─────────────────
+# Runs before the heavy gates: it is the only guard here that protects CONSUMERS
+# rather than this repo, and once a tag is pushed it is installable regardless of
+# what any later job decides.
+#
+# rello-ui shipped five tags whose tree misdeclares its version — v1.4.0/v1.4.1
+# say 1.3.0, v1.4.2-v1.4.4 say 1.4.0 (measured across the org 2026-08-20: 9 of
+# 329 tags, 2 of 36 packages). All five predate the publish workflow's
+# tag-equality step by seven weeks, so nothing failed — there was nothing there.
+#
+# The publish guard alone would not be enough anyway. Of 403 @rello-platform/*
+# dependency declarations across 62 package.json files, 401 are `github:`
+# git-refs and 2 are workspace links; ZERO install from GitHub Packages. A
+# git-ref pin resolves the tag's TREE, so refusing to publish changes nothing for
+# a real consumer — which is exactly how @rello-platform/signals put "0.27.0"
+# into three live repos' lockfiles while its publish guard failed loudly four
+# times and went unread for twelve days.
+#
+# Reads the pre-push ref list on stdin: "<local ref> <local sha> <remote ref>
+# <remote sha>" per ref. Nothing else in this hook consumes stdin.
+_tagguard_failed=0
+while read -r _lref _lsha _rref _rsha; do
+  case "$_rref" in refs/tags/*) ;; *) continue ;; esac
+  _tag="${_rref#refs/tags/}"
+  # A tag DELETION pushes the all-zero sha — nothing to verify.
+  case "$_lsha" in *[!0]*) ;; *) continue ;; esac
+
+  # Verify the version in the COMMIT BEING TAGGED, not the working tree — they
+  # can differ, and the tagged tree is what a consumer actually installs.
+  _tagged_pkg="$(git show "${_lsha}:package.json" 2>/dev/null)"
+  if [ -z "$_tagged_pkg" ]; then
+    echo "[pre-push] UNVERIFIED — cannot read package.json at ${_lsha} for tag ${_tag}. Refusing." >&2
+    _tagguard_failed=1
+    continue
+  fi
+  _tagged_version="$(printf '%s' "$_tagged_pkg" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(JSON.parse(s).version||"")}catch{process.stdout.write("")}})')"
+
+  if ! TAG="$_tag" VER="$_tagged_version" node -e '
+    const { compare } = await import("./scripts/check-version-tag.mjs");
+    const r = compare(process.env.TAG, process.env.VER || undefined);
+    if (!r.ok) { console.error(`[pre-push] REFUSED — ${r.reason}`); process.exit(r.code); }
+    console.log(`[pre-push] tag/version agree — ${r.reason}`);
+  ' --input-type=module 2>&1; then
+    _tagguard_failed=1
+  fi
+done
+
+if [ "$_tagguard_failed" -ne 0 ]; then
+  echo "" >&2
+  echo "  A tag whose tree misdeclares its version reaches consumers regardless of" >&2
+  echo "  whether the publish succeeds — they pin github:...#<tag>, so npm records" >&2
+  echo "  the DECLARED version in their lockfile." >&2
+  echo "" >&2
+  echo "  Set package.json version to match, commit, then re-tag." >&2
+  exit 1
+fi
+
 echo "[pre-push] Running tsc --noEmit..."
 npx tsc --noEmit
 

@@ -15,16 +15,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Backstop only. This guard sits on the REGISTRY path, and no consumer uses
+      # it — measured 2026-08-20: of 403 @rello-platform/* dependency declarations
+      # across 62 package.json files, 401 are `github:` git-refs and 2 are
+      # workspace links; ZERO install from GitHub Packages. So refusing to publish
+      # a mismatched tag does not protect anybody; .husky/pre-push does, by
+      # refusing the tag before it exists.
+      #
+      # Kept anyway: it is the only detector for a tag created through the web UI
+      # or pushed with --no-verify, and it costs nothing.
+      #
+      # Runs the SAME script as the hook so the two can never disagree.
       - name: Verify tag matches package.json version
         if: github.event_name == 'push'
-        run: |
-          PKG_VERSION=$(jq -r .version package.json)
-          TAG_VERSION="${GITHUB_REF_NAME#v}"
-          if [ "$PKG_VERSION" != "$TAG_VERSION" ]; then
-            echo "::error::Tag ${GITHUB_REF_NAME} does not match package.json.version ${PKG_VERSION}"
-            exit 1
-          fi
-          echo "Tag ↔ package.json version match: ${GITHUB_REF_NAME} = v${PKG_VERSION}"
+        run: node scripts/check-version-tag.mjs "${GITHUB_REF_NAME}"
 
       - uses: actions/setup-node@v4
         with:
