@@ -77,6 +77,24 @@ fi
 
 echo "[pre-push] All checks passed."
 
+# ── lockfile git+ssh gate ────────────────────────────────────────────────────
+# WHY THIS REPO SPECIFICALLY. Two `git+ssh://git@github.com/...` resolved
+# entries (billing-client, slugs) sat on origin/main here and nowhere else. A
+# machine-level `url.https://github.com/.insteadOf git+ssh://git@github.com/`
+# rewrite masked them: they fetched fine locally and could only ever have
+# resolved on Railway from cache. The rewrite has since been removed, so they
+# would now fail locally too — which is the point, the local result finally
+# matches the build image.
+#
+# They survived on main because this repo never ran the gate. The shared
+# implementation has existed since scripts v0.5.0, but it rides
+# `check-stale-pins`, and rello-ui does not invoke that — nor do the other four
+# package repos. Wired directly here so it does not depend on a sibling check.
+#
+# Requires exit 0. Offenders (exit 1) block; an unparseable lockfile (exit 2)
+# blocks too — "could not tell" is not "fine". No `|| true`.
+npx --yes "github:rello-platform/scripts#v0.10.0" check-lockfile-ssh
+
 # ── tag-dist-gate ────────────────────────────────────────────────────────────
 # A v* tag may not carry a stale dist/. This package is installed from git tags,
 # so the artifact a consumer receives is whatever dist/ was committed at the tag
