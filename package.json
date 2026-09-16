@@ -1,6 +1,6 @@
 {
   "name": "@rello-platform/ui",
-  "version": "2.29.0",
+  "version": "2.30.0",
   "description": "Shared UI component library for Rello applications",
   "type": "module",
   "main": "./dist/index.js",
@@ -30,7 +30,7 @@
     "tokens"
   ],
   "scripts": {
-    "build": "tsup",
+    "compile": "tsup",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
@@ -38,7 +38,7 @@
     "build-storybook": "storybook build",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepare": "husky || true; git config core.hooksPath .husky || true"
+    "hooks": "husky || true; git config core.hooksPath .husky || true"
   },
   "peerDependencies": {
     "next": ">=14.0.0",
