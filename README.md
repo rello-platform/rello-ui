@@ -57,3 +57,7 @@ Brand colors, pipeline stages, and status colors are defined as CSS variables:
 - `--brand-primary` / `--brand-accent`
 - `--hot`, `--qualified`, `--engaged`, `--warming`, `--cold`
 - `--success`, `--warning`, `--error`, `--info`
+
+## Contributor setup
+
+After cloning, run `npm run hooks` once to wire the husky hooks (`core.hooksPath .husky`). This used to be the `prepare` script; C-33 (2026-09-16) moved it off the `prepare` name because npm runs a nested, lockfile-less install inside every git dependency whose manifest carries `prepare` (or `build`), and one such install failed two app builds on a registry blip.
