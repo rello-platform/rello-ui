@@ -16,7 +16,7 @@ This is a **library, not an app.** No business logic lives here. Breaking change
 - **Bundler:** tsup (ESM only, dual entry — see § Two-entry split)
 - **Package manager:** npm
 - **Dev:** `npm run dev` (tsup `--watch`)
-- **Build:** `npm run build` (tsup ESM bundle → `dist/`)
+- **Build:** `npm run compile` (tsup ESM bundle → `dist/`)
 - **Test:** `npm test` (Vitest run) / `npm run test:watch`
 - **Typecheck:** `npm run typecheck` (`tsc --noEmit`)
 - **Storybook:** `npm run storybook` (port 6006) / `npm run build-storybook`
@@ -106,7 +106,7 @@ src/components/<kebab-case-name>/
    - **Major** — breaking export removed/renamed, prop signature changed, two-entry split semantics changed.
    - **Minor** — new component added, new export added, additive prop on existing component.
    - **Patch** — bug fix, internal refactor with no surface change, doc-only change.
-2. **Build:** `npm run build` regenerates `dist/` cleanly. Verify no warnings beyond known noise.
+2. **Build:** `npm run compile` regenerates `dist/` cleanly. Verify no warnings beyond known noise.
 3. **Commit:** message `chore(release): v<version> — <one-line summary>`.
 4. **Tag:** `git tag v<version>` (annotated tag for GitHub Releases UX + human reference).
 5. **Push:** `git push origin main && git push origin v<version>`. CI `publish.yml` workflow handles the GitHub Packages publish.
@@ -148,7 +148,7 @@ Drumbeat's `@rello-platform/ui` pin from raw SHA to `#v2.3.0` tag form.
 2. For each spoke (`~/The-Drumbeat`, `~/Harvest-Home`, `~/Newsletter-Studio`, `~/Rello`,
    `~/Open-House-Hub`, plus any spoke not yet listed): edit `package.json` `@rello-platform/ui`
    value to `github:rello-platform/rello-ui#v<X.Y.Z>`, run `npm install <pkg>@github:rello-platform/rello-ui#v<X.Y.Z>`
-   (explicit-ref form to force re-resolve), run `npm run build` / `npx next build` /
+   (explicit-ref form to force re-resolve), run `npm run compile` / `npx next build` /
    the spoke's typecheck-equivalent, commit `chore(deps): bump @rello-platform/ui to v<X.Y.Z>`,
    push to that spoke's main.
 3. **Coordinated wave** — sweep all spokes in the same Build-KA fan-out wave; do not ship
@@ -161,7 +161,7 @@ Drumbeat's `@rello-platform/ui` pin from raw SHA to `#v2.3.0` tag form.
 Rello-UI is a **library, not a Railway-deployed service**. The platform's universal three-axis build verification (post-2026-05-18 GH-Actions retirement: husky pre-push hook + Railway deploy + `/api/health.commit` smoke — see universal CLAUDE.md §Build verification) substitutes the deploy/health axes with **consumer-install verification**:
 
 1. **`npx tsc --noEmit`** — zero new errors. Strict TypeScript; every component exports a typed prop interface that consumers import. (axis-1 equivalent — gated by husky pre-push in repos that have it; rello-ui currently relies on the npm-publish-time check + consumer-install verification below.)
-2. **`npm run build`** — `dist/` regenerates cleanly. Both entries (`dist/index.js`, `dist/client.js`) emit; only `dist/client.js` carries the `"use client"` banner. No regression vs prior `dist/`.
+2. **`npm run compile`** — `dist/` regenerates cleanly. Both entries (`dist/index.js`, `dist/client.js`) emit; only `dist/client.js` carries the `"use client"` banner. No regression vs prior `dist/`.
 3. **Consumer-install verification (Rello-UI's substitute for the deploy/health axes):** in a temp worktree of any sibling spoke (e.g. `~/The-Drumbeat-rui-test/`), update the spoke's `package.json` to pin `github:rello-platform/rello-ui#<NEW-SHA>` (the SHA your push will produce — known after `git push` SHA-match). Run `npm install`. Confirm clean resolve, no peer-dep warnings beyond known noise. If the spoke's `next build` is also reasonable to run (Drumbeat is a good candidate — uses many Rello-UI components), run it. Any consumer-install regression → halt.
 
 `tsc` and `build` are local; consumer-install is the structural substitute for "did this actually deploy."
