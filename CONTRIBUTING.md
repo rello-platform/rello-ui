@@ -145,7 +145,7 @@ export const Default: Story = { args: { /* ... */ } };
 | Command | Description |
 |---------|-------------|
 | `npm run storybook` | Start Storybook dev server on port 6006 |
-| `npm run build` | Build the package (ESM + types) |
+| `npm run compile` | Build the package (ESM + types) — renamed from `build` by C-33 (2026-09-16): `build` is one of the six script names that make npm run a nested install inside every git dependency |
 | `npm run dev` | Watch mode build |
 | `npm test` | Run tests |
 | `npm run test:watch` | Run tests in watch mode |

@@ -7,7 +7,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 COPY src/ src/
 COPY tsconfig.json tsup.config.ts ./
-RUN npm run build
+RUN npm run compile
 
 # Build the configurator
 FROM base AS app-build
