@@ -5,6 +5,31 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.32.0 — 2026-10-28
+
+**New: `@rello-platform/ui/email` — the shared transactional email shell**
+
+A new pure-TypeScript subpath entry (`dist/email.js`, no `"use client"` banner, no
+React/DOM/env) with one renderer, `renderRelloEmail(input) → { subject, preheader,
+html, text }`, for the Rello-family transactional emails (sign-in links, invites,
+notices, alerts). Layout is Kelly's "option A" (2026-10-28): the app logo, 96 px and
+centered on the brand color, the kicker "<App> · from <Company>", the headline, then
+body paragraphs, an optional info card, one button (+ the full link under it), an
+optional secondary link, the signer and the footer. Three audiences: `consumer` (the
+app's logo, tenant brand color), `pro` (Rello logo, tenant brand color) and `admin`
+(Rello logo, always `#111827`).
+
+- Every text value is HTML-escaped inside the renderer; button/link URLs must be
+  absolute http(s) or the button/link is dropped; empty fields are omitted.
+- Brand color must be `#rrggbb` with ≥ 3:1 contrast for white text, else `#1a365d`.
+- App names come from a `Record<PlatformSlug, string>`, so a new slug in
+  `@rello-platform/slugs` fails the typecheck until it is named. Logos are PNGs at
+  `https://hellorello.app/email/logos/<slug>.png` (served by Rello); apps without one
+  get the app name as text.
+- It renders only: no sending, no consent logic, no compliance footer rules.
+
+Also: `@rello-platform/slugs` v0.7.0 → v0.8.0 (adds `prequal-pro`).
+
 ## v2.28.0 — 2026-06-24
 
 **Fix: `UnderlineTabBar` — overflowing tab rows were silently clipped at desktop widths (no scroll affordance)**

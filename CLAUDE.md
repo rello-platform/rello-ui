@@ -32,6 +32,7 @@ This is a **library, not an app.** No business logic lives here. Breaking change
 |---|---|---|---|---|
 | `@rello-platform/ui` (root) | `src/index.ts` | NONE | Pure functions, types, CVA class-builders, data constants. NO React components. | RSC server components, Next API route handlers, Node scripts, build-time code |
 | `@rello-platform/ui/client` | `src/client.ts` | `"use client";` (tsup-injected) | Re-exports `./components` + `./icons`. Every React component + SVG icon renderer. | Client components, browser-only code |
+| `@rello-platform/ui/email` (v2.32.0) | `src/email/index.ts` | NONE | The transactional email shell: `renderRelloEmail()` and its types/constants. Pure TS, no React, no DOM, no env. | Spoke send paths (route handlers, Trigger.dev tasks, Node scripts) |
 
 **Why this split exists** — locked architectural invariant per `DISCOVERED-RELLO-UI-RUNTIME-IMPORT-FAILURE-ON-RAILWAY-041726`. Before v2.0.0 every export was bundled into a single `dist/index.js` with a global `"use client"` banner. Server components that imported pure utilities (catalog functions, `cn`, stage constants) got React-Server-Components client-reference proxies and crashed at call time in production with `TypeError: t is not a function`. The split is the structural fix; it is **non-negotiable**.
 
