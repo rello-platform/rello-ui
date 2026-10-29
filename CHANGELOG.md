@@ -5,6 +5,53 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.32.0 — 2026-10-28
+
+**New: `@rello-platform/ui/email` — the shared transactional email shell**
+
+A new pure-TypeScript subpath entry (`dist/email.js`, no `"use client"` banner, no
+React/DOM/env) with one renderer, `renderRelloEmail(input) → { subject, preheader,
+html, text }`, for the Rello-family transactional emails (sign-in links, invites,
+notices, alerts). Layout is Kelly's "option A" (2026-10-28): the app logo, 96 px and
+centered on the app's color, the kicker "<App> · from <Company>", the headline, then
+body paragraphs, an optional info card, one button (+ the full link under it), an
+optional secondary link, the signer and the footer. Three audiences: `consumer` (the
+app's logo, the app's colors), `pro` (Rello logo, the app's colors) and `admin`
+(Rello logo, Rello's colors).
+
+- Every text value is HTML-escaped inside the renderer; button/link URLs must be
+  absolute http(s) with no whitespace, control character or U+2028/U+2029 inside,
+  or the button/link is dropped (so the plain-text part cannot gain a second link
+  line); empty fields are omitted.
+- App-slug and badge-tone lookups read own keys only, so an inherited name such as
+  `constructor` or `__proto__` falls back like any unknown value.
+- Colors are each app's own rello-ui colors (Kelly 2026-10-29: "I don't like the
+  black. Each app has its own colors in Rello ui that should match."), read at render
+  time from `tokens/app-overrides.json` — `apps.<key>.<field>`, else
+  `defaults.<field>`; no hex is copied into the renderer. Header band and button =
+  `primary`; badge = a tint of `accent`; detail line, card labels, notes and footer =
+  `secondaryText`; info card = `rowBackground` + `cardBorder`. Slugs whose JSON key
+  differs are mapped explicitly (`RELLO_EMAIL_TOKEN_KEY_FOR_SLUG`): `home-stretch` →
+  `the-homestretch`, `home-scout` → `the-home-scout`; a slug with no block
+  (`prequal-pro`, `the-oven`, the engines) gets `defaults`; the `conversations` block is
+  not a platform slug and is unused. Admin mail uses Rello's colors (no more
+  `#111827`). Readability is enforced in the renderer: white header text ≥ 3:1 (a
+  primary under that is darkened — none is today), links, badge, secondary text and
+  signer initials ≥ 4.5:1 (links are darkened for the-drumbeat, open-house-hub,
+  newsletter-studio, market-intel and harvest-home). `resolveRelloEmailPalette()` and
+  `relloEmailContrast()` are exported.
+- **Removed before release (no consumer uses `/email` yet):** the `brandColor` input
+  (the tenant color no longer drives the header or button), `resolveRelloEmailColor()`,
+  `RELLO_EMAIL_DEFAULT_BRAND_COLOR` and `RELLO_EMAIL_ADMIN_COLOR`. `badge.tone` is still
+  accepted but no longer picks a color (deprecated); the label carries the meaning.
+- App names come from a `Record<PlatformSlug, string>`, so a new slug in
+  `@rello-platform/slugs` fails the typecheck until it is named. Logos are PNGs at
+  `https://hellorello.app/email/logos/<slug>.png` (served by Rello); apps without one
+  get the app name as text.
+- It renders only: no sending, no consent logic, no compliance footer rules.
+
+Also: `@rello-platform/slugs` v0.7.0 → v0.8.0 (adds `prequal-pro`).
+
 ## v2.28.0 — 2026-06-24
 
 **Fix: `UnderlineTabBar` — overflowing tab rows were silently clipped at desktop widths (no scroll affordance)**
