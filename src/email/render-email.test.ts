@@ -353,13 +353,14 @@ describe("renderRelloEmail — header and logos", () => {
     expect(html).toContain("Home Ready · from ClearPath Utah Mortgage");
   });
 
-  it("pro and admin mail carry the Rello logo", () => {
-    for (const audience of ["pro", "admin"] as const) {
-      const { html } = renderRelloEmail(full({ audience }));
-      expect(html).toContain('src="https://hellorello.app/email/logos/rello.png"');
-      expect(html).not.toContain("home-ready.png");
-    }
-    expect(renderRelloEmail(full({ audience: "pro" })).html).toContain("Home Ready · ClearPath Utah Mortgage");
+  it("pro mail carries the app's PNG logo; admin mail carries the Rello logo", () => {
+    const pro = renderRelloEmail(full({ audience: "pro" })).html;
+    expect(pro).toContain('src="https://hellorello.app/email/logos/home-ready.png"');
+    expect(pro).not.toContain("rello.png");
+    const admin = renderRelloEmail(full({ audience: "admin" })).html;
+    expect(admin).toContain('src="https://hellorello.app/email/logos/rello.png"');
+    expect(admin).not.toContain("home-ready.png");
+    expect(pro).toContain("Home Ready · ClearPath Utah Mortgage");
     expect(renderRelloEmail(full({ audience: "admin" })).html).toContain("Home Ready · Platform alert");
   });
 

@@ -1,0 +1,271 @@
+{
+  "_about": "sha256 of renderRelloEmail(baselineInput(slug, audience)) at tag v2.32.0 (b33294789bedb7ee786eccb6f004e39768ab8892): html with the header logo cut out by cutLogo, text as is. Both from src/test/email-logo-baseline.ts.",
+  "renders": {
+    "arive": {
+      "consumer": {
+        "html": "9f6cab08c72e8e36b529f62ffe169c155ec749ae19a4c8faf209750594c9e281",
+        "text": "760701207654f5031f204bba776177010a8fde334175a36a0ff947ef82b3f49f"
+      },
+      "pro": {
+        "html": "0d4b7fc7ddd300df4878fee6c89df3f87a27f14da6be4d458ba149a0e8c1b630",
+        "text": "73dc845130102223942f73e16124664e084d17a443db17f35ffeccbfc442da1b"
+      },
+      "admin": {
+        "html": "3cf8e9c3600f2fd4cde358c0f06894c6e228cab928269031adec6ddf4e2cb335",
+        "text": "e4ca4dd5cc0b39075bcb7a5af2b2e88e164df70839433b29369be3ae983eaa6a"
+      }
+    },
+    "rello": {
+      "consumer": {
+        "html": "aebcb70b5d803864f2f660387ddaa78322e4f7e713299cd520be472ed6e74431",
+        "text": "22b1c757af347b9f6d682450cda98f9542a98bf664d28643f70aedb6ed09da7c"
+      },
+      "pro": {
+        "html": "8636caa5622169fce336cbabcb763d79ca5f73521e05bcc8d3700171638756f5",
+        "text": "ebb6ddfefbcd31a325f2abfe226c8838dc0b5a28ab2f94b15379e947d99749ae"
+      },
+      "admin": {
+        "html": "ac12f6791b3defca95d67adb71e493b4a77cfc6f8bffe6d2dd123079283bddf8",
+        "text": "70a3f05c657a144fc3e44ebbf6e07e2571b67fddf97a52f94f6fb239cfe93c83"
+      }
+    },
+    "harvest-home": {
+      "consumer": {
+        "html": "81909c40ee045d3f4bdf76fd8b5e7abb4a9172f398b800dfc62f74f658ed8ee0",
+        "text": "b6479dd95d706405071762b65b019d4c9fdec15f6272c4b75d69d9277a8c449e"
+      },
+      "pro": {
+        "html": "7bff8c0ace94315ca5e60fbde84fdfc5e1f91f332947c5ae941ea3649ec2a76d",
+        "text": "975cef447258d8d68bd861a8857e19009c56c53d3d809ac95b2b2c06fc8686a7"
+      },
+      "admin": {
+        "html": "ffc9647ff73ddf173dcd225b061258d1f4af8cdb6e3ff9e87a3b5dfef1e60749",
+        "text": "563a5d4e4700128880aa903709b85f5f1def65443a4833115be15ceffb500f21"
+      }
+    },
+    "home-ready": {
+      "consumer": {
+        "html": "bd9e91dc4f75345e5e9406131815b2f8e20f1126fcb12ab36b47c528e8bdb191",
+        "text": "7449dd56c1b1f6f269888fb32e6b56a5693f2c14bf3cade761bb7ca03d6c383b"
+      },
+      "pro": {
+        "html": "7c0269af4376bbb2ccaf4dc0c921bb0f63218898d4d7a596667caf44bbbe8e89",
+        "text": "ddc032605acfda055b1454b7343043c566bb71fd517e2222a07609ee0ab5c183"
+      },
+      "admin": {
+        "html": "e34259fe9ec47c3840bfce64607a247f8b9a0c8c0e0801d8fad66321824545fb",
+        "text": "87f08d4e19a550308eed251044c2f16ecf1d687308a07697efaa1b5fa823b1af"
+      }
+    },
+    "home-stretch": {
+      "consumer": {
+        "html": "1214c7d010713eb6af1ca98a0bfd593a5a5a764692cbff0df0104f794c0cd4c5",
+        "text": "9d8ebb238c563f0620f10454f8949301556f89e0024ed0800d615d27a0e22c76"
+      },
+      "pro": {
+        "html": "5978b2bc25e640475e4aa510e04bc3e22e36355ec9db5b5b877c8447369e1b64",
+        "text": "8d3f78423703d24cb1cb39c80f34768a7542721a788b6c7f967725d2a2213d87"
+      },
+      "admin": {
+        "html": "7ad6ede3ccfef2c4df7fe79b900737908b633d78839b7510ef7beb57a1b8243b",
+        "text": "3a7a35060cf11b5cc4bfd10a0fffddf49c9b01e85bdde7ee2f403e183e8499ea"
+      }
+    },
+    "home-scout": {
+      "consumer": {
+        "html": "7e143938320a8032184581e30043bba8c08c36ce8c35b167663cfb3b1e82e547",
+        "text": "91a76b573ee5e5d65c330bd6cfe3020f9eb9e22bdab9fadfa880fdae76264ce3"
+      },
+      "pro": {
+        "html": "e8a0fc8667909c038d00a6a72e87c552b38cd4853161e107eb7066793c97945e",
+        "text": "dacaec49df74c75cfde706b9718dc12c3db6c0bfc3a10666f0166e654bdf3204"
+      },
+      "admin": {
+        "html": "f07c8fb4baf6115b4238cbf2704d1462f200003fbd4648b7b8aeabcbc2bb0975",
+        "text": "d1485cfb772ba7f168605a4d0d31b87e0e1311a655ef0919eb5512c7fdebce0c"
+      }
+    },
+    "market-intel": {
+      "consumer": {
+        "html": "6dd13fca2b1add18d28ddaba810079c2984d6d8948ad822d8a94defd086191a1",
+        "text": "5c1543840647127e331fa479e2c09b593de5257da3464f084d4c3122c0d658ef"
+      },
+      "pro": {
+        "html": "393bb97a8f7b1f7ab6541449d31098837b293fe21400347f280ab223427a42d4",
+        "text": "1cc04b6197f15ebe9eeacf46be01873ab9c4d7bcbcfc59eee83de96947e3d8f8"
+      },
+      "admin": {
+        "html": "79f67f181d3a4f8f9403bed58a18e2d22e4c1a09f4539690aee9b173a116601f",
+        "text": "7b1669dec04556a83ea728b190e0035c1c0532dab3a1893b36e8456455a3e172"
+      }
+    },
+    "newsletter-studio": {
+      "consumer": {
+        "html": "08523cdb68742f3ce8f36fd5c7b1ef09bad1ed6cb3ba1466f9bfcaa0ab30e881",
+        "text": "50842a42c220a5366d4135df9a9a3580e12b4dfbf55c2c93efc373429c87a034"
+      },
+      "pro": {
+        "html": "df21916acfcaf947fcea62080f0d462ebb82eedc83295a4102aa61a175dc5e53",
+        "text": "2b138a9fef326cee0399a5876178114e4a2dab8eb3e58369ea65bb3365e46475"
+      },
+      "admin": {
+        "html": "36a318ad49e3a0c11232ce4358f32ec3e04ed1fc1c615fa5e27183b6634d66cf",
+        "text": "c25b5630f1285b89f91447550d5777f80a864bb801c3aaf70c92897f66d2f008"
+      }
+    },
+    "the-oven": {
+      "consumer": {
+        "html": "e8ff19de563f3fa0667f577ba752447a7654f96bc22a73d1a6c4bafcecef8ba2",
+        "text": "745be5e17188629f5090d765ca73004579ef6c8f9aa039b75c7ed1975350a6fb"
+      },
+      "pro": {
+        "html": "07a9e824d8ad4ebc1ddadfc9053d92197abe0e34a4c73b7ebcadac573070ec17",
+        "text": "bc1d52d0cf418c701eefc65c232b6735d90b3e3b0a58c32946975b9006cbfc96"
+      },
+      "admin": {
+        "html": "0be5b3c5d917f24d633172a46e615bb12c3df6f9a33b9538d0b38cd7d2b76dbc",
+        "text": "dd100e3d5f63ddd3a38cf9302336861b4639618807e9d8775a45ee9a5168badf"
+      }
+    },
+    "the-drumbeat": {
+      "consumer": {
+        "html": "f6d9157f9689b47c353e109a3451769a8b2b00f82d92f88b755f077fdba5296b",
+        "text": "09b6eb98ab0db1f4f89db4b15b95f4c7c28ad72bf9e9a2b8c1b8dbef418634ca"
+      },
+      "pro": {
+        "html": "bdd816c71301473b5e7338cf58772bf94d8ab3ed7a2d83b11bfc1e139db6f7a0",
+        "text": "bc63cefa1a7ef758a0c71b8eb04bbbf5e6f0bdbfdc868f10b093649d74e8e207"
+      },
+      "admin": {
+        "html": "f49e3715fe9aae4e8a2a0e210b835fa91e2e433905813240b7ca07befcc05188",
+        "text": "110b8e2dc93f4784e15658b775a436635aba204569a7511ec99e399661398d27"
+      }
+    },
+    "open-house-hub": {
+      "consumer": {
+        "html": "9e42ea78031522cf0352e30001f5cc569fb7e5def5e2f3535f00385c1b7b5939",
+        "text": "a259496f7b7b0e5aecbc118e21c6b71add66fe215bf4176ed9cecea54f0b3d5f"
+      },
+      "pro": {
+        "html": "3aff38d8845c65a830ef908be9340f11f5f21ebd334f521f953f981b8bbd95d6",
+        "text": "03cbed4ea0eae296d27387926f245c2db151bda1f412ee4e8d62d4aa899b1712"
+      },
+      "admin": {
+        "html": "70207ea36fd1e48430a167e338880e47848078da97881f7b560721aee758c8e2",
+        "text": "45ca932c3ad908d1150c922643bb10c7eeee4ab621e99a8cbf2391ac08110996"
+      }
+    },
+    "pathfinder-pro": {
+      "consumer": {
+        "html": "26e6522c9e73ad4ca6165499dd28cf55ec7e741ce7132f187b1eb08ce2f7f0d3",
+        "text": "07b61f236ead165463b2ceb3dab28083a42b2bc80e7229c2f5337e20d70d49af"
+      },
+      "pro": {
+        "html": "8791208f08d0b0eeb484a1f52b004f5be159e5bdc0ba48ef7c284fba3111e4be",
+        "text": "df59b78892f901c4216d7f939908a01877e570945f877846b725b34ad12c4522"
+      },
+      "admin": {
+        "html": "c1c8113bbfd5302d51b317983d9d7a161892652da128698ad6fe77599a651aed",
+        "text": "3bfa6103054e4da1604ed4e31a5cab3f8212e9b7c15163688d5de18760bb8810"
+      }
+    },
+    "prequal-pro": {
+      "consumer": {
+        "html": "c8f216ed347e4e9da6cdd809c9afe9128898215650156b7c599f1fe006c570e5",
+        "text": "c9645a3818e106650ebb9f444d40a0aa77dc2c1b800bea83a667b146dff79616"
+      },
+      "pro": {
+        "html": "4002991d5642e68a67a629aa274a671bc1edbbb9b780b73e55a7098b71186664",
+        "text": "f27e287d61e4a1edc934a15ee44a4098d767879a00f721c07b274973ad88e525"
+      },
+      "admin": {
+        "html": "80be5c6f21b2341bae9092a2bb859ce74ce203c1a237a5d5d45428a06fd32e79",
+        "text": "faf1a882de8213d0c6b8535bc4fdb9b4c13b794e40ec827b64e693b322479ffe"
+      }
+    },
+    "milo-engine": {
+      "consumer": {
+        "html": "c0ef7ab4452d85a5e9b78eba17d846c06ee785ed66ddd6f0b68d142fa154cb62",
+        "text": "95be0e48e1bce0c83592b3bd1a98a4bfdb940b0f07a025b954eff6e0c5d53f6f"
+      },
+      "pro": {
+        "html": "2c20da3a6950673ce343791d3ea59d5921840c909184297ae38469c1a4a1fbd7",
+        "text": "0d767e1774dc4b7a3736211a2e39ac281933a5c6fee1a2b5100ec9d6b2aa3357"
+      },
+      "admin": {
+        "html": "a661ca699569db0b513287799a3f2947a525dbf8863828b23f7d03effcd20c2c",
+        "text": "10dd49869a121d3e538e3fffd31e794baf1ecfda98ae273d322ed21a078c7a29"
+      }
+    },
+    "content-engine": {
+      "consumer": {
+        "html": "a5a3f9bce0f50a070014b987ec6aacfe7c8652ff2abf6a6c030b35639a539d2b",
+        "text": "cafa0986f578eeba465600adae13b52310d250a9d0720629883b384e1dccb9f4"
+      },
+      "pro": {
+        "html": "733e51fe9b14d2863039becdbf42d8c4267a4e80eafaeba75fc393d6d2bad5ab",
+        "text": "f0c72f498c99d1705381ac65abf0167e316c5235c66de9e860adcd5917b0eec3"
+      },
+      "admin": {
+        "html": "0ec6ef4f94b23f7b82932246d7cbffa3af3c7811911512ce1651bed3e0d2229e",
+        "text": "70acf51729948e51bc70159a5f1f7a2be5dd1cfaf64ed0116b232e50ed0cbdde"
+      }
+    },
+    "property-engine": {
+      "consumer": {
+        "html": "b11fffd42aced33886921560db1c32fcff50c68380ba625a72e5f329927d297c",
+        "text": "e854430fce30b56b8bf82925fcba7f959cb5696ce09cc18564ddb7911eac720e"
+      },
+      "pro": {
+        "html": "bc475fb808cac41237d551bc8aef9f5d0896ed439302e652868a69c8c3af5648",
+        "text": "6b83268dd5acbe9ec1f830d6a84e1b5e2dabd607d743367ccef8e83803eb01a1"
+      },
+      "admin": {
+        "html": "317c06ef08288bfba923fbd83965c20dc0250729b15d10d6c1ea6e413a75683f",
+        "text": "006b1e89ba8f1198d61b37b941c60a7524778b62d0f17d8592243017f0398750"
+      }
+    },
+    "journey-engine": {
+      "consumer": {
+        "html": "b539211e4e9819a1b07cad3f88a6e5b4dca6b3c941974817f93df04b4f9b02c3",
+        "text": "3f43d2e7b792110539743e6871db62ba74355f88e368e10914fa3379fa9c1c8b"
+      },
+      "pro": {
+        "html": "142e792ebb5df5fa508527ba906a9a0763249b5dc0abd35a0582e1de2ac71281",
+        "text": "3d54e8d5d6108368b4db6309ce83e51dd138c2e0f1b8357e26d3d923762efb8b"
+      },
+      "admin": {
+        "html": "c32b7d060e40fc6fdfce012bb68ea229c021b81a62e848003e4306a42b357dcf",
+        "text": "0e80ee212a652f71bd358e3b8c14af79807c9f9e4794868fb9704ce8013d3ac4"
+      }
+    },
+    "report-engine": {
+      "consumer": {
+        "html": "93a1779a1e4c2938c630a338dcd32a47e4c81b479901f8765433b40e330a08d7",
+        "text": "b19842892d6d4db7edc077a30434b389c66a087823cb19099209172ab9b97416"
+      },
+      "pro": {
+        "html": "4cd6225f8c6d750d0b4830d503602e643aba3cc2034a18e3572a5bc3b8e2d0e3",
+        "text": "0beba723045eb3641732464de468a87a1c0fdb75ab81564185daa5379d831ebe"
+      },
+      "admin": {
+        "html": "3ee8dedb9dc01eb90d43f1b1b219195c81351c818ede5a2192c521cbd1220ea9",
+        "text": "6a3baca67828491f51697701e71552cebd28900097c008184bab2b07efa5f05b"
+      }
+    },
+    "drumbeat-video-engine": {
+      "consumer": {
+        "html": "cfe3a5714bef35c29dd8ece0f284f076941c9fa307399b126d3a4bc1922d0bd6",
+        "text": "de24b8e193de3222cbfa35b023a81162341d29adbe65753776fcc29b9c8b20b1"
+      },
+      "pro": {
+        "html": "96ddd65c12b403caa8f981121439dae615b801d52a72d451cdb42909de1dd11d",
+        "text": "9748d0787ba02cc3dff5f46880b09f1761b1fb5feb96f9c773acaf0b1017cda6"
+      },
+      "admin": {
+        "html": "c4dc3b3cff6ebd506fd2419092782431fa5a9c5b2c616d243383ac49799cc54c",
+        "text": "db20e067e4d18e85e08e73a8bcdbdafe43735fbd144cb5b13ef3e98f168d464e"
+      }
+    }
+  }
+}

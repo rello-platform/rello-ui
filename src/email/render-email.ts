@@ -6,9 +6,14 @@
  *
  *   consumer — leads and clients: the sending app's colors, the app's logo,
  *              the LO signer, the lender footer.
- *   pro      — agents and LOs: the sending app's colors, the Rello logo, an
+ *   pro      — agents and LOs: the sending app's colors, the app's logo, an
  *              optional info card, a "why you get this" footer.
  *   admin    — platform admins: Rello's colors, the Rello logo, short.
+ *
+ * Logos: every app's email carries that app's logo, whoever receives it
+ * (KA ruling 2026-10-29, on Kelly's "those dont include the Market intel
+ * logo"). Only admin mail draws Rello's. An app with no hosted logo shows its
+ * name as text in the header.
  *
  * Colors (Kelly 2026-10-29: "Each app has its own colors in Rello ui that
  * should match"): read at render time from tokens/app-overrides.json, the same
@@ -89,7 +94,7 @@ export interface RelloEmailInput {
   /**
    * The app the email comes from. Decides the app name, the colors (from
    * tokens/app-overrides.json; admin mail always uses Rello's) and, for
-   * consumer mail, the logo.
+   * consumer and pro mail, the logo.
    */
   app: PlatformSlug;
   /** The sender company (tenant). Omitted from the kicker when empty. */
@@ -370,9 +375,9 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const company = line(input.companyName);
   const pal = resolveRelloEmailPalette(audience, input.app);
   const color = pal.primary;
-  // Option A: the app's own logo on consumer mail; Rello's on agent/LO and admin mail.
+  // The sending app's own logo on consumer and pro mail; Rello's on admin mail.
   const logoSlug: PlatformSlug =
-    audience === "consumer" && isKnownApp(input.app)
+    audience !== "admin" && isKnownApp(input.app)
       ? input.app
       : "rello";
   const logoUrl = relloEmailLogoUrl(logoSlug);
