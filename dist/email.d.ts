@@ -6,11 +6,18 @@ import { PlatformSlug } from '@rello-platform/slugs';
  * "<App> · from <Company>", the headline, then body, one button, signer and
  * footer). One layout, three audiences:
  *
- *   consumer — leads and clients: the tenant's brand color, the app's logo,
+ *   consumer — leads and clients: the sending app's colors, the app's logo,
  *              the LO signer, the lender footer.
- *   pro      — agents and LOs: the same brand color, the Rello logo, an
+ *   pro      — agents and LOs: the sending app's colors, the Rello logo, an
  *              optional info card, a "why you get this" footer.
- *   admin    — platform admins: Rello's own #111827, the Rello logo, short.
+ *   admin    — platform admins: Rello's colors, the Rello logo, short.
+ *
+ * Colors (Kelly 2026-10-29: "Each app has its own colors in Rello ui that
+ * should match"): read at render time from tokens/app-overrides.json, the same
+ * file the Configurator edits and the apps theme from — apps.<key>.<field>,
+ * else defaults.<field>. No app color is copied into this file. A color that
+ * would make text hard to read is darkened here until it passes (white header
+ * text ≥ 3:1, other text ≥ 4.5:1).
  *
  * Pure: no React, no DOM, no network, no env. It RENDERS; it never sends and
  * adds no compliance rule. Each app keeps its own send path, consent checks
@@ -28,6 +35,10 @@ import { PlatformSlug } from '@rello-platform/slugs';
  */
 
 type RelloEmailAudience = "consumer" | "pro" | "admin";
+/**
+ * @deprecated Accepted and ignored: every badge uses the sending app's accent
+ * (Kelly 2026-10-29). The badge label carries the meaning.
+ */
 type RelloEmailBadgeTone = "hot" | "info" | "success" | "warning" | "neutral";
 interface RelloEmailLink {
     label: string;
@@ -67,12 +78,14 @@ interface RelloEmailFooter {
 }
 interface RelloEmailInput {
     audience: RelloEmailAudience;
-    /** The app the email comes from. Decides the app name and, for consumer mail, the logo. */
+    /**
+     * The app the email comes from. Decides the app name, the colors (from
+     * tokens/app-overrides.json; admin mail always uses Rello's) and, for
+     * consumer mail, the logo.
+     */
     app: PlatformSlug;
     /** The sender company (tenant). Omitted from the kicker when empty. */
     companyName?: string | null;
-    /** Tenant brand color, #rrggbb. Ignored for admin mail (always #111827). */
-    brandColor?: string | null;
     subject: string;
     /** Inbox preview text. */
     preheader?: string | null;
@@ -105,8 +118,6 @@ interface RenderedRelloEmail {
     html: string;
     text: string;
 }
-declare const RELLO_EMAIL_DEFAULT_BRAND_COLOR = "#1a365d";
-declare const RELLO_EMAIL_ADMIN_COLOR = "#111827";
 declare const RELLO_EMAIL_LOGO_BASE_URL = "https://hellorello.app/email/logos";
 /**
  * Display name for every platform slug. Typed as a full Record so a slug added
@@ -129,11 +140,38 @@ declare function escapeEmailHtml(value: string): string;
  */
 declare function safeEmailUrl(value: unknown): string | null;
 /**
- * The header/button color. A valid #rrggbb that white text and the white logo
- * can sit on (contrast ≥ 3:1, WCAG large text) is used as given; anything else
- * falls back to the default navy. Admin mail is always #111827.
+ * tokens/app-overrides.json keys that are not the platform slug. Every other
+ * slug reads the block under its own name; a slug with no block (prequal-pro,
+ * the-oven, the engines, …) reads `defaults`. The JSON's "conversations" block
+ * is a Rello module, not a platform slug, so no email reads it.
  */
-declare function resolveRelloEmailColor(audience: RelloEmailAudience, brandColor: unknown): string;
+declare const RELLO_EMAIL_TOKEN_KEY_FOR_SLUG: Readonly<Partial<Record<PlatformSlug, string>>>;
+/** The colors one email is drawn with. All lowercase #rrggbb. */
+interface RelloEmailPalette {
+    /** Header band and button: the app's `primary`, darkened only if white text on it falls under 3:1. */
+    primary: string;
+    /** Link text: `primary`, darkened until ≥ 4.5:1 on white. */
+    link: string;
+    /** Badge background: a light tint of the app's `accent`. */
+    badgeBackground: string;
+    /** Badge text: `accent`, darkened until ≥ 4.5:1 on the badge background. */
+    badgeText: string;
+    /** Detail line, card labels, notes, signer details, footer: `secondaryText`, darkened until ≥ 4.5:1 on white and on the card. */
+    secondaryText: string;
+    /** Info card: `rowBackground` (white if too dark for the card's text) with a `cardBorder` edge. */
+    cardBackground: string;
+    cardBorder: string;
+    /** Signer initials: a light tint of `primary`, with `primary` darkened until ≥ 4.5:1 on it. */
+    avatarBackground: string;
+    avatarText: string;
+}
+/** WCAG contrast ratio of two #rrggbb colors. */
+declare function relloEmailContrast(a: string, b: string): number;
+/**
+ * The colors for one email: the sending app's tokens (admin mail and an
+ * unknown app: Rello's), each text color held to its contrast floor.
+ */
+declare function resolveRelloEmailPalette(audience: RelloEmailAudience, app: unknown): RelloEmailPalette;
 declare function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail;
 
-export { RELLO_EMAIL_ADMIN_COLOR, RELLO_EMAIL_APP_NAMES, RELLO_EMAIL_DEFAULT_BRAND_COLOR, RELLO_EMAIL_LOGO_BASE_URL, RELLO_EMAIL_LOGO_SLUGS, type RelloEmailAudience, type RelloEmailBadgeTone, type RelloEmailButton, type RelloEmailCardRow, type RelloEmailFooter, type RelloEmailInput, type RelloEmailLink, type RelloEmailSigner, type RenderedRelloEmail, escapeEmailHtml, relloEmailLogoUrl, renderRelloEmail, resolveRelloEmailColor, safeEmailUrl };
+export { RELLO_EMAIL_APP_NAMES, RELLO_EMAIL_LOGO_BASE_URL, RELLO_EMAIL_LOGO_SLUGS, RELLO_EMAIL_TOKEN_KEY_FOR_SLUG, type RelloEmailAudience, type RelloEmailBadgeTone, type RelloEmailButton, type RelloEmailCardRow, type RelloEmailFooter, type RelloEmailInput, type RelloEmailLink, type RelloEmailPalette, type RelloEmailSigner, type RenderedRelloEmail, escapeEmailHtml, relloEmailContrast, relloEmailLogoUrl, renderRelloEmail, resolveRelloEmailPalette, safeEmailUrl };

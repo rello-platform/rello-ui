@@ -1,6 +1,248 @@
+// tokens/app-overrides.json
+var app_overrides_default = {
+  description: "Per-app color overrides. Each app inherits the default design tokens unless overridden here. Set a value to null to inherit the default.",
+  defaults: {
+    primary: "#3B5998",
+    accent: "#C9785D",
+    pageBackground: "#FAFBFC",
+    cardBackground: "#FFFFFF",
+    cardBorder: "#D1D5DB",
+    primaryText: "#2D3339",
+    secondaryText: "#646F77",
+    tertiaryText: "#98A1AA",
+    heroCardBackground: "#2D3339",
+    heroCardBorder: "#434B52",
+    heroCardTitle: "#FFFFFF",
+    rowBackground: "#FFFFFF",
+    rowBorder: "#D1D5DB",
+    heroCardBodyText: "#C8CED3",
+    appTitleColor: "#2D3339",
+    appSubtitleColor: "#646F77"
+  },
+  apps: {
+    rello: {
+      name: "Rello",
+      accent: "#FDBA74",
+      pageBackground: "#FAF8F5",
+      cardBackground: "#FFFFFF",
+      cardBorder: "#E7E5E4",
+      primaryText: "#1C1917",
+      secondaryText: "#57534E",
+      tertiaryText: "#A8A29E",
+      heroCardBackground: "#292524",
+      heroCardBorder: "#292524",
+      heroCardTitle: "#FFFFFF",
+      rowBackground: "#F5F0EB",
+      rowBorder: "#E7E5E4",
+      notes: "Back-office CRM \u2014 uses default brand colors",
+      heroCardBodyText: "#9A9895",
+      appTitleColor: "#1C1917",
+      appSubtitleColor: "#57534E"
+    },
+    "the-drumbeat": {
+      name: "The Drumbeat",
+      primary: "#D4506A",
+      accent: "#EDA5B4",
+      pageBackground: "#FBF9FA",
+      cardBackground: "#FFFFFF",
+      cardBorder: "#EAE3E6",
+      primaryText: "#2D1620",
+      secondaryText: "#6E5460",
+      tertiaryText: "#ADA2A7",
+      heroCardBackground: "#2D1620",
+      heroCardBorder: "#2D1620",
+      heroCardTitle: "#FFFFFF",
+      rowBackground: "#F6F2F4",
+      rowBorder: "#EAE3E6",
+      notes: "Daily action dashboard",
+      heroCardBodyText: "#ADA2A7",
+      appTitleColor: "#2D1620",
+      appSubtitleColor: "#6E5460"
+    },
+    conversations: {
+      name: "Conversations",
+      primary: "#0D9488",
+      accent: "#5EEAD4",
+      pageBackground: "#F8FBFA",
+      cardBackground: "#FFFFFF",
+      cardBorder: "#E0EAE7",
+      primaryText: "#142726",
+      secondaryText: "#4F6461",
+      tertiaryText: "#97ABA7",
+      heroCardBackground: "#F8FBFA",
+      heroCardBorder: "#F8FBFA",
+      heroCardTitle: "#0D9488",
+      rowBackground: "#F0F6F4",
+      rowBorder: "#E0EAE7",
+      notes: "Phone, SMS, email communication hub",
+      heroCardBodyText: "#4F6461",
+      appTitleColor: "#142726",
+      appSubtitleColor: "#4F6461"
+    },
+    "home-ready": {
+      name: "Home Ready",
+      primary: "#0270D2",
+      accent: "#C9785E",
+      pageBackground: "#F7F9FB",
+      cardBackground: "#FFFFFF",
+      cardBorder: "#E1E7ED",
+      primaryText: "#0F2137",
+      secondaryText: "#5A6A7A",
+      tertiaryText: "#9AA7B4",
+      heroCardBackground: "#F7F9FB",
+      heroCardBorder: "#F7F9FB",
+      heroCardTitle: "#0270D2",
+      rowBackground: "#EFF4F9",
+      rowBorder: "#E1E7ED",
+      notes: "Consumer-facing buyer qualification \u2014 homeready.app",
+      heroCardBodyText: "#5A6A7A",
+      appTitleColor: "#0F2137",
+      appSubtitleColor: "#5A6A7A"
+    },
+    "the-homestretch": {
+      name: "The HomeStretch",
+      primary: "#0070D2",
+      accent: "#36B37E",
+      pageBackground: "#F8FAFB",
+      cardBackground: "#FFFFFF",
+      cardBorder: "#E2E8EE",
+      primaryText: "#112240",
+      secondaryText: "#546B81",
+      tertiaryText: "#96A5B4",
+      heroCardBackground: "#F8FAFB",
+      heroCardBorder: "#F8FAFB",
+      heroCardTitle: "#0070D2",
+      rowBackground: "#F0F5FA",
+      rowBorder: "#E2E8EE",
+      notes: "Consumer-facing education & closing \u2014 thehomestretch.ai",
+      heroCardBodyText: "#546B81",
+      appTitleColor: "#112240",
+      appSubtitleColor: "#546B81"
+    },
+    "open-house-hub": {
+      name: "Open House Hub",
+      primary: "#0D9488",
+      accent: "#5EEAD4",
+      pageBackground: "#F8FBFA",
+      cardBackground: "#FFFFFF",
+      cardBorder: "#E0EAE7",
+      primaryText: "#142726",
+      secondaryText: "#4F6461",
+      tertiaryText: "#97ABA7",
+      heroCardBackground: "#F8FBFA",
+      heroCardBorder: "#F8FBFA",
+      heroCardTitle: "#0D9488",
+      rowBackground: "#F0F6F4",
+      rowBorder: "#E0EAE7",
+      notes: "Open house lead capture \u2014 openhousehub.app",
+      heroCardBodyText: "#97ABA7",
+      appTitleColor: "#142726",
+      appSubtitleColor: "#4F6461"
+    },
+    "pathfinder-pro": {
+      name: "PathfinderPro",
+      primary: "#1E3A5F",
+      accent: "#3B82F6",
+      pageBackground: "#F8FAFB",
+      cardBackground: "#FFFFFF",
+      cardBorder: "#E5E7EB",
+      primaryText: "#111827",
+      secondaryText: "#6B7280",
+      tertiaryText: "#9CA3AF",
+      heroCardBackground: "#1E3A5F",
+      heroCardBorder: "#152E4D",
+      heroCardTitle: "#FFFFFF",
+      heroCardBodyText: "#BFDBFE",
+      rowBackground: "#F9FAFB",
+      rowBorder: "#E5E7EB",
+      notes: "MLO power-user pre-qual workspace \u2014 Deep Navy + Bright Blue financial-precision palette",
+      appTitleColor: "#1E3A5F",
+      appSubtitleColor: "#6B7280"
+    },
+    "newsletter-studio": {
+      name: "Newsletter Studio",
+      primary: "#6366F1",
+      accent: "#A78BFA",
+      pageBackground: "#F9F8FC",
+      cardBackground: "#E6E4ED",
+      cardBorder: "#E6E4ED",
+      primaryText: "#1E1B3A",
+      secondaryText: "#5E5A72",
+      tertiaryText: "#A09DAE",
+      heroCardBackground: "#F9F8FC",
+      heroCardBorder: "#F9F8FC",
+      heroCardTitle: "#6366F1",
+      rowBackground: "#F3F2F8",
+      rowBorder: "#E6E4ED",
+      notes: "Email newsletter builder \u2014 newsletterstudio.app",
+      heroCardBodyText: "#A78BFA",
+      appTitleColor: "#1E1B3A",
+      appSubtitleColor: "#5E5A72"
+    },
+    "market-intel": {
+      name: "Market Intel",
+      primary: "#CA775C",
+      accent: "#E4B5A4",
+      pageBackground: "#FAF9F7",
+      cardBackground: "#FFFFFF",
+      cardBorder: "#E8E3DF",
+      primaryText: "#2C1E1A",
+      secondaryText: "#6B5750",
+      tertiaryText: "#A89E98",
+      heroCardBackground: "#FAF9F7",
+      heroCardBorder: "#FAF9F7",
+      heroCardTitle: "#2C1E1A",
+      rowBackground: "#F5F1EE",
+      rowBorder: "#E8E3DF",
+      notes: "Market data & neighborhood insights \u2014 market-intel.app",
+      heroCardBodyText: "#6B5750",
+      appTitleColor: "#2C1E1A",
+      appSubtitleColor: "#6B5750"
+    },
+    "harvest-home": {
+      name: "Harvest Home",
+      primary: "#B8860B",
+      accent: "#D4A84B",
+      pageBackground: "#FAFAF7",
+      cardBackground: "#FFFFFF",
+      cardBorder: "#E8E4DA",
+      primaryText: "#2A2110",
+      secondaryText: "#6B5F4B",
+      tertiaryText: "#A69E8E",
+      heroCardBackground: "#2A2110",
+      heroCardBorder: "#2A2110",
+      heroCardTitle: "#FFFFFF",
+      rowBackground: "#F5F3ED",
+      rowBorder: "#E8E4DA",
+      notes: "Lead discovery & enrichment",
+      heroCardBodyText: "#A69E8E",
+      appTitleColor: "#2A2110",
+      appSubtitleColor: "#6B5F4B"
+    },
+    "the-home-scout": {
+      name: "The Home Scout",
+      primary: "#2D6A4F",
+      accent: "#D4A84B",
+      pageBackground: "#FAFAF8",
+      cardBackground: "#FFFFFF",
+      cardBorder: "#E2E0DA",
+      primaryText: "#1A2E24",
+      secondaryText: "#546B5F",
+      tertiaryText: "#96A89E",
+      heroCardBackground: "#1A2E24",
+      heroCardBorder: "#1A2E24",
+      heroCardTitle: "#FFFFFF",
+      rowBackground: "#F3F5F2",
+      rowBorder: "#E2E0DA",
+      notes: "Consumer-facing tool library & lead capture \u2014 thehomescout.app",
+      heroCardBodyText: "#96A89E",
+      appTitleColor: "#1A2E24",
+      appSubtitleColor: "#546B5F"
+    }
+  }
+};
+
 // src/email/render-email.ts
-var RELLO_EMAIL_DEFAULT_BRAND_COLOR = "#1a365d";
-var RELLO_EMAIL_ADMIN_COLOR = "#111827";
 var RELLO_EMAIL_LOGO_BASE_URL = "https://hellorello.app/email/logos";
 var RELLO_EMAIL_APP_NAMES = {
   arive: "ARIVE",
@@ -36,13 +278,6 @@ var RELLO_EMAIL_LOGO_SLUGS = /* @__PURE__ */ new Set([
 function relloEmailLogoUrl(app) {
   return RELLO_EMAIL_LOGO_SLUGS.has(app) ? `${RELLO_EMAIL_LOGO_BASE_URL}/${app}.png` : null;
 }
-var BADGE_COLORS = {
-  hot: { bg: "#fdecea", fg: "#b42318" },
-  info: { bg: "#e8f0fb", fg: "#1d4ed8" },
-  success: { bg: "#e7f6ec", fg: "#067647" },
-  warning: { bg: "#fef4e6", fg: "#b54708" },
-  neutral: { bg: "#f2f4f7", fg: "#344054" }
-};
 var FONT = "-apple-system,'Segoe UI',Helvetica,Arial,sans-serif";
 function escapeEmailHtml(value) {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
@@ -65,20 +300,76 @@ function safeEmailUrl(value) {
     return null;
   }
 }
+var RELLO_EMAIL_TOKEN_KEY_FOR_SLUG = {
+  "home-stretch": "the-homestretch",
+  "home-scout": "the-home-scout"
+};
+var MALFORMED_TOKEN_FALLBACK = "#475569";
+var CARD_VALUE_TEXT = "#111827";
+var WHITE = "#ffffff";
+function validHex(value) {
+  if (typeof value !== "string") return null;
+  const hex = value.trim().toLowerCase();
+  return /^#[0-9a-f]{6}$/.test(hex) ? hex : null;
+}
+function tokenColor(key, field) {
+  const tokens = app_overrides_default;
+  const apps = tokens.apps && typeof tokens.apps === "object" ? tokens.apps : {};
+  const block2 = hasOwn(apps, key) ? apps[key] : null;
+  const fromApp = block2 && typeof block2 === "object" && hasOwn(block2, field) ? validHex(block2[field]) : null;
+  if (fromApp) return fromApp;
+  const defaults = tokens.defaults && typeof tokens.defaults === "object" ? tokens.defaults : {};
+  return (hasOwn(defaults, field) ? validHex(defaults[field]) : null) ?? MALFORMED_TOKEN_FALLBACK;
+}
 function channel(hex, i) {
   const c = parseInt(hex.slice(i, i + 2), 16) / 255;
   return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
 }
-function whiteContrast(hex) {
-  const l = 0.2126 * channel(hex, 1) + 0.7152 * channel(hex, 3) + 0.0722 * channel(hex, 5);
-  return 1.05 / (l + 0.05);
+function luminance(hex) {
+  return 0.2126 * channel(hex, 1) + 0.7152 * channel(hex, 3) + 0.0722 * channel(hex, 5);
 }
-function resolveRelloEmailColor(audience, brandColor) {
-  if (audience === "admin") return RELLO_EMAIL_ADMIN_COLOR;
-  if (typeof brandColor !== "string") return RELLO_EMAIL_DEFAULT_BRAND_COLOR;
-  const hex = brandColor.trim().toLowerCase();
-  if (!/^#[0-9a-f]{6}$/.test(hex)) return RELLO_EMAIL_DEFAULT_BRAND_COLOR;
-  return whiteContrast(hex) >= 3 ? hex : RELLO_EMAIL_DEFAULT_BRAND_COLOR;
+function relloEmailContrast(a, b) {
+  const la = luminance(a);
+  const lb = luminance(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+function mix(hex, toward, t) {
+  let out = "#";
+  for (const i of [1, 3, 5]) {
+    const a = parseInt(hex.slice(i, i + 2), 16);
+    const b = parseInt(toward.slice(i, i + 2), 16);
+    out += Math.round(a + (b - a) * t).toString(16).padStart(2, "0");
+  }
+  return out;
+}
+function darkenUntil(color, against, min) {
+  for (let step = 0; step <= 50; step++) {
+    const c = step === 0 ? color : mix(color, "#000000", step / 50);
+    if (against.every((bg) => relloEmailContrast(c, bg) >= min)) return c;
+  }
+  return "#000000";
+}
+function resolveRelloEmailPalette(audience, app) {
+  const slug = audience !== "admin" && isKnownApp(app) ? app : "rello";
+  const key = RELLO_EMAIL_TOKEN_KEY_FOR_SLUG[slug] ?? slug;
+  const primaryToken = tokenColor(key, "primary");
+  const accent = tokenColor(key, "accent");
+  const rowBackground = tokenColor(key, "rowBackground");
+  const cardBackground = relloEmailContrast(CARD_VALUE_TEXT, rowBackground) >= 7 ? rowBackground : WHITE;
+  const primary = darkenUntil(primaryToken, [WHITE], 3);
+  const badgeBackground = mix(accent, WHITE, 0.82);
+  const avatarBackground = mix(primary, WHITE, 0.85);
+  return {
+    primary,
+    link: darkenUntil(primaryToken, [WHITE], 4.5),
+    badgeBackground,
+    badgeText: darkenUntil(accent, [badgeBackground], 4.5),
+    secondaryText: darkenUntil(tokenColor(key, "secondaryText"), [WHITE, cardBackground], 4.5),
+    cardBackground,
+    cardBorder: tokenColor(key, "cardBorder"),
+    avatarBackground,
+    avatarText: darkenUntil(primary, [avatarBackground], 4.5)
+  };
 }
 function initialsOf(name) {
   return name.split(" ").filter(Boolean).slice(0, 2).map((w) => w.charAt(0).toUpperCase()).join("");
@@ -97,7 +388,8 @@ function renderRelloEmail(input) {
   const audience = input.audience === "pro" || input.audience === "admin" ? input.audience : "consumer";
   const app = appName(input.app);
   const company = line(input.companyName);
-  const color = resolveRelloEmailColor(audience, input.brandColor);
+  const pal = resolveRelloEmailPalette(audience, input.app);
+  const color = pal.primary;
   const logoSlug = audience === "consumer" && isKnownApp(input.app) ? input.app : "rello";
   const logoUrl = relloEmailLogoUrl(logoSlug);
   const logoAlt = appName(logoSlug);
@@ -107,8 +399,6 @@ function renderRelloEmail(input) {
   const detail = line(input.detail);
   const kicker = line(input.kicker) || (audience === "admin" ? `${app} \xB7 Platform alert` : company ? audience === "consumer" ? `${app} \xB7 from ${company}` : `${app} \xB7 ${company}` : app);
   const badgeLabel = line(input.badge?.label);
-  const toneKey = input.badge?.tone;
-  const badgeTone = hasOwn(BADGE_COLORS, toneKey) ? BADGE_COLORS[toneKey] : BADGE_COLORS.neutral;
   const paragraphs = (input.paragraphs ?? []).map(block).filter(Boolean);
   const cardTitle = line(input.card?.title);
   const cardRows = (input.card?.rows ?? []).map((r) => ({ label: line(r?.label), value: block(r?.value) })).filter((r) => r.label && r.value);
@@ -141,11 +431,11 @@ function renderRelloEmail(input) {
   const footerLine2 = [footerAddress, f.equalHousing === true ? "Equal Housing Opportunity" : ""].filter(Boolean).join(" \xB7 ");
   const rows = [];
   rows.push(
-    `<tr><td align="center" bgcolor="${color}" style="background:${color};padding:30px 32px 26px;color:#ffffff;border-radius:10px 10px 0 0;">` + (logoUrl ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">` : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) + `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;opacity:.85;">${e(kicker)}</div>` + (headline ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${e(headline)}</div>` : "") + `</td></tr>`
+    `<tr><td align="center" bgcolor="${color}" style="background:${color};padding:30px 32px 26px;color:#ffffff;border-radius:10px 10px 0 0;">` + (logoUrl ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">` : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) + `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${e(kicker)}</div>` + (headline ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${e(headline)}</div>` : "") + `</td></tr>`
   );
   if (badgeLabel || detail) {
     rows.push(
-      `<tr><td style="padding:24px 32px 0;">` + (badgeLabel ? `<span style="display:inline-block;background:${badgeTone.bg};color:${badgeTone.fg};font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;">${e(badgeLabel)}</span>` : "") + (detail ? `<div style="font-size:14px;color:#6b7280;margin-top:${badgeLabel ? "8px" : "0"};">${e(detail)}</div>` : "") + `</td></tr>`
+      `<tr><td style="padding:24px 32px 0;">` + (badgeLabel ? `<span style="display:inline-block;background:${pal.badgeBackground};color:${pal.badgeText};font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;">${e(badgeLabel)}</span>` : "") + (detail ? `<div style="font-size:14px;color:${pal.secondaryText};margin-top:${badgeLabel ? "8px" : "0"};">${e(detail)}</div>` : "") + `</td></tr>`
     );
   }
   if (paragraphs.length > 0) {
@@ -157,37 +447,37 @@ function renderRelloEmail(input) {
   }
   if (cardRows.length > 0) {
     rows.push(
-      `<tr><td style="padding:18px 32px 4px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f6fa;border-radius:8px;font-size:14px;line-height:1.5;">` + (cardTitle ? `<tr><td colspan="2" style="padding:14px 18px 2px;font-weight:700;color:#111827;">${e(cardTitle)}</td></tr>` : "") + cardRows.map((r, i) => {
+      `<tr><td style="padding:18px 32px 4px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${pal.cardBackground};border:1px solid ${pal.cardBorder};border-radius:8px;font-size:14px;line-height:1.5;">` + (cardTitle ? `<tr><td colspan="2" style="padding:14px 18px 2px;font-weight:700;color:${CARD_VALUE_TEXT};">${e(cardTitle)}</td></tr>` : "") + cardRows.map((r, i) => {
         const top = i === 0 ? cardTitle ? "8px" : "14px" : "4px";
         const bottom = i === cardRows.length - 1 ? "14px" : "4px";
-        return `<tr><td valign="top" style="padding:${top} 18px ${bottom};color:#6b7280;width:130px;">${e(r.label)}</td><td valign="top" style="padding:${top} 18px ${bottom};color:#111827;">${e(r.value).replace(/\n/g, "<br>")}</td></tr>`;
+        return `<tr><td valign="top" style="padding:${top} 18px ${bottom};color:${pal.secondaryText};width:130px;">${e(r.label)}</td><td valign="top" style="padding:${top} 18px ${bottom};color:${CARD_VALUE_TEXT};">${e(r.value).replace(/\n/g, "<br>")}</td></tr>`;
       }).join("") + `</table></td></tr>`
     );
   }
   if (button || secondary) {
     rows.push(
-      `<tr><td align="center" style="padding:24px 32px 6px;">` + (button ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr><td align="center" bgcolor="${color}" style="background:${color};border-radius:8px;"><a href="${e(button.url)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;">${e(button.label)}</a></td></tr></table>` : "") + (secondary ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${color};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>` : "") + (button && button.note ? `<div style="font-size:13px;color:#6b7280;margin-top:10px;">${e(button.note)}</div>` : "") + `</td></tr>`
+      `<tr><td align="center" style="padding:24px 32px 6px;">` + (button ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr><td align="center" bgcolor="${color}" style="background:${color};border-radius:8px;"><a href="${e(button.url)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;">${e(button.label)}</a></td></tr></table>` : "") + (secondary ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>` : "") + (button && button.note ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;">${e(button.note)}</div>` : "") + `</td></tr>`
     );
   }
   if (showFallback && button) {
     rows.push(
-      `<tr><td style="padding:16px 32px 4px;font-size:13px;line-height:1.6;color:#4b5563;">Button not working? Copy this link into your browser:<br><a href="${e(button.url)}" style="color:${color};word-break:break-all;">${e(button.url)}</a></td></tr>`
+      `<tr><td style="padding:16px 32px 4px;font-size:13px;line-height:1.6;color:${pal.secondaryText};">Button not working? Copy this link into your browser:<br><a href="${e(button.url)}" style="color:${pal.link};word-break:break-all;">${e(button.url)}</a></td></tr>`
     );
   }
   if (signer) {
     rows.push(
-      `<tr><td style="padding:20px 32px 22px;font-size:15px;line-height:1.6;color:#1f2937;">` + (signer.replyLine ? `<p style="margin:0 0 12px;">${e(signer.replyLine)}</p>` : "") + `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td width="52" valign="top"><div style="width:40px;height:40px;border-radius:20px;background:#dbe4f0;text-align:center;line-height:40px;font-size:14px;font-weight:700;color:${color};">${e(signer.initials)}</div></td><td valign="top" style="font-size:14px;line-height:1.5;"><b>${e(signer.name)}</b>` + (signerMeta ? `<br><span style="color:#4b5563;">${e(signerMeta)}</span>` : "") + (signer.phone ? `<br><span style="color:#4b5563;">${e(signer.phone)}</span>` : "") + `</td></tr></table></td></tr>`
+      `<tr><td style="padding:20px 32px 22px;font-size:15px;line-height:1.6;color:#1f2937;">` + (signer.replyLine ? `<p style="margin:0 0 12px;">${e(signer.replyLine)}</p>` : "") + `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td width="52" valign="top"><div style="width:40px;height:40px;border-radius:20px;background:${pal.avatarBackground};text-align:center;line-height:40px;font-size:14px;font-weight:700;color:${pal.avatarText};">${e(signer.initials)}</div></td><td valign="top" style="font-size:14px;line-height:1.5;"><b>${e(signer.name)}</b>` + (signerMeta ? `<br><span style="color:${pal.secondaryText};">${e(signerMeta)}</span>` : "") + (signer.phone ? `<br><span style="color:${pal.secondaryText};">${e(signer.phone)}</span>` : "") + `</td></tr></table></td></tr>`
     );
   }
   const footerParts = [
     footerLine1 ? e(footerLine1) : "",
     footerLine2 ? e(footerLine2) : "",
     footerReason ? e(footerReason) : "",
-    pref ? `<a href="${e(pref.url)}" style="color:#6b7280;">${e(pref.label)}</a>` : ""
+    pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${e(pref.label)}</a>` : ""
   ].filter(Boolean);
   if (footerParts.length > 0) {
     rows.push(
-      `<tr><td style="border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:#6b7280;line-height:1.6;">` + footerParts.join("<br>") + `</td></tr>`
+      `<tr><td style="border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:${pal.secondaryText};line-height:1.6;">` + footerParts.join("<br>") + `</td></tr>`
     );
   }
   const html = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="x-apple-disable-message-reformatting"><title>${e(subject)}</title></head><body style="margin:0;padding:24px 12px;background:#eef1f5;font-family:${FONT};color:#1f2937;">` + (preheader ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#eef1f5;opacity:0;">${e(preheader)}</div>` : "") + `<!--[if mso]><table role="presentation" width="600" align="center" cellpadding="0" cellspacing="0"><tr><td><![endif]--><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:10px;font-family:${FONT};">` + rows.join("") + `</table><!--[if mso]></td></tr></table><![endif]--></body></html>`;
@@ -221,15 +511,15 @@ function renderRelloEmail(input) {
 ` };
 }
 export {
-  RELLO_EMAIL_ADMIN_COLOR,
   RELLO_EMAIL_APP_NAMES,
-  RELLO_EMAIL_DEFAULT_BRAND_COLOR,
   RELLO_EMAIL_LOGO_BASE_URL,
   RELLO_EMAIL_LOGO_SLUGS,
+  RELLO_EMAIL_TOKEN_KEY_FOR_SLUG,
   escapeEmailHtml,
+  relloEmailContrast,
   relloEmailLogoUrl,
   renderRelloEmail,
-  resolveRelloEmailColor,
+  resolveRelloEmailPalette,
   safeEmailUrl
 };
 //# sourceMappingURL=email.js.map

@@ -4,11 +4,18 @@
  * "<App> · from <Company>", the headline, then body, one button, signer and
  * footer). One layout, three audiences:
  *
- *   consumer — leads and clients: the tenant's brand color, the app's logo,
+ *   consumer — leads and clients: the sending app's colors, the app's logo,
  *              the LO signer, the lender footer.
- *   pro      — agents and LOs: the same brand color, the Rello logo, an
+ *   pro      — agents and LOs: the sending app's colors, the Rello logo, an
  *              optional info card, a "why you get this" footer.
- *   admin    — platform admins: Rello's own #111827, the Rello logo, short.
+ *   admin    — platform admins: Rello's colors, the Rello logo, short.
+ *
+ * Colors (Kelly 2026-10-29: "Each app has its own colors in Rello ui that
+ * should match"): read at render time from tokens/app-overrides.json, the same
+ * file the Configurator edits and the apps theme from — apps.<key>.<field>,
+ * else defaults.<field>. No app color is copied into this file. A color that
+ * would make text hard to read is darkened here until it passes (white header
+ * text ≥ 3:1, other text ≥ 4.5:1).
  *
  * Pure: no React, no DOM, no network, no env. It RENDERS; it never sends and
  * adds no compliance rule. Each app keeps its own send path, consent checks
@@ -26,9 +33,14 @@
  */
 
 import type { PlatformSlug } from "@rello-platform/slugs";
+import appOverrides from "../../tokens/app-overrides.json";
 
 export type RelloEmailAudience = "consumer" | "pro" | "admin";
 
+/**
+ * @deprecated Accepted and ignored: every badge uses the sending app's accent
+ * (Kelly 2026-10-29). The badge label carries the meaning.
+ */
 export type RelloEmailBadgeTone = "hot" | "info" | "success" | "warning" | "neutral";
 
 export interface RelloEmailLink {
@@ -74,12 +86,14 @@ export interface RelloEmailFooter {
 
 export interface RelloEmailInput {
   audience: RelloEmailAudience;
-  /** The app the email comes from. Decides the app name and, for consumer mail, the logo. */
+  /**
+   * The app the email comes from. Decides the app name, the colors (from
+   * tokens/app-overrides.json; admin mail always uses Rello's) and, for
+   * consumer mail, the logo.
+   */
   app: PlatformSlug;
   /** The sender company (tenant). Omitted from the kicker when empty. */
   companyName?: string | null;
-  /** Tenant brand color, #rrggbb. Ignored for admin mail (always #111827). */
-  brandColor?: string | null;
   subject: string;
   /** Inbox preview text. */
   preheader?: string | null;
@@ -108,8 +122,6 @@ export interface RenderedRelloEmail {
   text: string;
 }
 
-export const RELLO_EMAIL_DEFAULT_BRAND_COLOR = "#1a365d";
-export const RELLO_EMAIL_ADMIN_COLOR = "#111827";
 export const RELLO_EMAIL_LOGO_BASE_URL = "https://hellorello.app/email/logos";
 
 /**
@@ -158,14 +170,6 @@ export function relloEmailLogoUrl(app: PlatformSlug): string | null {
   return RELLO_EMAIL_LOGO_SLUGS.has(app) ? `${RELLO_EMAIL_LOGO_BASE_URL}/${app}.png` : null;
 }
 
-const BADGE_COLORS: Record<RelloEmailBadgeTone, { bg: string; fg: string }> = {
-  hot: { bg: "#fdecea", fg: "#b42318" },
-  info: { bg: "#e8f0fb", fg: "#1d4ed8" },
-  success: { bg: "#e7f6ec", fg: "#067647" },
-  warning: { bg: "#fef4e6", fg: "#b54708" },
-  neutral: { bg: "#f2f4f7", fg: "#344054" },
-};
-
 const FONT = "-apple-system,'Segoe UI',Helvetica,Arial,sans-serif";
 
 export function escapeEmailHtml(value: string): string {
@@ -208,28 +212,132 @@ export function safeEmailUrl(value: unknown): string | null {
   }
 }
 
+/**
+ * tokens/app-overrides.json keys that are not the platform slug. Every other
+ * slug reads the block under its own name; a slug with no block (prequal-pro,
+ * the-oven, the engines, …) reads `defaults`. The JSON's "conversations" block
+ * is a Rello module, not a platform slug, so no email reads it.
+ */
+export const RELLO_EMAIL_TOKEN_KEY_FOR_SLUG: Readonly<Partial<Record<PlatformSlug, string>>> = {
+  "home-stretch": "the-homestretch",
+  "home-scout": "the-home-scout",
+};
+
+/** The colors one email is drawn with. All lowercase #rrggbb. */
+export interface RelloEmailPalette {
+  /** Header band and button: the app's `primary`, darkened only if white text on it falls under 3:1. */
+  primary: string;
+  /** Link text: `primary`, darkened until ≥ 4.5:1 on white. */
+  link: string;
+  /** Badge background: a light tint of the app's `accent`. */
+  badgeBackground: string;
+  /** Badge text: `accent`, darkened until ≥ 4.5:1 on the badge background. */
+  badgeText: string;
+  /** Detail line, card labels, notes, signer details, footer: `secondaryText`, darkened until ≥ 4.5:1 on white and on the card. */
+  secondaryText: string;
+  /** Info card: `rowBackground` (white if too dark for the card's text) with a `cardBorder` edge. */
+  cardBackground: string;
+  cardBorder: string;
+  /** Signer initials: a light tint of `primary`, with `primary` darkened until ≥ 4.5:1 on it. */
+  avatarBackground: string;
+  avatarText: string;
+}
+
+type TokenField = "primary" | "accent" | "secondaryText" | "rowBackground" | "cardBorder";
+
+/**
+ * Only reached if tokens/app-overrides.json `defaults` itself holds a
+ * malformed value, which a test refuses. A neutral slate, deliberately no
+ * app's color, ≥ 4.5:1 against white both ways.
+ */
+const MALFORMED_TOKEN_FALLBACK = "#475569";
+
+/** Card title and values; the card background must keep ≥ 7:1 with it. */
+const CARD_VALUE_TEXT = "#111827";
+
+const WHITE = "#ffffff";
+
+function validHex(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const hex = value.trim().toLowerCase();
+  return /^#[0-9a-f]{6}$/.test(hex) ? hex : null;
+}
+
+/** apps.<key>.<field>, else defaults.<field>. Read on every call, never cached. */
+function tokenColor(key: string, field: TokenField): string {
+  const tokens = appOverrides as unknown as { defaults?: unknown; apps?: unknown };
+  const apps = tokens.apps && typeof tokens.apps === "object" ? (tokens.apps as Record<string, unknown>) : {};
+  const block = hasOwn(apps, key) ? apps[key] : null;
+  const fromApp =
+    block && typeof block === "object" && hasOwn(block as Record<string, unknown>, field)
+      ? validHex((block as Record<string, unknown>)[field])
+      : null;
+  if (fromApp) return fromApp;
+  const defaults = tokens.defaults && typeof tokens.defaults === "object" ? (tokens.defaults as Record<string, unknown>) : {};
+  return (hasOwn(defaults, field) ? validHex(defaults[field]) : null) ?? MALFORMED_TOKEN_FALLBACK;
+}
+
 function channel(hex: string, i: number): number {
   const c = parseInt(hex.slice(i, i + 2), 16) / 255;
   return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
 }
 
-/** WCAG contrast of white text on this #rrggbb color. */
-function whiteContrast(hex: string): number {
-  const l = 0.2126 * channel(hex, 1) + 0.7152 * channel(hex, 3) + 0.0722 * channel(hex, 5);
-  return 1.05 / (l + 0.05);
+function luminance(hex: string): number {
+  return 0.2126 * channel(hex, 1) + 0.7152 * channel(hex, 3) + 0.0722 * channel(hex, 5);
+}
+
+/** WCAG contrast ratio of two #rrggbb colors. */
+export function relloEmailContrast(a: string, b: string): number {
+  const la = luminance(a);
+  const lb = luminance(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+
+/** `hex` moved the fraction `t` (0–1) of the way to `toward`. */
+function mix(hex: string, toward: string, t: number): string {
+  let out = "#";
+  for (const i of [1, 3, 5]) {
+    const a = parseInt(hex.slice(i, i + 2), 16);
+    const b = parseInt(toward.slice(i, i + 2), 16);
+    out += Math.round(a + (b - a) * t).toString(16).padStart(2, "0");
+  }
+  return out;
+}
+
+/** `color` as given if it reaches `min` against every color in `against`, else darkened toward black in 2% steps until it does. */
+function darkenUntil(color: string, against: readonly string[], min: number): string {
+  for (let step = 0; step <= 50; step++) {
+    const c = step === 0 ? color : mix(color, "#000000", step / 50);
+    if (against.every((bg) => relloEmailContrast(c, bg) >= min)) return c;
+  }
+  return "#000000";
 }
 
 /**
- * The header/button color. A valid #rrggbb that white text and the white logo
- * can sit on (contrast ≥ 3:1, WCAG large text) is used as given; anything else
- * falls back to the default navy. Admin mail is always #111827.
+ * The colors for one email: the sending app's tokens (admin mail and an
+ * unknown app: Rello's), each text color held to its contrast floor.
  */
-export function resolveRelloEmailColor(audience: RelloEmailAudience, brandColor: unknown): string {
-  if (audience === "admin") return RELLO_EMAIL_ADMIN_COLOR;
-  if (typeof brandColor !== "string") return RELLO_EMAIL_DEFAULT_BRAND_COLOR;
-  const hex = brandColor.trim().toLowerCase();
-  if (!/^#[0-9a-f]{6}$/.test(hex)) return RELLO_EMAIL_DEFAULT_BRAND_COLOR;
-  return whiteContrast(hex) >= 3 ? hex : RELLO_EMAIL_DEFAULT_BRAND_COLOR;
+export function resolveRelloEmailPalette(audience: RelloEmailAudience, app: unknown): RelloEmailPalette {
+  const slug: PlatformSlug = audience !== "admin" && isKnownApp(app) ? app : "rello";
+  const key = RELLO_EMAIL_TOKEN_KEY_FOR_SLUG[slug] ?? slug;
+  const primaryToken = tokenColor(key, "primary");
+  const accent = tokenColor(key, "accent");
+  const rowBackground = tokenColor(key, "rowBackground");
+  const cardBackground = relloEmailContrast(CARD_VALUE_TEXT, rowBackground) >= 7 ? rowBackground : WHITE;
+  const primary = darkenUntil(primaryToken, [WHITE], 3);
+  const badgeBackground = mix(accent, WHITE, 0.82);
+  const avatarBackground = mix(primary, WHITE, 0.85);
+  return {
+    primary,
+    link: darkenUntil(primaryToken, [WHITE], 4.5),
+    badgeBackground,
+    badgeText: darkenUntil(accent, [badgeBackground], 4.5),
+    secondaryText: darkenUntil(tokenColor(key, "secondaryText"), [WHITE, cardBackground], 4.5),
+    cardBackground,
+    cardBorder: tokenColor(key, "cardBorder"),
+    avatarBackground,
+    avatarText: darkenUntil(primary, [avatarBackground], 4.5),
+  };
 }
 
 function initialsOf(name: string): string {
@@ -260,7 +368,8 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     input.audience === "pro" || input.audience === "admin" ? input.audience : "consumer";
   const app = appName(input.app);
   const company = line(input.companyName);
-  const color = resolveRelloEmailColor(audience, input.brandColor);
+  const pal = resolveRelloEmailPalette(audience, input.app);
+  const color = pal.primary;
   // Option A: the app's own logo on consumer mail; Rello's on agent/LO and admin mail.
   const logoSlug: PlatformSlug =
     audience === "consumer" && isKnownApp(input.app)
@@ -284,8 +393,6 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         : app);
 
   const badgeLabel = line(input.badge?.label);
-  const toneKey = input.badge?.tone;
-  const badgeTone = hasOwn(BADGE_COLORS, toneKey) ? BADGE_COLORS[toneKey] : BADGE_COLORS.neutral;
   const paragraphs = (input.paragraphs ?? []).map(block).filter(Boolean);
   const cardTitle = line(input.card?.title);
   const cardRows = (input.card?.rows ?? [])
@@ -333,7 +440,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
       (logoUrl
         ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">`
         : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) +
-      `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;opacity:.85;">${e(kicker)}</div>` +
+      `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${e(kicker)}</div>` +
       (headline
         ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${e(headline)}</div>`
         : "") +
@@ -344,10 +451,10 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     rows.push(
       `<tr><td style="padding:24px 32px 0;">` +
         (badgeLabel
-          ? `<span style="display:inline-block;background:${badgeTone.bg};color:${badgeTone.fg};font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;">${e(badgeLabel)}</span>`
+          ? `<span style="display:inline-block;background:${pal.badgeBackground};color:${pal.badgeText};font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;">${e(badgeLabel)}</span>`
           : "") +
         (detail
-          ? `<div style="font-size:14px;color:#6b7280;margin-top:${badgeLabel ? "8px" : "0"};">${e(detail)}</div>`
+          ? `<div style="font-size:14px;color:${pal.secondaryText};margin-top:${badgeLabel ? "8px" : "0"};">${e(detail)}</div>`
           : "") +
         `</td></tr>`,
     );
@@ -369,17 +476,17 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   if (cardRows.length > 0) {
     rows.push(
       `<tr><td style="padding:18px 32px 4px;">` +
-        `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f6fa;border-radius:8px;font-size:14px;line-height:1.5;">` +
+        `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${pal.cardBackground};border:1px solid ${pal.cardBorder};border-radius:8px;font-size:14px;line-height:1.5;">` +
         (cardTitle
-          ? `<tr><td colspan="2" style="padding:14px 18px 2px;font-weight:700;color:#111827;">${e(cardTitle)}</td></tr>`
+          ? `<tr><td colspan="2" style="padding:14px 18px 2px;font-weight:700;color:${CARD_VALUE_TEXT};">${e(cardTitle)}</td></tr>`
           : "") +
         cardRows
           .map((r, i) => {
             const top = i === 0 ? (cardTitle ? "8px" : "14px") : "4px";
             const bottom = i === cardRows.length - 1 ? "14px" : "4px";
             return (
-              `<tr><td valign="top" style="padding:${top} 18px ${bottom};color:#6b7280;width:130px;">${e(r.label)}</td>` +
-              `<td valign="top" style="padding:${top} 18px ${bottom};color:#111827;">${e(r.value).replace(/\n/g, "<br>")}</td></tr>`
+              `<tr><td valign="top" style="padding:${top} 18px ${bottom};color:${pal.secondaryText};width:130px;">${e(r.label)}</td>` +
+              `<td valign="top" style="padding:${top} 18px ${bottom};color:${CARD_VALUE_TEXT};">${e(r.value).replace(/\n/g, "<br>")}</td></tr>`
             );
           })
           .join("") +
@@ -397,10 +504,10 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
             `</td></tr></table>`
           : "") +
         (secondary
-          ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${color};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>`
+          ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>`
           : "") +
         (button && button.note
-          ? `<div style="font-size:13px;color:#6b7280;margin-top:10px;">${e(button.note)}</div>`
+          ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;">${e(button.note)}</div>`
           : "") +
         `</td></tr>`,
     );
@@ -408,9 +515,9 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
 
   if (showFallback && button) {
     rows.push(
-      `<tr><td style="padding:16px 32px 4px;font-size:13px;line-height:1.6;color:#4b5563;">` +
+      `<tr><td style="padding:16px 32px 4px;font-size:13px;line-height:1.6;color:${pal.secondaryText};">` +
         `Button not working? Copy this link into your browser:<br>` +
-        `<a href="${e(button.url)}" style="color:${color};word-break:break-all;">${e(button.url)}</a>` +
+        `<a href="${e(button.url)}" style="color:${pal.link};word-break:break-all;">${e(button.url)}</a>` +
         `</td></tr>`,
     );
   }
@@ -420,10 +527,10 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
       `<tr><td style="padding:20px 32px 22px;font-size:15px;line-height:1.6;color:#1f2937;">` +
         (signer.replyLine ? `<p style="margin:0 0 12px;">${e(signer.replyLine)}</p>` : "") +
         `<table role="presentation" cellpadding="0" cellspacing="0"><tr>` +
-        `<td width="52" valign="top"><div style="width:40px;height:40px;border-radius:20px;background:#dbe4f0;text-align:center;line-height:40px;font-size:14px;font-weight:700;color:${color};">${e(signer.initials)}</div></td>` +
+        `<td width="52" valign="top"><div style="width:40px;height:40px;border-radius:20px;background:${pal.avatarBackground};text-align:center;line-height:40px;font-size:14px;font-weight:700;color:${pal.avatarText};">${e(signer.initials)}</div></td>` +
         `<td valign="top" style="font-size:14px;line-height:1.5;"><b>${e(signer.name)}</b>` +
-        (signerMeta ? `<br><span style="color:#4b5563;">${e(signerMeta)}</span>` : "") +
-        (signer.phone ? `<br><span style="color:#4b5563;">${e(signer.phone)}</span>` : "") +
+        (signerMeta ? `<br><span style="color:${pal.secondaryText};">${e(signerMeta)}</span>` : "") +
+        (signer.phone ? `<br><span style="color:${pal.secondaryText};">${e(signer.phone)}</span>` : "") +
         `</td></tr></table></td></tr>`,
     );
   }
@@ -432,11 +539,11 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     footerLine1 ? e(footerLine1) : "",
     footerLine2 ? e(footerLine2) : "",
     footerReason ? e(footerReason) : "",
-    pref ? `<a href="${e(pref.url)}" style="color:#6b7280;">${e(pref.label)}</a>` : "",
+    pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${e(pref.label)}</a>` : "",
   ].filter(Boolean);
   if (footerParts.length > 0) {
     rows.push(
-      `<tr><td style="border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:#6b7280;line-height:1.6;">` +
+      `<tr><td style="border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:${pal.secondaryText};line-height:1.6;">` +
         footerParts.join("<br>") +
         `</td></tr>`,
     );

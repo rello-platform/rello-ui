@@ -1,12 +1,15 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { APP_SLUGS, ENGINE_SLUGS } from "@rello-platform/slugs";
+import tokens from "../../tokens/app-overrides.json";
 import {
-  RELLO_EMAIL_ADMIN_COLOR,
   RELLO_EMAIL_APP_NAMES,
-  RELLO_EMAIL_DEFAULT_BRAND_COLOR,
   RELLO_EMAIL_LOGO_SLUGS,
+  RELLO_EMAIL_TOKEN_KEY_FOR_SLUG,
+  relloEmailContrast,
   renderRelloEmail,
-  resolveRelloEmailColor,
+  resolveRelloEmailPalette,
   safeEmailUrl,
   type RelloEmailInput,
 } from "./index";
@@ -19,7 +22,6 @@ function full(overrides: Partial<RelloEmailInput> = {}): RelloEmailInput {
     audience: "consumer",
     app: "home-ready",
     companyName: "ClearPath Utah Mortgage",
-    brandColor: "#1a365d",
     subject: "Your Home Ready plan is ready, Sarah",
     preheader: "Tap to see where you stand and your next step.",
     headline: "Your Home Ready plan is ready, Sarah.",
@@ -48,7 +50,6 @@ function hostile(): RelloEmailInput {
     audience: "consumer",
     app: "home-ready",
     companyName: XSS,
-    brandColor: "#1a365d",
     subject: XSS,
     preheader: XSS,
     kicker: XSS,
@@ -125,27 +126,188 @@ describe("renderRelloEmail — URLs", () => {
   });
 });
 
-describe("renderRelloEmail — color", () => {
-  it("uses a valid tenant color", () => {
-    expect(renderRelloEmail(full({ brandColor: "#0F766E" })).html).toContain("background:#0f766e");
+describe("renderRelloEmail — app colors from tokens/app-overrides.json (Kelly 2026-10-29)", () => {
+  type Block = Record<string, string | null | undefined>;
+  const T = tokens as unknown as { defaults: Block; apps: Record<string, Block> };
+  const lc = (v: string | null | undefined) => (v ?? "").toLowerCase();
+  const jsonPrimary = (key: string) => lc(T.apps[key]?.primary ?? T.defaults.primary);
+  const headerOf = (html: string) => html.match(/<tr><td align="center" bgcolor="(#[0-9a-f]{6})" style="background:\1;padding:30px/)?.[1];
+  const buttonOf = (html: string) => html.match(/<td align="center" bgcolor="(#[0-9a-f]{6})" style="background:\1;border-radius:8px;">/)?.[1];
+  const ALL_SLUGS = [...APP_SLUGS, ...ENGINE_SLUGS];
+
+  /** Runs `fn` with one JSON block changed, then puts the JSON back exactly. */
+  function withTokens(key: string, block: Block | undefined, fn: () => void) {
+    const had = Object.prototype.hasOwnProperty.call(T.apps, key);
+    const before = T.apps[key];
+    if (block === undefined) delete T.apps[key];
+    else T.apps[key] = block;
+    try {
+      fn();
+    } finally {
+      if (had) T.apps[key] = before;
+      else delete T.apps[key];
+    }
+  }
+
+  it("today's JSON holds the primaries the KA listed", () => {
+    expect(jsonPrimary("rello")).toBe("#3b5998");
+    expect(jsonPrimary("home-ready")).toBe("#0270d2");
+    expect(jsonPrimary("the-homestretch")).toBe("#0070d2");
+    expect(jsonPrimary("open-house-hub")).toBe("#0d9488");
+    expect(jsonPrimary("pathfinder-pro")).toBe("#1e3a5f");
+    expect(jsonPrimary("newsletter-studio")).toBe("#6366f1");
+    expect(jsonPrimary("market-intel")).toBe("#ca775c");
+    expect(jsonPrimary("harvest-home")).toBe("#b8860b");
+    expect(jsonPrimary("the-home-scout")).toBe("#2d6a4f");
+    expect(jsonPrimary("the-drumbeat")).toBe("#d4506a");
   });
 
-  for (const bad of ["red", "#fff", "#12345g", "rgb(0,0,0)", "#1a365d;background:url(x)", "", null, undefined]) {
-    it(`falls back to the default for ${JSON.stringify(bad)}`, () => {
-      expect(resolveRelloEmailColor("consumer", bad)).toBe(RELLO_EMAIL_DEFAULT_BRAND_COLOR);
+  const SAME_KEY = ["home-ready", "open-house-hub", "pathfinder-pro", "newsletter-studio", "market-intel", "harvest-home", "the-drumbeat"] as const;
+  for (const app of SAME_KEY) {
+    it(`${app}: header and button are the JSON primary, on consumer and pro mail`, () => {
+      for (const audience of ["consumer", "pro"] as const) {
+        const { html } = renderRelloEmail(full({ app, audience }));
+        expect(headerOf(html), audience).toBe(jsonPrimary(app));
+        expect(buttonOf(html), audience).toBe(jsonPrimary(app));
+      }
     });
   }
 
-  it("falls back when white text would be unreadable on the color", () => {
-    expect(resolveRelloEmailColor("consumer", "#ffd400")).toBe(RELLO_EMAIL_DEFAULT_BRAND_COLOR);
-    expect(resolveRelloEmailColor("pro", "#ffffff")).toBe(RELLO_EMAIL_DEFAULT_BRAND_COLOR);
+  it("slugs whose JSON key differs read the mapped block", () => {
+    expect(RELLO_EMAIL_TOKEN_KEY_FOR_SLUG).toEqual({ "home-stretch": "the-homestretch", "home-scout": "the-home-scout" });
+    expect(headerOf(renderRelloEmail(full({ app: "home-stretch" })).html)).toBe(jsonPrimary("the-homestretch"));
+    expect(headerOf(renderRelloEmail(full({ app: "home-scout" })).html)).toBe(jsonPrimary("the-home-scout"));
   });
 
-  it("admin mail is always #111827", () => {
-    expect(resolveRelloEmailColor("admin", "#0f766e")).toBe(RELLO_EMAIL_ADMIN_COLOR);
-    const { html } = renderRelloEmail(full({ audience: "admin", brandColor: "#0f766e" }));
-    expect(html).toContain(`background:${RELLO_EMAIL_ADMIN_COLOR}`);
-    expect(html).not.toContain("#0f766e");
+  it("a slug with no JSON block gets defaults.primary", () => {
+    for (const app of ["prequal-pro", "the-oven", "journey-engine", "rello"] as const) {
+      expect(T.apps[app]?.primary ?? null, app).toBeNull();
+      const { html } = renderRelloEmail(full({ app }));
+      expect(headerOf(html), app).toBe(lc(T.defaults.primary));
+      expect(buttonOf(html), app).toBe(lc(T.defaults.primary));
+    }
+  });
+
+  it("admin mail uses Rello's primary, whatever the app; never #111827 or black", () => {
+    for (const app of ["rello", "home-ready", "harvest-home"] as const) {
+      const { html } = renderRelloEmail(full({ app, audience: "admin" }));
+      expect(headerOf(html), app).toBe(jsonPrimary("rello"));
+      expect(buttonOf(html), app).toBe(jsonPrimary("rello"));
+      expect(html, app).not.toMatch(/background:#(111827|000000)|bgcolor="#(111827|000000)"/);
+    }
+    expect(resolveRelloEmailPalette("admin", "home-ready")).toEqual(resolveRelloEmailPalette("consumer", "rello"));
+  });
+
+  it("no header or button anywhere is the old #111827 or black", () => {
+    for (const app of ALL_SLUGS) {
+      for (const audience of ["consumer", "pro", "admin"] as const) {
+        const { html } = renderRelloEmail(full({ app, audience }));
+        expect(headerOf(html), `${audience}/${app}`).not.toMatch(/^#(111827|000000)$/);
+        expect(buttonOf(html), `${audience}/${app}`).not.toMatch(/^#(111827|000000)$/);
+      }
+    }
+  });
+
+  it("a changed JSON value changes the render (the JSON is read, not copied)", () => {
+    withTokens("home-ready", { ...T.apps["home-ready"], primary: "#7A1FA2" }, () => {
+      const { html } = renderRelloEmail(full({ app: "home-ready" }));
+      expect(headerOf(html)).toBe("#7a1fa2");
+      expect(buttonOf(html)).toBe("#7a1fa2");
+    });
+    expect(headerOf(renderRelloEmail(full({ app: "home-ready" })).html)).toBe("#0270d2");
+    // A block added for a slug that has none is picked up too.
+    withTokens("prequal-pro", { primary: "#5B21B6" }, () => {
+      expect(headerOf(renderRelloEmail(full({ app: "prequal-pro" })).html)).toBe("#5b21b6");
+    });
+    // A mapped key: editing the-homestretch moves home-stretch mail.
+    withTokens("the-homestretch", { ...T.apps["the-homestretch"], primary: "#14532D" }, () => {
+      expect(headerOf(renderRelloEmail(full({ app: "home-stretch" })).html)).toBe("#14532d");
+    });
+  });
+
+  it("no app's primary hex is written into the renderer source", () => {
+    const src = readFileSync(join(process.cwd(), "src/email/render-email.ts"), "utf8").toLowerCase();
+    const primaries = new Set([lc(T.defaults.primary), ...Object.values(T.apps).map((b) => lc(b.primary)).filter(Boolean)]);
+    for (const hex of primaries) expect(src, hex).not.toContain(hex);
+  });
+
+  it("a malformed app value falls back to defaults", () => {
+    withTokens("home-ready", { ...T.apps["home-ready"], primary: "red" }, () => {
+      expect(headerOf(renderRelloEmail(full({ app: "home-ready" })).html)).toBe(lc(T.defaults.primary));
+    });
+    withTokens("home-ready", { ...T.apps["home-ready"], primary: "#0270d2;background:url(x)" }, () => {
+      const { html } = renderRelloEmail(full({ app: "home-ready" }));
+      expect(headerOf(html)).toBe(lc(T.defaults.primary));
+      expect(html).not.toContain("url(x)");
+    });
+  });
+
+  it("the JSON defaults are valid #rrggbb and every app key is a slug, a mapped key or conversations", () => {
+    for (const field of ["primary", "accent", "secondaryText", "rowBackground", "cardBorder"]) {
+      expect(T.defaults[field], field).toMatch(/^#[0-9a-fA-F]{6}$/);
+    }
+    const known = new Set<string>([...ALL_SLUGS, ...Object.values(RELLO_EMAIL_TOKEN_KEY_FOR_SLUG), "conversations"]);
+    for (const key of Object.keys(T.apps)) expect(known.has(key), key).toBe(true);
+    for (const key of Object.values(RELLO_EMAIL_TOKEN_KEY_FOR_SLUG)) expect(T.apps[key as string], key).toBeTruthy();
+  });
+
+  it("contrast: white header text ≥ 3:1, every other text ≥ 4.5:1, for every slug and audience", () => {
+    for (const app of ALL_SLUGS) {
+      for (const audience of ["consumer", "pro", "admin"] as const) {
+        const p = resolveRelloEmailPalette(audience, app);
+        const at = `${audience}/${app}`;
+        expect(relloEmailContrast("#ffffff", p.primary), at).toBeGreaterThanOrEqual(3);
+        expect(relloEmailContrast(p.link, "#ffffff"), at).toBeGreaterThanOrEqual(4.5);
+        expect(relloEmailContrast(p.badgeText, p.badgeBackground), at).toBeGreaterThanOrEqual(4.5);
+        expect(relloEmailContrast(p.secondaryText, "#ffffff"), at).toBeGreaterThanOrEqual(4.5);
+        expect(relloEmailContrast(p.secondaryText, p.cardBackground), at).toBeGreaterThanOrEqual(4.5);
+        expect(relloEmailContrast(p.avatarText, p.avatarBackground), at).toBeGreaterThanOrEqual(4.5);
+        expect(relloEmailContrast("#111827", p.cardBackground), at).toBeGreaterThanOrEqual(7);
+      }
+    }
+  });
+
+  it("a primary that passes 3:1 is used exactly; one that fails is darkened until it passes", () => {
+    for (const key of SAME_KEY) expect(resolveRelloEmailPalette("consumer", key).primary, key).toBe(jsonPrimary(key));
+    withTokens("home-ready", { ...T.apps["home-ready"], primary: "#FFD400" }, () => {
+      const { primary, link } = resolveRelloEmailPalette("consumer", "home-ready");
+      expect(primary).not.toBe("#ffd400");
+      expect(relloEmailContrast("#ffffff", primary)).toBeGreaterThanOrEqual(3);
+      expect(relloEmailContrast(link, "#ffffff")).toBeGreaterThanOrEqual(4.5);
+      expect(headerOf(renderRelloEmail(full({ app: "home-ready" })).html)).toBe(primary);
+    });
+  });
+
+  it("links use the app primary, darkened only where it is under 4.5:1 on white", () => {
+    // home-ready #0270d2 is 4.94:1 → used as is; open-house-hub #0d9488 is 3.74:1 → darkened.
+    expect(resolveRelloEmailPalette("consumer", "home-ready").link).toBe("#0270d2");
+    const ohh = resolveRelloEmailPalette("consumer", "open-house-hub").link;
+    expect(ohh).not.toBe("#0d9488");
+    const { html } = renderRelloEmail(full({ app: "open-house-hub" }));
+    expect(html).toContain(`style="color:${ohh};font-weight:600;text-decoration:none;">Read the FAQ`);
+    expect(html).toContain(`style="color:${ohh};word-break:break-all;">`);
+  });
+
+  it("badge, card labels and secondary text come from the app's accent / secondaryText", () => {
+    const hr = resolveRelloEmailPalette("consumer", "home-ready");
+    const nl = resolveRelloEmailPalette("consumer", "newsletter-studio");
+    expect(hr.badgeBackground).not.toBe(nl.badgeBackground);
+    expect(hr.secondaryText).toBe(lc(T.apps["home-ready"].secondaryText));
+    const { html } = renderRelloEmail(full({ app: "home-ready" }));
+    expect(html).toContain(`background:${hr.badgeBackground};color:${hr.badgeText};`);
+    expect(html).toContain(`color:${hr.secondaryText};width:130px;">Budget<`);
+    expect(html).toContain(`background:${hr.cardBackground};border:1px solid ${hr.cardBorder};`);
+    expect(html).not.toMatch(/#b42318|#6b7280|#4b5563|#f3f6fa|#dbe4f0/);
+    // The tone no longer picks a color.
+    for (const tone of ["hot", "info", "success", "warning", "neutral"] as const) {
+      expect(renderRelloEmail(full({ badge: { label: "New", tone } })).html, tone).toBe(html);
+    }
+  });
+
+  it("a brandColor passed by an old caller has no effect", () => {
+    const withOld = renderRelloEmail({ ...full(), brandColor: "#ff0000" } as RelloEmailInput).html;
+    expect(withOld).toBe(renderRelloEmail(full()).html);
+    expect(withOld).not.toContain("#ff0000");
   });
 });
 
