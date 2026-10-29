@@ -271,3 +271,70 @@ describe("renderRelloEmail — structure and plain text", () => {
     expect(r.text).toContain("one\ntwo");
   });
 });
+
+describe("renderRelloEmail — URL line breaks and controls (audit TE-001)", () => {
+  const SLOTS: Array<[string, (url: string) => Partial<RelloEmailInput>]> = [
+    ["button", (url) => ({ button: { label: "See my plan", url } })],
+    ["secondary link", (url) => ({ secondaryLink: { label: "Read the FAQ", url } })],
+    ["preference link", (url) => ({ footer: { ...full().footer, preferenceLink: { label: "Email preferences", url } } })],
+  ];
+  const BREAKS = ["\r\n", "\n", "\r", " ", " "];
+
+  for (const [slot, put] of SLOTS) {
+    for (const br of BREAKS) {
+      it(`drops the ${slot} when its URL carries ${JSON.stringify(br)}`, () => {
+        const url = `https://homeready.app/a${br}https://fake.example/b`;
+        const r = renderRelloEmail(full(put(url)));
+        expect(r.html).not.toContain("fake.example");
+        expect(r.text).not.toContain("fake.example");
+        expect(r.text.split("\n").some((l) => l.trim() === "https://homeready.app/a")).toBe(false);
+      });
+    }
+  }
+
+  it("rejects whitespace, C0/C1 controls and U+2028/2029 anywhere inside the URL", () => {
+    const inner = [" ", "\t", "\n", "\r", "\v", "\f", "\u0000", "\u001f", "\u007f", "\u0080", "\u0085", "\u009f", " ", " ", " "];
+    for (const ch of inner) {
+      expect(safeEmailUrl(`https://homeready.app/a${ch}b?x=1`), JSON.stringify(ch)).toBeNull();
+    }
+  });
+
+  it("still drops a newline-obfuscated javascript: URL", () => {
+    expect(safeEmailUrl("java\nscript:alert(1)")).toBeNull();
+    expect(safeEmailUrl("javascript:\nalert(1)")).toBeNull();
+    const r = renderRelloEmail(full({ button: { label: "Go", url: "java\r\nscript:alert(1)" } }));
+    expect(r.html).not.toMatch(/script:/i);
+    expect(r.text).not.toMatch(/script:/i);
+  });
+
+  it("keeps an ordinary https URL with a query string and & intact in both parts", () => {
+    const url = "https://homeready.app/auth/verify?token=abc&x=1&next=%2Fplan";
+    expect(safeEmailUrl(`  ${url}  `)).toBe(url);
+    const r = renderRelloEmail(full({ button: { label: "See my plan", url } }));
+    expect(r.html).toContain('href="https://homeready.app/auth/verify?token=abc&amp;x=1&amp;next=%2Fplan"');
+    expect(r.text).toContain(`See my plan:\n${url}`);
+  });
+});
+
+describe("renderRelloEmail — inherited map keys (audit TE-002)", () => {
+  const INHERITED = ["constructor", "__proto__", "toString", "hasOwnProperty", "valueOf"];
+
+  it("an inherited key as the app falls back to Rello like any unknown app", () => {
+    for (const app of INHERITED) {
+      const r = renderRelloEmail({ ...full(), app: app as RelloEmailInput["app"] });
+      expect(r.html, app).toContain('alt="Rello"');
+      expect(r.html, app).toContain("https://hellorello.app/email/logos/rello.png");
+      expect(r.text.startsWith("Rello · from ClearPath Utah Mortgage"), app).toBe(true);
+      expect(r.html, app).not.toMatch(/undefined|\[object|function /);
+    }
+  });
+
+  it("an inherited key as the badge tone falls back to the neutral tone", () => {
+    const neutral = renderRelloEmail(full({ badge: { label: "New", tone: "neutral" } })).html;
+    for (const tone of INHERITED) {
+      const r = renderRelloEmail(full({ badge: { label: "New", tone: tone as "neutral" } }));
+      expect(r.html, tone).not.toMatch(/undefined|\[object|function /);
+      expect(r.html, tone).toBe(neutral);
+    }
+  });
+});

@@ -20,7 +20,11 @@ app's logo, tenant brand color), `pro` (Rello logo, tenant brand color) and `adm
 (Rello logo, always `#111827`).
 
 - Every text value is HTML-escaped inside the renderer; button/link URLs must be
-  absolute http(s) or the button/link is dropped; empty fields are omitted.
+  absolute http(s) with no whitespace, control character or U+2028/U+2029 inside,
+  or the button/link is dropped (so the plain-text part cannot gain a second link
+  line); empty fields are omitted.
+- App-slug and badge-tone lookups read own keys only, so an inherited name such as
+  `constructor` or `__proto__` falls back like any unknown value.
 - Brand color must be `#rrggbb` with ≥ 3:1 contrast for white text, else `#1a365d`.
 - App names come from a `Record<PlatformSlug, string>`, so a new slug in
   `@rello-platform/slugs` fails the typecheck until it is named. Logos are PNGs at

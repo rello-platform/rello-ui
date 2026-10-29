@@ -121,7 +121,12 @@ declare const RELLO_EMAIL_APP_NAMES: Readonly<Record<PlatformSlug, string>>;
 declare const RELLO_EMAIL_LOGO_SLUGS: ReadonlySet<PlatformSlug>;
 declare function relloEmailLogoUrl(app: PlatformSlug): string | null;
 declare function escapeEmailHtml(value: string): string;
-/** The URL if it is an absolute http(s) URL, else null. */
+/**
+ * The URL if it is an absolute http(s) URL, else null. A URL with whitespace,
+ * a control character or a line separator inside it is refused: the URL parser
+ * would quietly strip those, but the returned string is written as-is into the
+ * plain-text part, where a line break would start a second, fake link line.
+ */
 declare function safeEmailUrl(value: unknown): string | null;
 /**
  * The header/button color. A valid #rrggbb that white text and the white logo

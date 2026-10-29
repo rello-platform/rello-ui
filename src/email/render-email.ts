@@ -187,11 +187,19 @@ function block(value: unknown): string {
   return typeof value === "string" ? value.replace(/\r\n?/g, "\n").trim() : "";
 }
 
-/** The URL if it is an absolute http(s) URL, else null. */
+/** Whitespace, C0/C1 controls and the Unicode line/paragraph separators. */
+const URL_FORBIDDEN_CHARS = /[\s\u0000-\u001f\u007f-\u009f\u2028\u2029]/;
+
+/**
+ * The URL if it is an absolute http(s) URL, else null. A URL with whitespace,
+ * a control character or a line separator inside it is refused: the URL parser
+ * would quietly strip those, but the returned string is written as-is into the
+ * plain-text part, where a line break would start a second, fake link line.
+ */
 export function safeEmailUrl(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const raw = value.trim();
-  if (!raw) return null;
+  if (!raw || URL_FORBIDDEN_CHARS.test(raw)) return null;
   try {
     const url = new URL(raw);
     return url.protocol === "https:" || url.protocol === "http:" ? raw : null;
@@ -233,10 +241,17 @@ function initialsOf(name: string): string {
     .join("");
 }
 
+/** Own keys only, so "constructor" or "__proto__" read as unknown, not as Object.prototype. */
+function hasOwn<T extends object>(map: T, key: unknown): key is keyof T {
+  return typeof key === "string" && Object.prototype.hasOwnProperty.call(map, key);
+}
+
+function isKnownApp(app: unknown): app is PlatformSlug {
+  return hasOwn(RELLO_EMAIL_APP_NAMES, app);
+}
+
 function appName(app: unknown): string {
-  return typeof app === "string" && app in RELLO_EMAIL_APP_NAMES
-    ? RELLO_EMAIL_APP_NAMES[app as PlatformSlug]
-    : "Rello";
+  return isKnownApp(app) ? RELLO_EMAIL_APP_NAMES[app] : "Rello";
 }
 
 export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
@@ -248,7 +263,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const color = resolveRelloEmailColor(audience, input.brandColor);
   // Option A: the app's own logo on consumer mail; Rello's on agent/LO and admin mail.
   const logoSlug: PlatformSlug =
-    audience === "consumer" && typeof input.app === "string" && input.app in RELLO_EMAIL_APP_NAMES
+    audience === "consumer" && isKnownApp(input.app)
       ? input.app
       : "rello";
   const logoUrl = relloEmailLogoUrl(logoSlug);
@@ -269,7 +284,8 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         : app);
 
   const badgeLabel = line(input.badge?.label);
-  const badgeTone = BADGE_COLORS[input.badge?.tone ?? "neutral"] ?? BADGE_COLORS.neutral;
+  const toneKey = input.badge?.tone;
+  const badgeTone = hasOwn(BADGE_COLORS, toneKey) ? BADGE_COLORS[toneKey] : BADGE_COLORS.neutral;
   const paragraphs = (input.paragraphs ?? []).map(block).filter(Boolean);
   const cardTitle = line(input.card?.title);
   const cardRows = (input.card?.rows ?? [])

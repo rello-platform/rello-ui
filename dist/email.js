@@ -53,10 +53,11 @@ function line(value) {
 function block(value) {
   return typeof value === "string" ? value.replace(/\r\n?/g, "\n").trim() : "";
 }
+var URL_FORBIDDEN_CHARS = /[\s\u0000-\u001f\u007f-\u009f\u2028\u2029]/;
 function safeEmailUrl(value) {
   if (typeof value !== "string") return null;
   const raw = value.trim();
-  if (!raw) return null;
+  if (!raw || URL_FORBIDDEN_CHARS.test(raw)) return null;
   try {
     const url = new URL(raw);
     return url.protocol === "https:" || url.protocol === "http:" ? raw : null;
@@ -82,8 +83,14 @@ function resolveRelloEmailColor(audience, brandColor) {
 function initialsOf(name) {
   return name.split(" ").filter(Boolean).slice(0, 2).map((w) => w.charAt(0).toUpperCase()).join("");
 }
+function hasOwn(map, key) {
+  return typeof key === "string" && Object.prototype.hasOwnProperty.call(map, key);
+}
+function isKnownApp(app) {
+  return hasOwn(RELLO_EMAIL_APP_NAMES, app);
+}
 function appName(app) {
-  return typeof app === "string" && app in RELLO_EMAIL_APP_NAMES ? RELLO_EMAIL_APP_NAMES[app] : "Rello";
+  return isKnownApp(app) ? RELLO_EMAIL_APP_NAMES[app] : "Rello";
 }
 function renderRelloEmail(input) {
   const e = escapeEmailHtml;
@@ -91,7 +98,7 @@ function renderRelloEmail(input) {
   const app = appName(input.app);
   const company = line(input.companyName);
   const color = resolveRelloEmailColor(audience, input.brandColor);
-  const logoSlug = audience === "consumer" && typeof input.app === "string" && input.app in RELLO_EMAIL_APP_NAMES ? input.app : "rello";
+  const logoSlug = audience === "consumer" && isKnownApp(input.app) ? input.app : "rello";
   const logoUrl = relloEmailLogoUrl(logoSlug);
   const logoAlt = appName(logoSlug);
   const subject = line(input.subject);
@@ -100,7 +107,8 @@ function renderRelloEmail(input) {
   const detail = line(input.detail);
   const kicker = line(input.kicker) || (audience === "admin" ? `${app} \xB7 Platform alert` : company ? audience === "consumer" ? `${app} \xB7 from ${company}` : `${app} \xB7 ${company}` : app);
   const badgeLabel = line(input.badge?.label);
-  const badgeTone = BADGE_COLORS[input.badge?.tone ?? "neutral"] ?? BADGE_COLORS.neutral;
+  const toneKey = input.badge?.tone;
+  const badgeTone = hasOwn(BADGE_COLORS, toneKey) ? BADGE_COLORS[toneKey] : BADGE_COLORS.neutral;
   const paragraphs = (input.paragraphs ?? []).map(block).filter(Boolean);
   const cardTitle = line(input.card?.title);
   const cardRows = (input.card?.rows ?? []).map((r) => ({ label: line(r?.label), value: block(r?.value) })).filter((r) => r.label && r.value);
