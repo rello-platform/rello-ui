@@ -8,9 +8,14 @@ import { PlatformSlug } from '@rello-platform/slugs';
  *
  *   consumer — leads and clients: the sending app's colors, the app's logo,
  *              the LO signer, the lender footer.
- *   pro      — agents and LOs: the sending app's colors, the Rello logo, an
+ *   pro      — agents and LOs: the sending app's colors, the app's logo, an
  *              optional info card, a "why you get this" footer.
  *   admin    — platform admins: Rello's colors, the Rello logo, short.
+ *
+ * Logos: every app's email carries that app's logo, whoever receives it
+ * (KA ruling 2026-10-29, on Kelly's "those dont include the Market intel
+ * logo"). Only admin mail draws Rello's. An app with no hosted logo shows its
+ * name as text in the header.
  *
  * Colors (Kelly 2026-10-29: "Each app has its own colors in Rello ui that
  * should match"): read at render time from tokens/app-overrides.json, the same
@@ -81,7 +86,7 @@ interface RelloEmailInput {
     /**
      * The app the email comes from. Decides the app name, the colors (from
      * tokens/app-overrides.json; admin mail always uses Rello's) and, for
-     * consumer mail, the logo.
+     * consumer and pro mail, the logo.
      */
     app: PlatformSlug;
     /** The sender company (tenant). Omitted from the kicker when empty. */

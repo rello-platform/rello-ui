@@ -390,7 +390,7 @@ function renderRelloEmail(input) {
   const company = line(input.companyName);
   const pal = resolveRelloEmailPalette(audience, input.app);
   const color = pal.primary;
-  const logoSlug = audience === "consumer" && isKnownApp(input.app) ? input.app : "rello";
+  const logoSlug = audience !== "admin" && isKnownApp(input.app) ? input.app : "rello";
   const logoUrl = relloEmailLogoUrl(logoSlug);
   const logoAlt = appName(logoSlug);
   const subject = line(input.subject);

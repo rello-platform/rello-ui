@@ -5,6 +5,27 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.33.0 — 2026-10-29
+
+**Changed: `pro` email draws the sending app's logo**
+
+`renderRelloEmail` with `audience: "pro"` now draws the sending app's logo
+(`relloEmailLogoUrl(app)`), as `consumer` already did. Only `admin` mail keeps
+the Rello logo and palette. KA ruling 2026-10-29, on Kelly's report about Market
+Intel's agent-facing emails: *"those dont include the Market intel logo or are the
+correct colors for the app in rello ui."* Every app's email carries that app's logo,
+whoever receives it. This also changes Harvest Home and The Drumbeat, whose emails are
+`pro`.
+
+- An app with no hosted logo (`pathfinder-pro`, `the-oven`, the engines…) shows its
+  name as text in the header on `pro` mail, as on `consumer` mail. An unknown app
+  still falls back to Rello.
+- Nothing else in the output changes. `src/email/logo-by-audience.test.ts` renders
+  every platform slug × {consumer, pro, admin}. With the header logo cut out, each
+  render hashes the same as at v2.32.0 (`src/email/fixtures/v2.32.0-logo-baseline.json`),
+  and the text part is identical.
+- No export, type or signature change. No component, token or CSS change.
+
 ## v2.32.0 — 2026-10-28
 
 **New: `@rello-platform/ui/email` — the shared transactional email shell**
