@@ -17,8 +17,9 @@ to have the branding of the tenant or agent."*
 
 - Header: the brand logo when `logoUrl` is a clean https URL whose path ends .png,
   .jpg, .jpeg or .gif (no credentials, whitespace or control characters), drawn with
-  `width="200" height="64"` and `alt` = the brand name, sized by CSS to fit that box
-  without stretching. Otherwise the brand name is the header text; an empty name shows
+  a `width="200"` attribute only (no height, so Outlook scales it in proportion) and
+  `alt` = the brand name; CSS caps it at 200×64 (`max-width`, `max-height`,
+  `height:auto`). Otherwise the brand name is the header text; an empty name shows
   nothing.
 - The app's name and hosted logo appear nowhere: not in the header, logo, alt text or
   default kicker. A given `kicker` is written as given; the default kicker reads

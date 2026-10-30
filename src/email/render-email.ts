@@ -513,9 +513,10 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     `<tr><td align="center" bgcolor="${color}" style="background:${color};padding:30px 32px 26px;color:#ffffff;border-radius:10px 10px 0 0;">` +
       (brand
         ? logoUrl
-          ? // A brand logo's shape is unknown: the attributes reserve a 200×64 box and
-            // the style fits the image inside it without stretching.
-            `<img src="${e(logoUrl)}" width="200" height="64" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:auto;height:auto;max-width:200px;max-height:64px;border:0;outline:none;text-decoration:none;">`
+          ? // A brand logo's shape is unknown: a width attribute only (no height), so
+            // Outlook scales it in proportion; the style caps it at 200×64 elsewhere.
+            // A distorted logo is worse than a large one (KA ruling, prompt 110).
+            `<img src="${e(logoUrl)}" width="200" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;max-width:200px;max-height:64px;height:auto;border:0;outline:none;text-decoration:none;">`
           : logoAlt
             ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`
             : ""

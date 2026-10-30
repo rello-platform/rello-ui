@@ -74,7 +74,7 @@ function visible(s: string): string {
 }
 
 describe("brand: the header logo", () => {
-  it("draws the brand logo for a clean https png/jpg/jpeg/gif URL, with width, height and alt = brand name", () => {
+  it("draws the brand logo for a clean https png/jpg/jpeg/gif URL, with a width and alt = brand name", () => {
     for (const url of [
       LOGO,
       "https://cdn.example.com/a/logo.JPG",
@@ -85,9 +85,20 @@ describe("brand: the header logo", () => {
       expect(img, url).not.toBeNull();
       expect(img!.src, url).toBe(url);
       expect(img!.alt, url).toBe("Summit Realty Group");
-      expect(Number(img!.width), url).toBeGreaterThan(0);
-      expect(Number(img!.height), url).toBeGreaterThan(0);
+      expect(Number(img!.width), url).toBe(200);
     }
+  });
+
+  it("sizes the logo by width only, so Outlook scales it in proportion instead of stretching it", () => {
+    const html = renderRelloEmail(branded("home-scout", BRAND)).html;
+    const tag = header(html).match(/<img [^>]*>/)![0];
+    const img = headerImg(html)!;
+    expect(img.width).toBe("200");
+    expect(img).not.toHaveProperty("height");
+    expect(tag).toContain("max-width:200px");
+    expect(tag).toContain("max-height:64px");
+    expect(tag).toContain("height:auto");
+    expect(tag).not.toMatch(/[^-]height:64px/);
   });
 
   it("writes the brand name as the header text when the logo is missing, http, svg, webp, or not a URL", () => {
