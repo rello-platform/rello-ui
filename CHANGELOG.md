@@ -34,12 +34,18 @@ but instead feature the tenant or agent."*
 - Nothing is gated: a brand with no usable logo, color or name still renders the whole
   email.
 - `admin` mail ignores `brand`.
+- `resolveRelloEmailBrand({ agentName, business, tenant })` is the one brand rule every
+  app uses (KA amended 121): the agent's business wins as a whole, with a missing logo
+  or color left missing, never taken from the tenant; otherwise the tenant. A business
+  whose name is the leading words of the tenant's (or the reverse) is the tenant.
 - Without `brand` (absent, undefined or null) every render is byte-identical to v2.33.0:
   `src/email/consumer-brand.test.ts` hashes every platform slug × {consumer, pro,
   admin} against `src/email/fixtures/v2.33.0-no-brand-<audience>.json` (written at
   b320298d), compares one full home-scout render per audience character for character,
   and re-checks the v2.32.0 logo-cut baseline.
-- New export: type `RelloEmailBrand`. No component, token or CSS change.
+- New exports: `resolveRelloEmailBrand` and types `RelloEmailBrand`,
+  `RelloEmailBrandLevelInput`, `ResolvedRelloEmailBrand`. No component, token or CSS
+  change.
 
 ## v2.33.0 — 2026-10-29
 

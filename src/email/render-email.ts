@@ -103,6 +103,20 @@ export interface RelloEmailBrand {
   primary?: string | null;
 }
 
+/** One level's brand facts as an app stores them, before the rule picks a level. */
+export interface RelloEmailBrandLevelInput {
+  name?: string | null;
+  logoUrl?: string | null;
+  primary?: string | null;
+}
+
+/** The brand the rule picked, and which level it came from. */
+export interface ResolvedRelloEmailBrand extends RelloEmailBrand {
+  logoUrl: string | null;
+  primary: string | null;
+  level: "agent" | "tenant";
+}
+
 export interface RelloEmailInput {
   audience: RelloEmailAudience;
   /**
@@ -410,6 +424,64 @@ function brandPalette(audience: RelloEmailAudience, primary: unknown): RelloEmai
     link: darkenUntil(hex, [WHITE], 4.5),
     avatarBackground,
     avatarText: darkenUntil(band, [avatarBackground], 4.5),
+  };
+}
+
+function brandFact(value: unknown): string {
+  return typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
+}
+
+function nameWords(name: string): string[] {
+  return name.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+}
+
+/**
+ * The same business under two spellings: one name's words are the leading words
+ * of the other, so "ClearPath Utah" is "ClearPath Utah Mortgage" and "Sansom
+ * Mortgage, LLC" is "Sansom Mortgage", while "Sansom Realty" is not.
+ */
+function sameBusiness(a: string, b: string): boolean {
+  const [x, y] = [nameWords(a), nameWords(b)];
+  const [short, long] = x.length <= y.length ? [x, y] : [y, x];
+  return short.length > 0 && short.every((word, i) => word === long[i]);
+}
+
+/**
+ * THE BRAND RULE, one rule for every app (KA amended 121, 2026-10-30). The
+ * agent level wins as a whole: an agent with their own business uses its name,
+ * logo and color, and a missing one stays missing, so an RE agent inside an MLO
+ * tenant never carries the MLO's logo or color. Otherwise the tenant level. An
+ * agent whose business is the tenant's is the tenant level. An own logo with no
+ * business name is named by the agent. Nothing is gated: a missing fact is left
+ * out and the shell shows the name as text, or the neutral default color.
+ */
+export function resolveRelloEmailBrand(args: {
+  /** The agent's own name: the last resort for the brand's name. */
+  agentName?: string | null;
+  /** The agent's business. */
+  business?: RelloEmailBrandLevelInput | null;
+  tenant?: RelloEmailBrandLevelInput | null;
+}): ResolvedRelloEmailBrand {
+  const agentName = brandFact(args.agentName);
+  const businessName = brandFact(args.business?.name);
+  const businessLogo = brandFact(args.business?.logoUrl);
+  const tenantName = brandFact(args.tenant?.name);
+  const tenantLogo = brandFact(args.tenant?.logoUrl);
+  const ownName = businessName !== "" && !sameBusiness(businessName, tenantName);
+  const ownLogo = businessName === "" && businessLogo !== "" && businessLogo !== tenantLogo;
+  if (ownName || ownLogo) {
+    return {
+      name: businessName || agentName,
+      logoUrl: businessLogo || null,
+      primary: brandFact(args.business?.primary) || null,
+      level: "agent",
+    };
+  }
+  return {
+    name: tenantName || agentName,
+    logoUrl: tenantLogo || null,
+    primary: brandFact(args.tenant?.primary) || null,
+    level: "tenant",
   };
 }
 
