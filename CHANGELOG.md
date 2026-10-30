@@ -5,6 +5,37 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.34.0 — 2026-10-29
+
+**Added: consumer email can carry the sender's brand (`brand` input)**
+
+`renderRelloEmail` takes an optional `brand: { name, logoUrl?, primary? }`
+(`RelloEmailBrand`). On `consumer` mail it replaces the sending app's logo, name and
+primary color with the agent's or tenant's. KA ruling 2026-10-29 (prompt 097), on
+Kelly's report: *"Home Scout CTA emails should NOT have home scout branding. They need
+to have the branding of the tenant or agent."*
+
+- Header: the brand logo when `logoUrl` is a clean https URL whose path ends .png,
+  .jpg, .jpeg or .gif (no credentials, whitespace or control characters), drawn with
+  `width="200" height="64"` and `alt` = the brand name, sized by CSS to fit that box
+  without stretching. Otherwise the brand name is the header text; an empty name shows
+  nothing.
+- The app's name and hosted logo appear nowhere: not in the header, logo, alt text or
+  default kicker. A given `kicker` is written as given; the default kicker reads
+  "Rello · from <company>" (or "Rello").
+- Header band, button, links and signer initials use `brand.primary` when it is a
+  `#rgb`/`#rrggbb` hex, darkened until white text on it reaches 3:1 and links 4.5:1.
+  Otherwise the app's palette. Badge, detail text and card keep the app's palette.
+- Nothing is gated: a brand with no usable logo, color or name still renders the whole
+  email.
+- `pro` and `admin` mail ignore `brand`.
+- Without `brand` (absent, undefined or null) every render is byte-identical to v2.33.0:
+  `src/email/consumer-brand.test.ts` hashes every platform slug × {consumer, pro,
+  admin} against `src/email/fixtures/v2.33.0-no-brand-<audience>.json` (written at
+  b320298d), compares one full home-scout render per audience character for character,
+  and re-checks the v2.32.0 logo-cut baseline.
+- New export: type `RelloEmailBrand`. No component, token or CSS change.
+
 ## v2.33.0 — 2026-10-29
 
 **Changed: `pro` email draws the sending app's logo**

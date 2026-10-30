@@ -89,6 +89,20 @@ export interface RelloEmailFooter {
   preferenceLink?: RelloEmailLink | null;
 }
 
+/**
+ * The sender's own brand (the agent's or tenant's), for consumer mail sent on
+ * their behalf: a lead who filled in a form on an agent's site hears from that
+ * agent, not from the app behind the form. Pro and admin mail ignore it.
+ */
+export interface RelloEmailBrand {
+  /** Header text when there is no usable logo, and the logo's alt text. Empty: the header names nobody. */
+  name: string;
+  /** Drawn only when a clean https URL whose path ends .png, .jpg, .jpeg or .gif; else the name is the header text. */
+  logoUrl?: string | null;
+  /** Header band and button color when a #rgb/#rrggbb hex, darkened as needed; else the app's palette. */
+  primary?: string | null;
+}
+
 export interface RelloEmailInput {
   audience: RelloEmailAudience;
   /**
@@ -118,6 +132,12 @@ export interface RelloEmailInput {
   showLinkFallback?: boolean;
   signer?: RelloEmailSigner | null;
   footer?: RelloEmailFooter | null;
+  /**
+   * Consumer mail only: the sender's brand replaces the app's logo, name and
+   * primary color, so neither the app's name nor its logo appears anywhere in
+   * the email. Absent (or null), the email is exactly what it was at v2.33.0.
+   */
+  brand?: RelloEmailBrand | null;
 }
 
 export interface RenderedRelloEmail {
@@ -268,6 +288,32 @@ function validHex(value: unknown): string | null {
   return /^#[0-9a-f]{6}$/.test(hex) ? hex : null;
 }
 
+/** A brand color: #rrggbb, or #rgb expanded to it; anything else null. */
+function brandHex(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const hex = value.trim().toLowerCase();
+  if (/^#[0-9a-f]{3}$/.test(hex)) return `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
+  return validHex(hex);
+}
+
+/**
+ * A brand logo the header may draw: an https URL with no whitespace, control
+ * characters or credentials, whose path ends .png, .jpg, .jpeg or .gif (the
+ * formats every mail client shows; SVG and WebP are not). Else null.
+ */
+function brandLogoUrl(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const raw = value.trim();
+  if (!raw || URL_FORBIDDEN_CHARS.test(raw)) return null;
+  try {
+    const url = new URL(raw);
+    if (url.protocol !== "https:" || url.username || url.password) return null;
+    return /\.(png|jpe?g|gif)$/i.test(url.pathname) ? raw : null;
+  } catch {
+    return null;
+  }
+}
+
 /** apps.<key>.<field>, else defaults.<field>. Read on every call, never cached. */
 function tokenColor(key: string, field: TokenField): string {
   const tokens = appOverrides as unknown as { defaults?: unknown; apps?: unknown };
@@ -345,6 +391,25 @@ export function resolveRelloEmailPalette(audience: RelloEmailAudience, app: unkn
   };
 }
 
+/**
+ * The app's palette with the brand color in place of `primary`: header band,
+ * button, links and the signer's initials. A missing or malformed brand color
+ * leaves the app's palette as it is.
+ */
+function brandPalette(app: RelloEmailPalette, primary: unknown): RelloEmailPalette {
+  const hex = brandHex(primary);
+  if (!hex) return app;
+  const band = darkenUntil(hex, [WHITE], 3);
+  const avatarBackground = mix(band, WHITE, 0.85);
+  return {
+    ...app,
+    primary: band,
+    link: darkenUntil(hex, [WHITE], 4.5),
+    avatarBackground,
+    avatarText: darkenUntil(band, [avatarBackground], 4.5),
+  };
+}
+
 function initialsOf(name: string): string {
   return name
     .split(" ")
@@ -371,17 +436,21 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const e = escapeEmailHtml;
   const audience: RelloEmailAudience =
     input.audience === "pro" || input.audience === "admin" ? input.audience : "consumer";
-  const app = appName(input.app);
+  // The sender's brand, on consumer mail only. Null keeps every byte of v2.33.0.
+  const brand = audience === "consumer" && input.brand && typeof input.brand === "object" ? input.brand : null;
+  // Under a brand the app is never named; "Rello" is the platform's word in the default kicker.
+  const app = brand ? "Rello" : appName(input.app);
   const company = line(input.companyName);
-  const pal = resolveRelloEmailPalette(audience, input.app);
+  const pal = brand ? brandPalette(resolveRelloEmailPalette(audience, input.app), brand.primary) : resolveRelloEmailPalette(audience, input.app);
   const color = pal.primary;
   // The sending app's own logo on consumer and pro mail; Rello's on admin mail.
+  // Under a brand: the brand's logo, else its name, else nothing.
   const logoSlug: PlatformSlug =
     audience !== "admin" && isKnownApp(input.app)
       ? input.app
       : "rello";
-  const logoUrl = relloEmailLogoUrl(logoSlug);
-  const logoAlt = appName(logoSlug);
+  const logoUrl = brand ? brandLogoUrl(brand.logoUrl) : relloEmailLogoUrl(logoSlug);
+  const logoAlt = brand ? line(brand.name) : appName(logoSlug);
 
   const subject = line(input.subject);
   const preheader = line(input.preheader);
@@ -442,9 +511,17 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
 
   rows.push(
     `<tr><td align="center" bgcolor="${color}" style="background:${color};padding:30px 32px 26px;color:#ffffff;border-radius:10px 10px 0 0;">` +
-      (logoUrl
-        ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">`
-        : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) +
+      (brand
+        ? logoUrl
+          ? // A brand logo's shape is unknown: the attributes reserve a 200×64 box and
+            // the style fits the image inside it without stretching.
+            `<img src="${e(logoUrl)}" width="200" height="64" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:auto;height:auto;max-width:200px;max-height:64px;border:0;outline:none;text-decoration:none;">`
+          : logoAlt
+            ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`
+            : ""
+        : logoUrl
+          ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">`
+          : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) +
       `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${e(kicker)}</div>` +
       (headline
         ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${e(headline)}</div>`

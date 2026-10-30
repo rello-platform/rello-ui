@@ -1,0 +1,87 @@
+{
+  "_about": "renderRelloEmail(baselineInput(slug, \"consumer\")) at v2.33.0 (b320298d), before the consumer `brand` input existed. renders: sha256 of the whole html and text for every slug. homeScout: the full home-scout render, kept readable. Input from src/test/email-logo-baseline.ts.",
+  "renders": {
+    "arive": {
+      "html": "f115156a90fe062e6f68affcc73d424a79fe77bd54c6e0d6dcd35090356fbf25",
+      "text": "760701207654f5031f204bba776177010a8fde334175a36a0ff947ef82b3f49f"
+    },
+    "rello": {
+      "html": "126407e9471f3385804dc5e09e4f1f5ff004891fe829c3b4a81707df71d17381",
+      "text": "22b1c757af347b9f6d682450cda98f9542a98bf664d28643f70aedb6ed09da7c"
+    },
+    "harvest-home": {
+      "html": "46a75ce6b3299689de12d894f4d17bf9a8c658947581b28ac01490172bf6dbaa",
+      "text": "b6479dd95d706405071762b65b019d4c9fdec15f6272c4b75d69d9277a8c449e"
+    },
+    "home-ready": {
+      "html": "e9ba7cf408f131b4ef9816743b7a93aae405a73832695d8dad8cb90a9ae23158",
+      "text": "7449dd56c1b1f6f269888fb32e6b56a5693f2c14bf3cade761bb7ca03d6c383b"
+    },
+    "home-stretch": {
+      "html": "3ef8c6d9684b5d9c2b9dddf2edbb4632286f07f7a8513de282d5abd318ef17a2",
+      "text": "9d8ebb238c563f0620f10454f8949301556f89e0024ed0800d615d27a0e22c76"
+    },
+    "home-scout": {
+      "html": "c8098ddf09f5dafdd39fe975206a0b76a436cea4ddd2f073726a5e99ecae7d07",
+      "text": "91a76b573ee5e5d65c330bd6cfe3020f9eb9e22bdab9fadfa880fdae76264ce3"
+    },
+    "market-intel": {
+      "html": "b5d4dde1edf7cfea21a18160f61bb86f5d7f48ecdbba2c8dcefa1fa9e16af300",
+      "text": "5c1543840647127e331fa479e2c09b593de5257da3464f084d4c3122c0d658ef"
+    },
+    "newsletter-studio": {
+      "html": "4fcfef8e11c9c6d9e53838832551b3d2dab4899d07cb0f3f62cc3d80aacc7428",
+      "text": "50842a42c220a5366d4135df9a9a3580e12b4dfbf55c2c93efc373429c87a034"
+    },
+    "the-oven": {
+      "html": "9705f8cd54ac8448d793e26622daf2b9e337a2acafb209a163c7b3e195be1b37",
+      "text": "745be5e17188629f5090d765ca73004579ef6c8f9aa039b75c7ed1975350a6fb"
+    },
+    "the-drumbeat": {
+      "html": "fd3e17ba2fc73b32f2146c8c6404e6014902f7ddf16e9462444a0383a76d56c7",
+      "text": "09b6eb98ab0db1f4f89db4b15b95f4c7c28ad72bf9e9a2b8c1b8dbef418634ca"
+    },
+    "open-house-hub": {
+      "html": "88297114a3946e8144cc5883520c0fb484db5f63d5c73a915b638f9cfe5d677c",
+      "text": "a259496f7b7b0e5aecbc118e21c6b71add66fe215bf4176ed9cecea54f0b3d5f"
+    },
+    "pathfinder-pro": {
+      "html": "830979c96894394d0cb3d45b2514c47a9a00c021080e6d6c31998c4738b74528",
+      "text": "07b61f236ead165463b2ceb3dab28083a42b2bc80e7229c2f5337e20d70d49af"
+    },
+    "prequal-pro": {
+      "html": "4807d6cdab87f47ddf1809ebc5c288cbf153618667c1566933f8890e9dd24b7c",
+      "text": "c9645a3818e106650ebb9f444d40a0aa77dc2c1b800bea83a667b146dff79616"
+    },
+    "milo-engine": {
+      "html": "adf7773e7a9ce1930475f36c6be92ef3de44a69c93cf3e34e57381be7e4385c3",
+      "text": "95be0e48e1bce0c83592b3bd1a98a4bfdb940b0f07a025b954eff6e0c5d53f6f"
+    },
+    "content-engine": {
+      "html": "ecad7a069e4191230cee3549fac825190fd24264fabd3bcbaf73b1e0ad55b983",
+      "text": "cafa0986f578eeba465600adae13b52310d250a9d0720629883b384e1dccb9f4"
+    },
+    "property-engine": {
+      "html": "d9fba2a19447bc162548412b8ed647b07b965c8eb93b2d5123c1848f7f5aaf02",
+      "text": "e854430fce30b56b8bf82925fcba7f959cb5696ce09cc18564ddb7911eac720e"
+    },
+    "journey-engine": {
+      "html": "d96a1014f5789ad1d6289cd058a1a3d60213723db10bbf1eb74118b060a69997",
+      "text": "3f43d2e7b792110539743e6871db62ba74355f88e368e10914fa3379fa9c1c8b"
+    },
+    "report-engine": {
+      "html": "18212f633d76c4342c04d3a22ba7325ef2225a6103edd191e1708d76cfba53bd",
+      "text": "b19842892d6d4db7edc077a30434b389c66a087823cb19099209172ab9b97416"
+    },
+    "drumbeat-video-engine": {
+      "html": "2c6da8368223c3ff3255a00afc057b61aa6cce7cf5f45802c5d3f07f0e400b33",
+      "text": "de24b8e193de3222cbfa35b023a81162341d29adbe65753776fcc29b9c8b20b1"
+    }
+  },
+  "homeScout": {
+    "subject": "Your plan is ready, Sarah",
+    "preheader": "Tap to see where you stand.",
+    "html": "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><meta name=\"x-apple-disable-message-reformatting\"><title>Your plan is ready, Sarah</title></head><body style=\"margin:0;padding:24px 12px;background:#eef1f5;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#1f2937;\"><div style=\"display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#eef1f5;opacity:0;\">Tap to see where you stand.</div><!--[if mso]><table role=\"presentation\" width=\"600\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"><tr><td><![endif]--><table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:600px;margin:0 auto;background:#ffffff;border-radius:10px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;\"><tr><td align=\"center\" bgcolor=\"#2d6a4f\" style=\"background:#2d6a4f;padding:30px 32px 26px;color:#ffffff;border-radius:10px 10px 0 0;\"><div style=\"font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;\">Home Scout</div><div style=\"font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;\">Home Scout · from ClearPath Utah Mortgage</div><div style=\"font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;\">Your plan is ready, Sarah.</div></td></tr><tr><td style=\"padding:24px 32px 0;\"><span style=\"display:inline-block;background:#f7efdf;color:#83682f;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;\">New</span><div style=\"font-size:14px;color:#546b5f;margin-top:8px;\">4 minutes ago · from your page</div></td></tr><tr><td style=\"padding:24px 32px 4px;font-size:16px;line-height:1.6;color:#1f2937;\"><p style=\"margin:0 0 12px;\">I put together your plan.</p><p style=\"margin:0 0 0;\">It takes about 2 minutes.<br>No password needed.</p></td></tr><tr><td style=\"padding:18px 32px 4px;\"><table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f3f5f2;border:1px solid #e2e0da;border-radius:8px;font-size:14px;line-height:1.5;\"><tr><td colspan=\"2\" style=\"padding:14px 18px 2px;font-weight:700;color:#111827;\">Your numbers</td></tr><tr><td valign=\"top\" style=\"padding:8px 18px 14px;color:#546b5f;width:130px;\">Budget</td><td valign=\"top\" style=\"padding:8px 18px 14px;color:#111827;\">$450,000</td></tr></table></td></tr><tr><td align=\"center\" style=\"padding:24px 32px 6px;\"><table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:0 auto;\"><tr><td align=\"center\" bgcolor=\"#2d6a4f\" style=\"background:#2d6a4f;border-radius:8px;\"><a href=\"https://example.com/plan?a=1&amp;b=2\" style=\"display:inline-block;background:#2d6a4f;color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;\">See my plan</a></td></tr></table><div style=\"margin-top:12px;font-size:15px;\"><a href=\"https://example.com/talk\" style=\"color:#2d6a4f;font-weight:600;text-decoration:none;\">Talk to me</a></div><div style=\"font-size:13px;color:#546b5f;margin-top:10px;\">This link expires in 7 days.</div></td></tr><tr><td style=\"padding:16px 32px 4px;font-size:13px;line-height:1.6;color:#546b5f;\">Button not working? Copy this link into your browser:<br><a href=\"https://example.com/plan?a=1&amp;b=2\" style=\"color:#2d6a4f;word-break:break-all;\">https://example.com/plan?a=1&amp;b=2</a></td></tr><tr><td style=\"padding:20px 32px 22px;font-size:15px;line-height:1.6;color:#1f2937;\"><p style=\"margin:0 0 12px;\">Reply any time.</p><table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\"><tr><td width=\"52\" valign=\"top\"><div style=\"width:40px;height:40px;border-radius:20px;background:#e0e9e5;text-align:center;line-height:40px;font-size:14px;font-weight:700;color:#2d6a4f;\">KS</div></td><td valign=\"top\" style=\"font-size:14px;line-height:1.5;\"><b>Kelly Sansom</b><br><span style=\"color:#546b5f;\">Loan Officer · NMLS #123456</span><br><span style=\"color:#546b5f;\">801-555-0100</span></td></tr></table></td></tr><tr><td style=\"border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:#546b5f;line-height:1.6;\">ClearPath Utah Mortgage · Company NMLS #999999<br>10168 South 2505 East, Sandy, UT 84092 · Equal Housing Opportunity<br><a href=\"https://example.com/prefs\" style=\"color:#546b5f;\">Email preferences</a></td></tr></table><!--[if mso]></td></tr></table><![endif]--></body></html>",
+    "text": "Home Scout · from ClearPath Utah Mortgage\n\nYour plan is ready, Sarah.\n\nNew\n4 minutes ago · from your page\n\nI put together your plan.\n\nIt takes about 2 minutes.\nNo password needed.\n\nYour numbers\nBudget: $450,000\n\nSee my plan:\nhttps://example.com/plan?a=1&b=2\nThis link expires in 7 days.\n\nTalk to me: https://example.com/talk\n\nReply any time.\n\nKelly Sansom\nLoan Officer · NMLS #123456\n801-555-0100\n\n—\nClearPath Utah Mortgage · Company NMLS #999999\n10168 South 2505 East, Sandy, UT 84092 · Equal Housing Opportunity\nEmail preferences: https://example.com/prefs\n"
+  }
+}

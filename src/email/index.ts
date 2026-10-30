@@ -21,5 +21,6 @@ export {
   type RelloEmailSigner,
   type RelloEmailFooter,
   type RelloEmailInput,
+  type RelloEmailBrand,
   type RenderedRelloEmail,
 } from "./render-email";
