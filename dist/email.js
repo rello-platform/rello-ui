@@ -403,6 +403,40 @@ function brandPalette(audience, primary) {
     avatarText: darkenUntil(band, [avatarBackground], 4.5)
   };
 }
+function brandFact(value) {
+  return typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
+}
+function nameWords(name) {
+  return name.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+}
+function sameBusiness(a, b) {
+  const [x, y] = [nameWords(a), nameWords(b)];
+  const [short, long] = x.length <= y.length ? [x, y] : [y, x];
+  return short.length > 0 && short.every((word, i) => word === long[i]);
+}
+function resolveRelloEmailBrand(args) {
+  const agentName = brandFact(args.agentName);
+  const businessName = brandFact(args.business?.name);
+  const businessLogo = brandFact(args.business?.logoUrl);
+  const tenantName = brandFact(args.tenant?.name);
+  const tenantLogo = brandFact(args.tenant?.logoUrl);
+  const ownName = businessName !== "" && !sameBusiness(businessName, tenantName);
+  const ownLogo = businessName === "" && businessLogo !== "" && businessLogo !== tenantLogo;
+  if (ownName || ownLogo) {
+    return {
+      name: businessName || agentName,
+      logoUrl: businessLogo || null,
+      primary: brandFact(args.business?.primary) || null,
+      level: "agent"
+    };
+  }
+  return {
+    name: tenantName || agentName,
+    logoUrl: tenantLogo || null,
+    primary: brandFact(args.tenant?.primary) || null,
+    level: "tenant"
+  };
+}
 function initialsOf(name) {
   return name.split(" ").filter(Boolean).slice(0, 2).map((w) => w.charAt(0).toUpperCase()).join("");
 }
@@ -557,6 +591,7 @@ export {
   relloEmailContrast,
   relloEmailLogoUrl,
   renderRelloEmail,
+  resolveRelloEmailBrand,
   resolveRelloEmailPalette,
   safeEmailUrl
 };
