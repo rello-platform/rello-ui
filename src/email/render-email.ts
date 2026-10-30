@@ -89,6 +89,34 @@ export interface RelloEmailFooter {
   preferenceLink?: RelloEmailLink | null;
 }
 
+/**
+ * The sender's own brand (the agent's or tenant's), for consumer and pro mail
+ * sent on their behalf: the reader hears from that agent or business, not from
+ * the app behind the email. Admin mail ignores it.
+ */
+export interface RelloEmailBrand {
+  /** Header text when there is no usable logo, and the logo's alt text. Empty: the header names nobody. */
+  name: string;
+  /** Drawn only when a clean https URL whose path ends .png, .jpg, .jpeg or .gif; else the name is the header text. */
+  logoUrl?: string | null;
+  /** Header band and button color when a #rgb/#rrggbb hex, darkened as needed; else the neutral default. */
+  primary?: string | null;
+}
+
+/** One level's brand facts as an app stores them, before the rule picks a level. */
+export interface RelloEmailBrandLevelInput {
+  name?: string | null;
+  logoUrl?: string | null;
+  primary?: string | null;
+}
+
+/** The brand the rule picked, and which level it came from. */
+export interface ResolvedRelloEmailBrand extends RelloEmailBrand {
+  logoUrl: string | null;
+  primary: string | null;
+  level: "agent" | "tenant";
+}
+
 export interface RelloEmailInput {
   audience: RelloEmailAudience;
   /**
@@ -114,10 +142,19 @@ export interface RelloEmailInput {
   button?: RelloEmailButton | null;
   /** A text link beside the button. */
   secondaryLink?: RelloEmailLink | null;
+  /** More text links, after `secondaryLink`, for an email with more than two choices. */
+  moreLinks?: ReadonlyArray<RelloEmailLink> | null;
   /** Writes the button's full URL under it ("Button not working? …"). Default true. */
   showLinkFallback?: boolean;
   signer?: RelloEmailSigner | null;
   footer?: RelloEmailFooter | null;
+  /**
+   * Consumer and pro mail: the sender's brand replaces the app's logo, name and
+   * colors, so neither the app's name, logo nor color appears anywhere in the
+   * email. Admin mail ignores it. Absent (or null), the email is exactly what
+   * it was at v2.33.0.
+   */
+  brand?: RelloEmailBrand | null;
 }
 
 export interface RenderedRelloEmail {
@@ -268,6 +305,32 @@ function validHex(value: unknown): string | null {
   return /^#[0-9a-f]{6}$/.test(hex) ? hex : null;
 }
 
+/** A brand color: #rrggbb, or #rgb expanded to it; anything else null. */
+function brandHex(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const hex = value.trim().toLowerCase();
+  if (/^#[0-9a-f]{3}$/.test(hex)) return `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
+  return validHex(hex);
+}
+
+/**
+ * A brand logo the header may draw: an https URL with no whitespace, control
+ * characters or credentials, whose path ends .png, .jpg, .jpeg or .gif (the
+ * formats every mail client shows; SVG and WebP are not). Else null.
+ */
+function brandLogoUrl(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const raw = value.trim();
+  if (!raw || URL_FORBIDDEN_CHARS.test(raw)) return null;
+  try {
+    const url = new URL(raw);
+    if (url.protocol !== "https:" || url.username || url.password) return null;
+    return /\.(png|jpe?g|gif)$/i.test(url.pathname) ? raw : null;
+  } catch {
+    return null;
+  }
+}
+
 /** apps.<key>.<field>, else defaults.<field>. Read on every call, never cached. */
 function tokenColor(key: string, field: TokenField): string {
   const tokens = appOverrides as unknown as { defaults?: unknown; apps?: unknown };
@@ -345,6 +408,85 @@ export function resolveRelloEmailPalette(audience: RelloEmailAudience, app: unkn
   };
 }
 
+/**
+ * The neutral default with the brand color in place of `primary`: header band,
+ * button, links and the signer's initials. Starting from the neutral default,
+ * never the sending app's palette, is what keeps the app's color out of a
+ * branded email. A missing or malformed brand color leaves the default as it is.
+ */
+function brandPalette(audience: RelloEmailAudience, primary: unknown): RelloEmailPalette {
+  const neutral = resolveRelloEmailPalette(audience, "rello");
+  const hex = brandHex(primary);
+  if (!hex) return neutral;
+  const band = darkenUntil(hex, [WHITE], 3);
+  const avatarBackground = mix(band, WHITE, 0.85);
+  return {
+    ...neutral,
+    primary: band,
+    link: darkenUntil(hex, [WHITE], 4.5),
+    avatarBackground,
+    avatarText: darkenUntil(band, [avatarBackground], 4.5),
+  };
+}
+
+function brandFact(value: unknown): string {
+  return typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
+}
+
+function nameWords(name: string): string[] {
+  return name.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+}
+
+/**
+ * The same business under two spellings: one name's words are the leading words
+ * of the other, so "ClearPath Utah" is "ClearPath Utah Mortgage" and "Sansom
+ * Mortgage, LLC" is "Sansom Mortgage", while "Sansom Realty" is not.
+ */
+function sameBusiness(a: string, b: string): boolean {
+  const [x, y] = [nameWords(a), nameWords(b)];
+  const [short, long] = x.length <= y.length ? [x, y] : [y, x];
+  return short.length > 0 && short.every((word, i) => word === long[i]);
+}
+
+/**
+ * THE BRAND RULE, one rule for every app (KA amended 121, 2026-10-30). The
+ * agent level wins as a whole: an agent with their own business uses its name,
+ * logo and color, and a missing one stays missing, so an RE agent inside an MLO
+ * tenant never carries the MLO's logo or color. Otherwise the tenant level. An
+ * agent whose business is the tenant's is the tenant level. An own logo with no
+ * business name is named by the agent. Nothing is gated: a missing fact is left
+ * out and the shell shows the name as text, or the neutral default color.
+ */
+export function resolveRelloEmailBrand(args: {
+  /** The agent's own name: the last resort for the brand's name. */
+  agentName?: string | null;
+  /** The agent's business. */
+  business?: RelloEmailBrandLevelInput | null;
+  tenant?: RelloEmailBrandLevelInput | null;
+}): ResolvedRelloEmailBrand {
+  const agentName = brandFact(args.agentName);
+  const businessName = brandFact(args.business?.name);
+  const businessLogo = brandFact(args.business?.logoUrl);
+  const tenantName = brandFact(args.tenant?.name);
+  const tenantLogo = brandFact(args.tenant?.logoUrl);
+  const ownName = businessName !== "" && !sameBusiness(businessName, tenantName);
+  const ownLogo = businessName === "" && businessLogo !== "" && businessLogo !== tenantLogo;
+  if (ownName || ownLogo) {
+    return {
+      name: businessName || agentName,
+      logoUrl: businessLogo || null,
+      primary: brandFact(args.business?.primary) || null,
+      level: "agent",
+    };
+  }
+  return {
+    name: tenantName || agentName,
+    logoUrl: tenantLogo || null,
+    primary: brandFact(args.tenant?.primary) || null,
+    level: "tenant",
+  };
+}
+
 function initialsOf(name: string): string {
   return name
     .split(" ")
@@ -371,17 +513,21 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const e = escapeEmailHtml;
   const audience: RelloEmailAudience =
     input.audience === "pro" || input.audience === "admin" ? input.audience : "consumer";
-  const app = appName(input.app);
+  // The sender's brand, on consumer and pro mail. Null keeps every byte of v2.33.0.
+  const brand = audience !== "admin" && input.brand && typeof input.brand === "object" ? input.brand : null;
+  // Under a brand the app is never named; "Rello" is the platform's word in the default kicker.
+  const app = brand ? "Rello" : appName(input.app);
   const company = line(input.companyName);
-  const pal = resolveRelloEmailPalette(audience, input.app);
+  const pal = brand ? brandPalette(audience, brand.primary) : resolveRelloEmailPalette(audience, input.app);
   const color = pal.primary;
   // The sending app's own logo on consumer and pro mail; Rello's on admin mail.
+  // Under a brand: the brand's logo, else its name, else nothing.
   const logoSlug: PlatformSlug =
     audience !== "admin" && isKnownApp(input.app)
       ? input.app
       : "rello";
-  const logoUrl = relloEmailLogoUrl(logoSlug);
-  const logoAlt = appName(logoSlug);
+  const logoUrl = brand ? brandLogoUrl(brand.logoUrl) : relloEmailLogoUrl(logoSlug);
+  const logoAlt = brand ? line(brand.name) : appName(logoSlug);
 
   const subject = line(input.subject);
   const preheader = line(input.preheader);
@@ -410,6 +556,9 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const secondaryUrl = safeEmailUrl(input.secondaryLink?.url);
   const secondaryLabel = line(input.secondaryLink?.label);
   const secondary = secondaryUrl && secondaryLabel ? { url: secondaryUrl, label: secondaryLabel } : null;
+  const moreLinks = (input.moreLinks ?? [])
+    .map((l) => ({ url: safeEmailUrl(l?.url), label: line(l?.label) }))
+    .filter((l): l is { url: string; label: string } => l.url !== null && l.label !== "");
   const showFallback = button !== null && input.showLinkFallback !== false;
 
   const signerName = line(input.signer?.name);
@@ -442,9 +591,18 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
 
   rows.push(
     `<tr><td align="center" bgcolor="${color}" style="background:${color};padding:30px 32px 26px;color:#ffffff;border-radius:10px 10px 0 0;">` +
-      (logoUrl
-        ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">`
-        : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) +
+      (brand
+        ? logoUrl
+          ? // A brand logo's shape is unknown: a width attribute only (no height), so
+            // Outlook scales it in proportion; the style caps it at 200×64 elsewhere.
+            // A distorted logo is worse than a large one (KA ruling, prompt 110).
+            `<img src="${e(logoUrl)}" width="200" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;max-width:200px;max-height:64px;height:auto;border:0;outline:none;text-decoration:none;">`
+          : logoAlt
+            ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`
+            : ""
+        : logoUrl
+          ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">`
+          : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) +
       `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${e(kicker)}</div>` +
       (headline
         ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${e(headline)}</div>`
@@ -499,7 +657,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     );
   }
 
-  if (button || secondary) {
+  if (button || secondary || moreLinks.length > 0) {
     rows.push(
       `<tr><td align="center" style="padding:24px 32px 6px;">` +
         (button
@@ -511,6 +669,12 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         (secondary
           ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>`
           : "") +
+        moreLinks
+          .map(
+            (l, i) =>
+              `<div style="margin-top:${button || secondary || i > 0 ? "12px" : "0"};font-size:15px;"><a href="${e(l.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(l.label)}</a></div>`,
+          )
+          .join("") +
         (button && button.note
           ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;">${e(button.note)}</div>`
           : "") +
@@ -587,6 +751,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     if (button.note) push(button.note);
   }
   if (secondary) push("", `${secondary.label}: ${secondary.url}`);
+  for (const l of moreLinks) push("", `${l.label}: ${l.url}`);
   if (signer) {
     push("");
     if (signer.replyLine) push(signer.replyLine, "");

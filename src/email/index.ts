@@ -3,6 +3,7 @@
 // Trigger.dev tasks. See render-email.ts.
 export {
   renderRelloEmail,
+  resolveRelloEmailBrand,
   resolveRelloEmailPalette,
   relloEmailContrast,
   relloEmailLogoUrl,
@@ -21,5 +22,8 @@ export {
   type RelloEmailSigner,
   type RelloEmailFooter,
   type RelloEmailInput,
+  type RelloEmailBrand,
+  type RelloEmailBrandLevelInput,
+  type ResolvedRelloEmailBrand,
   type RenderedRelloEmail,
 } from "./render-email";
