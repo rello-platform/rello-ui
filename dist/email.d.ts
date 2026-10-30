@@ -82,16 +82,16 @@ interface RelloEmailFooter {
     preferenceLink?: RelloEmailLink | null;
 }
 /**
- * The sender's own brand (the agent's or tenant's), for consumer mail sent on
- * their behalf: a lead who filled in a form on an agent's site hears from that
- * agent, not from the app behind the form. Pro and admin mail ignore it.
+ * The sender's own brand (the agent's or tenant's), for consumer and pro mail
+ * sent on their behalf: the reader hears from that agent or business, not from
+ * the app behind the email. Admin mail ignores it.
  */
 interface RelloEmailBrand {
     /** Header text when there is no usable logo, and the logo's alt text. Empty: the header names nobody. */
     name: string;
     /** Drawn only when a clean https URL whose path ends .png, .jpg, .jpeg or .gif; else the name is the header text. */
     logoUrl?: string | null;
-    /** Header band and button color when a #rgb/#rrggbb hex, darkened as needed; else the app's palette. */
+    /** Header band and button color when a #rgb/#rrggbb hex, darkened as needed; else the neutral default. */
     primary?: string | null;
 }
 interface RelloEmailInput {
@@ -130,9 +130,10 @@ interface RelloEmailInput {
     signer?: RelloEmailSigner | null;
     footer?: RelloEmailFooter | null;
     /**
-     * Consumer mail only: the sender's brand replaces the app's logo, name and
-     * primary color, so neither the app's name nor its logo appears anywhere in
-     * the email. Absent (or null), the email is exactly what it was at v2.33.0.
+     * Consumer and pro mail: the sender's brand replaces the app's logo, name and
+     * colors, so neither the app's name, logo nor color appears anywhere in the
+     * email. Admin mail ignores it. Absent (or null), the email is exactly what
+     * it was at v2.33.0.
      */
     brand?: RelloEmailBrand | null;
 }

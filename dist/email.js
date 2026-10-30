@@ -389,13 +389,14 @@ function resolveRelloEmailPalette(audience, app) {
     avatarText: darkenUntil(primary, [avatarBackground], 4.5)
   };
 }
-function brandPalette(app, primary) {
+function brandPalette(audience, primary) {
+  const neutral = resolveRelloEmailPalette(audience, "rello");
   const hex = brandHex(primary);
-  if (!hex) return app;
+  if (!hex) return neutral;
   const band = darkenUntil(hex, [WHITE], 3);
   const avatarBackground = mix(band, WHITE, 0.85);
   return {
-    ...app,
+    ...neutral,
     primary: band,
     link: darkenUntil(hex, [WHITE], 4.5),
     avatarBackground,
@@ -417,10 +418,10 @@ function appName(app) {
 function renderRelloEmail(input) {
   const e = escapeEmailHtml;
   const audience = input.audience === "pro" || input.audience === "admin" ? input.audience : "consumer";
-  const brand = audience === "consumer" && input.brand && typeof input.brand === "object" ? input.brand : null;
+  const brand = audience !== "admin" && input.brand && typeof input.brand === "object" ? input.brand : null;
   const app = brand ? "Rello" : appName(input.app);
   const company = line(input.companyName);
-  const pal = brand ? brandPalette(resolveRelloEmailPalette(audience, input.app), brand.primary) : resolveRelloEmailPalette(audience, input.app);
+  const pal = brand ? brandPalette(audience, brand.primary) : resolveRelloEmailPalette(audience, input.app);
   const color = pal.primary;
   const logoSlug = audience !== "admin" && isKnownApp(input.app) ? input.app : "rello";
   const logoUrl = brand ? brandLogoUrl(brand.logoUrl) : relloEmailLogoUrl(logoSlug);
