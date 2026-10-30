@@ -21,6 +21,12 @@ import { BASELINE_AUDIENCES, baselineInput, cutLogo, sha256 } from "../test/emai
  * sender's own brand, the agent's or tenant's, instead of the sending app's.
  * Kelly: "Home Scout CTA emails should NOT have home scout branding. They need
  * to have the branding of the tenant or agent."
+ *
+ * Widened to pro mail (KA amended 121, 2026-10-30). Kelly: "Open House Hub,
+ * like Home Scout should not tout itself as an app but instead feature the
+ * tenant or agent." A brand now replaces the app on consumer AND pro mail;
+ * admin mail still ignores it. With no brand color the email uses the neutral
+ * default, never the sending app's color.
  */
 
 const SLUGS: readonly PlatformSlug[] = [...APP_SLUGS, ...ENGINE_SLUGS];
@@ -145,28 +151,32 @@ describe("brand: the header logo", () => {
 
 describe("brand: the app's name and logo appear nowhere", () => {
   for (const kicker of [undefined, "Rello · from Summit Realty Group"]) {
-    it(`no consumer app's name or hosted logo in subject, preheader, html or text (kicker ${kicker ? "given" : "default"})`, () => {
-      for (const slug of SLUGS) {
-        // Rello is the platform's own name and the approved kicker word; skip that one app.
-        if (slug === "rello") continue;
-        for (const brand of [BRAND, { ...BRAND, logoUrl: null }, { name: "" }]) {
-          const r = renderRelloEmail({ ...branded(slug, brand), kicker });
-          const name = RELLO_EMAIL_APP_NAMES[slug].toLowerCase();
-          for (const [part, value] of Object.entries({ subject: r.subject, preheader: r.preheader, html: r.html, text: r.text })) {
-            expect(value.toLowerCase().includes(name), `${slug} ${part} ${JSON.stringify(brand)}`).toBe(false);
+    it(`no app's name or hosted logo in subject, preheader, html or text, consumer and pro (kicker ${kicker ? "given" : "default"})`, () => {
+      for (const audience of ["consumer", "pro"] as const) {
+        for (const slug of SLUGS) {
+          // Rello is the platform's own name and the approved kicker word; skip that one app.
+          if (slug === "rello") continue;
+          for (const brand of [BRAND, { ...BRAND, logoUrl: null }, { name: "" }]) {
+            const r = renderRelloEmail({ ...branded(slug, brand, audience), kicker });
+            const name = RELLO_EMAIL_APP_NAMES[slug].toLowerCase();
+            for (const [part, value] of Object.entries({ subject: r.subject, preheader: r.preheader, html: r.html, text: r.text })) {
+              expect(value.toLowerCase().includes(name), `${audience} ${slug} ${part} ${JSON.stringify(brand)}`).toBe(false);
+            }
+            const logo = relloEmailLogoUrl(slug);
+            if (logo) expect(r.html.includes(logo), `${audience} ${slug} logo`).toBe(false);
+            expect(r.html, `${audience} ${slug}`).not.toContain("hellorello.app/email/logos");
           }
-          const logo = relloEmailLogoUrl(slug);
-          if (logo) expect(r.html.includes(logo), `${slug} logo`).toBe(false);
-          expect(r.html, slug).not.toContain("hellorello.app/email/logos");
         }
       }
     });
   }
 
   it("the check can fail: the same input without brand carries the app name", () => {
-    const r = renderRelloEmail(baselineInput("home-scout", "consumer"));
-    expect(r.html.toLowerCase()).toContain("home scout");
-    expect(r.text.toLowerCase()).toContain("home scout");
+    for (const audience of ["consumer", "pro"] as const) {
+      const r = renderRelloEmail(baselineInput("home-scout", audience));
+      expect(r.html.toLowerCase()).toContain("home scout");
+      expect(r.text.toLowerCase()).toContain("home scout");
+    }
   });
 });
 
@@ -195,13 +205,33 @@ describe("brand: the header band and button color", () => {
     expect(parseInt(band.slice(1, 3), 16)).toBeGreaterThan(parseInt(band.slice(5, 7), 16));
   });
 
-  it("falls back to the app palette when brand.primary is missing or not #rgb/#rrggbb", () => {
-    const app = resolveRelloEmailPalette("consumer", "home-scout");
-    for (const primary of [null, undefined, "", "purple", "#7c3aed80", "#7c3ae", "rgb(1,2,3)", "7c3aed", "#ggg"]) {
-      const html = renderRelloEmail(branded("home-scout", { ...BRAND, primary })).html;
-      expect(headerBand(html), String(primary)).toBe(app.primary);
-      expect(buttonColor(html), String(primary)).toBe(app.primary);
-      expect(linkColor(html), String(primary)).toBe(app.link);
+  it("uses the neutral default, never the app's color, when brand.primary is missing or not #rgb/#rrggbb", () => {
+    const neutral = resolveRelloEmailPalette("consumer", "rello");
+    for (const audience of ["consumer", "pro"] as const) {
+      for (const app of ["home-scout", "open-house-hub", "the-drumbeat"] as const) {
+        expect(resolveRelloEmailPalette(audience, app).primary, `${app} differs, or this check can't fail`).not.toBe(neutral.primary);
+        for (const primary of [null, undefined, "", "purple", "#7c3aed80", "#7c3ae", "rgb(1,2,3)", "7c3aed", "#ggg"]) {
+          const html = renderRelloEmail(branded(app, { ...BRAND, primary }, audience)).html;
+          expect(headerBand(html), `${audience} ${app} ${String(primary)}`).toBe(neutral.primary);
+          expect(buttonColor(html), `${audience} ${app} ${String(primary)}`).toBe(neutral.primary);
+          expect(linkColor(html), `${audience} ${app} ${String(primary)}`).toBe(neutral.link);
+        }
+      }
+    }
+  });
+
+  it("under a brand the card and badge use the neutral default too, so no app color shows", () => {
+    const neutral = resolveRelloEmailPalette("consumer", "rello");
+    const app = resolveRelloEmailPalette("pro", "open-house-hub");
+    const html = renderRelloEmail({
+      ...branded("open-house-hub", BRAND, "pro"),
+      badge: { label: "New" },
+      card: { rows: [{ label: "When", value: "Saturday" }] },
+    }).html;
+    expect(html).toContain(`background:${neutral.badgeBackground};color:${neutral.badgeText}`);
+    expect(html).toContain(`background:${neutral.cardBackground};border:1px solid ${neutral.cardBorder}`);
+    for (const color of [app.badgeBackground, app.cardBackground, app.cardBorder]) {
+      expect(html, color).not.toContain(color);
     }
   });
 });
@@ -268,13 +298,30 @@ describe("brand: without it, every render is byte-identical to v2.33.0", () => {
   });
 });
 
-describe("brand: pro and admin mail ignore it", () => {
-  for (const audience of ["pro", "admin"] as const) {
-    it(`${audience} mail with a brand renders exactly as without one`, () => {
-      for (const slug of SLUGS) {
-        const without = renderRelloEmail(baselineInput(slug, audience));
-        expect(renderRelloEmail(branded(slug, BRAND, audience)), `${slug}`).toEqual(without);
-      }
-    });
-  }
+describe("brand: pro mail carries it", () => {
+  it("draws the brand's logo, name and color on every slug's pro mail", () => {
+    for (const slug of SLUGS) {
+      const html = renderRelloEmail(branded(slug, BRAND, "pro")).html;
+      expect(headerImg(html)?.src, slug).toBe(LOGO);
+      expect(headerImg(html)?.alt, slug).toBe("Summit Realty Group");
+      expect(headerBand(html), slug).toBe("#7c3aed");
+      expect(buttonColor(html), slug).toBe("#7c3aed");
+    }
+  });
+
+  it("with no usable logo, the brand name is the header text", () => {
+    const html = renderRelloEmail(branded("open-house-hub", { name: "Summit Realty Group", logoUrl: "https://x.example/l.webp" }, "pro")).html;
+    expect(headerImg(html)).toBeNull();
+    expect(header(html)).toContain(">Summit Realty Group</div>");
+    expect(header(html)).not.toContain("Open House Hub");
+  });
+});
+
+describe("brand: admin mail ignores it", () => {
+  it("admin mail with a brand renders exactly as without one", () => {
+    for (const slug of SLUGS) {
+      const without = renderRelloEmail(baselineInput(slug, "admin"));
+      expect(renderRelloEmail(branded(slug, BRAND, "admin")), `${slug}`).toEqual(without);
+    }
+  });
 });

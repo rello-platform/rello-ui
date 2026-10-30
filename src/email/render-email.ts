@@ -90,16 +90,16 @@ export interface RelloEmailFooter {
 }
 
 /**
- * The sender's own brand (the agent's or tenant's), for consumer mail sent on
- * their behalf: a lead who filled in a form on an agent's site hears from that
- * agent, not from the app behind the form. Pro and admin mail ignore it.
+ * The sender's own brand (the agent's or tenant's), for consumer and pro mail
+ * sent on their behalf: the reader hears from that agent or business, not from
+ * the app behind the email. Admin mail ignores it.
  */
 export interface RelloEmailBrand {
   /** Header text when there is no usable logo, and the logo's alt text. Empty: the header names nobody. */
   name: string;
   /** Drawn only when a clean https URL whose path ends .png, .jpg, .jpeg or .gif; else the name is the header text. */
   logoUrl?: string | null;
-  /** Header band and button color when a #rgb/#rrggbb hex, darkened as needed; else the app's palette. */
+  /** Header band and button color when a #rgb/#rrggbb hex, darkened as needed; else the neutral default. */
   primary?: string | null;
 }
 
@@ -133,9 +133,10 @@ export interface RelloEmailInput {
   signer?: RelloEmailSigner | null;
   footer?: RelloEmailFooter | null;
   /**
-   * Consumer mail only: the sender's brand replaces the app's logo, name and
-   * primary color, so neither the app's name nor its logo appears anywhere in
-   * the email. Absent (or null), the email is exactly what it was at v2.33.0.
+   * Consumer and pro mail: the sender's brand replaces the app's logo, name and
+   * colors, so neither the app's name, logo nor color appears anywhere in the
+   * email. Admin mail ignores it. Absent (or null), the email is exactly what
+   * it was at v2.33.0.
    */
   brand?: RelloEmailBrand | null;
 }
@@ -392,17 +393,19 @@ export function resolveRelloEmailPalette(audience: RelloEmailAudience, app: unkn
 }
 
 /**
- * The app's palette with the brand color in place of `primary`: header band,
- * button, links and the signer's initials. A missing or malformed brand color
- * leaves the app's palette as it is.
+ * The neutral default with the brand color in place of `primary`: header band,
+ * button, links and the signer's initials. Starting from the neutral default,
+ * never the sending app's palette, is what keeps the app's color out of a
+ * branded email. A missing or malformed brand color leaves the default as it is.
  */
-function brandPalette(app: RelloEmailPalette, primary: unknown): RelloEmailPalette {
+function brandPalette(audience: RelloEmailAudience, primary: unknown): RelloEmailPalette {
+  const neutral = resolveRelloEmailPalette(audience, "rello");
   const hex = brandHex(primary);
-  if (!hex) return app;
+  if (!hex) return neutral;
   const band = darkenUntil(hex, [WHITE], 3);
   const avatarBackground = mix(band, WHITE, 0.85);
   return {
-    ...app,
+    ...neutral,
     primary: band,
     link: darkenUntil(hex, [WHITE], 4.5),
     avatarBackground,
@@ -436,12 +439,12 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const e = escapeEmailHtml;
   const audience: RelloEmailAudience =
     input.audience === "pro" || input.audience === "admin" ? input.audience : "consumer";
-  // The sender's brand, on consumer mail only. Null keeps every byte of v2.33.0.
-  const brand = audience === "consumer" && input.brand && typeof input.brand === "object" ? input.brand : null;
+  // The sender's brand, on consumer and pro mail. Null keeps every byte of v2.33.0.
+  const brand = audience !== "admin" && input.brand && typeof input.brand === "object" ? input.brand : null;
   // Under a brand the app is never named; "Rello" is the platform's word in the default kicker.
   const app = brand ? "Rello" : appName(input.app);
   const company = line(input.companyName);
-  const pal = brand ? brandPalette(resolveRelloEmailPalette(audience, input.app), brand.primary) : resolveRelloEmailPalette(audience, input.app);
+  const pal = brand ? brandPalette(audience, brand.primary) : resolveRelloEmailPalette(audience, input.app);
   const color = pal.primary;
   // The sending app's own logo on consumer and pro mail; Rello's on admin mail.
   // Under a brand: the brand's logo, else its name, else nothing.

@@ -7,13 +7,15 @@ guidance in `CLAUDE.md` § Publishing convention.
 
 ## v2.34.0 — 2026-10-29
 
-**Added: consumer email can carry the sender's brand (`brand` input)**
+**Added: consumer and pro email can carry the sender's brand (`brand` input)**
 
 `renderRelloEmail` takes an optional `brand: { name, logoUrl?, primary? }`
-(`RelloEmailBrand`). On `consumer` mail it replaces the sending app's logo, name and
-primary color with the agent's or tenant's. KA ruling 2026-10-29 (prompt 097), on
+(`RelloEmailBrand`). On `consumer` and `pro` mail it replaces the sending app's logo,
+name and colors with the agent's or tenant's. KA ruling 2026-10-29 (prompt 097), on
 Kelly's report: *"Home Scout CTA emails should NOT have home scout branding. They need
-to have the branding of the tenant or agent."*
+to have the branding of the tenant or agent."* Widened to `pro` by KA amended 121
+(2026-10-30), Kelly: *"Open House Hub, like Home Scout should not tout itself as an app
+but instead feature the tenant or agent."*
 
 - Header: the brand logo when `logoUrl` is a clean https URL whose path ends .png,
   .jpg, .jpeg or .gif (no credentials, whitespace or control characters), drawn with
@@ -26,10 +28,12 @@ to have the branding of the tenant or agent."*
   "Rello · from <company>" (or "Rello").
 - Header band, button, links and signer initials use `brand.primary` when it is a
   `#rgb`/`#rrggbb` hex, darkened until white text on it reaches 3:1 and links 4.5:1.
-  Otherwise the app's palette. Badge, detail text and card keep the app's palette.
+  Otherwise the neutral default (the `defaults` tokens, as Rello reads them), never the
+  sending app's color. Badge, detail text and card use the neutral default as well, so
+  no app color shows under a brand.
 - Nothing is gated: a brand with no usable logo, color or name still renders the whole
   email.
-- `pro` and `admin` mail ignore `brand`.
+- `admin` mail ignores `brand`.
 - Without `brand` (absent, undefined or null) every render is byte-identical to v2.33.0:
   `src/email/consumer-brand.test.ts` hashes every platform slug × {consumer, pro,
   admin} against `src/email/fixtures/v2.33.0-no-brand-<audience>.json` (written at
