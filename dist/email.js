@@ -238,6 +238,26 @@ var app_overrides_default = {
       heroCardBodyText: "#96A89E",
       appTitleColor: "#1A2E24",
       appSubtitleColor: "#546B5F"
+    },
+    "prequal-pro": {
+      name: "PreQual Pro",
+      primary: "#4060DE",
+      accent: "#E85D2D",
+      pageBackground: "#F8FAFC",
+      cardBackground: "#FFFFFF",
+      cardBorder: "#E2E8F0",
+      primaryText: "#1E293B",
+      secondaryText: "#64748B",
+      tertiaryText: "#94A3B8",
+      heroCardBackground: "#F8FAFC",
+      heroCardBorder: "#F8FAFC",
+      heroCardTitle: "#4060DE",
+      rowBackground: "#F8FAFC",
+      rowBorder: "#E2E8F0",
+      notes: "Income verification and pre-underwriting for loan officers \u2014 prequalpro.app",
+      heroCardBodyText: "#64748B",
+      appTitleColor: "#1E293B",
+      appSubtitleColor: "#64748B"
     }
   }
 };
