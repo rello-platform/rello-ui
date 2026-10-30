@@ -180,7 +180,7 @@ describe("renderRelloEmail — app colors from tokens/app-overrides.json (Kelly 
   });
 
   it("a slug with no JSON block gets defaults.primary", () => {
-    for (const app of ["prequal-pro", "the-oven", "journey-engine", "rello"] as const) {
+    for (const app of ["the-oven", "journey-engine", "rello"] as const) {
       expect(T.apps[app]?.primary ?? null, app).toBeNull();
       const { html } = renderRelloEmail(full({ app }));
       expect(headerOf(html), app).toBe(lc(T.defaults.primary));

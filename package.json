@@ -1,6 +1,6 @@
 {
   "name": "@rello-platform/ui",
-  "version": "2.34.0",
+  "version": "2.35.0",
   "description": "Shared UI component library for Rello applications",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,6 +20,7 @@
     "./email": {
       "types": "./dist/email.d.ts",
       "import": "./dist/email.js",
+      "require": "./dist/email.cjs",
       "default": "./dist/email.js"
     },
     "./styles": "./src/styles/index.css",

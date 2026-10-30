@@ -8,6 +8,7 @@ import { defineConfig } from "tsup";
  *
  *   dist/email.js   — `@rello-platform/ui/email`: the transactional email
  *                     shell. Pure, no banner (see the third entry below).
+ *                     Also dist/email.cjs, for CommonJS apps (PreQual Pro).
  *
  *   dist/client.js  — client-only entry. "use client" banner at top
  *                     marks all exports as RSC client boundaries.
@@ -43,9 +44,10 @@ export default defineConfig([
     // dist/email.js — `@rello-platform/ui/email`, the shared transactional
     // email shell. Pure TypeScript like the root entry (no banner, no React);
     // its own entry so a server/Trigger task can render email without loading
-    // the component library's root barrel.
+    // the component library's root barrel. CommonJS as well, because PreQual
+    // Pro is CommonJS Express and its builders are synchronous.
     entry: { email: "src/email/index.ts" },
-    format: ["esm"],
+    format: ["esm", "cjs"],
     dts: true,
     splitting: false,
     sourcemap: true,

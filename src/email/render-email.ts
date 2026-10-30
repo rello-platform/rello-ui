@@ -256,8 +256,8 @@ export function safeEmailUrl(value: unknown): string | null {
 
 /**
  * tokens/app-overrides.json keys that are not the platform slug. Every other
- * slug reads the block under its own name; a slug with no block (prequal-pro,
- * the-oven, the engines, …) reads `defaults`. The JSON's "conversations" block
+ * slug reads the block under its own name; a slug with no block (the-oven,
+ * the engines, …) reads `defaults`. The JSON's "conversations" block
  * is a Rello module, not a platform slug, so no email reads it.
  */
 export const RELLO_EMAIL_TOKEN_KEY_FOR_SLUG: Readonly<Partial<Record<PlatformSlug, string>>> = {
