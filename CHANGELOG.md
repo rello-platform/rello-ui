@@ -43,6 +43,8 @@ but instead feature the tenant or agent."*
   admin} against `src/email/fixtures/v2.33.0-no-brand-<audience>.json` (written at
   b320298d), compares one full home-scout render per audience character for character,
   and re-checks the v2.32.0 logo-cut baseline.
+- `moreLinks`: optional text links after `secondaryLink`, in the HTML and the text part,
+  for an email with more than two choices (Open House Hub's showing feedback).
 - New exports: `resolveRelloEmailBrand` and types `RelloEmailBrand`,
   `RelloEmailBrandLevelInput`, `ResolvedRelloEmailBrand`. No component, token or CSS
   change.

@@ -142,6 +142,8 @@ export interface RelloEmailInput {
   button?: RelloEmailButton | null;
   /** A text link beside the button. */
   secondaryLink?: RelloEmailLink | null;
+  /** More text links, after `secondaryLink`, for an email with more than two choices. */
+  moreLinks?: ReadonlyArray<RelloEmailLink> | null;
   /** Writes the button's full URL under it ("Button not working? …"). Default true. */
   showLinkFallback?: boolean;
   signer?: RelloEmailSigner | null;
@@ -554,6 +556,9 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const secondaryUrl = safeEmailUrl(input.secondaryLink?.url);
   const secondaryLabel = line(input.secondaryLink?.label);
   const secondary = secondaryUrl && secondaryLabel ? { url: secondaryUrl, label: secondaryLabel } : null;
+  const moreLinks = (input.moreLinks ?? [])
+    .map((l) => ({ url: safeEmailUrl(l?.url), label: line(l?.label) }))
+    .filter((l): l is { url: string; label: string } => l.url !== null && l.label !== "");
   const showFallback = button !== null && input.showLinkFallback !== false;
 
   const signerName = line(input.signer?.name);
@@ -652,7 +657,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     );
   }
 
-  if (button || secondary) {
+  if (button || secondary || moreLinks.length > 0) {
     rows.push(
       `<tr><td align="center" style="padding:24px 32px 6px;">` +
         (button
@@ -664,6 +669,12 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         (secondary
           ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>`
           : "") +
+        moreLinks
+          .map(
+            (l, i) =>
+              `<div style="margin-top:${button || secondary || i > 0 ? "12px" : "0"};font-size:15px;"><a href="${e(l.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(l.label)}</a></div>`,
+          )
+          .join("") +
         (button && button.note
           ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;">${e(button.note)}</div>`
           : "") +
@@ -740,6 +751,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     if (button.note) push(button.note);
   }
   if (secondary) push("", `${secondary.label}: ${secondary.url}`);
+  for (const l of moreLinks) push("", `${l.label}: ${l.url}`);
   if (signer) {
     push("");
     if (signer.replyLine) push(signer.replyLine, "");
