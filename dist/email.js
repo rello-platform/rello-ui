@@ -312,6 +312,24 @@ function validHex(value) {
   const hex = value.trim().toLowerCase();
   return /^#[0-9a-f]{6}$/.test(hex) ? hex : null;
 }
+function brandHex(value) {
+  if (typeof value !== "string") return null;
+  const hex = value.trim().toLowerCase();
+  if (/^#[0-9a-f]{3}$/.test(hex)) return `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
+  return validHex(hex);
+}
+function brandLogoUrl(value) {
+  if (typeof value !== "string") return null;
+  const raw = value.trim();
+  if (!raw || URL_FORBIDDEN_CHARS.test(raw)) return null;
+  try {
+    const url = new URL(raw);
+    if (url.protocol !== "https:" || url.username || url.password) return null;
+    return /\.(png|jpe?g|gif)$/i.test(url.pathname) ? raw : null;
+  } catch {
+    return null;
+  }
+}
 function tokenColor(key, field) {
   const tokens = app_overrides_default;
   const apps = tokens.apps && typeof tokens.apps === "object" ? tokens.apps : {};
@@ -371,6 +389,19 @@ function resolveRelloEmailPalette(audience, app) {
     avatarText: darkenUntil(primary, [avatarBackground], 4.5)
   };
 }
+function brandPalette(app, primary) {
+  const hex = brandHex(primary);
+  if (!hex) return app;
+  const band = darkenUntil(hex, [WHITE], 3);
+  const avatarBackground = mix(band, WHITE, 0.85);
+  return {
+    ...app,
+    primary: band,
+    link: darkenUntil(hex, [WHITE], 4.5),
+    avatarBackground,
+    avatarText: darkenUntil(band, [avatarBackground], 4.5)
+  };
+}
 function initialsOf(name) {
   return name.split(" ").filter(Boolean).slice(0, 2).map((w) => w.charAt(0).toUpperCase()).join("");
 }
@@ -386,13 +417,14 @@ function appName(app) {
 function renderRelloEmail(input) {
   const e = escapeEmailHtml;
   const audience = input.audience === "pro" || input.audience === "admin" ? input.audience : "consumer";
-  const app = appName(input.app);
+  const brand = audience === "consumer" && input.brand && typeof input.brand === "object" ? input.brand : null;
+  const app = brand ? "Rello" : appName(input.app);
   const company = line(input.companyName);
-  const pal = resolveRelloEmailPalette(audience, input.app);
+  const pal = brand ? brandPalette(resolveRelloEmailPalette(audience, input.app), brand.primary) : resolveRelloEmailPalette(audience, input.app);
   const color = pal.primary;
   const logoSlug = audience !== "admin" && isKnownApp(input.app) ? input.app : "rello";
-  const logoUrl = relloEmailLogoUrl(logoSlug);
-  const logoAlt = appName(logoSlug);
+  const logoUrl = brand ? brandLogoUrl(brand.logoUrl) : relloEmailLogoUrl(logoSlug);
+  const logoAlt = brand ? line(brand.name) : appName(logoSlug);
   const subject = line(input.subject);
   const preheader = line(input.preheader);
   const headline = line(input.headline);
@@ -431,7 +463,11 @@ function renderRelloEmail(input) {
   const footerLine2 = [footerAddress, f.equalHousing === true ? "Equal Housing Opportunity" : ""].filter(Boolean).join(" \xB7 ");
   const rows = [];
   rows.push(
-    `<tr><td align="center" bgcolor="${color}" style="background:${color};padding:30px 32px 26px;color:#ffffff;border-radius:10px 10px 0 0;">` + (logoUrl ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">` : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) + `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${e(kicker)}</div>` + (headline ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${e(headline)}</div>` : "") + `</td></tr>`
+    `<tr><td align="center" bgcolor="${color}" style="background:${color};padding:30px 32px 26px;color:#ffffff;border-radius:10px 10px 0 0;">` + (brand ? logoUrl ? (
+      // A brand logo's shape is unknown: the attributes reserve a 200×64 box and
+      // the style fits the image inside it without stretching.
+      `<img src="${e(logoUrl)}" width="200" height="64" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:auto;height:auto;max-width:200px;max-height:64px;border:0;outline:none;text-decoration:none;">`
+    ) : logoAlt ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>` : "" : logoUrl ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">` : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) + `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${e(kicker)}</div>` + (headline ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${e(headline)}</div>` : "") + `</td></tr>`
   );
   if (badgeLabel || detail) {
     rows.push(

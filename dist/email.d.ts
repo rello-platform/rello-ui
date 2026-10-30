@@ -81,6 +81,19 @@ interface RelloEmailFooter {
     /** e.g. "Change your alerts" → the app's preference page. */
     preferenceLink?: RelloEmailLink | null;
 }
+/**
+ * The sender's own brand (the agent's or tenant's), for consumer mail sent on
+ * their behalf: a lead who filled in a form on an agent's site hears from that
+ * agent, not from the app behind the form. Pro and admin mail ignore it.
+ */
+interface RelloEmailBrand {
+    /** Header text when there is no usable logo, and the logo's alt text. Empty: the header names nobody. */
+    name: string;
+    /** Drawn only when a clean https URL whose path ends .png, .jpg, .jpeg or .gif; else the name is the header text. */
+    logoUrl?: string | null;
+    /** Header band and button color when a #rgb/#rrggbb hex, darkened as needed; else the app's palette. */
+    primary?: string | null;
+}
 interface RelloEmailInput {
     audience: RelloEmailAudience;
     /**
@@ -116,6 +129,12 @@ interface RelloEmailInput {
     showLinkFallback?: boolean;
     signer?: RelloEmailSigner | null;
     footer?: RelloEmailFooter | null;
+    /**
+     * Consumer mail only: the sender's brand replaces the app's logo, name and
+     * primary color, so neither the app's name nor its logo appears anywhere in
+     * the email. Absent (or null), the email is exactly what it was at v2.33.0.
+     */
+    brand?: RelloEmailBrand | null;
 }
 interface RenderedRelloEmail {
     subject: string;
@@ -179,4 +198,4 @@ declare function relloEmailContrast(a: string, b: string): number;
 declare function resolveRelloEmailPalette(audience: RelloEmailAudience, app: unknown): RelloEmailPalette;
 declare function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail;
 
-export { RELLO_EMAIL_APP_NAMES, RELLO_EMAIL_LOGO_BASE_URL, RELLO_EMAIL_LOGO_SLUGS, RELLO_EMAIL_TOKEN_KEY_FOR_SLUG, type RelloEmailAudience, type RelloEmailBadgeTone, type RelloEmailButton, type RelloEmailCardRow, type RelloEmailFooter, type RelloEmailInput, type RelloEmailLink, type RelloEmailPalette, type RelloEmailSigner, type RenderedRelloEmail, escapeEmailHtml, relloEmailContrast, relloEmailLogoUrl, renderRelloEmail, resolveRelloEmailPalette, safeEmailUrl };
+export { RELLO_EMAIL_APP_NAMES, RELLO_EMAIL_LOGO_BASE_URL, RELLO_EMAIL_LOGO_SLUGS, RELLO_EMAIL_TOKEN_KEY_FOR_SLUG, type RelloEmailAudience, type RelloEmailBadgeTone, type RelloEmailBrand, type RelloEmailButton, type RelloEmailCardRow, type RelloEmailFooter, type RelloEmailInput, type RelloEmailLink, type RelloEmailPalette, type RelloEmailSigner, type RenderedRelloEmail, escapeEmailHtml, relloEmailContrast, relloEmailLogoUrl, renderRelloEmail, resolveRelloEmailPalette, safeEmailUrl };
