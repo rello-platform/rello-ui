@@ -5,6 +5,20 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.35.0 — 2026-10-30
+
+**Added: PreQual Pro's email colors, and `./email` for CommonJS apps**
+
+- `tokens/app-overrides.json` gains a `prequal-pro` block from PreQual Pro's own
+  brand (primary #4060DE). Its consumer and pro mail used `defaults` until now. Its
+  logo was already hosted at `https://hellorello.app/email/logos/prequal-pro.png`.
+- `@rello-platform/ui/email` gains a `require` condition (`dist/email.cjs`). PreQual
+  Pro is CommonJS Express with synchronous email builders. `dist/email.js` is
+  unchanged apart from the new tokens.
+- Renders for every other app are byte-identical to v2.34.0, and PreQual Pro's
+  admin html and text parts are too. The hash baselines name that one exception
+  (`hasNewTokens`).
+
 ## v2.34.0 — 2026-10-29
 
 **Added: consumer and pro email can carry the sender's brand (`brand` input)**

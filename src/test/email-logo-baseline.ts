@@ -11,6 +11,15 @@ import type { RelloEmailAudience, RelloEmailInput } from "../email";
 
 export const BASELINE_AUDIENCES: readonly RelloEmailAudience[] = ["consumer", "pro", "admin"];
 
+/**
+ * The one exception to the hash baselines. prequal-pro gained its tokens block
+ * in v2.35.0, so its consumer and pro html changed color on purpose. Its admin
+ * html and all its text parts still match, and every other slug matches whole.
+ */
+export function hasNewTokens(app: PlatformSlug, audience: RelloEmailAudience): boolean {
+  return app === "prequal-pro" && audience !== "admin";
+}
+
 /** Every field set, the kicker and footer reason left to their per-audience defaults. */
 export function baselineInput(app: PlatformSlug, audience: RelloEmailAudience): RelloEmailInput {
   return {
