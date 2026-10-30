@@ -137,6 +137,8 @@ interface RelloEmailInput {
     button?: RelloEmailButton | null;
     /** A text link beside the button. */
     secondaryLink?: RelloEmailLink | null;
+    /** More text links, after `secondaryLink`, for an email with more than two choices. */
+    moreLinks?: ReadonlyArray<RelloEmailLink> | null;
     /** Writes the button's full URL under it ("Button not working? …"). Default true. */
     showLinkFallback?: boolean;
     signer?: RelloEmailSigner | null;

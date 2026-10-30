@@ -475,6 +475,7 @@ function renderRelloEmail(input) {
   const secondaryUrl = safeEmailUrl(input.secondaryLink?.url);
   const secondaryLabel = line(input.secondaryLink?.label);
   const secondary = secondaryUrl && secondaryLabel ? { url: secondaryUrl, label: secondaryLabel } : null;
+  const moreLinks = (input.moreLinks ?? []).map((l) => ({ url: safeEmailUrl(l?.url), label: line(l?.label) })).filter((l) => l.url !== null && l.label !== "");
   const showFallback = button !== null && input.showLinkFallback !== false;
   const signerName = line(input.signer?.name);
   const signer = signerName ? {
@@ -526,9 +527,11 @@ function renderRelloEmail(input) {
       }).join("") + `</table></td></tr>`
     );
   }
-  if (button || secondary) {
+  if (button || secondary || moreLinks.length > 0) {
     rows.push(
-      `<tr><td align="center" style="padding:24px 32px 6px;">` + (button ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr><td align="center" bgcolor="${color}" style="background:${color};border-radius:8px;"><a href="${e(button.url)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;">${e(button.label)}</a></td></tr></table>` : "") + (secondary ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>` : "") + (button && button.note ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;">${e(button.note)}</div>` : "") + `</td></tr>`
+      `<tr><td align="center" style="padding:24px 32px 6px;">` + (button ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr><td align="center" bgcolor="${color}" style="background:${color};border-radius:8px;"><a href="${e(button.url)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;">${e(button.label)}</a></td></tr></table>` : "") + (secondary ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>` : "") + moreLinks.map(
+        (l, i) => `<div style="margin-top:${button || secondary || i > 0 ? "12px" : "0"};font-size:15px;"><a href="${e(l.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(l.label)}</a></div>`
+      ).join("") + (button && button.note ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;">${e(button.note)}</div>` : "") + `</td></tr>`
     );
   }
   if (showFallback && button) {
@@ -569,6 +572,7 @@ function renderRelloEmail(input) {
     if (button.note) push(button.note);
   }
   if (secondary) push("", `${secondary.label}: ${secondary.url}`);
+  for (const l of moreLinks) push("", `${l.label}: ${l.url}`);
   if (signer) {
     push("");
     if (signer.replyLine) push(signer.replyLine, "");
