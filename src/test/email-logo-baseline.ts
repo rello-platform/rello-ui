@@ -66,19 +66,6 @@ export function cutLogo(html: string): string {
   return out;
 }
 
-/**
- * The style text v2.36.0 added to every slot that holds caller text. A render
- * with it cut out must still hash as it did at v2.32.0 / v2.33.0, so these
- * baselines keep proving that the wrap is the ONLY change to ordinary mail.
- * Written out in full on purpose: if the shell's value changes, this goes red.
- */
-export const WRAP_STYLE = "overflow-wrap:anywhere;word-break:break-word;";
-
-/** The html with every v2.36.0 wrap style removed. */
-export function cutWrap(html: string): string {
-  return html.split(WRAP_STYLE).join("");
-}
-
 export function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");
 }

@@ -14,7 +14,7 @@ import {
   type RelloEmailBrand,
   type RelloEmailInput,
 } from "./index";
-import { BASELINE_AUDIENCES, baselineInput, cutLogo, cutWrap, hasNewTokens, sha256 } from "../test/email-logo-baseline";
+import { BASELINE_AUDIENCES, baselineInput, cutLogo, hasNewTokens, sha256 } from "../test/email-logo-baseline";
 
 /**
  * v2.34.0 (KA ruling 2026-10-29, prompt 097): consumer mail can carry the
@@ -126,7 +126,7 @@ describe("brand: the header logo", () => {
       const html = renderRelloEmail(branded("home-scout", { ...BRAND, logoUrl })).html;
       expect(headerImg(html), String(logoUrl)).toBeNull();
       expect(header(html), String(logoUrl)).toContain(
-        `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;overflow-wrap:anywhere;word-break:break-word;">Summit Realty Group</div>`,
+        `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">Summit Realty Group</div>`,
       );
     }
   });
@@ -274,7 +274,7 @@ describe("brand: without it, every render is byte-identical to v2.33.0", () => {
       for (const slug of SLUGS) {
         for (const input of [baselineInput(slug, audience), branded(slug, undefined, audience), branded(slug, null, audience)]) {
           const r = renderRelloEmail(input);
-          if (!hasNewTokens(slug, audience)) expect(sha256(cutWrap(r.html)), `${slug} ${audience} html`).toBe(renders[slug].html);
+          if (!hasNewTokens(slug, audience)) expect(sha256(r.html), `${slug} ${audience} html`).toBe(renders[slug].html);
           expect(sha256(r.text), `${slug} ${audience} text`).toBe(renders[slug].text);
         }
       }
@@ -282,7 +282,7 @@ describe("brand: without it, every render is byte-identical to v2.33.0", () => {
 
     it(`${audience}: the home-scout render equals the stored v2.33.0 copy, character for character`, () => {
       const r = renderRelloEmail(baselineInput("home-scout", audience));
-      expect({ ...r, html: cutWrap(r.html) }).toEqual(fixtures[audience].homeScout);
+      expect(r).toEqual(fixtures[audience].homeScout);
     });
   }
 
@@ -291,7 +291,7 @@ describe("brand: without it, every render is byte-identical to v2.33.0", () => {
     for (const slug of SLUGS) {
       for (const audience of BASELINE_AUDIENCES) {
         const r = renderRelloEmail(branded(slug, null, audience));
-        if (!hasNewTokens(slug, audience)) expect(sha256(cutLogo(cutWrap(r.html))), `${slug} ${audience}`).toBe(renders[slug][audience].html);
+        if (!hasNewTokens(slug, audience)) expect(sha256(cutLogo(r.html)), `${slug} ${audience}`).toBe(renders[slug][audience].html);
         expect(sha256(r.text), `${slug} ${audience}`).toBe(renders[slug][audience].text);
       }
     }

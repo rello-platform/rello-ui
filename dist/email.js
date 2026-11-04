@@ -302,6 +302,28 @@ var FONT = "-apple-system,'Segoe UI',Helvetica,Arial,sans-serif";
 function escapeEmailHtml(value) {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
+var LONG_RUN = 40;
+var CHUNK = 10;
+var graphemeSegmenter = (() => {
+  try {
+    const ctor = Intl.Segmenter;
+    return typeof ctor === "function" ? new ctor(void 0, { granularity: "grapheme" }) : null;
+  } catch {
+    return null;
+  }
+})();
+function escapeEmailHtmlBreakable(value) {
+  return value.split(/([ \t\r\n\f]+)/).map((part, i) => {
+    if (i % 2 === 1 || part.length < LONG_RUN || !graphemeSegmenter) return escapeEmailHtml(part);
+    const graphemes = Array.from(graphemeSegmenter.segment(part), (g) => g.segment);
+    if (graphemes.length < LONG_RUN) return escapeEmailHtml(part);
+    const chunks = [];
+    for (let at = 0; at < graphemes.length; at += CHUNK) {
+      chunks.push(escapeEmailHtml(graphemes.slice(at, at + CHUNK).join("")));
+    }
+    return chunks.join("<wbr>");
+  }).join("");
+}
 function line(value) {
   return typeof value === "string" ? value.replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim() : "";
 }
@@ -326,7 +348,6 @@ var RELLO_EMAIL_TOKEN_KEY_FOR_SLUG = {
 };
 var MALFORMED_TOKEN_FALLBACK = "#475569";
 var CARD_VALUE_TEXT = "#111827";
-var WRAP = "overflow-wrap:anywhere;word-break:break-word;";
 var WHITE = "#ffffff";
 function validHex(value) {
   if (typeof value !== "string") return null;
@@ -472,6 +493,7 @@ function appName(app) {
 }
 function renderRelloEmail(input) {
   const e = escapeEmailHtml;
+  const ew = escapeEmailHtmlBreakable;
   const audience = input.audience === "pro" || input.audience === "admin" ? input.audience : "consumer";
   const brand = audience !== "admin" && input.brand && typeof input.brand === "object" ? input.brand : null;
   const app = brand ? "Rello" : appName(input.app);
@@ -525,34 +547,34 @@ function renderRelloEmail(input) {
       // Outlook scales it in proportion; the style caps it at 200×64 elsewhere.
       // A distorted logo is worse than a large one (KA ruling, prompt 110).
       `<img src="${e(logoUrl)}" width="200" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;max-width:200px;max-height:64px;height:auto;border:0;outline:none;text-decoration:none;">`
-    ) : logoAlt ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;${WRAP}">${e(logoAlt)}</div>` : "" : logoUrl ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">` : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) + `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;${WRAP}">${e(kicker)}</div>` + (headline ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;${WRAP}">${e(headline)}</div>` : "") + `</td></tr>`
+    ) : logoAlt ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${ew(logoAlt)}</div>` : "" : logoUrl ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">` : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${ew(logoAlt)}</div>`) + `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${ew(kicker)}</div>` + (headline ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${ew(headline)}</div>` : "") + `</td></tr>`
   );
   if (badgeLabel || detail) {
     rows.push(
-      `<tr><td style="padding:24px 32px 0;">` + (badgeLabel ? `<span style="display:inline-block;background:${pal.badgeBackground};color:${pal.badgeText};font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;${WRAP}">${e(badgeLabel)}</span>` : "") + (detail ? `<div style="font-size:14px;color:${pal.secondaryText};margin-top:${badgeLabel ? "8px" : "0"};${WRAP}">${e(detail)}</div>` : "") + `</td></tr>`
+      `<tr><td style="padding:24px 32px 0;">` + (badgeLabel ? `<span style="display:inline-block;background:${pal.badgeBackground};color:${pal.badgeText};font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;">${ew(badgeLabel)}</span>` : "") + (detail ? `<div style="font-size:14px;color:${pal.secondaryText};margin-top:${badgeLabel ? "8px" : "0"};">${ew(detail)}</div>` : "") + `</td></tr>`
     );
   }
   if (paragraphs.length > 0) {
     rows.push(
       `<tr><td style="padding:24px 32px 4px;font-size:16px;line-height:1.6;color:#1f2937;">` + paragraphs.map(
-        (p, i) => `<p style="margin:0 0 ${i === paragraphs.length - 1 ? "0" : "12px"};${WRAP}">${e(p).replace(/\n/g, "<br>")}</p>`
+        (p, i) => `<p style="margin:0 0 ${i === paragraphs.length - 1 ? "0" : "12px"};">${ew(p).replace(/\n/g, "<br>")}</p>`
       ).join("") + `</td></tr>`
     );
   }
   if (cardRows.length > 0) {
     rows.push(
-      `<tr><td style="padding:18px 32px 4px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${pal.cardBackground};border:1px solid ${pal.cardBorder};border-radius:8px;font-size:14px;line-height:1.5;">` + (cardTitle ? `<tr><td colspan="2" style="padding:14px 18px 2px;font-weight:700;color:${CARD_VALUE_TEXT};${WRAP}">${e(cardTitle)}</td></tr>` : "") + cardRows.map((r, i) => {
+      `<tr><td style="padding:18px 32px 4px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${pal.cardBackground};border:1px solid ${pal.cardBorder};border-radius:8px;font-size:14px;line-height:1.5;">` + (cardTitle ? `<tr><td colspan="2" style="padding:14px 18px 2px;font-weight:700;color:${CARD_VALUE_TEXT};">${ew(cardTitle)}</td></tr>` : "") + cardRows.map((r, i) => {
         const top = i === 0 ? cardTitle ? "8px" : "14px" : "4px";
         const bottom = i === cardRows.length - 1 ? "14px" : "4px";
-        return `<tr><td valign="top" style="padding:${top} 18px ${bottom};color:${pal.secondaryText};width:130px;${WRAP}">${e(r.label)}</td><td valign="top" style="padding:${top} 18px ${bottom};color:${CARD_VALUE_TEXT};${WRAP}">${e(r.value).replace(/\n/g, "<br>")}</td></tr>`;
+        return `<tr><td valign="top" style="padding:${top} 18px ${bottom};color:${pal.secondaryText};width:130px;">${ew(r.label)}</td><td valign="top" style="padding:${top} 18px ${bottom};color:${CARD_VALUE_TEXT};">${ew(r.value).replace(/\n/g, "<br>")}</td></tr>`;
       }).join("") + `</table></td></tr>`
     );
   }
   if (button || secondary || moreLinks.length > 0) {
     rows.push(
-      `<tr><td align="center" style="padding:24px 32px 6px;">` + (button ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr><td align="center" bgcolor="${color}" style="background:${color};border-radius:8px;"><a href="${e(button.url)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;${WRAP}">${e(button.label)}</a></td></tr></table>` : "") + (secondary ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;${WRAP}"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>` : "") + moreLinks.map(
-        (l, i) => `<div style="margin-top:${button || secondary || i > 0 ? "12px" : "0"};font-size:15px;${WRAP}"><a href="${e(l.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(l.label)}</a></div>`
-      ).join("") + (button && button.note ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;${WRAP}">${e(button.note)}</div>` : "") + `</td></tr>`
+      `<tr><td align="center" style="padding:24px 32px 6px;">` + (button ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr><td align="center" bgcolor="${color}" style="background:${color};border-radius:8px;"><a href="${e(button.url)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;">${ew(button.label)}</a></td></tr></table>` : "") + (secondary ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${ew(secondary.label)}</a></div>` : "") + moreLinks.map(
+        (l, i) => `<div style="margin-top:${button || secondary || i > 0 ? "12px" : "0"};font-size:15px;"><a href="${e(l.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${ew(l.label)}</a></div>`
+      ).join("") + (button && button.note ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;">${ew(button.note)}</div>` : "") + `</td></tr>`
     );
   }
   if (showFallback && button) {
@@ -562,18 +584,18 @@ function renderRelloEmail(input) {
   }
   if (signer) {
     rows.push(
-      `<tr><td style="padding:20px 32px 22px;font-size:15px;line-height:1.6;color:#1f2937;">` + (signer.replyLine ? `<p style="margin:0 0 12px;${WRAP}">${e(signer.replyLine)}</p>` : "") + `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td width="52" valign="top"><div style="width:40px;height:40px;border-radius:20px;background:${pal.avatarBackground};text-align:center;line-height:40px;font-size:14px;font-weight:700;color:${pal.avatarText};">${e(signer.initials)}</div></td><td valign="top" style="font-size:14px;line-height:1.5;${WRAP}"><b>${e(signer.name)}</b>` + (signerMeta ? `<br><span style="color:${pal.secondaryText};">${e(signerMeta)}</span>` : "") + (signer.phone ? `<br><span style="color:${pal.secondaryText};">${e(signer.phone)}</span>` : "") + `</td></tr></table></td></tr>`
+      `<tr><td style="padding:20px 32px 22px;font-size:15px;line-height:1.6;color:#1f2937;">` + (signer.replyLine ? `<p style="margin:0 0 12px;">${ew(signer.replyLine)}</p>` : "") + `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td width="52" valign="top"><div style="width:40px;height:40px;border-radius:20px;background:${pal.avatarBackground};text-align:center;line-height:40px;font-size:14px;font-weight:700;color:${pal.avatarText};">${e(signer.initials)}</div></td><td valign="top" style="font-size:14px;line-height:1.5;"><b>${ew(signer.name)}</b>` + (signerMeta ? `<br><span style="color:${pal.secondaryText};">${ew(signerMeta)}</span>` : "") + (signer.phone ? `<br><span style="color:${pal.secondaryText};">${ew(signer.phone)}</span>` : "") + `</td></tr></table></td></tr>`
     );
   }
   const footerParts = [
-    footerLine1 ? e(footerLine1) : "",
-    footerLine2 ? e(footerLine2) : "",
-    footerReason ? e(footerReason) : "",
-    pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${e(pref.label)}</a>` : ""
+    footerLine1 ? ew(footerLine1) : "",
+    footerLine2 ? ew(footerLine2) : "",
+    footerReason ? ew(footerReason) : "",
+    pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${ew(pref.label)}</a>` : ""
   ].filter(Boolean);
   if (footerParts.length > 0) {
     rows.push(
-      `<tr><td style="border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:${pal.secondaryText};line-height:1.6;${WRAP}">` + footerParts.join("<br>") + `</td></tr>`
+      `<tr><td style="border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:${pal.secondaryText};line-height:1.6;">` + footerParts.join("<br>") + `</td></tr>`
     );
   }
   const html = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="x-apple-disable-message-reformatting"><title>${e(subject)}</title></head><body style="margin:0;padding:24px 12px;background:#eef1f5;font-family:${FONT};color:#1f2937;">` + (preheader ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#eef1f5;opacity:0;">${e(preheader)}</div>` : "") + `<!--[if mso]><table role="presentation" width="600" align="center" cellpadding="0" cellspacing="0"><tr><td><![endif]--><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:10px;font-family:${FONT};">` + rows.join("") + `</table><!--[if mso]></td></tr></table><![endif]--></body></html>`;

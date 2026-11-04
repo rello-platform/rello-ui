@@ -7,7 +7,7 @@ guidance in `CLAUDE.md` § Publishing convention.
 
 ## v2.36.0 — 2026-11-03
 
-**Fixed: a long unbroken value no longer stretches an email**
+**Fixed: a very long unbroken run no longer stretches an email**
 
 An auto-layout table sizes itself to the widest thing it cannot break. A caller's
 900-character unbroken string (a URL, an id, a pasted blob) made a 600 px email
@@ -15,22 +15,32 @@ thousands of pixels wide on every audience; measured in headless Chromium before
 this change, 900 ASCII characters in one slot gave a document 5,563 to 12,303 px
 wide (TE-1043; The-Home-Scout's `breakLongRuns` workaround, TE-1050, split emoji).
 
-- `renderRelloEmail` adds `overflow-wrap:anywhere;word-break:break-word;` to the
-  style of every slot that holds caller text: kicker, headline, badge, detail,
-  paragraphs, card title / label / value, button label and note, secondary and
-  further link labels, signer reply line and name block, the footer block, and the
-  brand name shown as header text. `overflow-wrap:anywhere` lets the table
-  shrink; `overflow-wrap:break-word` alone does not (measured: still thousands of
-  px wide). `word-break:break-word` is kept as the older spelling for clients that
-  know only that one.
+- `renderRelloEmail` gives a very long run a place to break. A run of 40 or more
+  non-space characters (counted as user-perceived characters) gets a `<wbr>`
+  between chunks of 10, in every slot that holds caller text: kicker, headline,
+  badge, detail, paragraphs, card title / label / value, button label and note,
+  secondary and further link labels, signer reply line, name, title and phone,
+  the three footer lines, the preference link, and the brand name shown as
+  header text. `<wbr>` is an element, not a character: no text is added and the
+  visible text equals the input.
+- Each chunk is escaped on its own after the split, so a boundary never falls
+  inside an entity (`&amp;`); the split is on `Intl.Segmenter` graphemes, so an
+  emoji, a flag or a family emoji is never cut. Where `Intl.Segmenter` is missing
+  the text is escaped and left whole, as before.
+- **Ordinary mail is byte-identical to v2.35.0**: nothing is added to any email
+  with no run of 40 or more unbroken characters, so the v2.32.0 / v2.33.0 render
+  hashes pass unmodified. No CSS is added, so no table is re-laid-out (a
+  `overflow-wrap:anywhere` style on the cells did re-lay-out them and broke
+  ordinary words on a phone, TE-1051, and added 9,315 bytes to a 100-row digest).
+  Plain-text parts, hrefs, the button URL and every other attribute are untouched.
+- A token of 24 to 39 characters is below the threshold and renders as before:
+  on a narrow phone it can still be as wide as it was at v2.35.0.
 - Left alone on purpose: the fallback link (already `word-break:break-all`), the
-  hidden preheader, the signer's initials (cut to 3 characters), and the app-name
-  text header (a fixed list of names, not caller text).
-- Ordinary mail is unchanged except for that added style text: with it cut out,
-  every render still hashes as at v2.32.0 / v2.33.0. Plain-text parts are
-  byte-identical. No character is added or removed.
-- Not proved here: no mail client was opened. Outlook desktop (Word's engine) may
-  ignore both properties; the 600 px MSO width wrapper is unchanged.
+  hidden preheader, the `<title>`, the signer's initials (cut to 3 characters),
+  and every attribute.
+- Not proved here: no mail client was opened. How Gmail, Outlook and Apple Mail
+  treat `<wbr>`, and whether an address or URL over the threshold is still
+  auto-linked, is not tested.
 
 ## v2.35.0 — 2026-10-30
 

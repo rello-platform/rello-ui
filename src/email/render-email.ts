@@ -223,6 +223,61 @@ export function escapeEmailHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
+/**
+ * A very long unbroken run (a URL, an id, a pasted blob) cannot wrap, so an
+ * auto-layout table grows to hold it and the whole email goes sideways. This
+ * gives such a run somewhere to break and touches nothing else (TE-1043).
+ *
+ * A run of non-space characters of LONG_RUN or more user-perceived characters
+ * gets a `<wbr>` between chunks of CHUNK of them. `<wbr>` is an element, not a
+ * character: no text is added, a copy of the visible text equals the input, and
+ * a run under the threshold renders exactly as `escapeEmailHtml` renders it.
+ *
+ * The split is on raw text, one chunk at a time, and each chunk is escaped on
+ * its own, so a boundary can never fall inside an entity such as `&amp;`. The
+ * split is on Intl.Segmenter graphemes, so an emoji, a flag or a family emoji
+ * is never cut. Where Intl.Segmenter does not exist the text is escaped and left
+ * whole (no `<wbr>`, as before this helper): a code-point split could cut a
+ * joined emoji, and an unbroken run is the safer failure than a broken glyph.
+ * Used only for text inside elements, never inside an attribute or a URL.
+ */
+const LONG_RUN = 40;
+const CHUNK = 10;
+
+interface GraphemeSegmenter {
+  segment(input: string): Iterable<{ segment: string }>;
+}
+
+const graphemeSegmenter: GraphemeSegmenter | null = (() => {
+  try {
+    const ctor = (Intl as unknown as { Segmenter?: new (locale?: string, options?: { granularity: string }) => GraphemeSegmenter })
+      .Segmenter;
+    return typeof ctor === "function" ? new ctor(undefined, { granularity: "grapheme" }) : null;
+  } catch {
+    return null;
+  }
+})();
+
+function escapeEmailHtmlBreakable(value: string): string {
+  // Spaces, tabs and line breaks end a run. A no-break space does not: a browser
+  // cannot break there either, so it belongs to the run it holds together.
+  return value
+    .split(/([ \t\r\n\f]+)/)
+    .map((part, i) => {
+      // Odd parts are the separators the split kept; a part shorter than the
+      // threshold in UTF-16 units has fewer graphemes than that, too.
+      if (i % 2 === 1 || part.length < LONG_RUN || !graphemeSegmenter) return escapeEmailHtml(part);
+      const graphemes = Array.from(graphemeSegmenter.segment(part), (g) => g.segment);
+      if (graphemes.length < LONG_RUN) return escapeEmailHtml(part);
+      const chunks: string[] = [];
+      for (let at = 0; at < graphemes.length; at += CHUNK) {
+        chunks.push(escapeEmailHtml(graphemes.slice(at, at + CHUNK).join("")));
+      }
+      return chunks.join("<wbr>");
+    })
+    .join("");
+}
+
 /** One line of text: trimmed, line breaks flattened, non-strings read as empty. */
 function line(value: unknown): string {
   return typeof value === "string" ? value.replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim() : "";
@@ -296,20 +351,6 @@ const MALFORMED_TOKEN_FALLBACK = "#475569";
 
 /** Card title and values; the card background must keep ≥ 7:1 with it. */
 const CARD_VALUE_TEXT = "#111827";
-
-/**
- * Appended to the style of every slot that holds caller text. A long unbroken run
- * (a URL, an order id, a pasted string) has no break point, so an auto-layout
- * table sizes itself to it and the email grows to thousands of pixels
- * (measured: 900 characters made a 600 px email 12,303 px wide). `anywhere`
- * lets the run break at any character and also counts those break points in the
- * cell's minimum width, which `overflow-wrap:break-word` alone does not (measured
- * in Chromium: the table stays thousands of pixels wide), so the table can
- * shrink; `word-break:break-word` is the older spelling for clients that know
- * only that one (in Chromium it does the same job as `anywhere`). Ordinary words are not touched: a break is taken only when a
- * word alone is wider than its line. No character is added or removed.
- */
-const WRAP = "overflow-wrap:anywhere;word-break:break-word;";
 
 const WHITE = "#ffffff";
 
@@ -525,6 +566,8 @@ function appName(app: unknown): string {
 
 export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const e = escapeEmailHtml;
+  // For text slots only: breaks a very long unbroken run (see escapeEmailHtmlBreakable).
+  const ew = escapeEmailHtmlBreakable;
   const audience: RelloEmailAudience =
     input.audience === "pro" || input.audience === "admin" ? input.audience : "consumer";
   // The sender's brand, on consumer and pro mail. Null keeps every byte of v2.33.0.
@@ -612,14 +655,14 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
             // A distorted logo is worse than a large one (KA ruling, prompt 110).
             `<img src="${e(logoUrl)}" width="200" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;max-width:200px;max-height:64px;height:auto;border:0;outline:none;text-decoration:none;">`
           : logoAlt
-            ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;${WRAP}">${e(logoAlt)}</div>`
+            ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${ew(logoAlt)}</div>`
             : ""
         : logoUrl
           ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">`
-          : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) +
-      `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;${WRAP}">${e(kicker)}</div>` +
+          : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${ew(logoAlt)}</div>`) +
+      `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${ew(kicker)}</div>` +
       (headline
-        ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;${WRAP}">${e(headline)}</div>`
+        ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${ew(headline)}</div>`
         : "") +
       `</td></tr>`,
   );
@@ -628,10 +671,10 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     rows.push(
       `<tr><td style="padding:24px 32px 0;">` +
         (badgeLabel
-          ? `<span style="display:inline-block;background:${pal.badgeBackground};color:${pal.badgeText};font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;${WRAP}">${e(badgeLabel)}</span>`
+          ? `<span style="display:inline-block;background:${pal.badgeBackground};color:${pal.badgeText};font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;">${ew(badgeLabel)}</span>`
           : "") +
         (detail
-          ? `<div style="font-size:14px;color:${pal.secondaryText};margin-top:${badgeLabel ? "8px" : "0"};${WRAP}">${e(detail)}</div>`
+          ? `<div style="font-size:14px;color:${pal.secondaryText};margin-top:${badgeLabel ? "8px" : "0"};">${ew(detail)}</div>`
           : "") +
         `</td></tr>`,
     );
@@ -643,7 +686,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         paragraphs
           .map(
             (p, i) =>
-              `<p style="margin:0 0 ${i === paragraphs.length - 1 ? "0" : "12px"};${WRAP}">${e(p).replace(/\n/g, "<br>")}</p>`,
+              `<p style="margin:0 0 ${i === paragraphs.length - 1 ? "0" : "12px"};">${ew(p).replace(/\n/g, "<br>")}</p>`,
           )
           .join("") +
         `</td></tr>`,
@@ -655,15 +698,15 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
       `<tr><td style="padding:18px 32px 4px;">` +
         `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${pal.cardBackground};border:1px solid ${pal.cardBorder};border-radius:8px;font-size:14px;line-height:1.5;">` +
         (cardTitle
-          ? `<tr><td colspan="2" style="padding:14px 18px 2px;font-weight:700;color:${CARD_VALUE_TEXT};${WRAP}">${e(cardTitle)}</td></tr>`
+          ? `<tr><td colspan="2" style="padding:14px 18px 2px;font-weight:700;color:${CARD_VALUE_TEXT};">${ew(cardTitle)}</td></tr>`
           : "") +
         cardRows
           .map((r, i) => {
             const top = i === 0 ? (cardTitle ? "8px" : "14px") : "4px";
             const bottom = i === cardRows.length - 1 ? "14px" : "4px";
             return (
-              `<tr><td valign="top" style="padding:${top} 18px ${bottom};color:${pal.secondaryText};width:130px;${WRAP}">${e(r.label)}</td>` +
-              `<td valign="top" style="padding:${top} 18px ${bottom};color:${CARD_VALUE_TEXT};${WRAP}">${e(r.value).replace(/\n/g, "<br>")}</td></tr>`
+              `<tr><td valign="top" style="padding:${top} 18px ${bottom};color:${pal.secondaryText};width:130px;">${ew(r.label)}</td>` +
+              `<td valign="top" style="padding:${top} 18px ${bottom};color:${CARD_VALUE_TEXT};">${ew(r.value).replace(/\n/g, "<br>")}</td></tr>`
             );
           })
           .join("") +
@@ -677,20 +720,20 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         (button
           ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr>` +
             `<td align="center" bgcolor="${color}" style="background:${color};border-radius:8px;">` +
-            `<a href="${e(button.url)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;${WRAP}">${e(button.label)}</a>` +
+            `<a href="${e(button.url)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;">${ew(button.label)}</a>` +
             `</td></tr></table>`
           : "") +
         (secondary
-          ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;${WRAP}"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>`
+          ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${ew(secondary.label)}</a></div>`
           : "") +
         moreLinks
           .map(
             (l, i) =>
-              `<div style="margin-top:${button || secondary || i > 0 ? "12px" : "0"};font-size:15px;${WRAP}"><a href="${e(l.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(l.label)}</a></div>`,
+              `<div style="margin-top:${button || secondary || i > 0 ? "12px" : "0"};font-size:15px;"><a href="${e(l.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${ew(l.label)}</a></div>`,
           )
           .join("") +
         (button && button.note
-          ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;${WRAP}">${e(button.note)}</div>`
+          ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;">${ew(button.note)}</div>`
           : "") +
         `</td></tr>`,
     );
@@ -708,25 +751,25 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   if (signer) {
     rows.push(
       `<tr><td style="padding:20px 32px 22px;font-size:15px;line-height:1.6;color:#1f2937;">` +
-        (signer.replyLine ? `<p style="margin:0 0 12px;${WRAP}">${e(signer.replyLine)}</p>` : "") +
+        (signer.replyLine ? `<p style="margin:0 0 12px;">${ew(signer.replyLine)}</p>` : "") +
         `<table role="presentation" cellpadding="0" cellspacing="0"><tr>` +
         `<td width="52" valign="top"><div style="width:40px;height:40px;border-radius:20px;background:${pal.avatarBackground};text-align:center;line-height:40px;font-size:14px;font-weight:700;color:${pal.avatarText};">${e(signer.initials)}</div></td>` +
-        `<td valign="top" style="font-size:14px;line-height:1.5;${WRAP}"><b>${e(signer.name)}</b>` +
-        (signerMeta ? `<br><span style="color:${pal.secondaryText};">${e(signerMeta)}</span>` : "") +
-        (signer.phone ? `<br><span style="color:${pal.secondaryText};">${e(signer.phone)}</span>` : "") +
+        `<td valign="top" style="font-size:14px;line-height:1.5;"><b>${ew(signer.name)}</b>` +
+        (signerMeta ? `<br><span style="color:${pal.secondaryText};">${ew(signerMeta)}</span>` : "") +
+        (signer.phone ? `<br><span style="color:${pal.secondaryText};">${ew(signer.phone)}</span>` : "") +
         `</td></tr></table></td></tr>`,
     );
   }
 
   const footerParts = [
-    footerLine1 ? e(footerLine1) : "",
-    footerLine2 ? e(footerLine2) : "",
-    footerReason ? e(footerReason) : "",
-    pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${e(pref.label)}</a>` : "",
+    footerLine1 ? ew(footerLine1) : "",
+    footerLine2 ? ew(footerLine2) : "",
+    footerReason ? ew(footerReason) : "",
+    pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${ew(pref.label)}</a>` : "",
   ].filter(Boolean);
   if (footerParts.length > 0) {
     rows.push(
-      `<tr><td style="border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:${pal.secondaryText};line-height:1.6;${WRAP}">` +
+      `<tr><td style="border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:${pal.secondaryText};line-height:1.6;">` +
         footerParts.join("<br>") +
         `</td></tr>`,
     );
