@@ -199,3 +199,47 @@ describe("v2.36.0: a long unbroken run gets break points in every caller-text sl
     for (const m of html.matchAll(/<[^>]*>/g)) if (m[0] !== WBR) expect(m[0], "a tag").not.toContain(WBR);
   });
 });
+
+/**
+ * TE-1052: a run ends at every character a browser can already wrap a line at, not just ASCII space.
+ * The set was measured in headless Chromium (paste-back evidence a4-343/chars-results.json). Code points
+ * are written as numbers, never as escapes in a string, so no tool can turn one into a plain space.
+ */
+const range = (from: number, to: number): number[] => Array.from({ length: to - from + 1 }, (_, i) => from + i);
+const BREAKING_SEPARATORS: number[] = [0x09, 0x0a, 0x0d, 0x20, 0x85, 0x1680, ...range(0x2000, 0x2006), ...range(0x2008, 0x200b), 0x2028, 0x2029, 0x205f, 0x3000];
+const NON_BREAKING: number[] = [0xa0, 0x2007, 0x202f, 0x2060, 0xfeff, 0x0b, 0x0c, 0x200c, 0x200d, 0x180e];
+const hex = (cp: number): string => `U+${cp.toString(16).toUpperCase().padStart(4, "0")}`;
+const SENTENCE = "Your communications and acknowledgement preferences will be reviewed by our representative.".split(" ");
+
+function mailWith(audience: RelloEmailAudience, value: string): string {
+  const input = base(audience);
+  input.paragraphs = [value];
+  input.card = { title: "T", rows: [{ label: "Details", value }] };
+  return renderRelloEmail(input).html;
+}
+
+describe("v2.36.0: a sentence spaced with a breaking space is ordinary prose (TE-1052)", () => {
+  for (const cp of BREAKING_SEPARATORS) {
+    it(`${hex(cp)} ends a run: the sentence gets no <wbr> in a paragraph or a card value, in every audience`, () => {
+      const sentence = SENTENCE.join(String.fromCodePoint(cp));
+      expect(Array.from(sentence).length, "the sentence is longer than the threshold").toBeGreaterThan(THRESHOLD);
+      for (const audience of AUDIENCES) expect(mailWith(audience, sentence), `${hex(cp)} ${audience}`).not.toContain(WBR);
+    });
+  }
+
+  for (const cp of NON_BREAKING) {
+    it(`${hex(cp)} does not end a run: 45 characters of words joined by it are one run and get the <wbr>`, () => {
+      const run = ["alpha", "bravo", "delta", "gamma", "kappa", "omega", "sigma", "theta", "zeta1"].join(String.fromCodePoint(cp));
+      expect(Array.from(run).length).toBe(45 + 8);
+      const html = mailWith("consumer", run);
+      expect(html, hex(cp)).toContain(WBR);
+      expect(noWbr(html), "no character lost").toContain(run);
+    });
+  }
+
+  it("a long run between breaking spaces is still chunked: only the run, not the words around it", () => {
+    const html = mailWith("consumer", `before${String.fromCodePoint(0x2003)}${"q".repeat(60)}${String.fromCodePoint(0x2003)}after`);
+    expect(html).toContain(`${"q".repeat(10)}${WBR}${"q".repeat(10)}`);
+    expect(html.split(WBR).length - 1, "six chunks of ten = five breaks, in the paragraph and again in the card value").toBe(10);
+  });
+});

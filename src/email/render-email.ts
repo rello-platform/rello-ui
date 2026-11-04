@@ -228,7 +228,7 @@ export function escapeEmailHtml(value: string): string {
  * auto-layout table grows to hold it and the whole email goes sideways. This
  * gives such a run somewhere to break and touches nothing else (TE-1043).
  *
- * A run of non-space characters of LONG_RUN or more user-perceived characters
+ * A run (see RUN_SEPARATORS) of LONG_RUN or more user-perceived characters
  * gets a `<wbr>` between chunks of CHUNK of them. `<wbr>` is an element, not a
  * character: no text is added, a copy of the visible text equals the input, and
  * a run under the threshold renders exactly as `escapeEmailHtml` renders it.
@@ -258,11 +258,32 @@ const graphemeSegmenter: GraphemeSegmenter | null = (() => {
   }
 })();
 
+/**
+ * The characters a run ends at: every space or line break a browser can already
+ * wrap a line at (TE-1052). A sentence spaced with U+2003 is ordinary prose, not
+ * one 40-character run, and a `<wbr>` inside "communications" would break the
+ * word on a phone. Measured in headless Chromium (a 20-character word on each
+ * side of the candidate in a 120 px box): a line wraps at all of these.
+ *
+ *   U+0009 tab, U+000A, U+000D, U+0020 space, U+0085 NEL (Unicode line-break
+ *   classes BA/LF/CR/SP/NL), U+1680 Ogham space, U+2000-U+2006 and
+ *   U+2008-U+200A (en, em ... hair spaces, class BA), U+200B zero-width space
+ *   (ZW), U+2028 / U+2029 line and paragraph separators, U+205F medium
+ *   mathematical space, U+3000 ideographic space.
+ *
+ * NOT separators, because a browser cannot wrap at them either, so each belongs
+ * to the run it holds together: U+00A0 no-break space, U+2007 figure space and
+ * U+202F narrow no-break space (class GL), U+2060 word joiner and U+FEFF (WJ),
+ * U+200C / U+200D (joiners), U+180E, and U+000B / U+000C. UAX #14 calls those
+ * last two mandatory breaks, but Chromium does not wrap at either; where an
+ * engine did, the cost is only that the run is not chunked, which is how it
+ * rendered before this helper existed.
+ */
+const RUN_SEPARATORS = /([\t\n\r \u0085\u1680\u2000-\u2006\u2008-\u200b\u2028\u2029\u205f\u3000]+)/;
+
 function escapeEmailHtmlBreakable(value: string): string {
-  // Spaces, tabs and line breaks end a run. A no-break space does not: a browser
-  // cannot break there either, so it belongs to the run it holds together.
   return value
-    .split(/([ \t\r\n\f]+)/)
+    .split(RUN_SEPARATORS)
     .map((part, i) => {
       // Odd parts are the separators the split kept; a part shorter than the
       // threshold in UTF-16 units has fewer graphemes than that, too.

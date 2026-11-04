@@ -312,8 +312,9 @@ var graphemeSegmenter = (() => {
     return null;
   }
 })();
+var RUN_SEPARATORS = /([\t\n\r \u0085\u1680\u2000-\u2006\u2008-\u200b\u2028\u2029\u205f\u3000]+)/;
 function escapeEmailHtmlBreakable(value) {
-  return value.split(/([ \t\r\n\f]+)/).map((part, i) => {
+  return value.split(RUN_SEPARATORS).map((part, i) => {
     if (i % 2 === 1 || part.length < LONG_RUN || !graphemeSegmenter) return escapeEmailHtml(part);
     const graphemes = Array.from(graphemeSegmenter.segment(part), (g) => g.segment);
     if (graphemes.length < LONG_RUN) return escapeEmailHtml(part);
