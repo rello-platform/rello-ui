@@ -5,6 +5,33 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.36.0 — 2026-11-03
+
+**Fixed: a long unbroken value no longer stretches an email**
+
+An auto-layout table sizes itself to the widest thing it cannot break. A caller's
+900-character unbroken string (a URL, an id, a pasted blob) made a 600 px email
+thousands of pixels wide on every audience; measured in headless Chromium before
+this change, 900 ASCII characters in one slot gave a document 5,563 to 12,303 px
+wide (TE-1043; The-Home-Scout's `breakLongRuns` workaround, TE-1050, split emoji).
+
+- `renderRelloEmail` adds `overflow-wrap:anywhere;word-break:break-word;` to the
+  style of every slot that holds caller text: kicker, headline, badge, detail,
+  paragraphs, card title / label / value, button label and note, secondary and
+  further link labels, signer reply line and name block, the footer block, and the
+  brand name shown as header text. `overflow-wrap:anywhere` lets the table
+  shrink; `overflow-wrap:break-word` alone does not (measured: still thousands of
+  px wide). `word-break:break-word` is kept as the older spelling for clients that
+  know only that one.
+- Left alone on purpose: the fallback link (already `word-break:break-all`), the
+  hidden preheader, the signer's initials (cut to 3 characters), and the app-name
+  text header (a fixed list of names, not caller text).
+- Ordinary mail is unchanged except for that added style text: with it cut out,
+  every render still hashes as at v2.32.0 / v2.33.0. Plain-text parts are
+  byte-identical. No character is added or removed.
+- Not proved here: no mail client was opened. Outlook desktop (Word's engine) may
+  ignore both properties; the 600 px MSO width wrapper is unchanged.
+
 ## v2.35.0 — 2026-10-30
 
 **Added: PreQual Pro's email colors, and `./email` for CommonJS apps**

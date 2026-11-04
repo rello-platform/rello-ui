@@ -297,6 +297,20 @@ const MALFORMED_TOKEN_FALLBACK = "#475569";
 /** Card title and values; the card background must keep ≥ 7:1 with it. */
 const CARD_VALUE_TEXT = "#111827";
 
+/**
+ * Appended to the style of every slot that holds caller text. A long unbroken run
+ * (a URL, an order id, a pasted string) has no break point, so an auto-layout
+ * table sizes itself to it and the email grows to thousands of pixels
+ * (measured: 900 characters made a 600 px email 12,303 px wide). `anywhere`
+ * lets the run break at any character and also counts those break points in the
+ * cell's minimum width, which `overflow-wrap:break-word` alone does not (measured
+ * in Chromium: the table stays thousands of pixels wide), so the table can
+ * shrink; `word-break:break-word` is the older spelling for clients that know
+ * only that one (in Chromium it does the same job as `anywhere`). Ordinary words are not touched: a break is taken only when a
+ * word alone is wider than its line. No character is added or removed.
+ */
+const WRAP = "overflow-wrap:anywhere;word-break:break-word;";
+
 const WHITE = "#ffffff";
 
 function validHex(value: unknown): string | null {
@@ -598,14 +612,14 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
             // A distorted logo is worse than a large one (KA ruling, prompt 110).
             `<img src="${e(logoUrl)}" width="200" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;max-width:200px;max-height:64px;height:auto;border:0;outline:none;text-decoration:none;">`
           : logoAlt
-            ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`
+            ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;${WRAP}">${e(logoAlt)}</div>`
             : ""
         : logoUrl
           ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">`
           : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) +
-      `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${e(kicker)}</div>` +
+      `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;${WRAP}">${e(kicker)}</div>` +
       (headline
-        ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${e(headline)}</div>`
+        ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;${WRAP}">${e(headline)}</div>`
         : "") +
       `</td></tr>`,
   );
@@ -614,10 +628,10 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     rows.push(
       `<tr><td style="padding:24px 32px 0;">` +
         (badgeLabel
-          ? `<span style="display:inline-block;background:${pal.badgeBackground};color:${pal.badgeText};font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;">${e(badgeLabel)}</span>`
+          ? `<span style="display:inline-block;background:${pal.badgeBackground};color:${pal.badgeText};font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;${WRAP}">${e(badgeLabel)}</span>`
           : "") +
         (detail
-          ? `<div style="font-size:14px;color:${pal.secondaryText};margin-top:${badgeLabel ? "8px" : "0"};">${e(detail)}</div>`
+          ? `<div style="font-size:14px;color:${pal.secondaryText};margin-top:${badgeLabel ? "8px" : "0"};${WRAP}">${e(detail)}</div>`
           : "") +
         `</td></tr>`,
     );
@@ -629,7 +643,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         paragraphs
           .map(
             (p, i) =>
-              `<p style="margin:0 0 ${i === paragraphs.length - 1 ? "0" : "12px"};">${e(p).replace(/\n/g, "<br>")}</p>`,
+              `<p style="margin:0 0 ${i === paragraphs.length - 1 ? "0" : "12px"};${WRAP}">${e(p).replace(/\n/g, "<br>")}</p>`,
           )
           .join("") +
         `</td></tr>`,
@@ -641,15 +655,15 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
       `<tr><td style="padding:18px 32px 4px;">` +
         `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${pal.cardBackground};border:1px solid ${pal.cardBorder};border-radius:8px;font-size:14px;line-height:1.5;">` +
         (cardTitle
-          ? `<tr><td colspan="2" style="padding:14px 18px 2px;font-weight:700;color:${CARD_VALUE_TEXT};">${e(cardTitle)}</td></tr>`
+          ? `<tr><td colspan="2" style="padding:14px 18px 2px;font-weight:700;color:${CARD_VALUE_TEXT};${WRAP}">${e(cardTitle)}</td></tr>`
           : "") +
         cardRows
           .map((r, i) => {
             const top = i === 0 ? (cardTitle ? "8px" : "14px") : "4px";
             const bottom = i === cardRows.length - 1 ? "14px" : "4px";
             return (
-              `<tr><td valign="top" style="padding:${top} 18px ${bottom};color:${pal.secondaryText};width:130px;">${e(r.label)}</td>` +
-              `<td valign="top" style="padding:${top} 18px ${bottom};color:${CARD_VALUE_TEXT};">${e(r.value).replace(/\n/g, "<br>")}</td></tr>`
+              `<tr><td valign="top" style="padding:${top} 18px ${bottom};color:${pal.secondaryText};width:130px;${WRAP}">${e(r.label)}</td>` +
+              `<td valign="top" style="padding:${top} 18px ${bottom};color:${CARD_VALUE_TEXT};${WRAP}">${e(r.value).replace(/\n/g, "<br>")}</td></tr>`
             );
           })
           .join("") +
@@ -663,20 +677,20 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         (button
           ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr>` +
             `<td align="center" bgcolor="${color}" style="background:${color};border-radius:8px;">` +
-            `<a href="${e(button.url)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;">${e(button.label)}</a>` +
+            `<a href="${e(button.url)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;${WRAP}">${e(button.label)}</a>` +
             `</td></tr></table>`
           : "") +
         (secondary
-          ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>`
+          ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;${WRAP}"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>`
           : "") +
         moreLinks
           .map(
             (l, i) =>
-              `<div style="margin-top:${button || secondary || i > 0 ? "12px" : "0"};font-size:15px;"><a href="${e(l.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(l.label)}</a></div>`,
+              `<div style="margin-top:${button || secondary || i > 0 ? "12px" : "0"};font-size:15px;${WRAP}"><a href="${e(l.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(l.label)}</a></div>`,
           )
           .join("") +
         (button && button.note
-          ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;">${e(button.note)}</div>`
+          ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;${WRAP}">${e(button.note)}</div>`
           : "") +
         `</td></tr>`,
     );
@@ -694,10 +708,10 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   if (signer) {
     rows.push(
       `<tr><td style="padding:20px 32px 22px;font-size:15px;line-height:1.6;color:#1f2937;">` +
-        (signer.replyLine ? `<p style="margin:0 0 12px;">${e(signer.replyLine)}</p>` : "") +
+        (signer.replyLine ? `<p style="margin:0 0 12px;${WRAP}">${e(signer.replyLine)}</p>` : "") +
         `<table role="presentation" cellpadding="0" cellspacing="0"><tr>` +
         `<td width="52" valign="top"><div style="width:40px;height:40px;border-radius:20px;background:${pal.avatarBackground};text-align:center;line-height:40px;font-size:14px;font-weight:700;color:${pal.avatarText};">${e(signer.initials)}</div></td>` +
-        `<td valign="top" style="font-size:14px;line-height:1.5;"><b>${e(signer.name)}</b>` +
+        `<td valign="top" style="font-size:14px;line-height:1.5;${WRAP}"><b>${e(signer.name)}</b>` +
         (signerMeta ? `<br><span style="color:${pal.secondaryText};">${e(signerMeta)}</span>` : "") +
         (signer.phone ? `<br><span style="color:${pal.secondaryText};">${e(signer.phone)}</span>` : "") +
         `</td></tr></table></td></tr>`,
@@ -712,7 +726,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   ].filter(Boolean);
   if (footerParts.length > 0) {
     rows.push(
-      `<tr><td style="border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:${pal.secondaryText};line-height:1.6;">` +
+      `<tr><td style="border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:${pal.secondaryText};line-height:1.6;${WRAP}">` +
         footerParts.join("<br>") +
         `</td></tr>`,
     );

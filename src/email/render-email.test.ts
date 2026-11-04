@@ -295,7 +295,7 @@ describe("renderRelloEmail — app colors from tokens/app-overrides.json (Kelly 
     expect(hr.secondaryText).toBe(lc(T.apps["home-ready"].secondaryText));
     const { html } = renderRelloEmail(full({ app: "home-ready" }));
     expect(html).toContain(`background:${hr.badgeBackground};color:${hr.badgeText};`);
-    expect(html).toContain(`color:${hr.secondaryText};width:130px;">Budget<`);
+    expect(html).toContain(`color:${hr.secondaryText};width:130px;overflow-wrap:anywhere;word-break:break-word;">Budget<`);
     expect(html).toContain(`background:${hr.cardBackground};border:1px solid ${hr.cardBorder};`);
     expect(html).not.toMatch(/#b42318|#6b7280|#4b5563|#f3f6fa|#dbe4f0/);
     // The tone no longer picks a color.
