@@ -243,3 +243,65 @@ describe("v2.36.0: a sentence spaced with a breaking space is ordinary prose (TE
     expect(html.split(WBR).length - 1, "six chunks of ten = five breaks, in the paragraph and again in the card value").toBe(10);
   });
 });
+
+/**
+ * TE-1060: text in a script a browser breaks by itself is left whole. Thai has no spaces between words and
+ * Chromium breaks it at dictionary boundaries; a <wbr> every 10 characters cut "ข้อมูล" in two. Han, Hiragana,
+ * Katakana and Hangul break between nearly any two characters. Each sample below is spaceless and over the threshold.
+ */
+const SELF_BREAKING: Array<[script: string, text: string]> = [
+  ["Thai", "เราได้รับคำขอของคุณแล้วเจ้าหน้าที่จะตรวจสอบข้อมูลและติดต่อกลับโปรดตรวจสอบข้อมูลการติดต่อให้ถูกต้อง"],
+  ["Lao", "ພວກເຮົາໄດ້ຮັບຄຳຮ້ອງຂໍຂອງທ່ານແລ້ວເຈົ້າໜ້າທີ່ຈະກວດສອບຂໍ້ມູນແລະຕິດຕໍ່ກັບຄືນຖ້າທ່ານມີຄຳຖາມກະລຸນາຕິດຕໍ່ຫ້ອງການ"],
+  ["Khmer", "យើងបានទទួលសំណើរបស់អ្នកហើយមន្ត្រីនឹងពិនិត្យព័ត៌មានហើយទាក់ទងអ្នកវិញប្រសិនបើអ្នកមានសំណួរសូមទាក់ទងការិយាល័យ"],
+  ["Myanmar", "သင့်တောင်းဆိုမှုကိုလက်ခံရရှိပါပြီဝန်ထမ်းများကအချက်အလက်များကိုစစ်ဆေးပြီးပြန်လည်ဆက်သွယ်ပါမည်မေးခွန်းရှိပါကရုံးသို့ဆက်သွယ်ပါ"],
+  ["Han", "我们已经收到您的请求工作人员将核对信息并与您联系如果您对请求有任何疑问请联系办公室以获取更多信息"],
+  ["Hiragana", "おきゃくさまのりくえすとをうけつけましたたんとうしゃがないようをかくにんしごれんらくいたします"],
+  ["Katakana", "コミュニケーションプリファレンスアクノレッジメントレプレゼンタティブドキュメンテーション"],
+  ["Hangul", "요청이접수되었습니다담당자가정보를확인하고연락드리겠습니다요청에관한질문이있으시면사무실로문의해주십시오"],
+];
+
+describe("v2.36.0: text in a script a browser breaks by itself is left whole (TE-1060)", () => {
+  for (const [script, text] of SELF_BREAKING) {
+    it(`${script}: a spaceless run over the threshold gets no <wbr> in any audience, and the text is whole in the html`, () => {
+      expect(graphemes(text).length, "over the threshold").toBeGreaterThan(THRESHOLD);
+      for (const audience of AUDIENCES) {
+        const html = mailWith(audience, text);
+        expect(html, `${script} ${audience}`).not.toContain(WBR);
+        expect(html.split(text).length - 1, "whole, in the paragraph and again in the card value").toBe(2);
+      }
+    });
+  }
+
+  it("punctuation inside the run does not matter: Chinese with full-width commas and stops stays whole", () => {
+    const text = "我们已收到您的请求，工作人员将核对信息并与您联系。如果您对请求有任何疑问，请联系办公室以获取更多信息，感谢您的耐心等待与理解。";
+    expect(mailWith("pro", text)).not.toContain(WBR);
+  });
+
+  it("one such character is enough: 60 ASCII letters touching a single Han character stay whole, as at v2.35.0", () => {
+    const run = `${"a".repeat(60)}我`;
+    for (const audience of AUDIENCES) expect(mailWith(audience, run), audience).not.toContain(WBR);
+  });
+
+  it("the test is per run: a long URL beside Thai with a space between them is its own run and is still chunked", () => {
+    const url = `https://example.com/${"x".repeat(60)}`;
+    const html = mailWith("consumer", `เราได้รับคำขอของคุณแล้ว ${url}`);
+    expect(html).toContain(WBR);
+    expect(noWbr(html)).toContain(url);
+  });
+
+  it("the check can fail: the same 900-character run in Latin, Cyrillic, Arabic and Devanagari is still chunked", () => {
+    const runs: Array<[string, string]> = [
+      ["Latin", RUN],
+      ["Cyrillic", "Ж".repeat(900)],
+      ["Arabic", "ع".repeat(900)],
+      ["Devanagari", "क".repeat(900)],
+    ];
+    for (const [script, run] of runs) {
+      for (const audience of AUDIENCES) {
+        const html = mailWith(audience, run);
+        expect(html, `${script} ${audience}`).toContain(WBR);
+        expect(noWbr(html), `${script} ${audience}: no character lost`).toContain(run);
+      }
+    }
+  });
+});

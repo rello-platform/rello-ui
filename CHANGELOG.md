@@ -18,8 +18,10 @@ wide (TE-1043; The-Home-Scout's `breakLongRuns` workaround, TE-1050, split emoji
 - `renderRelloEmail` gives a very long run a place to break. A run is what lies
   between two characters a browser can already wrap a line at: ASCII space, tab,
   CR, LF, U+0085, U+1680, U+2000-U+2006, U+2008-U+200B, U+2028, U+2029, U+205F
-  and U+3000 (so a sentence spaced with U+2003 is ordinary prose, TE-1052). A
-  run of 40 or more characters (counted as user-perceived characters) gets a
+  and U+3000 (so a sentence spaced with U+2003 is ordinary prose, TE-1052; the
+  list was measured in Chromium with Latin words around each character). A
+  run of 40 or more characters (counted as user-perceived characters) that holds
+  no Thai, Lao, Khmer, Myanmar, Han, Hiragana, Katakana or Hangul gets a
   `<wbr>` between chunks of 10, in every slot that holds caller text: kicker, headline,
   badge, detail, paragraphs, card title / label / value, button label and note,
   secondary and further link labels, signer reply line, name, title and phone,
@@ -40,6 +42,15 @@ wide (TE-1043; The-Home-Scout's `breakLongRuns` workaround, TE-1050, split emoji
   U+2007, narrow no-break space U+202F, word joiner U+2060, U+FEFF, the joiners,
   form feed and vertical tab) do not end a run: 45 characters of words joined by
   them are one unbroken run and get the `<wbr>`.
+- **Text in a script a browser breaks by itself is left whole** (TE-1060). Thai,
+  Lao, Khmer and Myanmar have no spaces between words and the browser finds the
+  boundaries from a dictionary; Han, Hiragana, Katakana and Hangul break between
+  nearly any two characters. A run holding any character of those eight scripts
+  renders exactly as at v2.35.0, byte for byte: a `<wbr>` every 10 characters
+  would cut words the browser keeps whole (Thai "ข้อมูล" became "ข้" / "อมูล").
+  A long URL pasted straight against such text with no space is part of the same
+  run and stays unbroken, as at v2.35.0 (never worse than before); with a space
+  between them it is its own run and still gets the `<wbr>`.
 - A token of 24 to 39 characters is below the threshold and renders as before:
   on a narrow phone it can still be as wide as it was at v2.35.0.
 - Left alone on purpose: the fallback link (already `word-break:break-all`), the

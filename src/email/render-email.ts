@@ -232,6 +232,8 @@ export function escapeEmailHtml(value: string): string {
  * gets a `<wbr>` between chunks of CHUNK of them. `<wbr>` is an element, not a
  * character: no text is added, a copy of the visible text equals the input, and
  * a run under the threshold renders exactly as `escapeEmailHtml` renders it.
+ * A run holding a character from SELF_BREAKING_SCRIPTS is left whole (TE-1060):
+ * a browser already breaks that text, at its own word boundaries.
  *
  * The split is on raw text, one chunk at a time, and each chunk is escaped on
  * its own, so a boundary can never fall inside an entity such as `&amp;`. The
@@ -271,15 +273,41 @@ const graphemeSegmenter: GraphemeSegmenter | null = (() => {
  *   (ZW), U+2028 / U+2029 line and paragraph separators, U+205F medium
  *   mathematical space, U+3000 ideographic space.
  *
- * NOT separators, because a browser cannot wrap at them either, so each belongs
+ * NOT separators, because Chromium cannot wrap at them either, so each belongs
  * to the run it holds together: U+00A0 no-break space, U+2007 figure space and
  * U+202F narrow no-break space (class GL), U+2060 word joiner and U+FEFF (WJ),
  * U+200C / U+200D (joiners), U+180E, and U+000B / U+000C. UAX #14 calls those
- * last two mandatory breaks, but Chromium does not wrap at either; where an
- * engine did, the cost is only that the run is not chunked, which is how it
- * rendered before this helper existed.
+ * last two mandatory breaks, but Chromium does not wrap at either. An engine
+ * that does wrap at one of them loses nothing: the run is still chunked, so it
+ * gets an extra break point at each chunk boundary, as well as the one the
+ * engine already had.
+ *
+ * The measurement was Chromium only, with Latin words around each character.
+ * It says which characters end a run of Latin-script words; it does not say
+ * where a browser breaks text with no spaces at all (see SELF_BREAKING_SCRIPTS).
  */
 const RUN_SEPARATORS = /([\t\n\r \u0085\u1680\u2000-\u2006\u2008-\u200b\u2028\u2029\u205f\u3000]+)/;
+
+/**
+ * Scripts whose text a browser breaks by itself with no help from us (TE-1060).
+ * Thai, Lao, Khmer and Myanmar are written without spaces between words, and
+ * the browser finds the word boundaries from a dictionary; Han, Hiragana and
+ * Katakana break between nearly any two characters, and Hangul between syllables
+ * (measured in headless Chromium: a 200 px box, 44 to 121 spaceless characters of
+ * each, no `<wbr>`: every one wraps onto 4 to 6 lines and none overflows). A
+ * `<wbr>` every 10 characters there would cut words the browser keeps whole
+ * (Thai "ข้อมูล" became "ข้" / "อมูล"), so a run holding any of these characters
+ * is left exactly as it was before this helper existed. The test is the script
+ * of the characters, not word segmentation: `Intl.Segmenter` treats a comma as a
+ * word break and a browser does not.
+ *
+ * The test is per run, not per email: a long URL beside Thai text with a space
+ * between them is its own run and still gets its `<wbr>`; one pasted straight
+ * against Thai text with no space is one run and stays whole, as at v2.35.0
+ * (accepted: never worse than before). Needs Unicode property escapes (ES2018).
+ */
+const SELF_BREAKING_SCRIPTS =
+  /[\p{Script=Thai}\p{Script=Lao}\p{Script=Khmer}\p{Script=Myanmar}\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
 
 function escapeEmailHtmlBreakable(value: string): string {
   return value
@@ -288,6 +316,7 @@ function escapeEmailHtmlBreakable(value: string): string {
       // Odd parts are the separators the split kept; a part shorter than the
       // threshold in UTF-16 units has fewer graphemes than that, too.
       if (i % 2 === 1 || part.length < LONG_RUN || !graphemeSegmenter) return escapeEmailHtml(part);
+      if (SELF_BREAKING_SCRIPTS.test(part)) return escapeEmailHtml(part);
       const graphemes = Array.from(graphemeSegmenter.segment(part), (g) => g.segment);
       if (graphemes.length < LONG_RUN) return escapeEmailHtml(part);
       const chunks: string[] = [];

@@ -349,9 +349,11 @@ var graphemeSegmenter = (() => {
   }
 })();
 var RUN_SEPARATORS = /([\t\n\r \u0085\u1680\u2000-\u2006\u2008-\u200b\u2028\u2029\u205f\u3000]+)/;
+var SELF_BREAKING_SCRIPTS = /[\p{Script=Thai}\p{Script=Lao}\p{Script=Khmer}\p{Script=Myanmar}\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
 function escapeEmailHtmlBreakable(value) {
   return value.split(RUN_SEPARATORS).map((part, i) => {
     if (i % 2 === 1 || part.length < LONG_RUN || !graphemeSegmenter) return escapeEmailHtml(part);
+    if (SELF_BREAKING_SCRIPTS.test(part)) return escapeEmailHtml(part);
     const graphemes = Array.from(graphemeSegmenter.segment(part), (g) => g.segment);
     if (graphemes.length < LONG_RUN) return escapeEmailHtml(part);
     const chunks = [];
