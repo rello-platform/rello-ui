@@ -5,6 +5,61 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.36.0 — 2026-11-03
+
+**Fixed: a very long unbroken run no longer stretches an email**
+
+An auto-layout table sizes itself to the widest thing it cannot break. A caller's
+900-character unbroken string (a URL, an id, a pasted blob) made a 600 px email
+thousands of pixels wide on every audience; measured in headless Chromium before
+this change, 900 ASCII characters in one slot gave a document 5,563 to 12,303 px
+wide (TE-1043; The-Home-Scout's `breakLongRuns` workaround, TE-1050, split emoji).
+
+- `renderRelloEmail` gives a very long run a place to break. A run is what lies
+  between two characters a browser can already wrap a line at: ASCII space, tab,
+  CR, LF, U+0085, U+1680, U+2000-U+2006, U+2008-U+200B, U+2028, U+2029, U+205F
+  and U+3000 (so a sentence spaced with U+2003 is ordinary prose, TE-1052; the
+  list was measured in Chromium with Latin words around each character). A
+  run of 40 or more characters (counted as user-perceived characters) that holds
+  no Thai, Lao, Khmer, Myanmar, Han, Hiragana, Katakana or Hangul gets a
+  `<wbr>` between chunks of 10, in every slot that holds caller text: kicker, headline,
+  badge, detail, paragraphs, card title / label / value, button label and note,
+  secondary and further link labels, signer reply line, name, title and phone,
+  the three footer lines, the preference link, and the brand name shown as
+  header text. `<wbr>` is an element, not a character: no text is added and the
+  visible text equals the input.
+- Each chunk is escaped on its own after the split, so a boundary never falls
+  inside an entity (`&amp;`); the split is on `Intl.Segmenter` graphemes, so an
+  emoji, a flag or a family emoji is never cut. Where `Intl.Segmenter` is missing
+  the text is escaped and left whole, as before.
+- **Ordinary mail is byte-identical to v2.35.0**: nothing is added to any email
+  with no run of 40 or more unbroken characters, so the v2.32.0 / v2.33.0 render
+  hashes pass unmodified. No CSS is added, so no table is re-laid-out (a
+  `overflow-wrap:anywhere` style on the cells did re-lay-out them and broke
+  ordinary words on a phone, TE-1051, and added 9,315 bytes to a 100-row digest).
+  Plain-text parts, hrefs, the button URL and every other attribute are untouched.
+- Characters a browser cannot wrap at (no-break space U+00A0, figure space
+  U+2007, narrow no-break space U+202F, word joiner U+2060, U+FEFF, the joiners,
+  form feed and vertical tab) do not end a run: 45 characters of words joined by
+  them are one unbroken run and get the `<wbr>`.
+- **Text in a script a browser breaks by itself is left whole** (TE-1060). Thai,
+  Lao, Khmer and Myanmar have no spaces between words and the browser finds the
+  boundaries from a dictionary; Han, Hiragana, Katakana and Hangul break between
+  nearly any two characters. A run holding any character of those eight scripts
+  renders exactly as at v2.35.0, byte for byte: a `<wbr>` every 10 characters
+  would cut words the browser keeps whole (Thai "ข้อมูล" became "ข้" / "อมูล").
+  A long URL pasted straight against such text with no space is part of the same
+  run and stays unbroken, as at v2.35.0 (never worse than before); with a space
+  between them it is its own run and still gets the `<wbr>`.
+- A token of 24 to 39 characters is below the threshold and renders as before:
+  on a narrow phone it can still be as wide as it was at v2.35.0.
+- Left alone on purpose: the fallback link (already `word-break:break-all`), the
+  hidden preheader, the `<title>`, the signer's initials (cut to 3 characters),
+  and every attribute.
+- Not proved here: no mail client was opened. How Gmail, Outlook and Apple Mail
+  treat `<wbr>`, and whether an address or URL over the threshold is still
+  auto-linked, is not tested.
+
 ## v2.35.0 — 2026-10-30
 
 **Added: PreQual Pro's email colors, and `./email` for CommonJS apps**

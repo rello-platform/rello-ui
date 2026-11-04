@@ -223,6 +223,111 @@ export function escapeEmailHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
+/**
+ * A very long unbroken run (a URL, an id, a pasted blob) cannot wrap, so an
+ * auto-layout table grows to hold it and the whole email goes sideways. This
+ * gives such a run somewhere to break and touches nothing else (TE-1043).
+ *
+ * A run (see RUN_SEPARATORS) of LONG_RUN or more user-perceived characters
+ * gets a `<wbr>` between chunks of CHUNK of them. `<wbr>` is an element, not a
+ * character: no text is added, a copy of the visible text equals the input, and
+ * a run under the threshold renders exactly as `escapeEmailHtml` renders it.
+ * A run holding a character from SELF_BREAKING_SCRIPTS is left whole (TE-1060):
+ * a browser already breaks that text, at its own word boundaries.
+ *
+ * The split is on raw text, one chunk at a time, and each chunk is escaped on
+ * its own, so a boundary can never fall inside an entity such as `&amp;`. The
+ * split is on Intl.Segmenter graphemes, so an emoji, a flag or a family emoji
+ * is never cut. Where Intl.Segmenter does not exist the text is escaped and left
+ * whole (no `<wbr>`, as before this helper): a code-point split could cut a
+ * joined emoji, and an unbroken run is the safer failure than a broken glyph.
+ * Used only for text inside elements, never inside an attribute or a URL.
+ */
+const LONG_RUN = 40;
+const CHUNK = 10;
+
+interface GraphemeSegmenter {
+  segment(input: string): Iterable<{ segment: string }>;
+}
+
+const graphemeSegmenter: GraphemeSegmenter | null = (() => {
+  try {
+    const ctor = (Intl as unknown as { Segmenter?: new (locale?: string, options?: { granularity: string }) => GraphemeSegmenter })
+      .Segmenter;
+    return typeof ctor === "function" ? new ctor(undefined, { granularity: "grapheme" }) : null;
+  } catch {
+    return null;
+  }
+})();
+
+/**
+ * The characters a run ends at: every space or line break a browser can already
+ * wrap a line at (TE-1052). A sentence spaced with U+2003 is ordinary prose, not
+ * one 40-character run, and a `<wbr>` inside "communications" would break the
+ * word on a phone. Measured in headless Chromium (a 20-character word on each
+ * side of the candidate in a 120 px box): a line wraps at all of these.
+ *
+ *   U+0009 tab, U+000A, U+000D, U+0020 space, U+0085 NEL (Unicode line-break
+ *   classes BA/LF/CR/SP/NL), U+1680 Ogham space, U+2000-U+2006 and
+ *   U+2008-U+200A (en, em ... hair spaces, class BA), U+200B zero-width space
+ *   (ZW), U+2028 / U+2029 line and paragraph separators, U+205F medium
+ *   mathematical space, U+3000 ideographic space.
+ *
+ * NOT separators, because Chromium cannot wrap at them either, so each belongs
+ * to the run it holds together: U+00A0 no-break space, U+2007 figure space and
+ * U+202F narrow no-break space (class GL), U+2060 word joiner and U+FEFF (WJ),
+ * U+200C / U+200D (joiners), U+180E, and U+000B / U+000C. UAX #14 calls those
+ * last two mandatory breaks, but Chromium does not wrap at either. An engine
+ * that does wrap at one of them loses nothing: the run is still chunked, so it
+ * gets an extra break point at each chunk boundary, as well as the one the
+ * engine already had.
+ *
+ * The measurement was Chromium only, with Latin words around each character.
+ * It says which characters end a run of Latin-script words; it does not say
+ * where a browser breaks text with no spaces at all (see SELF_BREAKING_SCRIPTS).
+ */
+const RUN_SEPARATORS = /([\t\n\r \u0085\u1680\u2000-\u2006\u2008-\u200b\u2028\u2029\u205f\u3000]+)/;
+
+/**
+ * Scripts whose text a browser breaks by itself with no help from us (TE-1060).
+ * Thai, Lao, Khmer and Myanmar are written without spaces between words, and
+ * the browser finds the word boundaries from a dictionary; Han, Hiragana and
+ * Katakana break between nearly any two characters, and Hangul between syllables
+ * (measured in headless Chromium: a 200 px box, 44 to 121 spaceless characters of
+ * each, no `<wbr>`: every one wraps onto 4 to 6 lines and none overflows). A
+ * `<wbr>` every 10 characters there would cut words the browser keeps whole
+ * (Thai "ข้อมูล" became "ข้" / "อมูล"), so a run holding any of these characters
+ * is left exactly as it was before this helper existed. The test is the script
+ * of the characters, not word segmentation: `Intl.Segmenter` treats a comma as a
+ * word break and a browser does not.
+ *
+ * The test is per run, not per email: a long URL beside Thai text with a space
+ * between them is its own run and still gets its `<wbr>`; one pasted straight
+ * against Thai text with no space is one run and stays whole, as at v2.35.0
+ * (accepted: never worse than before). Needs Unicode property escapes (ES2018).
+ */
+const SELF_BREAKING_SCRIPTS =
+  /[\p{Script=Thai}\p{Script=Lao}\p{Script=Khmer}\p{Script=Myanmar}\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
+
+function escapeEmailHtmlBreakable(value: string): string {
+  return value
+    .split(RUN_SEPARATORS)
+    .map((part, i) => {
+      // Odd parts are the separators the split kept; a part shorter than the
+      // threshold in UTF-16 units has fewer graphemes than that, too.
+      if (i % 2 === 1 || part.length < LONG_RUN || !graphemeSegmenter) return escapeEmailHtml(part);
+      if (SELF_BREAKING_SCRIPTS.test(part)) return escapeEmailHtml(part);
+      const graphemes = Array.from(graphemeSegmenter.segment(part), (g) => g.segment);
+      if (graphemes.length < LONG_RUN) return escapeEmailHtml(part);
+      const chunks: string[] = [];
+      for (let at = 0; at < graphemes.length; at += CHUNK) {
+        chunks.push(escapeEmailHtml(graphemes.slice(at, at + CHUNK).join("")));
+      }
+      return chunks.join("<wbr>");
+    })
+    .join("");
+}
+
 /** One line of text: trimmed, line breaks flattened, non-strings read as empty. */
 function line(value: unknown): string {
   return typeof value === "string" ? value.replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim() : "";
@@ -511,6 +616,8 @@ function appName(app: unknown): string {
 
 export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const e = escapeEmailHtml;
+  // For text slots only: breaks a very long unbroken run (see escapeEmailHtmlBreakable).
+  const ew = escapeEmailHtmlBreakable;
   const audience: RelloEmailAudience =
     input.audience === "pro" || input.audience === "admin" ? input.audience : "consumer";
   // The sender's brand, on consumer and pro mail. Null keeps every byte of v2.33.0.
@@ -598,14 +705,14 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
             // A distorted logo is worse than a large one (KA ruling, prompt 110).
             `<img src="${e(logoUrl)}" width="200" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;max-width:200px;max-height:64px;height:auto;border:0;outline:none;text-decoration:none;">`
           : logoAlt
-            ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`
+            ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${ew(logoAlt)}</div>`
             : ""
         : logoUrl
           ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">`
-          : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${e(logoAlt)}</div>`) +
-      `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${e(kicker)}</div>` +
+          : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${ew(logoAlt)}</div>`) +
+      `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${ew(kicker)}</div>` +
       (headline
-        ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${e(headline)}</div>`
+        ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${ew(headline)}</div>`
         : "") +
       `</td></tr>`,
   );
@@ -614,10 +721,10 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     rows.push(
       `<tr><td style="padding:24px 32px 0;">` +
         (badgeLabel
-          ? `<span style="display:inline-block;background:${pal.badgeBackground};color:${pal.badgeText};font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;">${e(badgeLabel)}</span>`
+          ? `<span style="display:inline-block;background:${pal.badgeBackground};color:${pal.badgeText};font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;">${ew(badgeLabel)}</span>`
           : "") +
         (detail
-          ? `<div style="font-size:14px;color:${pal.secondaryText};margin-top:${badgeLabel ? "8px" : "0"};">${e(detail)}</div>`
+          ? `<div style="font-size:14px;color:${pal.secondaryText};margin-top:${badgeLabel ? "8px" : "0"};">${ew(detail)}</div>`
           : "") +
         `</td></tr>`,
     );
@@ -629,7 +736,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         paragraphs
           .map(
             (p, i) =>
-              `<p style="margin:0 0 ${i === paragraphs.length - 1 ? "0" : "12px"};">${e(p).replace(/\n/g, "<br>")}</p>`,
+              `<p style="margin:0 0 ${i === paragraphs.length - 1 ? "0" : "12px"};">${ew(p).replace(/\n/g, "<br>")}</p>`,
           )
           .join("") +
         `</td></tr>`,
@@ -641,15 +748,15 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
       `<tr><td style="padding:18px 32px 4px;">` +
         `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${pal.cardBackground};border:1px solid ${pal.cardBorder};border-radius:8px;font-size:14px;line-height:1.5;">` +
         (cardTitle
-          ? `<tr><td colspan="2" style="padding:14px 18px 2px;font-weight:700;color:${CARD_VALUE_TEXT};">${e(cardTitle)}</td></tr>`
+          ? `<tr><td colspan="2" style="padding:14px 18px 2px;font-weight:700;color:${CARD_VALUE_TEXT};">${ew(cardTitle)}</td></tr>`
           : "") +
         cardRows
           .map((r, i) => {
             const top = i === 0 ? (cardTitle ? "8px" : "14px") : "4px";
             const bottom = i === cardRows.length - 1 ? "14px" : "4px";
             return (
-              `<tr><td valign="top" style="padding:${top} 18px ${bottom};color:${pal.secondaryText};width:130px;">${e(r.label)}</td>` +
-              `<td valign="top" style="padding:${top} 18px ${bottom};color:${CARD_VALUE_TEXT};">${e(r.value).replace(/\n/g, "<br>")}</td></tr>`
+              `<tr><td valign="top" style="padding:${top} 18px ${bottom};color:${pal.secondaryText};width:130px;">${ew(r.label)}</td>` +
+              `<td valign="top" style="padding:${top} 18px ${bottom};color:${CARD_VALUE_TEXT};">${ew(r.value).replace(/\n/g, "<br>")}</td></tr>`
             );
           })
           .join("") +
@@ -663,20 +770,20 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         (button
           ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr>` +
             `<td align="center" bgcolor="${color}" style="background:${color};border-radius:8px;">` +
-            `<a href="${e(button.url)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;">${e(button.label)}</a>` +
+            `<a href="${e(button.url)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:600;font-size:16px;line-height:20px;padding:14px 32px;border-radius:8px;">${ew(button.label)}</a>` +
             `</td></tr></table>`
           : "") +
         (secondary
-          ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(secondary.label)}</a></div>`
+          ? `<div style="margin-top:${button ? "12px" : "0"};font-size:15px;"><a href="${e(secondary.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${ew(secondary.label)}</a></div>`
           : "") +
         moreLinks
           .map(
             (l, i) =>
-              `<div style="margin-top:${button || secondary || i > 0 ? "12px" : "0"};font-size:15px;"><a href="${e(l.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${e(l.label)}</a></div>`,
+              `<div style="margin-top:${button || secondary || i > 0 ? "12px" : "0"};font-size:15px;"><a href="${e(l.url)}" style="color:${pal.link};font-weight:600;text-decoration:none;">${ew(l.label)}</a></div>`,
           )
           .join("") +
         (button && button.note
-          ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;">${e(button.note)}</div>`
+          ? `<div style="font-size:13px;color:${pal.secondaryText};margin-top:10px;">${ew(button.note)}</div>`
           : "") +
         `</td></tr>`,
     );
@@ -694,21 +801,21 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   if (signer) {
     rows.push(
       `<tr><td style="padding:20px 32px 22px;font-size:15px;line-height:1.6;color:#1f2937;">` +
-        (signer.replyLine ? `<p style="margin:0 0 12px;">${e(signer.replyLine)}</p>` : "") +
+        (signer.replyLine ? `<p style="margin:0 0 12px;">${ew(signer.replyLine)}</p>` : "") +
         `<table role="presentation" cellpadding="0" cellspacing="0"><tr>` +
         `<td width="52" valign="top"><div style="width:40px;height:40px;border-radius:20px;background:${pal.avatarBackground};text-align:center;line-height:40px;font-size:14px;font-weight:700;color:${pal.avatarText};">${e(signer.initials)}</div></td>` +
-        `<td valign="top" style="font-size:14px;line-height:1.5;"><b>${e(signer.name)}</b>` +
-        (signerMeta ? `<br><span style="color:${pal.secondaryText};">${e(signerMeta)}</span>` : "") +
-        (signer.phone ? `<br><span style="color:${pal.secondaryText};">${e(signer.phone)}</span>` : "") +
+        `<td valign="top" style="font-size:14px;line-height:1.5;"><b>${ew(signer.name)}</b>` +
+        (signerMeta ? `<br><span style="color:${pal.secondaryText};">${ew(signerMeta)}</span>` : "") +
+        (signer.phone ? `<br><span style="color:${pal.secondaryText};">${ew(signer.phone)}</span>` : "") +
         `</td></tr></table></td></tr>`,
     );
   }
 
   const footerParts = [
-    footerLine1 ? e(footerLine1) : "",
-    footerLine2 ? e(footerLine2) : "",
-    footerReason ? e(footerReason) : "",
-    pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${e(pref.label)}</a>` : "",
+    footerLine1 ? ew(footerLine1) : "",
+    footerLine2 ? ew(footerLine2) : "",
+    footerReason ? ew(footerReason) : "",
+    pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${ew(pref.label)}</a>` : "",
   ].filter(Boolean);
   if (footerParts.length > 0) {
     rows.push(
