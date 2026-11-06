@@ -246,7 +246,9 @@ describe("brand: nothing is gated", () => {
       for (const piece of ["Your plan is ready, Sarah.", "See my plan", "https://example.com/plan?a=1&amp;b=2", "Talk to me", "Kelly Sansom", "Your numbers", "Email preferences"]) {
         expect(r.html, `${JSON.stringify(brand)} ${piece}`).toContain(piece);
       }
-      expect(r.text.split("\n").slice(1).join("\n")).toBe(plain.text.split("\n").slice(1).join("\n"));
+      // v2.37.0 (TE-1207): a named brand opens the text with its name, then the kicker line.
+      const drop = brand.name ? 2 : 1;
+      expect(r.text.split("\n").slice(drop).join("\n")).toBe(plain.text.split("\n").slice(1).join("\n"));
     }
   });
 });
@@ -255,12 +257,12 @@ describe("brand: the kicker is unchanged", () => {
   it("a given kicker is written as given", () => {
     const r = renderRelloEmail({ ...branded("home-scout", BRAND), kicker: "Rello · from Summit Realty Group" });
     expect(header(r.html)).toContain(">Rello · from Summit Realty Group</div>");
-    expect(r.text.split("\n")[0]).toBe("Rello · from Summit Realty Group");
+    expect(r.text.split("\n").slice(0, 2)).toEqual(["Summit Realty Group", "Rello · from Summit Realty Group"]); // v2.37.0: name, then the kicker as given
   });
 
   it("the default kicker keeps its shape with Rello in the app's place", () => {
-    expect(renderRelloEmail(branded("home-scout", BRAND)).text.split("\n")[0]).toBe("Rello · from ClearPath Utah Mortgage");
-    expect(renderRelloEmail({ ...branded("home-scout", BRAND), companyName: null }).text.split("\n")[0]).toBe("Rello");
+    expect(renderRelloEmail(branded("home-scout", BRAND)).text.split("\n")[1]).toBe("Rello · from ClearPath Utah Mortgage");
+    expect(renderRelloEmail({ ...branded("home-scout", BRAND), companyName: null }).text.split("\n")[1]).toBe("Rello");
   });
 });
 

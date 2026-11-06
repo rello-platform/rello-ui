@@ -844,6 +844,10 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   // ── Plain text: the same words, full links ────────────────────────────────
   const t: string[] = [];
   const push = (...ls: string[]) => t.push(...ls);
+  // TE-1207: under a brand the text part opens with the brand's name, the same name the HTML header
+  // prints (its logo's alt text, or the name as header text), then the kicker as before. A brand with
+  // no name names nobody, as in the header. With no brand every line is as it was at v2.36.0.
+  if (brand && logoAlt) push(logoAlt);
   push(kicker);
   if (headline) push("", headline);
   if (badgeLabel || detail) push("", ...[badgeLabel, detail].filter(Boolean));
