@@ -5,6 +5,47 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.37.1 — unreleased (version bump and tag at release, after audit)
+
+**Fixed: web addresses in caller text stay whole, so mail clients link them (TE-1189, TE-1187)**
+
+v2.36.0 (TE-1043) put a `<wbr>` every 10 characters into any run of 40 or more
+unbroken characters in caller text, and a web address is such a run. Gmail web then
+linked a fragment: out of `consumerfi<wbr>nance.gov/…` only `nance.gov/`, a different
+website, and out of `https://ww<wbr>w.consumer…` only `https://ww` (three real
+sends, read in Gmail on 2026-11-07). That release's own note said whether a URL over the
+threshold is still auto-linked was not tested.
+
+- An address in a run that TE-1043 would have chunked is now emitted whole, escaped as
+  one piece, with no `<wbr>` inside it, in
+  `<span style="overflow-wrap:anywhere;word-break:break-word;">`. That rule lets a phone
+  break the address only where a line must. Measured in headless Chromium at 375 px: a
+  90-character https address as a card value is 454 px wide without the rule and 375 px
+  with it.
+- What counts as an address: `http://` or `https://` plus a letter or digit; `www.`
+  plus a dotted host; `local@host` email addresses; and a bare host with no scheme
+  (`consumerfinance.gov`, with or without a path), but only when it ends in a common
+  ending (`.com .net .org .gov .edu .us .io .co .app …`, listed as `BARE_TLDS` in
+  `render-email.ts`). An address must start a run or follow a character that is not a
+  letter, a digit or one of `. _ % + @ / -`. Trailing `. , ; : ! ? ' " *` and an
+  unmatched `)`, `]` or `}` stay outside the address, where the caller wrote them.
+- Not addresses: other schemes (`ftp:`), `report.pdf`, `v2.37.0`, an IP address, or
+  letters glued in front of a scheme. A long run with no address keeps TE-1043's `<wbr>`
+  exactly as before. The rest of a run that holds an address is chunked as before if it
+  is itself 40 or more characters.
+- TE-1187: a signer name with an unbroken piece of 16 or more characters is wrapped in
+  the same span. A piece ends at a space or after a hyphen. On v2.37.0, 16 "W"
+  overflow a 320 px screen and 20 overflow 375 px; a 36-character unbroken name made the
+  email 391 px wide at 375 px, and now fits. Ordinary names are unchanged.
+- Visible text, the plain-text part, the subject, every href, src and alt, and every
+  render with no address are byte-equal to v2.37.0. Across a 22,572-render corpus, every
+  slot, audience and brand shape was compared against the v2.37.0 dist.
+- One v2.36.0 test (`long-run-break.test.ts`, "the test is per run") used a long URL as
+  its example of a run that is still chunked. It now uses a long id, because a URL no
+  longer is.
+
+No new export, prop or type. Consumers pick this up on their next pin bump.
+
 ## v2.37.0 — 2026-11-06
 
 **Changed: under a brand, the plain-text part opens with the brand's name (TE-1207)**

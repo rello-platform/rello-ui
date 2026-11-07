@@ -350,18 +350,91 @@ var graphemeSegmenter = (() => {
 })();
 var RUN_SEPARATORS = /([\t\n\r \u0085\u1680\u2000-\u2006\u2008-\u200b\u2028\u2029\u205f\u3000]+)/;
 var SELF_BREAKING_SCRIPTS = /[\p{Script=Thai}\p{Script=Lao}\p{Script=Khmer}\p{Script=Myanmar}\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
+var BARE_TLDS = "com|net|org|gov|edu|mil|us|io|co|app|dev|ai|info|biz|me|ca|uk|mortgage|loans|loan|lending|homes|house|realty|realtor|properties|finance|bank";
+var URL_CHAR = "[A-Za-z0-9\\-._~:/?#\\[\\]@!$&'()*+,;=%]";
+var HOST_LABEL = "[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?";
+var HOST_TAIL = "(?![A-Za-z0-9-])(?::\\d{1,5})?(?:[/?#]" + URL_CHAR + "*)?";
+var ADDRESS = new RegExp(
+  [
+    "https?://[A-Za-z0-9]" + URL_CHAR + "*",
+    "www\\.(?:" + HOST_LABEL + "\\.)+[A-Za-z]{2,63}" + HOST_TAIL,
+    "[A-Za-z0-9._%+-]+@(?:" + HOST_LABEL + "\\.)+[A-Za-z]{2,63}(?![A-Za-z0-9-])",
+    "(?:" + HOST_LABEL + "\\.)+(?:" + BARE_TLDS + ")" + HOST_TAIL
+  ].join("|"),
+  "gi"
+);
+var ADDRESS_BEFORE = /[A-Za-z0-9._%+@/-]/;
+var GRAPHEME_EXTEND = /^[\p{M}‌‍︀-️]/u;
+var WRAP_STYLE = "overflow-wrap:anywhere;word-break:break-word;";
+function trimAddress(match) {
+  let out = match;
+  for (; ; ) {
+    const last = out.charAt(out.length - 1);
+    if (/[.,;:!?'"*]/.test(last)) {
+      out = out.slice(0, -1);
+      continue;
+    }
+    const pair = last === ")" ? "(" : last === "]" ? "[" : last === "}" ? "{" : "";
+    if (pair && out.split(pair).length < out.split(last).length) {
+      out = out.slice(0, -1);
+      continue;
+    }
+    return out;
+  }
+}
+function findAddresses(run) {
+  const found = [];
+  for (const m of run.matchAll(ADDRESS)) {
+    const start = m.index ?? 0;
+    if (start > 0 && ADDRESS_BEFORE.test(run.charAt(start - 1))) continue;
+    const text = trimAddress(m[0]);
+    if (/^https?:\/\/$/i.test(text) || text.length === 0) continue;
+    const end = start + text.length;
+    if (GRAPHEME_EXTEND.test(run.slice(end))) continue;
+    found.push([start, end]);
+  }
+  return found;
+}
+function chunkRun(part) {
+  if (part.length < LONG_RUN || !graphemeSegmenter) return escapeEmailHtml(part);
+  const graphemes = Array.from(graphemeSegmenter.segment(part), (g) => g.segment);
+  if (graphemes.length < LONG_RUN) return escapeEmailHtml(part);
+  const chunks = [];
+  for (let at = 0; at < graphemes.length; at += CHUNK) {
+    chunks.push(escapeEmailHtml(graphemes.slice(at, at + CHUNK).join("")));
+  }
+  return chunks.join("<wbr>");
+}
 function escapeEmailHtmlBreakable(value) {
   return value.split(RUN_SEPARATORS).map((part, i) => {
     if (i % 2 === 1 || part.length < LONG_RUN || !graphemeSegmenter) return escapeEmailHtml(part);
     if (SELF_BREAKING_SCRIPTS.test(part)) return escapeEmailHtml(part);
-    const graphemes = Array.from(graphemeSegmenter.segment(part), (g) => g.segment);
-    if (graphemes.length < LONG_RUN) return escapeEmailHtml(part);
-    const chunks = [];
-    for (let at = 0; at < graphemes.length; at += CHUNK) {
-      chunks.push(escapeEmailHtml(graphemes.slice(at, at + CHUNK).join("")));
+    const chunked = chunkRun(part);
+    if (!chunked.includes("<wbr>")) return chunked;
+    const addresses = findAddresses(part);
+    if (addresses.length === 0) return chunked;
+    let out = "";
+    let at = 0;
+    for (const [start, end] of addresses) {
+      out += chunkRun(part.slice(at, start));
+      out += `<span style="${WRAP_STYLE}">${escapeEmailHtml(part.slice(start, end))}</span>`;
+      at = end;
     }
-    return chunks.join("<wbr>");
+    return out + chunkRun(part.slice(at));
   }).join("");
+}
+var SIGNER_NAME_RUN = 16;
+function escapeSignerName(name) {
+  const html = escapeEmailHtmlBreakable(name);
+  const longRun = name.split(RUN_SEPARATORS).some((part, i) => {
+    if (i % 2 === 1) return false;
+    return (part.match(/[^-]*-|[^-]+/g) ?? []).some((piece) => {
+      if (piece.length < SIGNER_NAME_RUN) return false;
+      if (!graphemeSegmenter) return true;
+      return Array.from(graphemeSegmenter.segment(piece)).length >= SIGNER_NAME_RUN;
+    });
+  });
+  return longRun ? `<span style="${WRAP_STYLE}">${html}</span>` : html;
 }
 function line(value) {
   return typeof value === "string" ? value.replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim() : "";
@@ -624,7 +697,7 @@ function renderRelloEmail(input) {
   }
   if (signer) {
     rows.push(
-      `<tr><td style="padding:20px 32px 22px;font-size:15px;line-height:1.6;color:#1f2937;">` + (signer.replyLine ? `<p style="margin:0 0 12px;">${ew(signer.replyLine)}</p>` : "") + `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td width="52" valign="top"><div style="width:40px;height:40px;border-radius:20px;background:${pal.avatarBackground};text-align:center;line-height:40px;font-size:14px;font-weight:700;color:${pal.avatarText};">${e(signer.initials)}</div></td><td valign="top" style="font-size:14px;line-height:1.5;"><b>${ew(signer.name)}</b>` + (signerMeta ? `<br><span style="color:${pal.secondaryText};">${ew(signerMeta)}</span>` : "") + (signer.phone ? `<br><span style="color:${pal.secondaryText};">${ew(signer.phone)}</span>` : "") + `</td></tr></table></td></tr>`
+      `<tr><td style="padding:20px 32px 22px;font-size:15px;line-height:1.6;color:#1f2937;">` + (signer.replyLine ? `<p style="margin:0 0 12px;">${ew(signer.replyLine)}</p>` : "") + `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td width="52" valign="top"><div style="width:40px;height:40px;border-radius:20px;background:${pal.avatarBackground};text-align:center;line-height:40px;font-size:14px;font-weight:700;color:${pal.avatarText};">${e(signer.initials)}</div></td><td valign="top" style="font-size:14px;line-height:1.5;"><b>${escapeSignerName(signer.name)}</b>` + (signerMeta ? `<br><span style="color:${pal.secondaryText};">${ew(signerMeta)}</span>` : "") + (signer.phone ? `<br><span style="color:${pal.secondaryText};">${ew(signer.phone)}</span>` : "") + `</td></tr></table></td></tr>`
     );
   }
   const footerParts = [

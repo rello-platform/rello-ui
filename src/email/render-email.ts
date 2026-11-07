@@ -309,6 +309,105 @@ const RUN_SEPARATORS = /([\t\n\r \u0085\u1680\u2000-\u2006\u2008-\u200b\u2028\u2
 const SELF_BREAKING_SCRIPTS =
   /[\p{Script=Thai}\p{Script=Lao}\p{Script=Khmer}\p{Script=Myanmar}\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
 
+/**
+ * Web addresses stay whole (TE-1189). A mail client that auto-links a bare
+ * address reads the text between elements, so a `<wbr>` inside one makes it
+ * link a fragment: Gmail web linked only "nance.gov/" out of
+ * "consumerfi<wbr>nance.gov/…" and only "https://ww" out of an https address
+ * (KA read of three real sends, 2026-11-07). An address the run-chunking below
+ * would have cut is instead emitted whole, escaped as one piece, inside a span
+ * carrying WRAP_STYLE, so a phone can still break it where it must.
+ *
+ * What counts as an address (ADDRESS, then trimAddress). Every form must start
+ * at the beginning of its run or right after a character that is not a letter,
+ * a digit or one of `. _ % + @ / -` (after one of those it is the inside of
+ * something longer). This is checked in code, not with a lookbehind, which older
+ * engines reject at load time. The forms:
+ *   - `http://` or `https://` (any case) followed by at least one letter or
+ *     digit, then URL characters (RFC 3986 unreserved, reserved and `%`);
+ *   - `www.` plus a dotted host ending in a letters-only label of 2-63, then an
+ *     optional `:port` and an optional path, query or fragment;
+ *   - an email address: `local@` plus a dotted host ending in a letters-only
+ *     label of 2-63;
+ *   - a bare host with no scheme (`consumerfinance.gov`, with or without a
+ *     `/path`): dotted labels ending in one of BARE_TLDS only. A bare
+ *     `name.ext` is otherwise too often a file name or two words joined by a
+ *     full stop to call it an address.
+ * Trailing `. , ; : ! ? ' " *` and a closing `)`, `]` or `}` with no opener
+ * inside the address are left out of it and stay exactly where the caller wrote
+ * them, outside the span. A match followed by a combining mark, ZWJ or variation
+ * selector is not an address (the span would cut a grapheme).
+ *
+ * Not addresses: everything else, including `ftp:` and other schemes, a bare
+ * host on any other ending (`report.pdf`, `v2.37.0`), and an IP address. A long
+ * run with no address gets TE-1043's `<wbr>` exactly as before.
+ */
+const BARE_TLDS =
+  "com|net|org|gov|edu|mil|us|io|co|app|dev|ai|info|biz|me|ca|uk|mortgage|loans|loan|lending|homes|house|realty|realtor|properties|finance|bank";
+const URL_CHAR = "[A-Za-z0-9\\-._~:/?#\\[\\]@!$&'()*+,;=%]";
+const HOST_LABEL = "[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?";
+const HOST_TAIL = "(?![A-Za-z0-9-])(?::\\d{1,5})?(?:[/?#]" + URL_CHAR + "*)?";
+const ADDRESS = new RegExp(
+  [
+    "https?://[A-Za-z0-9]" + URL_CHAR + "*",
+    "www\\.(?:" + HOST_LABEL + "\\.)+[A-Za-z]{2,63}" + HOST_TAIL,
+    "[A-Za-z0-9._%+-]+@(?:" + HOST_LABEL + "\\.)+[A-Za-z]{2,63}(?![A-Za-z0-9-])",
+    "(?:" + HOST_LABEL + "\\.)+(?:" + BARE_TLDS + ")" + HOST_TAIL,
+  ].join("|"),
+  "gi",
+);
+/** A character an address cannot follow directly (it would be inside something else). */
+const ADDRESS_BEFORE = /[A-Za-z0-9._%+@/-]/;
+/** A character that would join the address's last character into one grapheme. */
+const GRAPHEME_EXTEND = /^[\p{M}‌‍︀-️]/u;
+
+/** The CSS that lets a whole address (or a long name) break only where a line must. */
+const WRAP_STYLE = "overflow-wrap:anywhere;word-break:break-word;";
+
+function trimAddress(match: string): string {
+  let out = match;
+  for (;;) {
+    const last = out.charAt(out.length - 1);
+    if (/[.,;:!?'"*]/.test(last)) {
+      out = out.slice(0, -1);
+      continue;
+    }
+    const pair = last === ")" ? "(" : last === "]" ? "[" : last === "}" ? "{" : "";
+    if (pair && out.split(pair).length < out.split(last).length) {
+      out = out.slice(0, -1);
+      continue;
+    }
+    return out;
+  }
+}
+
+/** The addresses in one run, as [start, end) offsets, in order. */
+function findAddresses(run: string): Array<[number, number]> {
+  const found: Array<[number, number]> = [];
+  for (const m of run.matchAll(ADDRESS)) {
+    const start = m.index ?? 0;
+    if (start > 0 && ADDRESS_BEFORE.test(run.charAt(start - 1))) continue;
+    const text = trimAddress(m[0]);
+    if (/^https?:\/\/$/i.test(text) || text.length === 0) continue;
+    const end = start + text.length;
+    if (GRAPHEME_EXTEND.test(run.slice(end))) continue;
+    found.push([start, end]);
+  }
+  return found;
+}
+
+/** TE-1043's chunking for one piece of a run: a `<wbr>` between every CHUNK graphemes of a long piece. */
+function chunkRun(part: string): string {
+  if (part.length < LONG_RUN || !graphemeSegmenter) return escapeEmailHtml(part);
+  const graphemes = Array.from(graphemeSegmenter.segment(part), (g) => g.segment);
+  if (graphemes.length < LONG_RUN) return escapeEmailHtml(part);
+  const chunks: string[] = [];
+  for (let at = 0; at < graphemes.length; at += CHUNK) {
+    chunks.push(escapeEmailHtml(graphemes.slice(at, at + CHUNK).join("")));
+  }
+  return chunks.join("<wbr>");
+}
+
 function escapeEmailHtmlBreakable(value: string): string {
   return value
     .split(RUN_SEPARATORS)
@@ -317,15 +416,47 @@ function escapeEmailHtmlBreakable(value: string): string {
       // threshold in UTF-16 units has fewer graphemes than that, too.
       if (i % 2 === 1 || part.length < LONG_RUN || !graphemeSegmenter) return escapeEmailHtml(part);
       if (SELF_BREAKING_SCRIPTS.test(part)) return escapeEmailHtml(part);
-      const graphemes = Array.from(graphemeSegmenter.segment(part), (g) => g.segment);
-      if (graphemes.length < LONG_RUN) return escapeEmailHtml(part);
-      const chunks: string[] = [];
-      for (let at = 0; at < graphemes.length; at += CHUNK) {
-        chunks.push(escapeEmailHtml(graphemes.slice(at, at + CHUNK).join("")));
+      const chunked = chunkRun(part);
+      // A run TE-1043 leaves alone, or one with no address, renders exactly as at v2.37.0.
+      if (!chunked.includes("<wbr>")) return chunked;
+      const addresses = findAddresses(part);
+      if (addresses.length === 0) return chunked;
+      let out = "";
+      let at = 0;
+      for (const [start, end] of addresses) {
+        out += chunkRun(part.slice(at, start));
+        out += `<span style="${WRAP_STYLE}">${escapeEmailHtml(part.slice(start, end))}</span>`;
+        at = end;
       }
-      return chunks.join("<wbr>");
+      return out + chunkRun(part.slice(at));
     })
     .join("");
+}
+
+/**
+ * The signer's name sits in a nested table cell beside the avatar, so an
+ * unbroken name grows that table past a phone screen (TE-1187). Measured in
+ * headless Chromium on v2.37.0: an unbroken name of 16 "W" overflows a 320 px
+ * screen and 20 overflow 375 px. A name holding a piece of SIGNER_NAME_RUN or
+ * more graphemes goes in a span with WRAP_STYLE, which breaks it only where the
+ * line must. A piece ends where a run ends (RUN_SEPARATORS) and after a hyphen,
+ * where a browser can already break, and counts that hyphen. Every other name
+ * renders exactly as before.
+ */
+const SIGNER_NAME_RUN = 16;
+
+function escapeSignerName(name: string): string {
+  const html = escapeEmailHtmlBreakable(name);
+  const longRun = name.split(RUN_SEPARATORS).some((part, i) => {
+    if (i % 2 === 1) return false;
+    // A browser can break after a hyphen, so "Montgomery-Smythe" is two short pieces.
+    return (part.match(/[^-]*-|[^-]+/g) ?? []).some((piece) => {
+      if (piece.length < SIGNER_NAME_RUN) return false;
+      if (!graphemeSegmenter) return true;
+      return Array.from(graphemeSegmenter.segment(piece)).length >= SIGNER_NAME_RUN;
+    });
+  });
+  return longRun ? `<span style="${WRAP_STYLE}">${html}</span>` : html;
 }
 
 /** One line of text: trimmed, line breaks flattened, non-strings read as empty. */
@@ -809,7 +940,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         (signer.replyLine ? `<p style="margin:0 0 12px;">${ew(signer.replyLine)}</p>` : "") +
         `<table role="presentation" cellpadding="0" cellspacing="0"><tr>` +
         `<td width="52" valign="top"><div style="width:40px;height:40px;border-radius:20px;background:${pal.avatarBackground};text-align:center;line-height:40px;font-size:14px;font-weight:700;color:${pal.avatarText};">${e(signer.initials)}</div></td>` +
-        `<td valign="top" style="font-size:14px;line-height:1.5;"><b>${ew(signer.name)}</b>` +
+        `<td valign="top" style="font-size:14px;line-height:1.5;"><b>${escapeSignerName(signer.name)}</b>` +
         (signerMeta ? `<br><span style="color:${pal.secondaryText};">${ew(signerMeta)}</span>` : "") +
         (signer.phone ? `<br><span style="color:${pal.secondaryText};">${ew(signer.phone)}</span>` : "") +
         `</td></tr></table></td></tr>`,
