@@ -5,6 +5,33 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.37.0 — 2026-11-06
+
+**Changed: under a brand, the plain-text part opens with the brand's name (TE-1207)**
+
+`renderRelloEmail` already drew the sender's brand in the HTML header (the business's
+logo, or its name as header text). The plain-text part never named it: it began with the
+kicker, so a text-only reader of mail sent for an agent or business saw an app word and
+no business. Kelly's rule (2026-10-30, 2026-11-06): client mail carries the agent's
+business; the app name may appear small, never as the main branding.
+
+- When a brand is passed on consumer or pro mail and it has a name, the text part's first
+  line is that name, the same one the header prints (the logo's alt text, or the header
+  text): whitespace and line breaks collapsed, nothing else changed. The kicker follows on
+  line 2 exactly as before, and every line after it is as it was.
+- A brand with no name names nobody, in the header and now in the text: the text opens
+  with the kicker as at v2.36.0.
+- TE-1222: the text name line drops every C0 and C1 control character (U+0000-U+001F,
+  U+007F-U+009F) after the flattening, then collapses and trims; a name that is only
+  controls names nobody. The HTML header is unchanged and still prints the name as it was.
+- With no brand (absent, undefined or null) and on admin mail, which ignores a brand, every
+  byte of the text and the HTML is as at v2.36.0. The HTML never changes, branded or not.
+- No new export, prop or type. Callers need no change. A caller that already writes the
+  business name into its own kicker (Home Scout, Newsletter Studio, PreQual Pro) will now
+  see it on line 1 and again in the kicker; that is the ruled shape.
+
+Consumers pick this up on their next pin bump to `#v2.37.0` (published after audit).
+
 ## v2.36.0 — 2026-11-03
 
 **Fixed: a very long unbroken run no longer stretches an email**
