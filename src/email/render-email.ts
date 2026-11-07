@@ -635,6 +635,11 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
       : "rello";
   const logoUrl = brand ? brandLogoUrl(brand.logoUrl) : relloEmailLogoUrl(logoSlug);
   const logoAlt = brand ? line(brand.name) : appName(logoSlug);
+  // The TEXT part's name line only (the HTML keeps logoAlt exactly as before): the brand name with every
+  // C0/C1 control removed after line()'s flattening (NUL, NEL and the rest can read as line breaks or
+  // vanish in a client), then whitespace collapsed and trimmed. Nothing left = no name line.
+  // eslint-disable-next-line no-control-regex
+  const textName = brand ? line(brand.name).replace(/[\u0000-\u001f\u007f-\u009f]/g, "").replace(/\s+/g, " ").trim() : "";
 
   const subject = line(input.subject);
   const preheader = line(input.preheader);
@@ -846,8 +851,9 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const push = (...ls: string[]) => t.push(...ls);
   // TE-1207: under a brand the text part opens with the brand's name, the same name the HTML header
   // prints (its logo's alt text, or the name as header text), then the kicker as before. A brand with
-  // no name names nobody, as in the header. With no brand every line is as it was at v2.36.0.
-  if (brand && logoAlt) push(logoAlt);
+  // no name names nobody, as in the header. With no brand every line is as it was at v2.36.0. The name
+  // here is textName (TE-1222: C0/C1 controls removed), not logoAlt, so the HTML header is untouched.
+  if (brand && textName) push(textName);
   push(kicker);
   if (headline) push("", headline);
   if (badgeLabel || detail) push("", ...[badgeLabel, detail].filter(Boolean));

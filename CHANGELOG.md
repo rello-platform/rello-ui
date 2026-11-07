@@ -21,6 +21,9 @@ business; the app name may appear small, never as the main branding.
   line 2 exactly as before, and every line after it is as it was.
 - A brand with no name names nobody, in the header and now in the text: the text opens
   with the kicker as at v2.36.0.
+- TE-1222: the text name line drops every C0 and C1 control character (U+0000-U+001F,
+  U+007F-U+009F) after the flattening, then collapses and trims; a name that is only
+  controls names nobody. The HTML header is unchanged and still prints the name as it was.
 - With no brand (absent, undefined or null) and on admin mail, which ignores a brand, every
   byte of the text and the HTML is as at v2.36.0. The HTML never changes, branded or not.
 - No new export, prop or type. Callers need no change. A caller that already writes the
