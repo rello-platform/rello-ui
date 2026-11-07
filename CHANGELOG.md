@@ -19,27 +19,54 @@ threshold is still auto-linked was not tested.
 - An address in a run that TE-1043 would have chunked is now emitted whole, escaped as
   one piece, with no `<wbr>` inside it, in
   `<span style="overflow-wrap:anywhere;word-break:break-word;">`. That rule lets a phone
-  break the address only where a line must. Measured in headless Chromium at 375 px: a
-  90-character https address as a card value is 454 px wide without the rule and 375 px
-  with it.
-- What counts as an address: `http://` or `https://` plus a letter or digit; `www.`
-  plus a dotted host; `local@host` email addresses; and a bare host with no scheme
-  (`consumerfinance.gov`, with or without a path), but only when it ends in a common
-  ending (`.com .net .org .gov .edu .us .io .co .app …`, listed as `BARE_TLDS` in
-  `render-email.ts`). An address must start a run or follow a character that is not a
-  letter, a digit or one of `. _ % + @ / -`. Trailing `. , ; : ! ? ' " *` and an
-  unmatched `)`, `]` or `}` stay outside the address, where the caller wrote them.
-- Not addresses: other schemes (`ftp:`), `report.pdf`, `v2.37.0`, an IP address, or
-  letters glued in front of a scheme. A long run with no address keeps TE-1043's `<wbr>`
-  exactly as before. The rest of a run that holds an address is chunked as before if it
-  is itself 40 or more characters.
+  break the address only where a line must. Measured in headless Chromium:
+  - At 375 px, a 90-character https address as a card value is 454 px wide without the
+    rule and 375 px with it.
+  - At 320 px, `….realestate/…` as a card value is 566 px without it.
+  - A 90-character IDN address and the `.realestate` path, in body text and as a card
+    value, fit at 320 and 375 px. They fit with the full rule, and with only the
+    `word-break:break-word` that Gmail keeps.
+- What counts as an address:
+  - **After a scheme or `www.`:** `http://`, `https://` or `www.` followed by a letter
+    or digit in any script. The address then runs on through every character up to
+    whitespace, `<`, `>`, `"` or a control character, Unicode letters, marks and numbers
+    included, so an IDN host or path such as `https://bücher.de/…` stays one piece
+    (TE-1261).
+  - **Email addresses:** `local@host`.
+  - **Bare host with no scheme:** two or more dotted labels, in any script, whose last
+    label is 2-63 letters in any script, or a punycode `xn--` label. It counts with or
+    without a `:port` or `/path`. There is no list of endings any more (TE-1260):
+    `….realestate/…`, `….xyz/…`, `xn--bcher-kva.de/…` and `bücher.de/…` are addresses.
+  - **Where it can start:** at the start of a run, or after a character that is not a
+    letter, mark or digit in any script, nor one of `. _ % + @ / \ -`.
+  - **Trailing punctuation:** trailing `. , ; : ! ? ' " *`, any quotation mark, any
+    non-ASCII full stop, comma or closing bracket, and an unmatched `)`, `]` or `}` stay
+    outside the address, where the caller wrote them.
+- Not addresses, so they keep TE-1043's `<wbr>` exactly as before:
+  - a run with no dot, such as `tel:+1801…`;
+  - a dotted run whose last label is numeric, or mixes letters and digits: `v2.37.0`,
+    `10.0.0.1/…`, `ref-2026.07a…`;
+  - letters glued in front of a scheme (`Visithttps://…`);
+  - a Windows path;
+  - `ftp:` and other schemes, whose host follows a `/`;
+  - an address the caller broke with a line break: each line is its own run, as before.
+
+  A long run with no address keeps TE-1043's `<wbr>` exactly as before. The rest of a
+  run that holds an address is chunked as before if it is itself 40 or more characters.
+- Accepted side effect (KA ruling, 2026-11-07): a long dotted file name ending in
+  letters, such as `averyveryverylongreportname-final-version.pdf`, now counts as a bare
+  host. It is kept whole inside the span rather than split by `<wbr>`. The span's CSS
+  still keeps it inside a phone screen.
+- A run in a script the browser breaks by itself (Thai, Han, Hangul and others, TE-1060)
+  is still left whole with no span, as at v2.36.0, even when it holds an address.
 - TE-1187: a signer name with an unbroken piece of 16 or more characters is wrapped in
   the same span. A piece ends at a space or after a hyphen. On v2.37.0, 16 "W"
   overflow a 320 px screen and 20 overflow 375 px; a 36-character unbroken name made the
   email 391 px wide at 375 px, and now fits. Ordinary names are unchanged.
 - Visible text, the plain-text part, the subject, every href, src and alt, and every
-  render with no address are byte-equal to v2.37.0. Across a 22,572-render corpus, every
-  slot, audience and brand shape was compared against the v2.37.0 dist.
+  render with no address are byte-equal to v2.37.0. Across a 51,084-render corpus, every
+  slot, audience and brand shape was compared against the v2.37.0 dist. The corpus
+  includes AUDIT 30's inputs and shapes.
 - One v2.36.0 test (`long-run-break.test.ts`, "the test is per run") used a long URL as
   its example of a run that is still chunked. It now uses a long id, because a URL no
   longer is.

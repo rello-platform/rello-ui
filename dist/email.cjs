@@ -350,27 +350,28 @@ var graphemeSegmenter = (() => {
 })();
 var RUN_SEPARATORS = /([\t\n\r \u0085\u1680\u2000-\u2006\u2008-\u200b\u2028\u2029\u205f\u3000]+)/;
 var SELF_BREAKING_SCRIPTS = /[\p{Script=Thai}\p{Script=Lao}\p{Script=Khmer}\p{Script=Myanmar}\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
-var BARE_TLDS = "com|net|org|gov|edu|mil|us|io|co|app|dev|ai|info|biz|me|ca|uk|mortgage|loans|loan|lending|homes|house|realty|realtor|properties|finance|bank";
-var URL_CHAR = "[A-Za-z0-9\\-._~:/?#\\[\\]@!$&'()*+,;=%]";
-var HOST_LABEL = "[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?";
-var HOST_TAIL = "(?![A-Za-z0-9-])(?::\\d{1,5})?(?:[/?#]" + URL_CHAR + "*)?";
+var HOST_LABEL = "[\\p{L}\\p{N}](?:[\\p{L}\\p{M}\\p{N}-]{0,61}[\\p{L}\\p{M}\\p{N}])?";
+var HOST_END = "(?:xn--[a-z0-9-]{1,59}|\\p{L}[\\p{L}\\p{M}]{1,62})(?![\\p{L}\\p{M}\\p{N}-])";
+var RUN_ON = '[^\\s<>"\\p{Cc}]';
+var HOST_TAIL = "(?::\\d{1,5})?(?:[/?#]" + RUN_ON + "*)?";
 var ADDRESS = new RegExp(
   [
-    "https?://[A-Za-z0-9]" + URL_CHAR + "*",
-    "www\\.(?:" + HOST_LABEL + "\\.)+[A-Za-z]{2,63}" + HOST_TAIL,
-    "[A-Za-z0-9._%+-]+@(?:" + HOST_LABEL + "\\.)+[A-Za-z]{2,63}(?![A-Za-z0-9-])",
-    "(?:" + HOST_LABEL + "\\.)+(?:" + BARE_TLDS + ")" + HOST_TAIL
+    "https?://[\\p{L}\\p{N}]" + RUN_ON + "*",
+    "www\\.[\\p{L}\\p{N}]" + RUN_ON + "*",
+    "[a-z0-9._%+-]+@(?:" + HOST_LABEL + "\\.)+" + HOST_END,
+    "(?:" + HOST_LABEL + "\\.)+" + HOST_END + HOST_TAIL
   ].join("|"),
-  "gi"
+  "giu"
 );
-var ADDRESS_BEFORE = /[A-Za-z0-9._%+@/-]/;
-var GRAPHEME_EXTEND = /^[\p{M}‌‍︀-️]/u;
+var ADDRESS_BEFORE = /[\p{L}\p{M}\p{N}._%+@/\\-]/u;
+var GRAPHEME_EXTEND = /^[\p{M}\p{Join_Control}]/u;
+var TRAILING_PUNCTUATION = /^(?:[.,;:!?'"*]|[\p{Pi}\p{Pf}]|(?![ -~])[\p{Po}\p{Pe}])$/u;
 var WRAP_STYLE = "overflow-wrap:anywhere;word-break:break-word;";
 function trimAddress(match) {
   let out = match;
   for (; ; ) {
     const last = out.charAt(out.length - 1);
-    if (/[.,;:!?'"*]/.test(last)) {
+    if (TRAILING_PUNCTUATION.test(last)) {
       out = out.slice(0, -1);
       continue;
     }

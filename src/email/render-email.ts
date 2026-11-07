@@ -320,46 +320,52 @@ const SELF_BREAKING_SCRIPTS =
  *
  * What counts as an address (ADDRESS, then trimAddress). Every form must start
  * at the beginning of its run or right after a character that is not a letter,
- * a digit or one of `. _ % + @ / -` (after one of those it is the inside of
- * something longer). This is checked in code, not with a lookbehind, which older
- * engines reject at load time. The forms:
- *   - `http://` or `https://` (any case) followed by at least one letter or
- *     digit, then URL characters (RFC 3986 unreserved, reserved and `%`);
- *   - `www.` plus a dotted host ending in a letters-only label of 2-63, then an
- *     optional `:port` and an optional path, query or fragment;
- *   - an email address: `local@` plus a dotted host ending in a letters-only
- *     label of 2-63;
- *   - a bare host with no scheme (`consumerfinance.gov`, with or without a
- *     `/path`): dotted labels ending in one of BARE_TLDS only. A bare
- *     `name.ext` is otherwise too often a file name or two words joined by a
- *     full stop to call it an address.
- * Trailing `. , ; : ! ? ' " *` and a closing `)`, `]` or `}` with no opener
- * inside the address are left out of it and stay exactly where the caller wrote
- * them, outside the span. A match followed by a combining mark, ZWJ or variation
- * selector is not an address (the span would cut a grapheme).
+ * a mark or a digit in any script, nor one of `. _ % + @ / \ -` (after one of
+ * those it is the inside of something longer: "Visithttps://…", a Windows path,
+ * a host inside a path). This is checked in code, not with a lookbehind, which
+ * older engines reject at load time. The forms:
+ *   - `http://` or `https://` (any case) followed by a letter or digit in any
+ *     script, then every character up to whitespace, `<`, `>`, `"` or a control
+ *     character: Unicode letters, marks and numbers included, so an IDN host
+ *     (`https://bücher.de/…`) or path stays one piece (TE-1261);
+ *   - `www.` followed the same way;
+ *   - an email address: `local@` plus a host as below;
+ *   - a bare host with no scheme, with or without a `:port` or `/path`: two or
+ *     more dotted labels (letters, marks, digits and inner hyphens, any script)
+ *     whose last label is 2-63 letters in any script, or a punycode `xn--`
+ *     label (TE-1260: `….realestate/…`, `….xyz/…`, `xn--bcher-kva.de/…`).
+ * Trailing `. , ; : ! ? ' " *`, any opening or closing quotation mark, any
+ * non-ASCII full stop, comma or closing bracket, and a closing `)`, `]` or `}`
+ * with no opener inside the address are left out of it and stay exactly where
+ * the caller wrote them, outside the span. A match followed by a combining mark
+ * or a joiner is not an address (the span would cut a grapheme).
  *
- * Not addresses: everything else, including `ftp:` and other schemes, a bare
- * host on any other ending (`report.pdf`, `v2.37.0`), and an IP address. A long
- * run with no address gets TE-1043's `<wbr>` exactly as before.
+ * Not addresses, so they keep TE-1043's `<wbr>` exactly as before: a run with
+ * no dot (`tel:+1801…`), a dotted run whose last label is numeric or mixes
+ * letters and digits (`v2.37.0`, `10.0.0.1`, `ref-2026.07a`), letters glued
+ * onto a scheme, a Windows path, and `ftp:` or other schemes followed by a host
+ * (the host follows a `/`). A long dotted file name (`…-final-version.pdf`)
+ * does count, the accepted cost of rule 2: it is kept whole in the span.
  */
-const BARE_TLDS =
-  "com|net|org|gov|edu|mil|us|io|co|app|dev|ai|info|biz|me|ca|uk|mortgage|loans|loan|lending|homes|house|realty|realtor|properties|finance|bank";
-const URL_CHAR = "[A-Za-z0-9\\-._~:/?#\\[\\]@!$&'()*+,;=%]";
-const HOST_LABEL = "[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?";
-const HOST_TAIL = "(?![A-Za-z0-9-])(?::\\d{1,5})?(?:[/?#]" + URL_CHAR + "*)?";
+const HOST_LABEL = "[\\p{L}\\p{N}](?:[\\p{L}\\p{M}\\p{N}-]{0,61}[\\p{L}\\p{M}\\p{N}])?";
+const HOST_END = "(?:xn--[a-z0-9-]{1,59}|\\p{L}[\\p{L}\\p{M}]{1,62})(?![\\p{L}\\p{M}\\p{N}-])";
+const RUN_ON = '[^\\s<>"\\p{Cc}]';
+const HOST_TAIL = "(?::\\d{1,5})?(?:[/?#]" + RUN_ON + "*)?";
 const ADDRESS = new RegExp(
   [
-    "https?://[A-Za-z0-9]" + URL_CHAR + "*",
-    "www\\.(?:" + HOST_LABEL + "\\.)+[A-Za-z]{2,63}" + HOST_TAIL,
-    "[A-Za-z0-9._%+-]+@(?:" + HOST_LABEL + "\\.)+[A-Za-z]{2,63}(?![A-Za-z0-9-])",
-    "(?:" + HOST_LABEL + "\\.)+(?:" + BARE_TLDS + ")" + HOST_TAIL,
+    "https?://[\\p{L}\\p{N}]" + RUN_ON + "*",
+    "www\\.[\\p{L}\\p{N}]" + RUN_ON + "*",
+    "[a-z0-9._%+-]+@(?:" + HOST_LABEL + "\\.)+" + HOST_END,
+    "(?:" + HOST_LABEL + "\\.)+" + HOST_END + HOST_TAIL,
   ].join("|"),
-  "gi",
+  "giu",
 );
 /** A character an address cannot follow directly (it would be inside something else). */
-const ADDRESS_BEFORE = /[A-Za-z0-9._%+@/-]/;
+const ADDRESS_BEFORE = /[\p{L}\p{M}\p{N}._%+@/\\-]/u;
 /** A character that would join the address's last character into one grapheme. */
-const GRAPHEME_EXTEND = /^[\p{M}‌‍︀-️]/u;
+const GRAPHEME_EXTEND = /^[\p{M}\p{Join_Control}]/u;
+/** Trailing characters that end a sentence or close a quote rather than belong to an address. */
+const TRAILING_PUNCTUATION = /^(?:[.,;:!?'"*]|[\p{Pi}\p{Pf}]|(?![ -~])[\p{Po}\p{Pe}])$/u;
 
 /** The CSS that lets a whole address (or a long name) break only where a line must. */
 const WRAP_STYLE = "overflow-wrap:anywhere;word-break:break-word;";
@@ -368,7 +374,7 @@ function trimAddress(match: string): string {
   let out = match;
   for (;;) {
     const last = out.charAt(out.length - 1);
-    if (/[.,;:!?'"*]/.test(last)) {
+    if (TRAILING_PUNCTUATION.test(last)) {
       out = out.slice(0, -1);
       continue;
     }
