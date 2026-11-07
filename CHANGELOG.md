@@ -5,7 +5,7 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
-## v2.37.1 — unreleased (version bump and tag at release, after audit)
+## v2.37.1 — 2026-11-07
 
 **Fixed: web addresses in caller text stay whole, so mail clients link them (TE-1189, TE-1187)**
 
