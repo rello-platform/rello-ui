@@ -282,11 +282,13 @@ describe("v2.36.0: text in a script a browser breaks by itself is left whole (TE
     for (const audience of AUDIENCES) expect(mailWith(audience, run), audience).not.toContain(WBR);
   });
 
-  it("the test is per run: a long URL beside Thai with a space between them is its own run and is still chunked", () => {
-    const url = `https://example.com/${"x".repeat(60)}`;
-    const html = mailWith("consumer", `เราได้รับคำขอของคุณแล้ว ${url}`);
+  it("the test is per run: a long id beside Thai with a space between them is its own run and is still chunked", () => {
+    // v2.37.1 (TE-1189): this was a long URL, but a web address is now never chunked;
+    // a long run that is not an address still is, which is what this test is about.
+    const id = `ref-${"x".repeat(60)}`;
+    const html = mailWith("consumer", `เราได้รับคำขอของคุณแล้ว ${id}`);
     expect(html).toContain(WBR);
-    expect(noWbr(html)).toContain(url);
+    expect(noWbr(html)).toContain(id);
   });
 
   it("the check can fail: the same 900-character run in Latin, Cyrillic, Arabic and Devanagari is still chunked", () => {

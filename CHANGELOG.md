@@ -5,6 +5,89 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.37.1 — unreleased (version bump and tag at release, after audit)
+
+**Fixed: web addresses in caller text stay whole, so mail clients link them (TE-1189, TE-1187)**
+
+v2.36.0 (TE-1043) put a `<wbr>` every 10 characters into any run of 40 or more
+unbroken characters in caller text, and a web address is such a run. Gmail web then
+linked a fragment: out of `consumerfi<wbr>nance.gov/…` only `nance.gov/`, a different
+website, and out of `https://ww<wbr>w.consumer…` only `https://ww` (three real
+sends, read in Gmail on 2026-11-07). That release's own note said whether a URL over the
+threshold is still auto-linked was not tested.
+
+- An address in a run that TE-1043 would have chunked is now emitted whole, escaped as
+  one piece, with no `<wbr>` inside it, in
+  `<span style="overflow-wrap:anywhere;word-break:break-word;">`. That rule lets a phone
+  break the address only where a line must. Measured in headless Chromium:
+  - At 375 px, a 90-character https address as a card value is 454 px wide without the
+    rule and 375 px with it.
+  - At 320 px, `….realestate/…` as a card value is 566 px without it.
+  - A 90-character IDN address and the `.realestate` path, in body text and as a card
+    value, fit at 320 and 375 px. They fit with the full rule, and with only the
+    `word-break:break-word` that Gmail keeps.
+- What counts as an address:
+  - **After a scheme or `www.`:** `http://`, `https://` or `www.` followed by a letter
+    or digit in any script. The address then runs on through every character up to
+    whitespace, `<`, `>`, `"` or a control character, Unicode letters, marks and numbers
+    included, so an IDN host or path such as `https://bücher.de/…` stays one piece
+    (TE-1261).
+  - **Email addresses:** `local@host`.
+  - **Bare host with no scheme:** two or more dotted labels, in any script, whose last
+    label is 2-63 letters in any script, or a punycode `xn--` label. "Last" means last
+    (TE-1262): the host takes in every following `.label` before its ending is judged, so
+    `a.b.c.123` is not cut back to `a.b.c`. A full stop followed by a space, `/` or the
+    end of the run still ends the host. It counts with or
+    without a `:port` or `/path`. There is no list of endings any more (TE-1260):
+    `….realestate/…`, `….xyz/…`, `xn--bcher-kva.de/…` and `bücher.de/…` are addresses.
+  - **Where it can start:** at the start of a run, or after a character that is not a
+    letter, mark or digit in any script, nor one of `. _ % + @ / \ -`.
+  - **Trailing punctuation:** trailing `. , ; : ! ? ' " *`, any quotation mark, any
+    non-ASCII full stop, comma or closing bracket, and an unmatched `)`, `]` or `}` are
+    not part of the address. They stay where the caller wrote them.
+- Not addresses, so they keep TE-1043's `<wbr>` exactly as before:
+  - a run with no dot, such as `tel:+1801…`;
+  - a dotted run whose last label is numeric, or mixes letters and digits: `v2.37.0`,
+    `10.0.0.1/…`, `ref-2026.07a…`, and (TE-1262) `mortgage.application.processing.123…`
+    or `….reference2026`. These are byte-equal to v2.37.0; no prefix of them is spanned;
+  - letters glued in front of a scheme (`Visithttps://…`);
+  - a Windows path;
+  - `ftp:` and other schemes, whose host follows a `/`;
+  - an address the caller broke with a line break: each line is its own run, as before.
+
+  A long run with no address keeps TE-1043's `<wbr>` exactly as before.
+- Whole or nothing (TE-1262): a run that holds an address goes into the span in full, so
+  no part of a 40+ run is left outside it unbroken. Inside the span each address is one
+  piece with no `<wbr>`. Text glued to the address keeps TE-1043's `<wbr>` only when it
+  is itself 40 or more characters, else the span's CSS breaks it.
+  - Before this, the span held the address alone. Text glued to it was left outside, with
+    no `<wbr>` when under 40 characters.
+  - On RELLO-E43's `buildCriticalDriftEmail` metadata card, AUDIT 30's
+    `mortgage.application.processing.123456789012345678901` made the email 382 px wide at
+    320 and 375 px. It now fits, with the full CSS and with Gmail's.
+  - An address followed by 39 `)` made a card 396 px wide; that now fits too.
+  - `MortgageApplicationReferenceNumber.Ph.D.` was spanned only up to `.Ph`. Its last
+    label `D` is a single letter, so it is no address, and it is byte-equal to v2.37.0.
+- Accepted side effect (KA ruling, 2026-11-07): a long dotted file name ending in
+  letters, such as `averyveryverylongreportname-final-version.pdf`, now counts as a bare
+  host. It is kept whole inside the span rather than split by `<wbr>`. The span's CSS
+  still keeps it inside a phone screen.
+- A run in a script the browser breaks by itself (Thai, Han, Hangul and others, TE-1060)
+  is still left whole with no span, as at v2.36.0, even when it holds an address.
+- TE-1187: a signer name with an unbroken piece of 16 or more characters is wrapped in
+  the same span. A piece ends at a space or after a hyphen. On v2.37.0, 16 "W"
+  overflow a 320 px screen and 20 overflow 375 px; a 36-character unbroken name made the
+  email 391 px wide at 375 px, and now fits. Ordinary names are unchanged.
+- Visible text, the plain-text part, the subject, every href, src and alt, and every
+  render with no address are byte-equal to v2.37.0. Across a 65,934-render corpus, every
+  slot, audience and brand shape was compared against the v2.37.0 dist, with 0 failures.
+  The corpus includes AUDIT 30's inputs and shapes, and its 591 edge inputs.
+- One v2.36.0 test (`long-run-break.test.ts`, "the test is per run") used a long URL as
+  its example of a run that is still chunked. It now uses a long id, because a URL no
+  longer is.
+
+No new export, prop or type. Consumers pick this up on their next pin bump.
+
 ## v2.37.0 — 2026-11-06
 
 **Changed: under a brand, the plain-text part opens with the brand's name (TE-1207)**
