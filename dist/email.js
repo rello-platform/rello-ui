@@ -315,7 +315,7 @@ var graphemeSegmenter = (() => {
 var RUN_SEPARATORS = /([\t\n\r \u0085\u1680\u2000-\u2006\u2008-\u200b\u2028\u2029\u205f\u3000]+)/;
 var SELF_BREAKING_SCRIPTS = /[\p{Script=Thai}\p{Script=Lao}\p{Script=Khmer}\p{Script=Myanmar}\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
 var HOST_LABEL = "[\\p{L}\\p{N}](?:[\\p{L}\\p{M}\\p{N}-]{0,61}[\\p{L}\\p{M}\\p{N}])?";
-var HOST_END = "(?:xn--[a-z0-9-]{1,59}|\\p{L}[\\p{L}\\p{M}]{1,62})(?![\\p{L}\\p{M}\\p{N}-])";
+var HOST_END = "(?:xn--[a-z0-9-]{1,59}|\\p{L}[\\p{L}\\p{M}]{1,62})(?![\\p{L}\\p{M}\\p{N}-]|\\.[\\p{L}\\p{M}\\p{N}])";
 var RUN_ON = '[^\\s<>"\\p{Cc}]';
 var HOST_TAIL = "(?::\\d{1,5})?(?:[/?#]" + RUN_ON + "*)?";
 var ADDRESS = new RegExp(
@@ -381,11 +381,10 @@ function escapeEmailHtmlBreakable(value) {
     let out = "";
     let at = 0;
     for (const [start, end] of addresses) {
-      out += chunkRun(part.slice(at, start));
-      out += `<span style="${WRAP_STYLE}">${escapeEmailHtml(part.slice(start, end))}</span>`;
+      out += chunkRun(part.slice(at, start)) + escapeEmailHtml(part.slice(start, end));
       at = end;
     }
-    return out + chunkRun(part.slice(at));
+    return `<span style="${WRAP_STYLE}">${out}${chunkRun(part.slice(at))}</span>`;
   }).join("");
 }
 var SIGNER_NAME_RUN = 16;

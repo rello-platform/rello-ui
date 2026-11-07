@@ -10,6 +10,11 @@ import { escapeEmailHtml, renderRelloEmail, type RelloEmailInput } from "./index
  * its <wbr> as before; a long unbroken signer name gets the same span. jsdom has no
  * layout: the measured half (headless Chromium, 375 and 700 px) is in the paste-back's
  * evidence.
+ *
+ * TE-1262 (whole or nothing): the span covers the WHOLE run that holds an address, so no part of a
+ * 40+ run is left outside it unbroken; text glued to the address sits inside the same span, in the
+ * same place, chunked as TE-1043 chunks it only when that piece is itself 40+ graphemes. A host's
+ * ending is its LAST dotted label: a.b.c.123 and a.b.c.ref2026 are not addresses at all.
  */
 const WRAP = '<span style="overflow-wrap:anywhere;word-break:break-word;">';
 
@@ -50,12 +55,15 @@ const CASES: Array<{ name: string; before: string; address: string; after: strin
 
 describe("TE-1189: an address in caller text is never split", () => {
   for (const c of CASES) {
-    it(`${c.name}: whole, in the wrap span, punctuation where the caller put it, visible text unchanged`, () => {
+    it(`${c.name}: whole, its whole run in the wrap span, punctuation where the caller put it, visible text unchanged`, () => {
       const text = c.before + c.address + c.after;
       const out = renderRelloEmail(input(text));
       const html = body(out.html);
-      // The address is one escaped piece, no <wbr> anywhere inside it.
-      expect(html).toContain(WRAP + escapeEmailHtml(c.address) + "</span>" + escapeEmailHtml(c.after));
+      // The run holding the address (with any glued punctuation) is one span; the address is one escaped
+      // piece, no <wbr> anywhere inside it.
+      const pre = c.before.split(" ").pop() ?? "";
+      const post = c.after.split(" ")[0];
+      expect(html).toContain(WRAP + escapeEmailHtml(pre + c.address + post) + "</span>");
       expect(html).not.toMatch(/<wbr>/);
       expect(visible(html)).toBe(text);
       // The text part carries the caller's words exactly.
@@ -99,10 +107,16 @@ describe("TE-1189: an address in caller text is never split", () => {
     expect(body(renderRelloEmail(input(run)).html)).toBe(`${WRAP}${run}</span>`);
   });
 
-  it("an address inside a longer run: the address is whole, the long rest is still chunked", () => {
+  it("an address inside a longer run: one span over the whole run, the address whole, the long rest still chunked", () => {
     const junk = "z".repeat(42);
     const html = body(renderRelloEmail(input(`${junk}(https://example.com/abc)`)).html);
-    expect(html).toBe(`zzzzzzzzzz<wbr>zzzzzzzzzz<wbr>zzzzzzzzzz<wbr>zzzzzzzzzz<wbr>zz(${WRAP}https://example.com/abc</span>)`);
+    expect(html).toBe(`${WRAP}zzzzzzzzzz<wbr>zzzzzzzzzz<wbr>zzzzzzzzzz<wbr>zzzzzzzzzz<wbr>zz(https://example.com/abc)</span>`);
+  });
+
+  it("trailing punctuation is not part of the address: 40+ closing marks after it are still chunked", () => {
+    const url = "https://example.com/mortgages/options";
+    const html = body(renderRelloEmail(input(url + "!".repeat(45))).html);
+    expect(html).toBe(`${WRAP}${url}${(("!".repeat(45)).match(/.{1,10}/g) ?? []).join("<wbr>")}</span>`);
   });
 
   it("letters before a scheme make it part of a word, not an address: chunked as before", () => {
@@ -134,9 +148,12 @@ describe("TE-1189: an address in caller text is never split", () => {
 });
 
 describe("TE-1260 / TE-1261: any alphabetic or punycode host ending, and Unicode after a scheme (AUDIT 30 fixtures)", () => {
+  // One run: the span covers all of it (TE-1262), the address is a contiguous escaped piece inside.
   const whole = (text: string, address: string, before = "", after = "") => {
+    expect(before + address + after).toBe(text);
     const html = body(renderRelloEmail(input(text)).html);
-    expect(html).toBe(`${escapeEmailHtml(before)}${WRAP}${escapeEmailHtml(address)}</span>${escapeEmailHtml(after)}`);
+    expect(html).toBe(`${WRAP}${escapeEmailHtml(text)}</span>`);
+    expect(html).toContain(escapeEmailHtml(address));
     expect(html).not.toMatch(/<wbr>/);
     expect(visible(html)).toBe(text);
   };
@@ -155,7 +172,7 @@ describe("TE-1260 / TE-1261: any alphabetic or punycode host ending, and Unicode
     whole("verylongmortgagebrokerage.xn--p1ai/options/for/buyers", "verylongmortgagebrokerage.xn--p1ai/options/for/buyers");
   });
 
-  it("TE-1260: a bare Unicode host is one address, its full stop outside", () => {
+  it("TE-1260: a bare Unicode host is one address, its full stop after it in the same run", () => {
     whole("bücher-und-hypotheken.de/finanzierung/für-käufer.", "bücher-und-hypotheken.de/finanzierung/für-käufer", "", ".");
     whole("Siehe:hypothekenberatung.ελλάδα/προσφορές/για-αγοραστές", "hypothekenberatung.ελλάδα/προσφορές/για-αγοραστές", "Siehe:");
   });
@@ -166,9 +183,19 @@ describe("TE-1260 / TE-1261: any alphabetic or punycode host ending, and Unicode
     whole("www.bücher.de/hypotheken/optionen/für/käufer/und/mehr", "www.bücher.de/hypotheken/optionen/für/käufer/und/mehr");
   });
 
-  it("TE-1261: the run-on stops at < > and \" and trailing quotes and closers stay outside", () => {
+  it("TE-1261: the run-on stops at < > and \" and trailing quotes and closers are not part of the address", () => {
     const html = body(renderRelloEmail(input('https://example.com/mortgages?a=1&b=2<item>"\'suffix')).html);
-    expect(html).toBe(`${WRAP}https://example.com/mortgages?a=1&amp;b=2</span>&lt;item&gt;&quot;&#39;suffix`);
+    expect(html).toBe(`${WRAP}https://example.com/mortgages?a=1&amp;b=2&lt;item&gt;&quot;&#39;suffix</span>`);
+    // A 40+ tail after < is chunked, so the address did stop there.
+    const tail = "x".repeat(45);
+    expect(body(renderRelloEmail(input(`https://example.com/a?b=1<${tail}`)).html)).toBe(
+      `${WRAP}https://example.com/a?b=1${(("<" + tail).match(/.{1,10}/g) ?? []).map(escapeEmailHtml).join("<wbr>")}</span>`,
+    );
+    // Closing quotation marks: 40+ of them after an address are chunked, not taken into it.
+    const quotes = String.fromCodePoint(0xbb).repeat(45);
+    expect(body(renderRelloEmail(input(`https://example.com/mortgages${quotes}`)).html)).toBe(
+      `${WRAP}https://example.com/mortgages${(quotes.match(/.{1,10}/g) ?? []).join("<wbr>")}</span>`,
+    );
     whole("«https://bücher.de/hypotheken/optionen/für/käufer»", "https://bücher.de/hypotheken/optionen/für/käufer", "«", "»");
   });
 });
@@ -243,5 +270,61 @@ describe("TE-1187: a long unbroken signer name wraps where it must", () => {
   it("the threshold is a 16-grapheme run", () => {
     expect(name(renderRelloEmail(input("Hi.", "W".repeat(15))).html)).toBe("W".repeat(15));
     expect(name(renderRelloEmail(input("Hi.", "W".repeat(16))).html)).toBe(`${WRAP}${"W".repeat(16)}</span>`);
+  });
+});
+
+describe("TE-1262: the host's ending is its LAST label; whole or nothing (AUDIT 30, pastebacks/evidence/audit30-591)", () => {
+  // v2.37.0's chunking of an ASCII run: a <wbr> after every 10 characters.
+  const chunked = (run: string) => (run.match(/.{1,10}/g) ?? []).map(escapeEmailHtml).join("<wbr>");
+  const NUMERIC_FINAL = "mortgage.application.processing.123456789012345678901";
+  const MIXED_FINAL = "mortgage.application.processing.reference2026";
+  // The last label "D" is one letter, so this is no address either; 40397456 spanned "…Number.Ph" only.
+  const ABBREVIATION = "MortgageApplicationReferenceNumber.Ph.D.";
+
+  it("a dotted run whose last label is numeric or mixed is not an address: byte-equal to v2.37.0", () => {
+    for (const run of [NUMERIC_FINAL, MIXED_FINAL, ABBREVIATION]) {
+      expect(body(renderRelloEmail(input(run)).html)).toBe(chunked(run));
+      expect(body(renderRelloEmail(input(`See ${run} today.`)).html)).toBe(`See ${chunked(run)} today.`);
+    }
+  });
+
+  it("the same in a card value (RELLO-E43's buildCriticalDriftEmail metadata card)", () => {
+    for (const run of [NUMERIC_FINAL, MIXED_FINAL]) {
+      const html = renderRelloEmail({ ...input("Hi."), card: { title: "Details", rows: [{ label: "Reference", value: run }] } }).html;
+      expect(html).toContain(chunked(run));
+      expect(html).not.toContain(WRAP);
+    }
+  });
+
+  it("a sentence's full stop still ends the host; a dotted host with a letter ending is still one address", () => {
+    const run = "mortgage.application.processing.example";
+    expect(body(renderRelloEmail(input(`See ${run}. Then call.`)).html)).toBe(`See ${WRAP}${run}.</span> Then call.`);
+    expect(body(renderRelloEmail(input(`${run}/review`)).html)).toBe(`${WRAP}${run}/review</span>`);
+  });
+
+  it("no span ever covers part of a run: every span is a whole whitespace-delimited run", () => {
+    const runs = [
+      NUMERIC_FINAL, MIXED_FINAL, ABBREVIATION,
+      `${NUMERIC_FINAL}/x`, `(see:${MIXED_FINAL})`,
+      "LongMortgageApplicationIdentifier.Reference<item>\"'&value",
+      "customer.account.application.getMortgageDecision()",
+      "https://example.com/abc" + "9".repeat(30) + "<" + "8".repeat(30),
+      "z".repeat(42) + "(https://example.com/abc)",
+      "https://example.com/a,https://example.com/b" + ")".repeat(45),
+      "Application.profile.employment.currentEmployerDisplayName",
+      URL90 + "." + "1".repeat(39),
+    ];
+    for (const run of runs) {
+      const html = body(renderRelloEmail(input(`a ${run} b`)).html);
+      const spans = html.split(WRAP).length - 1;
+      if (spans === 0) {
+        expect(html).toBe(`a ${(run.length >= 40 ? chunked(run) : escapeEmailHtml(run))} b`);
+        continue;
+      }
+      expect(spans).toBe(1);
+      expect(html.startsWith(`a ${WRAP}`)).toBe(true);
+      expect(html.endsWith("</span> b")).toBe(true);
+      expect(visible(html)).toBe(`a ${run} b`);
+    }
   });
 });

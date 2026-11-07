@@ -314,9 +314,11 @@ const SELF_BREAKING_SCRIPTS =
  * address reads the text between elements, so a `<wbr>` inside one makes it
  * link a fragment: Gmail web linked only "nance.gov/" out of
  * "consumerfi<wbr>nance.gov/…" and only "https://ww" out of an https address
- * (KA read of three real sends, 2026-11-07). An address the run-chunking below
- * would have cut is instead emitted whole, escaped as one piece, inside a span
- * carrying WRAP_STYLE, so a phone can still break it where it must.
+ * (KA read of three real sends, 2026-11-07). In a run the chunking below would
+ * have cut, each address is emitted whole, escaped as one piece, and the whole
+ * run (address and any text glued to it) goes inside one span carrying
+ * WRAP_STYLE, so a phone can still break it where it must. Whole or nothing
+ * (TE-1262): a span never covers part of a run and leaves the rest outside.
  *
  * What counts as an address (ADDRESS, then trimAddress). Every form must start
  * at the beginning of its run or right after a character that is not a letter,
@@ -334,6 +336,10 @@ const SELF_BREAKING_SCRIPTS =
  *     more dotted labels (letters, marks, digits and inner hyphens, any script)
  *     whose last label is 2-63 letters in any script, or a punycode `xn--`
  *     label (TE-1260: `….realestate/…`, `….xyz/…`, `xn--bcher-kva.de/…`).
+ *     "Last" means last: the host takes in every `.label` that follows before
+ *     its ending is judged, so `a.b.c.123` and `a.b.c.ref2026` are not
+ *     addresses at all (TE-1262), and a full stop then a space, `/` or the end
+ *     of the run still ends a host.
  * Trailing `. , ; : ! ? ' " *`, any opening or closing quotation mark, any
  * non-ASCII full stop, comma or closing bracket, and a closing `)`, `]` or `}`
  * with no opener inside the address are left out of it and stay exactly where
@@ -348,7 +354,10 @@ const SELF_BREAKING_SCRIPTS =
  * does count, the accepted cost of rule 2: it is kept whole in the span.
  */
 const HOST_LABEL = "[\\p{L}\\p{N}](?:[\\p{L}\\p{M}\\p{N}-]{0,61}[\\p{L}\\p{M}\\p{N}])?";
-const HOST_END = "(?:xn--[a-z0-9-]{1,59}|\\p{L}[\\p{L}\\p{M}]{1,62})(?![\\p{L}\\p{M}\\p{N}-])";
+// The host ends only where no further ".label" follows (TE-1262): it takes in every dotted label before its
+// ending is judged, so a.b.c.123 is not cut back to a.b.c. A full stop followed by anything but a label
+// character (a sentence end, "/", the end of the run) still ends it.
+const HOST_END = "(?:xn--[a-z0-9-]{1,59}|\\p{L}[\\p{L}\\p{M}]{1,62})(?![\\p{L}\\p{M}\\p{N}-]|\\.[\\p{L}\\p{M}\\p{N}])";
 const RUN_ON = '[^\\s<>"\\p{Cc}]';
 const HOST_TAIL = "(?::\\d{1,5})?(?:[/?#]" + RUN_ON + "*)?";
 const ADDRESS = new RegExp(
@@ -427,14 +436,16 @@ function escapeEmailHtmlBreakable(value: string): string {
       if (!chunked.includes("<wbr>")) return chunked;
       const addresses = findAddresses(part);
       if (addresses.length === 0) return chunked;
+      // Whole or nothing (TE-1262): one span covers the entire run, so no part of a 40+ run is left
+      // outside it unbroken. Each address inside is one escaped piece with no <wbr>; the text around
+      // it is chunked as TE-1043 chunks it when that piece is itself 40+ graphemes, else left as is.
       let out = "";
       let at = 0;
       for (const [start, end] of addresses) {
-        out += chunkRun(part.slice(at, start));
-        out += `<span style="${WRAP_STYLE}">${escapeEmailHtml(part.slice(start, end))}</span>`;
+        out += chunkRun(part.slice(at, start)) + escapeEmailHtml(part.slice(start, end));
         at = end;
       }
-      return out + chunkRun(part.slice(at));
+      return `<span style="${WRAP_STYLE}">${out}${chunkRun(part.slice(at))}</span>`;
     })
     .join("");
 }

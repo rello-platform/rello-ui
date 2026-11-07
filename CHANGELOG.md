@@ -34,25 +34,40 @@ threshold is still auto-linked was not tested.
     (TE-1261).
   - **Email addresses:** `local@host`.
   - **Bare host with no scheme:** two or more dotted labels, in any script, whose last
-    label is 2-63 letters in any script, or a punycode `xn--` label. It counts with or
+    label is 2-63 letters in any script, or a punycode `xn--` label. "Last" means last
+    (TE-1262): the host takes in every following `.label` before its ending is judged, so
+    `a.b.c.123` is not cut back to `a.b.c`. A full stop followed by a space, `/` or the
+    end of the run still ends the host. It counts with or
     without a `:port` or `/path`. There is no list of endings any more (TE-1260):
     `….realestate/…`, `….xyz/…`, `xn--bcher-kva.de/…` and `bücher.de/…` are addresses.
   - **Where it can start:** at the start of a run, or after a character that is not a
     letter, mark or digit in any script, nor one of `. _ % + @ / \ -`.
   - **Trailing punctuation:** trailing `. , ; : ! ? ' " *`, any quotation mark, any
-    non-ASCII full stop, comma or closing bracket, and an unmatched `)`, `]` or `}` stay
-    outside the address, where the caller wrote them.
+    non-ASCII full stop, comma or closing bracket, and an unmatched `)`, `]` or `}` are
+    not part of the address. They stay where the caller wrote them.
 - Not addresses, so they keep TE-1043's `<wbr>` exactly as before:
   - a run with no dot, such as `tel:+1801…`;
   - a dotted run whose last label is numeric, or mixes letters and digits: `v2.37.0`,
-    `10.0.0.1/…`, `ref-2026.07a…`;
+    `10.0.0.1/…`, `ref-2026.07a…`, and (TE-1262) `mortgage.application.processing.123…`
+    or `….reference2026`. These are byte-equal to v2.37.0; no prefix of them is spanned;
   - letters glued in front of a scheme (`Visithttps://…`);
   - a Windows path;
   - `ftp:` and other schemes, whose host follows a `/`;
   - an address the caller broke with a line break: each line is its own run, as before.
 
-  A long run with no address keeps TE-1043's `<wbr>` exactly as before. The rest of a
-  run that holds an address is chunked as before if it is itself 40 or more characters.
+  A long run with no address keeps TE-1043's `<wbr>` exactly as before.
+- Whole or nothing (TE-1262): a run that holds an address goes into the span in full, so
+  no part of a 40+ run is left outside it unbroken. Inside the span each address is one
+  piece with no `<wbr>`. Text glued to the address keeps TE-1043's `<wbr>` only when it
+  is itself 40 or more characters, else the span's CSS breaks it.
+  - Before this, the span held the address alone. Text glued to it was left outside, with
+    no `<wbr>` when under 40 characters.
+  - On RELLO-E43's `buildCriticalDriftEmail` metadata card, AUDIT 30's
+    `mortgage.application.processing.123456789012345678901` made the email 382 px wide at
+    320 and 375 px. It now fits, with the full CSS and with Gmail's.
+  - An address followed by 39 `)` made a card 396 px wide; that now fits too.
+  - `MortgageApplicationReferenceNumber.Ph.D.` was spanned only up to `.Ph`. Its last
+    label `D` is a single letter, so it is no address, and it is byte-equal to v2.37.0.
 - Accepted side effect (KA ruling, 2026-11-07): a long dotted file name ending in
   letters, such as `averyveryverylongreportname-final-version.pdf`, now counts as a bare
   host. It is kept whole inside the span rather than split by `<wbr>`. The span's CSS
@@ -64,9 +79,9 @@ threshold is still auto-linked was not tested.
   overflow a 320 px screen and 20 overflow 375 px; a 36-character unbroken name made the
   email 391 px wide at 375 px, and now fits. Ordinary names are unchanged.
 - Visible text, the plain-text part, the subject, every href, src and alt, and every
-  render with no address are byte-equal to v2.37.0. Across a 51,084-render corpus, every
-  slot, audience and brand shape was compared against the v2.37.0 dist. The corpus
-  includes AUDIT 30's inputs and shapes.
+  render with no address are byte-equal to v2.37.0. Across a 65,934-render corpus, every
+  slot, audience and brand shape was compared against the v2.37.0 dist, with 0 failures.
+  The corpus includes AUDIT 30's inputs and shapes, and its 591 edge inputs.
 - One v2.36.0 test (`long-run-break.test.ts`, "the test is per run") used a long URL as
   its example of a run that is still chunked. It now uses a long id, because a URL no
   longer is.
