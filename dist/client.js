@@ -7284,25 +7284,160 @@ function WizardShell({
 }
 
 // src/components/rello-upsell-nudge/RelloUpsellNudge.tsx
+import * as React28 from "react";
 import { Xmark as Xmark3 } from "iconoir-react";
-import { jsx as jsx62, jsxs as jsxs49 } from "react/jsx-runtime";
+
+// src/components/rello-upsell-nudge/copy.ts
+var TOKEN = /\{\{\s*([A-Za-z0-9_]+)\s*\}\}/g;
+function usableValue(name, values) {
+  const raw = name === "monthlyPrice" ? values.monthlyPrice : name === "roiCopy" ? values.roiCopy : void 0;
+  if (typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  if (trimmed === "") return null;
+  if (name === "monthlyPrice" && !/[1-9]/.test(trimmed)) return null;
+  return trimmed;
+}
+function splitSentences(template) {
+  const pieces = [];
+  const re = /([\s\S]*?)(?:([.!?\u2026]+["\u201D\u2019')\]]*)(\s+|$)|(\n\s*)|$)/g;
+  let match;
+  while ((match = re.exec(template)) !== null) {
+    const [whole, body = "", stop = "", stopSep = "", lineSep = ""] = match;
+    if (whole === "") break;
+    pieces.push({ text: body + stop, sep: stop ? stopSep : lineSep });
+    if (re.lastIndex >= template.length) break;
+  }
+  return pieces;
+}
+function newlineCount(s) {
+  return (s.match(/\n/g) ?? []).length;
+}
+function renderUpsellCopy(template, values = {}) {
+  if (typeof template !== "string") return "";
+  if (!template.includes("{{")) return template;
+  const pieces = splitSentences(template);
+  const kept = [];
+  let pendingSep = "";
+  for (const piece of pieces) {
+    let missing = false;
+    const rendered = piece.text.replace(TOKEN, (_match, name) => {
+      const value = usableValue(name, values);
+      if (value === null) {
+        missing = true;
+        return "";
+      }
+      return value;
+    });
+    const leftover = missing ? false : /\{\{|\}\}/.test(rendered);
+    if (missing || leftover) {
+      if (kept.length > 0 && newlineCount(piece.sep) > newlineCount(pendingSep)) pendingSep = piece.sep;
+      continue;
+    }
+    if (kept.length > 0) kept[kept.length - 1].sep = pendingSep;
+    kept.push({ text: rendered, sep: piece.sep });
+    pendingSep = piece.sep;
+  }
+  return kept.map((p, i) => i < kept.length - 1 ? p.text + p.sep : p.text).join("").trim();
+}
+
+// src/components/rello-upsell-nudge/events.ts
+var UPSELL_ENGAGED_DWELL_MS = 3e3;
+
+// src/components/rello-upsell-nudge/RelloUpsellNudge.tsx
+import { Fragment as Fragment6, jsx as jsx62, jsxs as jsxs49 } from "react/jsx-runtime";
+var DEFAULT_CTA_LABEL = "Upgrade to Rello";
 function RelloUpsellNudge({
   seam,
   headline,
   body,
-  ctaLabel = "Upgrade to Rello",
+  ctaLabel = DEFAULT_CTA_LABEL,
   onClick,
   onDismiss,
   icon,
+  monthlyPrice,
+  roiCopy,
+  onEngaged,
+  details,
+  detailsLabel = "How it works",
   className,
+  onKeyDown,
+  onMouseEnter,
+  onMouseLeave,
+  onFocus,
+  onBlur,
   ...props
 }) {
+  const values = { monthlyPrice, roiCopy };
+  const headlineHasToken = typeof headline === "string" && headline.includes("{{");
+  const bodyHasToken = typeof body === "string" && body.includes("{{");
+  const ctaHasToken = typeof ctaLabel === "string" && ctaLabel.includes("{{");
+  const renderedHeadline = headlineHasToken ? renderUpsellCopy(headline, values) : headline;
+  const renderedBody = bodyHasToken ? renderUpsellCopy(body, values) : body;
+  const renderedCtaRaw = ctaHasToken ? renderUpsellCopy(ctaLabel, values) : ctaLabel;
+  const renderedCta = ctaHasToken && renderedCtaRaw === "" ? DEFAULT_CTA_LABEL : renderedCtaRaw;
+  const showHeadline = !headlineHasToken || renderedHeadline !== "";
+  const showBody = !bodyHasToken || renderedBody !== "";
+  const panelId = React28.useId();
+  const [detailsOpen, setDetailsOpen] = React28.useState(false);
+  const onEngagedRef = React28.useRef(onEngaged);
+  onEngagedRef.current = onEngaged;
+  const engagedRef = React28.useRef(false);
+  const dwellTimerRef = React28.useRef(null);
+  const hoveringRef = React28.useRef(false);
+  const focusedRef = React28.useRef(false);
+  const clearDwell = React28.useCallback(() => {
+    if (dwellTimerRef.current !== null) {
+      clearTimeout(dwellTimerRef.current);
+      dwellTimerRef.current = null;
+    }
+  }, []);
+  const fireEngaged = React28.useCallback(() => {
+    clearDwell();
+    if (engagedRef.current) return;
+    engagedRef.current = true;
+    onEngagedRef.current?.();
+  }, [clearDwell]);
+  const startDwell = React28.useCallback(() => {
+    if (engagedRef.current || dwellTimerRef.current !== null || !onEngagedRef.current) return;
+    dwellTimerRef.current = setTimeout(fireEngaged, UPSELL_ENGAGED_DWELL_MS);
+  }, [fireEngaged]);
+  const stopDwellIfIdle = React28.useCallback(() => {
+    if (!hoveringRef.current && !focusedRef.current) clearDwell();
+  }, [clearDwell]);
+  React28.useEffect(() => clearDwell, [clearDwell]);
   const handleKeyDown = (e) => {
     if (e.key === "Escape") {
       e.stopPropagation();
       onDismiss();
     }
-    props.onKeyDown?.(e);
+    onKeyDown?.(e);
+  };
+  const handleMouseEnter = (e) => {
+    hoveringRef.current = true;
+    startDwell();
+    onMouseEnter?.(e);
+  };
+  const handleMouseLeave = (e) => {
+    hoveringRef.current = false;
+    stopDwellIfIdle();
+    onMouseLeave?.(e);
+  };
+  const handleFocus = (e) => {
+    focusedRef.current = true;
+    startDwell();
+    onFocus?.(e);
+  };
+  const handleBlur = (e) => {
+    const next = e.relatedTarget;
+    if (!next || !e.currentTarget.contains(next)) {
+      focusedRef.current = false;
+      stopDwellIfIdle();
+    }
+    onBlur?.(e);
+  };
+  const toggleDetails = () => {
+    setDetailsOpen((open) => !open);
+    fireEngaged();
   };
   return /* @__PURE__ */ jsxs49(
     "section",
@@ -7310,7 +7445,6 @@ function RelloUpsellNudge({
       role: "region",
       "aria-label": "Rello upgrade option",
       "data-seam": seam,
-      onKeyDown: handleKeyDown,
       className: cn(
         "rounded-lg p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-3",
         className
@@ -7320,6 +7454,11 @@ function RelloUpsellNudge({
         backgroundColor: "transparent"
       },
       ...props,
+      onKeyDown: handleKeyDown,
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
+      onFocus: handleFocus,
+      onBlur: handleBlur,
       children: [
         /* @__PURE__ */ jsxs49("div", { className: "flex items-start gap-3 flex-1 min-w-0", children: [
           icon ? /* @__PURE__ */ jsx62(
@@ -7332,22 +7471,45 @@ function RelloUpsellNudge({
             }
           ) : null,
           /* @__PURE__ */ jsxs49("div", { className: "min-w-0 flex-1", children: [
-            /* @__PURE__ */ jsx62(
+            showHeadline ? /* @__PURE__ */ jsx62(
               "h3",
               {
                 className: "text-sm font-semibold",
                 style: { color: "var(--foreground, #111827)" },
-                children: headline
+                children: renderedHeadline
               }
-            ),
-            /* @__PURE__ */ jsx62(
+            ) : null,
+            showBody ? /* @__PURE__ */ jsx62(
               "p",
               {
                 className: "text-xs mt-1",
                 style: { color: "var(--neutral-700, #374151)" },
-                children: body
+                children: renderedBody
               }
-            )
+            ) : null,
+            details ? /* @__PURE__ */ jsxs49(Fragment6, { children: [
+              /* @__PURE__ */ jsx62(
+                "button",
+                {
+                  type: "button",
+                  "aria-expanded": detailsOpen,
+                  "aria-controls": detailsOpen ? panelId : void 0,
+                  onClick: toggleDetails,
+                  className: "mt-1 inline-flex items-center min-h-[44px] text-xs font-medium underline-offset-4 hover:underline rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary,#3B5998)] focus-visible:ring-offset-2",
+                  style: { color: "var(--brand-primary, #3B5998)" },
+                  children: detailsLabel
+                }
+              ),
+              detailsOpen ? /* @__PURE__ */ jsx62(
+                "div",
+                {
+                  id: panelId,
+                  className: "text-xs",
+                  style: { color: "var(--neutral-700, #374151)" },
+                  children: details
+                }
+              ) : null
+            ] }) : null
           ] })
         ] }),
         /* @__PURE__ */ jsxs49("div", { className: "flex items-center gap-2 shrink-0 self-stretch sm:self-auto", children: [
@@ -7359,7 +7521,7 @@ function RelloUpsellNudge({
               size: "lg",
               onClick,
               className: "min-h-[44px] w-full sm:w-auto",
-              children: ctaLabel
+              children: renderedCta
             }
           ),
           /* @__PURE__ */ jsx62(
@@ -7379,10 +7541,394 @@ function RelloUpsellNudge({
   );
 }
 
+// src/components/trial-countdown-banner/TrialCountdownBanner.tsx
+import * as React29 from "react";
+import Link2 from "next/link";
+import { Clock, WarningCircle as WarningCircle3 } from "iconoir-react";
+
+// src/components/trial-countdown-banner/remaining.ts
+var MINUTE_MS = 6e4;
+var HOUR_MS = 60 * MINUTE_MS;
+var DAY_MS = 24 * HOUR_MS;
+var TRIAL_URGENT_WINDOW_MS = 48 * HOUR_MS;
+function parseTrialEndsAt(trialEndsAt) {
+  let ms;
+  if (trialEndsAt instanceof Date) ms = trialEndsAt.getTime();
+  else if (typeof trialEndsAt === "number") ms = trialEndsAt;
+  else if (typeof trialEndsAt === "string" && trialEndsAt.trim() !== "") ms = Date.parse(trialEndsAt);
+  else return null;
+  return Number.isFinite(ms) ? ms : null;
+}
+function getTrialTimeRemaining(trialEndsAt, now = Date.now()) {
+  const end = parseTrialEndsAt(trialEndsAt);
+  if (end === null || !Number.isFinite(now)) return null;
+  const msRemaining = end - now;
+  if (msRemaining <= 0) return null;
+  const isUrgent = msRemaining <= TRIAL_URGENT_WINDOW_MS;
+  if (msRemaining >= DAY_MS) return { unit: "days", value: Math.ceil(msRemaining / DAY_MS), msRemaining, isUrgent };
+  if (msRemaining >= HOUR_MS) return { unit: "hours", value: Math.ceil(msRemaining / HOUR_MS), msRemaining, isUrgent };
+  return { unit: "minutes", value: Math.ceil(msRemaining / MINUTE_MS), msRemaining, isUrgent };
+}
+var UNIT_SINGULAR = { days: "day", hours: "hour", minutes: "minute" };
+function formatTrialTimeRemaining(remaining) {
+  return `${remaining.value} ${remaining.value === 1 ? UNIT_SINGULAR[remaining.unit] : remaining.unit}`;
+}
+
+// src/components/trial-countdown-banner/TrialCountdownBanner.tsx
+import { jsx as jsx63, jsxs as jsxs50 } from "react/jsx-runtime";
+var TICK_MS = 3e4;
+function TrialCountdownBanner({
+  trialEndsAt,
+  onShown,
+  ctaHref,
+  onCtaClick,
+  ctaLabel = "Upgrade to Rello",
+  className,
+  style,
+  ...props
+}) {
+  const endMs = parseTrialEndsAt(trialEndsAt);
+  const [now, setNow] = React29.useState(() => Date.now());
+  React29.useEffect(() => {
+    if (endMs === null) return void 0;
+    setNow(Date.now());
+    if (endMs <= Date.now()) return void 0;
+    const id = setInterval(() => {
+      const t = Date.now();
+      setNow(t);
+      if (t >= endMs) clearInterval(id);
+    }, TICK_MS);
+    return () => clearInterval(id);
+  }, [endMs]);
+  const remaining = endMs === null ? null : getTrialTimeRemaining(endMs, now);
+  const visible = remaining !== null;
+  const onShownRef = React29.useRef(onShown);
+  onShownRef.current = onShown;
+  const shownRef = React29.useRef(false);
+  React29.useEffect(() => {
+    if (visible && !shownRef.current) {
+      shownRef.current = true;
+      onShownRef.current?.();
+    }
+  }, [visible]);
+  if (!remaining) return null;
+  const { isUrgent } = remaining;
+  const accent = "var(--error, #C9605D)";
+  const ctaClass = "inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-4 rounded-md text-sm font-medium transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary,#3B5998)] focus-visible:ring-offset-2";
+  const ctaStyle = {
+    backgroundColor: "var(--brand-primary, #3B5998)",
+    color: "var(--brand-primary-foreground, #FFFFFF)"
+  };
+  return /* @__PURE__ */ jsxs50(
+    "section",
+    {
+      "aria-label": "Rello trial",
+      "data-urgent": isUrgent ? "true" : "false",
+      className: cn(
+        "w-full flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 py-2 sm:px-6",
+        className
+      ),
+      style: {
+        backgroundColor: isUrgent ? "color-mix(in srgb, var(--error, #C9605D) 8%, var(--card-background, #FFFFFF))" : "var(--neutral-50, #FAFBFC)",
+        borderBottom: `1px solid ${isUrgent ? accent : "var(--card-border, #D1D5DB)"}`,
+        color: "var(--foreground, #2D3339)",
+        ...style
+      },
+      ...props,
+      children: [
+        /* @__PURE__ */ jsxs50("div", { className: "flex items-center gap-2 min-w-0", children: [
+          isUrgent ? /* @__PURE__ */ jsx63("span", { "data-urgent-icon": "", "aria-hidden": "true", className: "inline-flex shrink-0", style: { color: accent }, children: /* @__PURE__ */ jsx63(WarningCircle3, { width: 18, height: 18 }) }) : /* @__PURE__ */ jsx63("span", { "aria-hidden": "true", className: "inline-flex shrink-0", style: { color: "var(--neutral-500, #646F77)" }, children: /* @__PURE__ */ jsx63(Clock, { width: 18, height: 18 }) }),
+          /* @__PURE__ */ jsxs50("p", { role: "status", "aria-live": "polite", "aria-atomic": "true", className: "text-sm font-medium", suppressHydrationWarning: true, children: [
+            "Your Rello trial ends in ",
+            formatTrialTimeRemaining(remaining),
+            "."
+          ] })
+        ] }),
+        ctaHref ? /* @__PURE__ */ jsx63(Link2, { href: ctaHref, onClick: onCtaClick, className: ctaClass, style: ctaStyle, children: ctaLabel }) : onCtaClick ? /* @__PURE__ */ jsx63("button", { type: "button", onClick: onCtaClick, className: ctaClass, style: ctaStyle, children: ctaLabel }) : null
+      ]
+    }
+  );
+}
+
+// src/components/trial-start-modal/TrialStartModal.tsx
+import * as React30 from "react";
+import * as DialogPrimitive3 from "@radix-ui/react-dialog";
+import { Fragment as Fragment7, jsx as jsx64, jsxs as jsxs51 } from "react/jsx-runtime";
+var DEFAULT_ERROR_HINT = "Check your connection and try again.";
+function readResult(raw) {
+  if (!raw || typeof raw !== "object") return null;
+  const status = raw.status;
+  if (status === "started" || status === "already-used" || status === "error") return raw;
+  return null;
+}
+function toDate(value) {
+  if (value === null || value === void 0 || value === "") return null;
+  const d = value instanceof Date ? value : new Date(value);
+  return Number.isFinite(d.getTime()) ? d : null;
+}
+var DATE_FORMAT = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" });
+var PRIMARY_CLASS = "inline-flex items-center justify-center gap-2 min-h-[44px] px-5 rounded-md text-sm font-medium transition-opacity hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary,#3B5998)] focus-visible:ring-offset-2";
+var PRIMARY_STYLE = {
+  backgroundColor: "var(--brand-primary, #3B5998)",
+  color: "var(--brand-primary-foreground, #FFFFFF)"
+};
+var SECONDARY_CLASS = "inline-flex items-center justify-center min-h-[44px] px-5 rounded-md text-sm font-medium border transition-colors hover:bg-[var(--neutral-50,#FAFBFC)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary,#3B5998)] focus-visible:ring-offset-2";
+var SECONDARY_STYLE = {
+  borderColor: "var(--card-border, #D1D5DB)",
+  color: "var(--neutral-700, #434B52)",
+  backgroundColor: "transparent"
+};
+function TrialStartModal({
+  open,
+  onClose,
+  onConfirm,
+  upgradeHref,
+  upgradeLabel = "Upgrade to Rello",
+  title = "Start your 14-day free trial",
+  description = "You'll have full Rello free for 14 days.",
+  confirmLabel = "Start trial",
+  cancelLabel = "Not now",
+  successAction,
+  onResult,
+  className
+}) {
+  const [phase, setPhase] = React30.useState({ kind: "idle" });
+  const inFlightRef = React30.useRef(false);
+  const mountedRef = React30.useRef(false);
+  const returnFocusRef = React30.useRef(null);
+  const onConfirmRef = React30.useRef(onConfirm);
+  onConfirmRef.current = onConfirm;
+  const onResultRef = React30.useRef(onResult);
+  onResultRef.current = onResult;
+  React30.useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+  const wasOpenRef = React30.useRef(open);
+  React30.useEffect(() => {
+    if (open && !wasOpenRef.current && !inFlightRef.current) {
+      setPhase((p) => p.kind === "error" ? { kind: "idle" } : p);
+    }
+    wasOpenRef.current = open;
+  }, [open]);
+  const submit = async () => {
+    if (inFlightRef.current) return;
+    inFlightRef.current = true;
+    setPhase({ kind: "pending" });
+    let result;
+    try {
+      const raw = await onConfirmRef.current();
+      const read = readResult(raw);
+      if (read) {
+        result = read;
+      } else {
+        console.error("[TrialStartModal] onConfirm resolved with an unreadable trial-start result; showing the error state", {
+          received: raw === null ? "null" : typeof raw
+        });
+        result = { status: "error" };
+      }
+    } catch (err) {
+      console.error("[TrialStartModal] trial start failed", err);
+      result = { status: "error" };
+    } finally {
+      inFlightRef.current = false;
+    }
+    try {
+      onResultRef.current?.(result);
+    } catch (err) {
+      console.error("[TrialStartModal] onResult threw", { status: result.status, err });
+    }
+    if (!mountedRef.current) return;
+    if (result.status === "started") setPhase({ kind: "started", trialEndsAt: result.trialEndsAt });
+    else if (result.status === "already-used") setPhase({ kind: "already-used", trialEndsAt: result.trialEndsAt });
+    else {
+      const message = typeof result.message === "string" && result.message.trim() !== "" ? result.message.trim() : void 0;
+      setPhase({ kind: "error", message });
+    }
+  };
+  const handleOpenChange = (next) => {
+    if (!next) onClose();
+  };
+  const body = (() => {
+    switch (phase.kind) {
+      case "started": {
+        const end = toDate(phase.trialEndsAt);
+        return /* @__PURE__ */ jsxs51(Fragment7, { children: [
+          /* @__PURE__ */ jsx64(DialogPrimitive3.Description, { asChild: true, children: /* @__PURE__ */ jsxs51("div", { className: "space-y-1", children: [
+            /* @__PURE__ */ jsx64("p", { className: "text-sm font-medium", children: "Your Rello trial has started." }),
+            end ? /* @__PURE__ */ jsxs51("p", { className: "text-sm", children: [
+              "It runs until ",
+              DATE_FORMAT.format(end),
+              "."
+            ] }) : null
+          ] }) }),
+          /* @__PURE__ */ jsxs51("div", { className: "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", children: [
+            /* @__PURE__ */ jsx64("button", { type: "button", className: SECONDARY_CLASS, style: SECONDARY_STYLE, onClick: onClose, children: "Done" }),
+            successAction ? /* @__PURE__ */ jsx64("a", { href: successAction.href, onClick: successAction.onClick, className: PRIMARY_CLASS, style: PRIMARY_STYLE, children: successAction.label }) : null
+          ] })
+        ] });
+      }
+      case "already-used": {
+        const end = toDate(phase.trialEndsAt);
+        const ended = end ? end.getTime() <= Date.now() : false;
+        return /* @__PURE__ */ jsxs51(Fragment7, { children: [
+          /* @__PURE__ */ jsx64(DialogPrimitive3.Description, { asChild: true, children: /* @__PURE__ */ jsxs51("div", { className: "space-y-1", children: [
+            /* @__PURE__ */ jsx64("p", { className: "text-sm font-medium", children: "You've already used your Rello trial." }),
+            end ? /* @__PURE__ */ jsxs51("p", { className: "text-sm", children: [
+              ended ? "Your trial ended on" : "Your trial runs until",
+              " ",
+              DATE_FORMAT.format(end),
+              "."
+            ] }) : null
+          ] }) }),
+          /* @__PURE__ */ jsxs51("div", { className: "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", children: [
+            /* @__PURE__ */ jsx64("button", { type: "button", className: SECONDARY_CLASS, style: SECONDARY_STYLE, onClick: onClose, children: "Close" }),
+            /* @__PURE__ */ jsx64("a", { href: upgradeHref, className: PRIMARY_CLASS, style: PRIMARY_STYLE, children: upgradeLabel })
+          ] })
+        ] });
+      }
+      case "error":
+        return /* @__PURE__ */ jsxs51(Fragment7, { children: [
+          /* @__PURE__ */ jsx64(DialogPrimitive3.Description, { asChild: true, children: /* @__PURE__ */ jsxs51("p", { role: "alert", className: "text-sm", style: { color: "var(--error, #C9605D)" }, children: [
+            "We couldn't start your trial. ",
+            phase.message ?? DEFAULT_ERROR_HINT
+          ] }) }),
+          /* @__PURE__ */ jsxs51("div", { className: "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", children: [
+            /* @__PURE__ */ jsx64("button", { type: "button", className: SECONDARY_CLASS, style: SECONDARY_STYLE, onClick: onClose, children: cancelLabel }),
+            /* @__PURE__ */ jsx64("button", { type: "button", className: PRIMARY_CLASS, style: PRIMARY_STYLE, onClick: submit, children: "Try again" })
+          ] })
+        ] });
+      default: {
+        const pending = phase.kind === "pending";
+        return /* @__PURE__ */ jsxs51(Fragment7, { children: [
+          /* @__PURE__ */ jsx64(DialogPrimitive3.Description, { asChild: true, children: /* @__PURE__ */ jsx64("div", { className: "text-sm", style: { color: "var(--neutral-700, #434B52)" }, children: description }) }),
+          /* @__PURE__ */ jsxs51("div", { className: "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", children: [
+            /* @__PURE__ */ jsx64("button", { type: "button", className: SECONDARY_CLASS, style: SECONDARY_STYLE, onClick: onClose, children: cancelLabel }),
+            /* @__PURE__ */ jsx64(
+              "button",
+              {
+                type: "button",
+                className: PRIMARY_CLASS,
+                style: PRIMARY_STYLE,
+                onClick: submit,
+                disabled: pending,
+                "aria-busy": pending ? "true" : void 0,
+                children: pending ? /* @__PURE__ */ jsxs51(Fragment7, { children: [
+                  /* @__PURE__ */ jsx64(
+                    "span",
+                    {
+                      "aria-hidden": "true",
+                      className: "size-4 rounded-full border-2 border-current border-t-transparent animate-spin"
+                    }
+                  ),
+                  "Starting your trial\u2026"
+                ] }) : confirmLabel
+              }
+            )
+          ] })
+        ] });
+      }
+    }
+  })();
+  return /* @__PURE__ */ jsx64(DialogPrimitive3.Root, { open, onOpenChange: handleOpenChange, children: /* @__PURE__ */ jsxs51(DialogPrimitive3.Portal, { children: [
+    /* @__PURE__ */ jsx64(
+      DialogPrimitive3.Overlay,
+      {
+        className: "fixed inset-0",
+        style: {
+          zIndex: "var(--z-modal, 50)",
+          backgroundColor: "color-mix(in srgb, var(--neutral-900, #2D3339) 50%, transparent)"
+        }
+      }
+    ),
+    /* @__PURE__ */ jsxs51(
+      DialogPrimitive3.Content,
+      {
+        "aria-modal": "true",
+        "aria-label": title,
+        onOpenAutoFocus: () => {
+          const active = typeof document !== "undefined" ? document.activeElement : null;
+          returnFocusRef.current = active instanceof HTMLElement && active !== document.body ? active : null;
+        },
+        onCloseAutoFocus: (event) => {
+          event.preventDefault();
+          const el = returnFocusRef.current;
+          returnFocusRef.current = null;
+          if (el && el.isConnected) el.focus();
+        },
+        className: cn(
+          "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-lg border p-6 shadow-lg outline-none space-y-4",
+          className
+        ),
+        style: {
+          zIndex: "var(--z-modal, 50)",
+          backgroundColor: "var(--card-background, #FFFFFF)",
+          borderColor: "var(--card-border, #D1D5DB)",
+          color: "var(--foreground, #2D3339)"
+        },
+        children: [
+          /* @__PURE__ */ jsx64(DialogPrimitive3.Title, { className: "text-lg font-semibold leading-tight", children: title }),
+          body
+        ]
+      }
+    )
+  ] }) });
+}
+
+// src/components/upgrade-menu-item/UpgradeMenuItem.tsx
+import * as React31 from "react";
+import Link3 from "next/link";
+import { Sparks } from "iconoir-react";
+import { jsx as jsx65, jsxs as jsxs52 } from "react/jsx-runtime";
+function UpgradeMenuItem({
+  href,
+  isEntitled,
+  isEmbed,
+  label = "Upgrade",
+  onClick,
+  onShown,
+  active = false,
+  hideIcon = false,
+  className
+}) {
+  const visible = !isEntitled && !isEmbed;
+  const onShownRef = React31.useRef(onShown);
+  onShownRef.current = onShown;
+  const shownRef = React31.useRef(false);
+  React31.useEffect(() => {
+    if (visible && !shownRef.current) {
+      shownRef.current = true;
+      onShownRef.current?.();
+    }
+  }, [visible]);
+  if (!visible) return null;
+  return /* @__PURE__ */ jsxs52(
+    Link3,
+    {
+      href,
+      onClick,
+      "aria-current": active ? "page" : void 0,
+      "data-active": active ? "true" : void 0,
+      className: cn(
+        "inline-flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-3 rounded-md text-sm font-medium transition-colors",
+        "hover:bg-[var(--brand-primary-light,rgba(59,89,152,0.15))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary,#3B5998)] focus-visible:ring-offset-2",
+        className
+      ),
+      style: { color: "var(--brand-primary, #3B5998)" },
+      children: [
+        hideIcon ? null : /* @__PURE__ */ jsx65(Sparks, { width: 16, height: 16, "aria-hidden": "true" }),
+        /* @__PURE__ */ jsx65("span", { children: label })
+      ]
+    }
+  );
+}
+
 // src/components/card-tooltip/CardTooltip.tsx
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { InfoCircle } from "iconoir-react";
-import { jsx as jsx63, jsxs as jsxs50 } from "react/jsx-runtime";
+import { jsx as jsx66, jsxs as jsxs53 } from "react/jsx-runtime";
 var POPOVER_CLASS = cn(
   "z-50 max-w-xs select-text rounded-md border px-3 py-2 text-sm shadow-lg",
   "bg-white",
@@ -7416,14 +7962,14 @@ function CardTooltipIcon({
   className
 }) {
   if (text === "") return null;
-  return /* @__PURE__ */ jsxs50(TooltipPrimitive.Root, { children: [
-    /* @__PURE__ */ jsx63(TooltipPrimitive.Trigger, { asChild: true, children: /* @__PURE__ */ jsx63(
+  return /* @__PURE__ */ jsxs53(TooltipPrimitive.Root, { children: [
+    /* @__PURE__ */ jsx66(TooltipPrimitive.Trigger, { asChild: true, children: /* @__PURE__ */ jsx66(
       "button",
       {
         type: "button",
         "aria-label": ariaLabel,
         className: cn(TRIGGER_CLASS, className),
-        children: /* @__PURE__ */ jsx63(
+        children: /* @__PURE__ */ jsx66(
           InfoCircle,
           {
             width: 16,
@@ -7434,7 +7980,7 @@ function CardTooltipIcon({
         )
       }
     ) }),
-    /* @__PURE__ */ jsx63(TooltipPrimitive.Portal, { children: /* @__PURE__ */ jsxs50(
+    /* @__PURE__ */ jsx66(TooltipPrimitive.Portal, { children: /* @__PURE__ */ jsxs53(
       TooltipPrimitive.Content,
       {
         side: placement,
@@ -7442,7 +7988,7 @@ function CardTooltipIcon({
         className: POPOVER_CLASS,
         children: [
           text,
-          /* @__PURE__ */ jsx63(TooltipPrimitive.Arrow, { width: 10, height: 5, style: { fill: ARROW_FILL } })
+          /* @__PURE__ */ jsx66(TooltipPrimitive.Arrow, { width: 10, height: 5, style: { fill: ARROW_FILL } })
         ]
       }
     ) })
@@ -7455,9 +8001,9 @@ function CardTooltip({
   ariaLabel,
   children
 }) {
-  return /* @__PURE__ */ jsxs50("div", { className: WRAPPER_RELATIVE_CLASS, children: [
+  return /* @__PURE__ */ jsxs53("div", { className: WRAPPER_RELATIVE_CLASS, children: [
     children,
-    text !== "" && /* @__PURE__ */ jsx63("div", { className: WRAPPER_ICON_POSITION_CLASS, children: /* @__PURE__ */ jsx63(
+    text !== "" && /* @__PURE__ */ jsx66("div", { className: WRAPPER_ICON_POSITION_CLASS, children: /* @__PURE__ */ jsx66(
       CardTooltipIcon,
       {
         text,
@@ -7473,7 +8019,7 @@ CardTooltip.displayName = "CardTooltip";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 // src/components/spend-panel/SpendPanel.tsx
-import { Fragment as Fragment6, jsx as jsx64, jsxs as jsxs51 } from "react/jsx-runtime";
+import { Fragment as Fragment8, jsx as jsx67, jsxs as jsxs54 } from "react/jsx-runtime";
 var COLOR = {
   foreground: "var(--foreground, #2D3339)",
   muted: "var(--neutral-500, #646F77)",
@@ -7500,9 +8046,9 @@ function AllotmentBar({ allotment }) {
   const over = used > included;
   const pct = included > 0 ? Math.min(Math.max(used / included * 100, 0), 100) : 0;
   const fillColor = over ? COLOR.error : COLOR.brand;
-  return /* @__PURE__ */ jsxs51("div", { className: "flex flex-col gap-1.5", children: [
-    /* @__PURE__ */ jsxs51("div", { className: "flex items-baseline justify-between gap-2", children: [
-      /* @__PURE__ */ jsx64(
+  return /* @__PURE__ */ jsxs54("div", { className: "flex flex-col gap-1.5", children: [
+    /* @__PURE__ */ jsxs54("div", { className: "flex items-baseline justify-between gap-2", children: [
+      /* @__PURE__ */ jsx67(
         "span",
         {
           className: "text-sm font-medium",
@@ -7510,13 +8056,13 @@ function AllotmentBar({ allotment }) {
           children: metricName
         }
       ),
-      /* @__PURE__ */ jsxs51("span", { className: "text-xs tabular-nums", style: { color: COLOR.muted }, children: [
+      /* @__PURE__ */ jsxs54("span", { className: "text-xs tabular-nums", style: { color: COLOR.muted }, children: [
         formatQuantity(used),
         " / ",
         formatQuantity(included)
       ] })
     ] }),
-    /* @__PURE__ */ jsx64(
+    /* @__PURE__ */ jsx67(
       "div",
       {
         role: "progressbar",
@@ -7528,7 +8074,7 @@ function AllotmentBar({ allotment }) {
         )} used`,
         className: "h-2 w-full overflow-hidden rounded-full",
         style: { backgroundColor: COLOR.track },
-        children: /* @__PURE__ */ jsx64(
+        children: /* @__PURE__ */ jsx67(
           "div",
           {
             className: "h-full rounded-full transition-all duration-300",
@@ -7537,11 +8083,11 @@ function AllotmentBar({ allotment }) {
         )
       }
     ),
-    /* @__PURE__ */ jsx64("div", { className: "flex items-center justify-between gap-2 text-xs", children: over ? /* @__PURE__ */ jsxs51("span", { style: { color: COLOR.error }, children: [
+    /* @__PURE__ */ jsx67("div", { className: "flex items-center justify-between gap-2 text-xs", children: over ? /* @__PURE__ */ jsxs54("span", { style: { color: COLOR.error }, children: [
       formatQuantity(used - included),
       " over plan",
       overageCents != null ? ` \xB7 ${formatCents(overageCents)}` : ""
-    ] }) : /* @__PURE__ */ jsxs51("span", { style: { color: COLOR.muted }, children: [
+    ] }) : /* @__PURE__ */ jsxs54("span", { style: { color: COLOR.muted }, children: [
       formatQuantity(remaining),
       " remaining"
     ] }) })
@@ -7563,10 +8109,10 @@ function SpendPanel({ data, onManageBilling, className }) {
   } = data;
   const isEmpty = rows.length === 0 && allotments.length === 0;
   const showPortal = portalAvailable && typeof onManageBilling === "function";
-  return /* @__PURE__ */ jsxs51(Card, { className: cn("flex flex-col gap-5", className), children: [
-    /* @__PURE__ */ jsxs51("div", { className: "flex flex-wrap items-start justify-between gap-3", children: [
-      /* @__PURE__ */ jsxs51("div", { children: [
-        /* @__PURE__ */ jsx64(
+  return /* @__PURE__ */ jsxs54(Card, { className: cn("flex flex-col gap-5", className), children: [
+    /* @__PURE__ */ jsxs54("div", { className: "flex flex-wrap items-start justify-between gap-3", children: [
+      /* @__PURE__ */ jsxs54("div", { children: [
+        /* @__PURE__ */ jsx67(
           "h3",
           {
             className: "text-lg font-semibold",
@@ -7574,13 +8120,13 @@ function SpendPanel({ data, onManageBilling, className }) {
             children: "Usage & spend"
           }
         ),
-        /* @__PURE__ */ jsxs51("p", { className: "text-sm", style: { color: COLOR.muted }, children: [
+        /* @__PURE__ */ jsxs54("p", { className: "text-sm", style: { color: COLOR.muted }, children: [
           appName,
           " \xB7 ",
           period.label
         ] })
       ] }),
-      showPortal && /* @__PURE__ */ jsx64(
+      showPortal && /* @__PURE__ */ jsx67(
         Button,
         {
           variant: "outline",
@@ -7591,7 +8137,7 @@ function SpendPanel({ data, onManageBilling, className }) {
         }
       )
     ] }),
-    /* @__PURE__ */ jsx64(
+    /* @__PURE__ */ jsx67(
       StatCard,
       {
         label: "Total this period",
@@ -7599,20 +8145,20 @@ function SpendPanel({ data, onManageBilling, className }) {
         subtitle: recordCount === 1 ? "1 metered event" : `${recordCount} metered events`
       }
     ),
-    isEmpty ? /* @__PURE__ */ jsx64(
+    isEmpty ? /* @__PURE__ */ jsx67(
       EmptyState,
       {
         title: "No usage yet this period",
         description: "$0 this month \u2014 nothing has been metered yet. Charges will appear here as you use the app."
       }
-    ) : /* @__PURE__ */ jsxs51(Fragment6, { children: [
-      allotments.length > 0 && /* @__PURE__ */ jsxs51(
+    ) : /* @__PURE__ */ jsxs54(Fragment8, { children: [
+      allotments.length > 0 && /* @__PURE__ */ jsxs54(
         "section",
         {
           "aria-label": "Plan allotments",
           className: "flex flex-col gap-4",
           children: [
-            /* @__PURE__ */ jsx64(
+            /* @__PURE__ */ jsx67(
               "h4",
               {
                 className: "text-sm font-semibold",
@@ -7620,12 +8166,12 @@ function SpendPanel({ data, onManageBilling, className }) {
                 children: "Plan allotments"
               }
             ),
-            allotments.map((a) => /* @__PURE__ */ jsx64(AllotmentBar, { allotment: a }, a.metric))
+            allotments.map((a) => /* @__PURE__ */ jsx67(AllotmentBar, { allotment: a }, a.metric))
           ]
         }
       ),
-      rows.length > 0 && /* @__PURE__ */ jsxs51("section", { "aria-label": "Usage breakdown", className: "flex flex-col gap-2", children: [
-        /* @__PURE__ */ jsx64(
+      rows.length > 0 && /* @__PURE__ */ jsxs54("section", { "aria-label": "Usage breakdown", className: "flex flex-col gap-2", children: [
+        /* @__PURE__ */ jsx67(
           "h4",
           {
             className: "text-sm font-semibold",
@@ -7633,22 +8179,22 @@ function SpendPanel({ data, onManageBilling, className }) {
             children: "Breakdown"
           }
         ),
-        /* @__PURE__ */ jsx64("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxs51("table", { className: "w-full border-collapse text-sm", children: [
-          /* @__PURE__ */ jsxs51("caption", { className: "sr-only", children: [
+        /* @__PURE__ */ jsx67("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxs54("table", { className: "w-full border-collapse text-sm", children: [
+          /* @__PURE__ */ jsxs54("caption", { className: "sr-only", children: [
             "Per-metric usage and revenue for ",
             appName,
             ", ",
             period.label
           ] }),
-          /* @__PURE__ */ jsx64("thead", { children: /* @__PURE__ */ jsxs51(
+          /* @__PURE__ */ jsx67("thead", { children: /* @__PURE__ */ jsxs54(
             "tr",
             {
               className: "text-left",
               style: { color: COLOR.muted },
               children: [
-                /* @__PURE__ */ jsx64("th", { scope: "col", className: "py-2 pr-3 font-medium", children: "Metric" }),
-                /* @__PURE__ */ jsx64("th", { scope: "col", className: "py-2 pr-3 font-medium", children: "Service" }),
-                /* @__PURE__ */ jsx64(
+                /* @__PURE__ */ jsx67("th", { scope: "col", className: "py-2 pr-3 font-medium", children: "Metric" }),
+                /* @__PURE__ */ jsx67("th", { scope: "col", className: "py-2 pr-3 font-medium", children: "Service" }),
+                /* @__PURE__ */ jsx67(
                   "th",
                   {
                     scope: "col",
@@ -7656,17 +8202,17 @@ function SpendPanel({ data, onManageBilling, className }) {
                     children: "Quantity"
                   }
                 ),
-                /* @__PURE__ */ jsx64("th", { scope: "col", className: "py-2 text-right font-medium", children: "Revenue" })
+                /* @__PURE__ */ jsx67("th", { scope: "col", className: "py-2 text-right font-medium", children: "Revenue" })
               ]
             }
           ) }),
-          /* @__PURE__ */ jsx64("tbody", { children: rows.map((row) => /* @__PURE__ */ jsxs51(
+          /* @__PURE__ */ jsx67("tbody", { children: rows.map((row) => /* @__PURE__ */ jsxs54(
             "tr",
             {
               className: "border-t",
               style: { borderColor: COLOR.border },
               children: [
-                /* @__PURE__ */ jsx64(
+                /* @__PURE__ */ jsx67(
                   "th",
                   {
                     scope: "row",
@@ -7675,22 +8221,22 @@ function SpendPanel({ data, onManageBilling, className }) {
                     children: row.metricName
                   }
                 ),
-                /* @__PURE__ */ jsx64("td", { className: "py-2 pr-3", style: { color: COLOR.muted }, children: row.service ?? "\u2014" }),
-                /* @__PURE__ */ jsxs51(
+                /* @__PURE__ */ jsx67("td", { className: "py-2 pr-3", style: { color: COLOR.muted }, children: row.service ?? "\u2014" }),
+                /* @__PURE__ */ jsxs54(
                   "td",
                   {
                     className: "py-2 pr-3 text-right tabular-nums",
                     style: { color: COLOR.foreground },
                     children: [
                       formatQuantity(row.quantity),
-                      row.unit ? /* @__PURE__ */ jsxs51("span", { style: { color: COLOR.faint }, children: [
+                      row.unit ? /* @__PURE__ */ jsxs54("span", { style: { color: COLOR.faint }, children: [
                         " ",
                         row.unit
                       ] }) : null
                     ]
                   }
                 ),
-                /* @__PURE__ */ jsx64(
+                /* @__PURE__ */ jsx67(
                   "td",
                   {
                     className: "py-2 text-right tabular-nums",
@@ -7709,11 +8255,11 @@ function SpendPanel({ data, onManageBilling, className }) {
 }
 
 // src/components/underline-tab-bar/UnderlineTabBar.tsx
-import * as React28 from "react";
-import Link2 from "next/link";
+import * as React32 from "react";
+import Link4 from "next/link";
 import clsx2 from "clsx";
 import { NavArrowLeft as NavArrowLeft2, NavArrowRight as NavArrowRight2 } from "iconoir-react";
-import { Fragment as Fragment7, jsx as jsx65, jsxs as jsxs52 } from "react/jsx-runtime";
+import { Fragment as Fragment9, jsx as jsx68, jsxs as jsxs55 } from "react/jsx-runtime";
 function UnderlineTabBar({
   tabs,
   activeTab,
@@ -7726,17 +8272,17 @@ function UnderlineTabBar({
     0,
     visibleTabs.findIndex((t) => t.id === activeTab)
   );
-  const scrollRef = React28.useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = React28.useState(false);
-  const [canScrollRight, setCanScrollRight] = React28.useState(false);
-  const updateScrollState = React28.useCallback(() => {
+  const scrollRef = React32.useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = React32.useState(false);
+  const [canScrollRight, setCanScrollRight] = React32.useState(false);
+  const updateScrollState = React32.useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
     const { scrollLeft, clientWidth, scrollWidth } = el;
     setCanScrollLeft(scrollLeft > 0);
     setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
   }, []);
-  React28.useEffect(() => {
+  React32.useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     updateScrollState();
@@ -7794,7 +8340,7 @@ function UnderlineTabBar({
     }
     if (target && !target.disabled) onChange?.(target.id);
   }
-  return /* @__PURE__ */ jsxs52(
+  return /* @__PURE__ */ jsxs55(
     "div",
     {
       role: "tablist",
@@ -7806,45 +8352,45 @@ function UnderlineTabBar({
         className
       ),
       children: [
-        canScrollLeft && /* @__PURE__ */ jsxs52(Fragment7, { children: [
-          /* @__PURE__ */ jsx65(
+        canScrollLeft && /* @__PURE__ */ jsxs55(Fragment9, { children: [
+          /* @__PURE__ */ jsx68(
             "div",
             {
               "aria-hidden": true,
               className: "absolute left-0 top-0 bottom-px w-8 bg-gradient-to-r from-[var(--background,#ffffff)] to-transparent pointer-events-none z-10"
             }
           ),
-          /* @__PURE__ */ jsx65(
+          /* @__PURE__ */ jsx68(
             "button",
             {
               type: "button",
               "aria-label": "Scroll tabs left",
               onClick: () => scrollByDirection("left"),
               className: "absolute left-0 top-0 bottom-px z-20 inline-flex items-center justify-center w-9 min-h-[44px] text-[var(--neutral-500,#6b7280)] hover:text-[var(--neutral-900,#111827)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-primary,#2563eb)]",
-              children: /* @__PURE__ */ jsx65(NavArrowLeft2, { "aria-hidden": true, width: 20, height: 20 })
+              children: /* @__PURE__ */ jsx68(NavArrowLeft2, { "aria-hidden": true, width: 20, height: 20 })
             }
           )
         ] }),
-        canScrollRight && /* @__PURE__ */ jsxs52(Fragment7, { children: [
-          /* @__PURE__ */ jsx65(
+        canScrollRight && /* @__PURE__ */ jsxs55(Fragment9, { children: [
+          /* @__PURE__ */ jsx68(
             "div",
             {
               "aria-hidden": true,
               className: "absolute right-0 top-0 bottom-px w-8 bg-gradient-to-l from-[var(--background,#ffffff)] to-transparent pointer-events-none z-10"
             }
           ),
-          /* @__PURE__ */ jsx65(
+          /* @__PURE__ */ jsx68(
             "button",
             {
               type: "button",
               "aria-label": "Scroll tabs right",
               onClick: () => scrollByDirection("right"),
               className: "absolute right-0 top-0 bottom-px z-20 inline-flex items-center justify-center w-9 min-h-[44px] text-[var(--neutral-500,#6b7280)] hover:text-[var(--neutral-900,#111827)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-primary,#2563eb)]",
-              children: /* @__PURE__ */ jsx65(NavArrowRight2, { "aria-hidden": true, width: 20, height: 20 })
+              children: /* @__PURE__ */ jsx68(NavArrowRight2, { "aria-hidden": true, width: 20, height: 20 })
             }
           )
         ] }),
-        /* @__PURE__ */ jsx65(
+        /* @__PURE__ */ jsx68(
           "div",
           {
             ref: scrollRef,
@@ -7862,8 +8408,8 @@ function UnderlineTabBar({
                 isActive ? "border-[var(--brand-primary,#2563eb)] text-[var(--neutral-900,#111827)] font-semibold" : "border-transparent text-[var(--neutral-500,#6b7280)] hover:text-[var(--neutral-700,#374151)] font-medium",
                 tab.disabled && "opacity-40 cursor-not-allowed pointer-events-none"
               );
-              const inner = /* @__PURE__ */ jsxs52(Fragment7, { children: [
-                tab.icon && /* @__PURE__ */ jsx65(
+              const inner = /* @__PURE__ */ jsxs55(Fragment9, { children: [
+                tab.icon && /* @__PURE__ */ jsx68(
                   "span",
                   {
                     "aria-hidden": true,
@@ -7874,8 +8420,8 @@ function UnderlineTabBar({
                     children: tab.icon
                   }
                 ),
-                /* @__PURE__ */ jsx65("span", { children: tab.label }),
-                typeof tab.count === "number" && tab.count > 0 && /* @__PURE__ */ jsx65(
+                /* @__PURE__ */ jsx68("span", { children: tab.label }),
+                typeof tab.count === "number" && tab.count > 0 && /* @__PURE__ */ jsx68(
                   "span",
                   {
                     className: clsx2(
@@ -7889,8 +8435,8 @@ function UnderlineTabBar({
                 )
               ] });
               if (tab.href && !tab.disabled) {
-                return /* @__PURE__ */ jsx65(
-                  Link2,
+                return /* @__PURE__ */ jsx68(
+                  Link4,
                   {
                     href: tab.href,
                     scroll: false,
@@ -7908,7 +8454,7 @@ function UnderlineTabBar({
                   tab.id
                 );
               }
-              return /* @__PURE__ */ jsx65(
+              return /* @__PURE__ */ jsx68(
                 "button",
                 {
                   role: "tab",
@@ -8101,8 +8647,11 @@ export {
   TodaySchedule,
   Tooltip,
   TrackCardIllustration,
+  TrialCountdownBanner,
+  TrialStartModal,
   TrophyIcon,
   UnderlineTabBar,
+  UpgradeMenuItem,
   VoiceCorpusInput,
   WasThisHelpful,
   WeeklyChallengeIcon,

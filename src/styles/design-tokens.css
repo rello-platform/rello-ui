@@ -9,6 +9,8 @@
   --brand-accent: #C9785D;
   --brand-primary-light: rgba(59, 89, 152, 0.15);
   --brand-accent-light: rgba(201, 120, 93, 0.15);
+  /* Text on a --brand-primary fill (v2.38.0; trial/upgrade CTAs). Override with a dark brand-primary's contrast colour. */
+  --brand-primary-foreground: #FFFFFF;
 
   /* Pipeline Stage Colors (universal across apps) */
   --hot: #D9534F;

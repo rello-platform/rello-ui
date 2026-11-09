@@ -1318,11 +1318,11 @@ declare function WizardShell({ steps, currentStep, onStepChange, onComplete, aut
 interface RelloUpsellNudgeProps extends React.HTMLAttributes<HTMLElement> {
     /** Stable seam identifier — bound to telemetry namespace at the consumer wrapper. */
     seam: string;
-    /** Headline copy (one short line). */
+    /** Headline copy (one short line). May carry `{{monthlyPrice}}` / `{{roiCopy}}`. */
     headline: string;
-    /** Body copy explaining the Rello-tier capability. */
+    /** Body copy explaining the Rello-tier capability. May carry `{{monthlyPrice}}` / `{{roiCopy}}`. */
     body: string;
-    /** CTA text — defaults to "Upgrade to Rello". */
+    /** CTA text — defaults to "Upgrade to Rello". May carry tokens; falls back to the default only if substitution empties it (an explicit "" stays empty). */
     ctaLabel?: string;
     /** Click handler — consumer fires `clicked` telemetry then navigates to upgrade flow. */
     onClick: () => void;
@@ -1330,8 +1330,174 @@ interface RelloUpsellNudgeProps extends React.HTMLAttributes<HTMLElement> {
     onDismiss: () => void;
     /** Optional left-icon slot. */
     icon?: React.ReactNode;
+    /**
+     * Display-ready monthly price from Rello's pricing config (e.g. "$199"),
+     * substituted for `{{monthlyPrice}}`. Never typed in this package. When it
+     * is missing, blank or carries no non-zero digit, the sentence that uses it
+     * is omitted; the nudge still renders.
+     */
+    monthlyPrice?: string | null;
+    /** Per-seam ROI line from Rello's config, substituted for `{{roiCopy}}`. Missing → its sentence is omitted. */
+    roiCopy?: string | null;
+    /**
+     * The 5th telemetry event. Fires at most once per mount, when the pointer
+     * or keyboard focus has stayed on the nudge for 3 seconds, or when the
+     * detail panel is first expanded. The consumer fires
+     * `<spoke>.upsell.<seam>.engaged`.
+     */
+    onEngaged?: () => void;
+    /** Optional detail panel behind a disclosure toggle. Expanding it counts as `engaged`. */
+    details?: React.ReactNode;
+    /** Label of the detail toggle — defaults to "How it works". */
+    detailsLabel?: string;
 }
-declare function RelloUpsellNudge({ seam, headline, body, ctaLabel, onClick, onDismiss, icon, className, ...props }: RelloUpsellNudgeProps): react_jsx_runtime.JSX.Element;
+declare function RelloUpsellNudge({ seam, headline, body, ctaLabel, onClick, onDismiss, icon, monthlyPrice, roiCopy, onEngaged, details, detailsLabel, className, onKeyDown, onMouseEnter, onMouseLeave, onFocus, onBlur, ...props }: RelloUpsellNudgeProps): react_jsx_runtime.JSX.Element;
+
+/**
+ * Trial countdown arithmetic. Pure and server-safe (root entry), so a spoke
+ * can decide in a server component whether to mount the banner at all, and
+ * so the banner's thresholds are tested without a DOM.
+ *
+ * ANSWERS Q-CS-12: days, then hours inside the last 24 hours, then minutes
+ * inside the last hour; the last 48 hours are urgent.
+ */
+type TrialEndsAtInput = Date | string | number | null | undefined;
+
+interface TrialCountdownBannerProps extends Omit<React.HTMLAttributes<HTMLElement>, "children"> {
+    /**
+     * When the trial ends: `EntitlementCheck.trialEndsAt` from Rello. A Date,
+     * an ISO string or epoch ms. No trial (null/undefined), an unreadable
+     * value, or a trial that has ended renders nothing.
+     */
+    trialEndsAt: TrialEndsAtInput;
+    /** Fires once per mount, the first time the banner is visible (`trial-banner.shown`). */
+    onShown?: () => void;
+    /** Upgrade destination (usually the spoke's `/upgrade` page). Renders the CTA as a link. */
+    ctaHref?: string;
+    /** Fires on CTA click (`trial-banner.clicked`). With no `ctaHref` the CTA is a button. */
+    onCtaClick?: () => void;
+    /** CTA text — defaults to "Upgrade to Rello". */
+    ctaLabel?: string;
+}
+/**
+ * Full-width strip for the very top of a spoke's agent/MLO chrome during an
+ * active Rello trial (ANSWERS Q-CS-12). Shows days left, then hours inside
+ * the last 24 hours, then minutes inside the last hour; the last 48 hours
+ * carry a warning icon and an error-tinted accent. It disappears by itself
+ * when the trial ends. The spoke decides where it mounts (never on
+ * lead-facing routes); this component only decides what the clock says.
+ */
+declare function TrialCountdownBanner({ trialEndsAt, onShown, ctaHref, onCtaClick, ctaLabel, className, style, ...props }: TrialCountdownBannerProps): react_jsx_runtime.JSX.Element | null;
+
+/**
+ * Trial-start outcome contract for `<TrialStartModal>`. Pure types,
+ * server-safe (root entry).
+ *
+ * The modal is transport-agnostic: it never calls Rello. The spoke's
+ * `onConfirm` calls Rello's `POST /api/v1/billing/trial-start` and maps the
+ * response to one of these:
+ *
+ *   2xx                     → { status: "started", trialEndsAt }
+ *   409 (one trial per tenant lifetime) → { status: "already-used", trialEndsAt: <existing end> }
+ *   anything else           → { status: "error", message? }   (or reject / throw)
+ *
+ * A rejected or thrown `onConfirm`, or a value that is none of the three, is
+ * shown as the error state with a retry. It is never shown as a success.
+ */
+type TrialStartEndsAt = Date | string | number | null | undefined;
+interface TrialStartStarted {
+    status: "started";
+    /** New trial end, when Rello returns it. Missing/unreadable → the date sentence is omitted. */
+    trialEndsAt?: TrialStartEndsAt;
+}
+interface TrialStartAlreadyUsed {
+    status: "already-used";
+    /** The EXISTING trial's end date from the 409 body. Missing/unreadable → the date sentence is omitted. */
+    trialEndsAt?: TrialStartEndsAt;
+}
+interface TrialStartError {
+    status: "error";
+    /** Shown after "We couldn't start your trial." Defaults to a connection hint. */
+    message?: string;
+}
+type TrialStartResult = TrialStartStarted | TrialStartAlreadyUsed | TrialStartError;
+
+interface TrialStartModalProps {
+    /** Controlled open state. */
+    open: boolean;
+    /** Called on Escape, outside click, "Not now", "Close" and "Done". The spoke sets `open` false. */
+    onClose: () => void;
+    /**
+     * Starts the trial. The spoke wires this to Rello's
+     * `POST /api/v1/billing/trial-start` and maps the response to a
+     * `TrialStartResult` (see ./types). The modal never calls Rello itself.
+     * Guarded: it is never called again while a call is in flight.
+     */
+    onConfirm: () => Promise<TrialStartResult>;
+    /** Where "Upgrade to Rello" goes when the trial was already used (409). */
+    upgradeHref: string;
+    /** Label of the 409 upgrade link — defaults to "Upgrade to Rello". */
+    upgradeLabel?: string;
+    /** Dialog title and accessible name — defaults to "Start your 14-day free trial". */
+    title?: string;
+    /** Confirm-step copy (spoke-substituted, e.g. the lead's name). */
+    description?: React.ReactNode;
+    /** Confirm button — defaults to "Start trial". */
+    confirmLabel?: string;
+    /** Cancel button — defaults to "Not now". */
+    cancelLabel?: string;
+    /** Optional deep link shown after success, e.g. "Open Pathfinder Pro intake". */
+    successAction?: {
+        label: string;
+        href: string;
+        onClick?: () => void;
+    };
+    /**
+     * Every outcome, including one that lands after the modal unmounted (the
+     * trial still started on Rello's side). The spoke refreshes entitlement
+     * and fires its own telemetry here.
+     */
+    onResult?: (result: TrialStartResult) => void;
+    className?: string;
+}
+/**
+ * Confirm-to-start modal for a Rello trial (ANSWERS Q-CS-7): explicit
+ * confirmation, no auto-enroll. States: confirm → pending → started |
+ * already used (409, with the existing end date and an upgrade link) |
+ * error with retry.
+ */
+declare function TrialStartModal({ open, onClose, onConfirm, upgradeHref, upgradeLabel, title, description, confirmLabel, cancelLabel, successAction, onResult, className, }: TrialStartModalProps): react_jsx_runtime.JSX.Element;
+
+interface UpgradeMenuItemProps {
+    /** The spoke's own upgrade page, e.g. "/upgrade". */
+    href: string;
+    /**
+     * Tenant already has Rello. Renders nothing. Required, so the spoke must
+     * decide; when its entitlement read fails it passes `true` (the platform's
+     * fail-open-as-suppress rule: never show an upgrade to a paying customer).
+     */
+    isEntitled: boolean;
+    /** Rendered inside Rello's chrome (`x-rello-embed`). Renders nothing. */
+    isEmbed: boolean;
+    /** Label — defaults to "Upgrade". */
+    label?: string;
+    /** Fires on click (`menu-item.clicked`). */
+    onClick?: () => void;
+    /** Fires once per mount, the first time the item is visible (`menu-item.shown`). */
+    onShown?: () => void;
+    /** The spoke is on the upgrade page now: sets `aria-current="page"`. */
+    active?: boolean;
+    /** Hide the leading icon. */
+    hideIcon?: boolean;
+    className?: string;
+}
+/**
+ * Always-on "Upgrade" item for a spoke's primary nav (ANSWERS Q-CS-11),
+ * right-aligned beside the avatar menu by the spoke. No earned-attention,
+ * 14-day or dismiss rules: only entitled and embed mode hide it. The spoke
+ * also leaves it out of lead-facing routes.
+ */
+declare function UpgradeMenuItem({ href, isEntitled, isEmbed, label, onClick, onShown, active, hideIcon, className, }: UpgradeMenuItemProps): react_jsx_runtime.JSX.Element | null;
 
 interface CardTooltipIconProps {
     /** Single-sentence tooltip body. When empty string, the component renders nothing. */
@@ -1425,4 +1591,4 @@ interface UnderlineTabBarProps {
 }
 declare function UnderlineTabBar({ tabs, activeTab, onChange, ariaLabel, className, }: UnderlineTabBarProps): react_jsx_runtime.JSX.Element;
 
-export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, ActionsIcon, AddressAutocomplete, type AddressAutocompleteProps, type AgentRole, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppGridIcon, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BrainIcon, BrandColorPicker, type BrandColorPickerProps, type BrandColors, BroadcastIcon, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, CardTooltip, CardTooltipIcon, type CardTooltipIconProps, type CardTooltipProps, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, ClosingIcon, type Column, CompassIcon, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, DialButton, type DialButtonProps, type DialPath, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DocsIcon, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateAction, type EmptyStateLinkProps, type EmptyStateProps, ErrorBanner, type ErrorBannerProps, type FactorVariant, type FeatureIllustrationKey, FinishLineIcon, FlowIcon, FollowupIcon, FunnelIcon, HRAssessmentsIcon, HSProgressIcon, HarvestHomeIcon, HarvestIcon, HearthIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeScoutIcon, HomeStretchIcon, type IllustrationKey, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LeadPoolIcon, LoadingOverlay, LoanVolumeIcon, MailboxIcon, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, type MultiFeedbackOption, type MultiFeedbackVariant, MultiFeedbackWidget, type MultiFeedbackWidgetProps, MyPipelineIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OpenHouseIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, PathfinderIcon, type PipelineData, PipelineThermometer, type PipelineThermometerProps, type PlatformIllustrationKey, PreApprovalIcon, PreQualIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, RateAlertIcon, RelloUpsellNudge, type RelloUpsellNudgeProps, RoutingIcon, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SessionRetryBanner, type SessionRetryBannerProps, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, type SocialLinks, SocialLinksInput, type SocialLinksInputProps, SpendPanel, type SpendPanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, TeamActivityIcon, type TeamCopy, type TeamCopyOverride, TeamDawnIcon, type TeamMember, TeamMemberCard, type TeamMemberCardProps, TeamPipelineIcon, type TeamRole, TeamRoster, type TeamRosterProps, type TeamRosterVariant, TendingIcon, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, TrophyIcon, type UnderlineTab, UnderlineTabBar, type UnderlineTabBarProps, VoiceCorpusInput, type VoiceCorpusInputProps, type VoiceCorpusSample, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, WelcomeMatIcon, type WizardAutosaveStatus, WizardShell, type WizardShellProps, type WizardStep, countWords, useToast };
+export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, ActionsIcon, AddressAutocomplete, type AddressAutocompleteProps, type AgentRole, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppGridIcon, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BrainIcon, BrandColorPicker, type BrandColorPickerProps, type BrandColors, BroadcastIcon, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, CardTooltip, CardTooltipIcon, type CardTooltipIconProps, type CardTooltipProps, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, ClosingIcon, type Column, CompassIcon, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, DialButton, type DialButtonProps, type DialPath, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DocsIcon, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateAction, type EmptyStateLinkProps, type EmptyStateProps, ErrorBanner, type ErrorBannerProps, type FactorVariant, type FeatureIllustrationKey, FinishLineIcon, FlowIcon, FollowupIcon, FunnelIcon, HRAssessmentsIcon, HSProgressIcon, HarvestHomeIcon, HarvestIcon, HearthIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeScoutIcon, HomeStretchIcon, type IllustrationKey, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LeadPoolIcon, LoadingOverlay, LoanVolumeIcon, MailboxIcon, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, type MultiFeedbackOption, type MultiFeedbackVariant, MultiFeedbackWidget, type MultiFeedbackWidgetProps, MyPipelineIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OpenHouseIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, PathfinderIcon, type PipelineData, PipelineThermometer, type PipelineThermometerProps, type PlatformIllustrationKey, PreApprovalIcon, PreQualIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, RateAlertIcon, RelloUpsellNudge, type RelloUpsellNudgeProps, RoutingIcon, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SessionRetryBanner, type SessionRetryBannerProps, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, type SocialLinks, SocialLinksInput, type SocialLinksInputProps, SpendPanel, type SpendPanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, TeamActivityIcon, type TeamCopy, type TeamCopyOverride, TeamDawnIcon, type TeamMember, TeamMemberCard, type TeamMemberCardProps, TeamPipelineIcon, type TeamRole, TeamRoster, type TeamRosterProps, type TeamRosterVariant, TendingIcon, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, TrialCountdownBanner, type TrialCountdownBannerProps, type TrialStartAlreadyUsed, type TrialStartEndsAt, type TrialStartError, TrialStartModal, type TrialStartModalProps, type TrialStartResult, type TrialStartStarted, TrophyIcon, type UnderlineTab, UnderlineTabBar, type UnderlineTabBarProps, UpgradeMenuItem, type UpgradeMenuItemProps, VoiceCorpusInput, type VoiceCorpusInputProps, type VoiceCorpusSample, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, WelcomeMatIcon, type WizardAutosaveStatus, WizardShell, type WizardShellProps, type WizardStep, countWords, useToast };

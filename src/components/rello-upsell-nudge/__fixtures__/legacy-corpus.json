@@ -1,0 +1,127 @@
+{
+  "_comment": "Inputs only. Rendered at v2.37.1 by the generator into nudge-v2.37.1.json. Story props copied from 2d5e639 RelloUpsellNudge.stories.tsx; audit78-* from PLATFORM AUDIT 78 evidence legacy-*.json; icon 'sparks' = <Sparks width={20} height={20} />. Every case is copy with no '{{' in any field: the v2.38.0 contract is that such copy renders exactly as at v2.37.1.",
+  "cases": [
+    {
+      "name": "story-StandaloneLight",
+      "props": {
+        "seam": "pages-create-custom",
+        "headline": "Upgrade to Rello to create custom landing pages",
+        "body": "Drumbeat surfaces your Home Scout landing-page library. Building net-new custom landing pages with full pipeline tracking and revenue attribution lives in Rello.",
+        "ctaLabel": "Upgrade to Rello"
+      }
+    },
+    {
+      "name": "story-StandaloneDark",
+      "props": {
+        "seam": "revenue-attribution",
+        "headline": "Tie sends to closed-loan revenue",
+        "body": "Rello adds closed-loan revenue attribution + ROI per channel + per-source LTV on top of Drumbeat's touch counts.",
+        "ctaLabel": "Upgrade to Rello"
+      }
+    },
+    {
+      "name": "story-MobileNarrow",
+      "props": {
+        "seam": "multi-channel-nurture",
+        "headline": "Build multi-step, multi-channel nurture",
+        "body": "Drip composers live in Rello + Journey Engine. Upgrade to design email + SMS + direct-mail cadences that branch on lead behavior.",
+        "ctaLabel": "Upgrade to Rello"
+      }
+    },
+    {
+      "name": "story-WithIcon",
+      "props": {
+        "seam": "full-timeline",
+        "headline": "See the full lead timeline",
+        "body": "Rello stitches your Drumbeat sends into the complete cross-app lead history — HH score, OHH check-ins, Newsletter Studio nurture, ad clicks, landing-page visits, and your manual notes — all on one timeline.",
+        "ctaLabel": "Upgrade to Rello",
+        "icon": "sparks"
+      }
+    },
+    {
+      "name": "audit78-legacy-braces",
+      "props": {
+        "seam": "audit",
+        "headline": "Literal }} text",
+        "body": "Plain copy",
+        "ctaLabel": "See plans"
+      }
+    },
+    {
+      "name": "audit78-legacy-cta",
+      "props": {
+        "seam": "audit",
+        "headline": "A",
+        "body": "B",
+        "ctaLabel": ""
+      }
+    },
+    {
+      "name": "audit78-legacy-empty",
+      "props": {
+        "seam": "audit",
+        "headline": "",
+        "body": "",
+        "ctaLabel": "See plans"
+      }
+    },
+    {
+      "name": "closing-pair-only-body",
+      "props": {
+        "seam": "x",
+        "headline": "H",
+        "body": "}}"
+      }
+    },
+    {
+      "name": "single-braces",
+      "props": {
+        "seam": "x",
+        "headline": "a { b } c",
+        "body": "Set {x} and {y}."
+      }
+    },
+    {
+      "name": "closing-pair-cta",
+      "props": {
+        "seam": "x",
+        "headline": "H",
+        "body": "B",
+        "ctaLabel": "Go }}"
+      }
+    },
+    {
+      "name": "whitespace-and-newlines",
+      "props": {
+        "seam": "x",
+        "headline": "  Two  spaces  ",
+        "body": "  Line one.  \n\nLine two.  "
+      }
+    },
+    {
+      "name": "whitespace-only",
+      "props": {
+        "seam": "x",
+        "headline": "   ",
+        "body": " \n ",
+        "ctaLabel": "  "
+      }
+    },
+    {
+      "name": "default-cta",
+      "props": {
+        "seam": "x",
+        "headline": "Default label",
+        "body": "No ctaLabel prop."
+      }
+    },
+    {
+      "name": "plain-punctuation",
+      "props": {
+        "seam": "x",
+        "headline": "Ready? Go!",
+        "body": "Was $1.99 a day… \"Quoted.\" (Bracketed.) Done"
+      }
+    }
+  ]
+}
