@@ -5,6 +5,72 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.38.0 — 2026-11-08
+
+**Added: the RELLO UPSELL Phase 3 components, a 5th upsell event and price/ROI tokens**
+
+The eight standalone apps will show an Upgrade nav item, a trial countdown and a
+trial-start modal, and the existing upsell nudge gains the `engaged` event and
+`{{monthlyPrice}}` / `{{roiCopy}}` copy. Everything is additive: no export was
+removed or renamed and no existing prop changed meaning. On 2026-11-08 no app
+mounts any of these (0 of 8 standalone spokes; 0 of 12 consumers import
+`RelloUpsellNudge`). RELLO UPSELL Phase 4 changes that.
+
+- **`<RelloUpsellNudge>`** (client)
+  - `onEngaged` is the 5th event. It fires at most once per mount: after 3 s of
+    continuous hover, after 3 s of keyboard focus inside the nudge (the keyboard
+    counterpart of hover), or on the first expand of the new optional detail
+    panel (`details`, `detailsLabel`, default "How it works"; `aria-expanded`
+    and `aria-controls`, 44 px target). Its timer is cleared on unmount.
+  - `monthlyPrice` and `roiCopy` fill `{{monthlyPrice}}` / `{{roiCopy}}` in
+    `headline`, `body` and `ctaLabel`. Prices are never typed in this package;
+    the spoke passes the values from Rello's config. When a value is missing,
+    blank, or (for the price) has no non-zero digit, the sentence that uses it
+    is omitted. The nudge still renders, and the copy never shows "$0", an
+    empty "/mo" or a raw `{{token}}` (any unfilled token, e.g. `{{leadName}}`,
+    omits its sentence too). A headline the rule empties is omitted, not left as
+    an empty heading; a CTA label it empties falls back to "Upgrade to Rello".
+    Copy without `{{` renders exactly as before.
+  - Fixed: a caller's `onKeyDown` used to replace the nudge's Escape-to-dismiss
+    handler, because the props spread came after it. Caller `onKeyDown`,
+    `onMouseEnter`, `onMouseLeave`, `onFocus` and `onBlur` are now composed with
+    the nudge's own (both run); the same spread would otherwise have disabled
+    `engaged`. No caller passes any of them today.
+- **`<TrialCountdownBanner>`** (client): a full-width strip for the top of the
+  agent/MLO chrome. It reads `trialEndsAt` (Date, ISO string or epoch ms) and
+  shows days, then hours in the last 24 h, then minutes in the last hour. It
+  renders nothing with no trial, an unreadable date or an ended trial, and
+  disappears by itself when the trial ends. The last 48 h add a warning icon,
+  an error-tinted accent and `data-urgent="true"`, so colour is not the only
+  signal. The text is in `role="status"` / `aria-live="polite"`. Optional CTA
+  (`ctaHref` link or `onCtaClick` button, 44 px). `onShown` fires once per
+  mount. The 30 s clock is cleared on unmount and stops when the trial ends.
+- **`<TrialStartModal>`** (client): confirm-to-start, transport-agnostic. It
+  never calls Rello; the spoke's `onConfirm(): Promise<TrialStartResult>` calls
+  `POST /api/v1/billing/trial-start` and maps the answer. States: confirm,
+  pending (disabled, `aria-busy`), started (end date, optional `successAction`
+  deep link), already used (409: the existing end date and the required
+  `upgradeHref` link), and error with "Try again" (`role="alert"`; a rejection,
+  a throw or an unreadable result is an error, never a success). A ref guard
+  calls `onConfirm` once even when two confirms land before React re-renders,
+  and releases on error so retry works. Radix dialog: `role="dialog"`,
+  `aria-modal`, `aria-label`, Escape and outside click close, focus trapped and
+  returned to the element that opened it (Radix alone drops it on `<body>` when
+  there is no `Dialog.Trigger`). An outcome that lands after unmount sets no
+  state but still reaches `onResult`, because the trial did start.
+- **`<UpgradeMenuItem>`** (client): the always-on primary-nav "Upgrade" link
+  (`next/link`). It renders nothing when `isEntitled` or `isEmbed` is true (both
+  required). `onShown` (once per mount), `onClick`, `active` → `aria-current`,
+  44 px target.
+- **Root entry (server-safe):** `renderUpsellCopy` + `UpsellCopyValues`,
+  `UPSELL_EVENTS` + `UpsellEvent` + `UPSELL_ENGAGED_DWELL_MS`,
+  `getTrialTimeRemaining`, `parseTrialEndsAt`, `formatTrialTimeRemaining`,
+  `TRIAL_URGENT_WINDOW_MS` and their types, and the `TrialStartResult` types.
+- **Token:** `--brand-primary-foreground` (default `#FFFFFF`), the text colour on
+  a `--brand-primary` fill. A tenant with a light brand colour overrides it.
+
+No flag. Every colour is a token with a fallback.
+
 ## v2.37.1 — 2026-11-07
 
 **Fixed: web addresses in caller text stay whole, so mail clients link them (TE-1189, TE-1187)**

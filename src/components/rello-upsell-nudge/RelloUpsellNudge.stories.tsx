@@ -67,3 +67,33 @@ export const WithIcon: Story = {
     icon: <Sparks width={20} height={20} />,
   },
 };
+
+/** v2.38.0: `{{monthlyPrice}}` / `{{roiCopy}}` filled from the spoke's Rello config, plus the detail panel (`engaged`). */
+export const PriceAndRoiTokens: Story = {
+  args: {
+    seam: "lead-ready-threshold",
+    headline: "This lead is ready. So is the door.",
+    body: "Marcus in Sandy upgraded mid-call when his first READY_NOW lead came through and had Pathfinder Pro export the pre-qual before they hung up. {{monthlyPrice}}/mo after trial. {{roiCopy}}",
+    ctaLabel: "Start your 14-day free trial",
+    monthlyPrice: "$199",
+    roiCopy: "One closed loan covers a full year of platform fees.",
+    details: <p>Rello spins up Pathfinder Pro for your team and pre-fills this lead's pre-qual intake.</p>,
+    onClick: () => {},
+    onDismiss: () => {},
+    onEngaged: () => {},
+  },
+};
+
+/** v2.38.0: the config values are missing. Their sentences are omitted and the nudge still renders. */
+export const TokensMissing: Story = {
+  args: {
+    ...PriceAndRoiTokens.args,
+    seam: "lead-ready-threshold",
+    headline: "This lead is ready. So is the door.",
+    body: PriceAndRoiTokens.args?.body ?? "",
+    onClick: () => {},
+    onDismiss: () => {},
+    monthlyPrice: null,
+    roiCopy: null,
+  },
+};

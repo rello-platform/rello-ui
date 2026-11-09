@@ -64,6 +64,10 @@ export * from "./wizard-shell";
 
 // v2.4.0 — DRUMBEAT RELLO-UPSELL Phase 4 PR-1 (SPEC-DRUM-RELLO-UPSELL §Component primitive decision)
 export * from "./rello-upsell-nudge";
+// v2.38.0 — RELLO UPSELL Phase 3 (trial banner, trial-start modal, Upgrade nav item)
+export * from "./trial-countdown-banner";
+export * from "./trial-start-modal";
+export * from "./upgrade-menu-item";
 
 // v2.7.0 — ADMIN PAGE GUIDANCE Phase 1 (CardTooltipIcon + CardTooltip wrapper + Tooltip namespace)
 export * from "./card-tooltip";

@@ -56,6 +56,34 @@ export type {
   TeamRosterVariant,
 } from "./components/lead-team/types";
 
+/* ─── Rello upsell (pure helpers + types; components live in /client) ─── */
+
+/**
+ * RELLO UPSELL Phase 3 (v2.38.0). `renderUpsellCopy` applies the token-omit
+ * rule `<RelloUpsellNudge>` uses, so a spoke renders identical copy on the
+ * server. `getTrialTimeRemaining` is the banner's clock, for deciding on the
+ * server whether to mount it. `TrialStartResult` is what a spoke's
+ * `onConfirm` maps Rello's trial-start response to.
+ */
+export { renderUpsellCopy, type UpsellCopyValues } from "./components/rello-upsell-nudge/copy";
+export { UPSELL_EVENTS, UPSELL_ENGAGED_DWELL_MS, type UpsellEvent } from "./components/rello-upsell-nudge/events";
+export {
+  TRIAL_URGENT_WINDOW_MS,
+  formatTrialTimeRemaining,
+  getTrialTimeRemaining,
+  parseTrialEndsAt,
+  type TrialEndsAtInput,
+  type TrialTimeRemaining,
+  type TrialTimeUnit,
+} from "./components/trial-countdown-banner/remaining";
+export type {
+  TrialStartAlreadyUsed,
+  TrialStartEndsAt,
+  TrialStartError,
+  TrialStartResult,
+  TrialStartStarted,
+} from "./components/trial-start-modal/types";
+
 /* ─── Pipeline stage constants (pure data) ─── */
 
 export {

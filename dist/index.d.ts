@@ -145,6 +145,120 @@ declare function agentRoleToTeamRole(role: AgentRole): TeamRole;
 declare function formatCopy(template: string, firstName: string, lastName: string): string;
 
 /**
+ * Upsell copy templating: `{{monthlyPrice}}` and `{{roiCopy}}`.
+ *
+ * Pure and server-safe (no React, no "use client"), exported from the root
+ * entry so a spoke can render the same copy in a server component, a
+ * notification or a test, and used by `<RelloUpsellNudge>` for its headline,
+ * body and CTA label.
+ *
+ * THE TOKEN-OMIT RULE (RELLO UPSELL Phase 3; ANSWERS Q-CS-8 + the platform
+ * no-gates rule): prices are never typed in this package. The spoke passes
+ * the values it read from Rello's pricing/ROI config. When a value is missing
+ * the SENTENCE that uses it is omitted and the rest of the copy, and the
+ * nudge, still render. The output never contains:
+ *   - "$0" or a price with no non-zero digit (a missing price is not free),
+ *   - an empty "/mo" left behind by a blank price,
+ *   - a raw `{{token}}`, including tokens this package does not fill
+ *     (e.g. `{{leadName}}`, which the spoke must substitute first).
+ */
+interface UpsellCopyValues {
+    /**
+     * Display-ready monthly price from Rello's config, e.g. "$199". Treated as
+     * missing when absent, blank, not a string, or carrying no non-zero digit
+     * ("$0", "0.00", "TBD").
+     */
+    monthlyPrice?: string | null;
+    /** Per-seam ROI line from Rello's config. Missing when absent, blank or not a string. */
+    roiCopy?: string | null;
+}
+/**
+ * Render an upsell copy template. Copy with no `{{` is returned unchanged,
+ * byte for byte, so callers that pass plain copy see no difference.
+ */
+declare function renderUpsellCopy(template: string, values?: UpsellCopyValues): string;
+
+/**
+ * Upsell telemetry vocabulary. Pure data, server-safe (root entry).
+ *
+ * ANSWERS Q-CS-5: five events per seam. The component reports `engaged`
+ * (`onEngaged`), `dismissed` (`onDismiss`) and `clicked` (`onClick`); the
+ * spoke's wrapper reports `shown` when it mounts the nudge; Rello's
+ * trial-start / upgrade handler emits `converted`. Signal types are
+ * `<spoke>.upsell.<seam>.<event>`, typed with `UpsellEvent` so the event half
+ * cannot be misspelled.
+ */
+declare const UPSELL_EVENTS: readonly ["shown", "engaged", "dismissed", "clicked", "converted"];
+type UpsellEvent = (typeof UPSELL_EVENTS)[number];
+/**
+ * How long the pointer (or keyboard focus) must stay on a nudge before it
+ * counts as `engaged` ("hover >= 3s OR detail-panel-expand").
+ */
+declare const UPSELL_ENGAGED_DWELL_MS = 3000;
+
+/**
+ * Trial countdown arithmetic. Pure and server-safe (root entry), so a spoke
+ * can decide in a server component whether to mount the banner at all, and
+ * so the banner's thresholds are tested without a DOM.
+ *
+ * ANSWERS Q-CS-12: days, then hours inside the last 24 hours, then minutes
+ * inside the last hour; the last 48 hours are urgent.
+ */
+type TrialEndsAtInput = Date | string | number | null | undefined;
+type TrialTimeUnit = "days" | "hours" | "minutes";
+interface TrialTimeRemaining {
+    unit: TrialTimeUnit;
+    /** Whole units left, rounded up (a trial with 13.2 days left shows 14). */
+    value: number;
+    msRemaining: number;
+    /** True inside the last 48 hours. */
+    isUrgent: boolean;
+}
+declare const TRIAL_URGENT_WINDOW_MS: number;
+/** Epoch ms of the trial end, or null when the input is not a readable instant. */
+declare function parseTrialEndsAt(trialEndsAt: TrialEndsAtInput): number | null;
+/**
+ * Time left on a trial, or null when there is no trial, the date is
+ * unreadable, or the trial has ended.
+ */
+declare function getTrialTimeRemaining(trialEndsAt: TrialEndsAtInput, now?: number): TrialTimeRemaining | null;
+/** "5 days", "1 hour", "12 minutes". */
+declare function formatTrialTimeRemaining(remaining: TrialTimeRemaining): string;
+
+/**
+ * Trial-start outcome contract for `<TrialStartModal>`. Pure types,
+ * server-safe (root entry).
+ *
+ * The modal is transport-agnostic: it never calls Rello. The spoke's
+ * `onConfirm` calls Rello's `POST /api/v1/billing/trial-start` and maps the
+ * response to one of these:
+ *
+ *   2xx                     → { status: "started", trialEndsAt }
+ *   409 (one trial per tenant lifetime) → { status: "already-used", trialEndsAt: <existing end> }
+ *   anything else           → { status: "error", message? }   (or reject / throw)
+ *
+ * A rejected or thrown `onConfirm`, or a value that is none of the three, is
+ * shown as the error state with a retry. It is never shown as a success.
+ */
+type TrialStartEndsAt = Date | string | number | null | undefined;
+interface TrialStartStarted {
+    status: "started";
+    /** New trial end, when Rello returns it. Missing/unreadable → the date sentence is omitted. */
+    trialEndsAt?: TrialStartEndsAt;
+}
+interface TrialStartAlreadyUsed {
+    status: "already-used";
+    /** The EXISTING trial's end date from the 409 body. Missing/unreadable → the date sentence is omitted. */
+    trialEndsAt?: TrialStartEndsAt;
+}
+interface TrialStartError {
+    status: "error";
+    /** Shown after "We couldn't start your trial." Defaults to a connection hint. */
+    message?: string;
+}
+type TrialStartResult = TrialStartStarted | TrialStartAlreadyUsed | TrialStartError;
+
+/**
  * Pure pipeline stage constants.
  *
  * Kept in a dedicated file (no `"use client"` directive) so the constants
@@ -205,4 +319,4 @@ type PlatformIllustrationKey = AppSlug;
 type FeatureIllustrationKey = "accountability-tracker" | "lead-capture-forms";
 type IllustrationKey = PlatformIllustrationKey | FeatureIllustrationKey;
 
-export { type AgentRole, type BadgeVariant, type BadgeVariantProps, type ButtonVariantProps, DEFAULT_TEAM_COPY, type FeatureIllustrationKey, type IllustrationKey, type PipelineData, type PlatformIllustrationKey, STAGES, STAGE_COLORS, STAGE_LABELS, type StructuredAddress, type TeamCopy, type TeamCopyOverride, type TeamMember, type TeamRole, type TeamRosterVariant, agentRoleToTeamRole, alphaTint, badgeVariants, buildLocationTagSlug, buttonVariants, cn, formatCopy, getTeamCopy, hexAlphaToPercent };
+export { type AgentRole, type BadgeVariant, type BadgeVariantProps, type ButtonVariantProps, DEFAULT_TEAM_COPY, type FeatureIllustrationKey, type IllustrationKey, type PipelineData, type PlatformIllustrationKey, STAGES, STAGE_COLORS, STAGE_LABELS, type StructuredAddress, TRIAL_URGENT_WINDOW_MS, type TeamCopy, type TeamCopyOverride, type TeamMember, type TeamRole, type TeamRosterVariant, type TrialEndsAtInput, type TrialStartAlreadyUsed, type TrialStartEndsAt, type TrialStartError, type TrialStartResult, type TrialStartStarted, type TrialTimeRemaining, type TrialTimeUnit, UPSELL_ENGAGED_DWELL_MS, UPSELL_EVENTS, type UpsellCopyValues, type UpsellEvent, agentRoleToTeamRole, alphaTint, badgeVariants, buildLocationTagSlug, buttonVariants, cn, formatCopy, formatTrialTimeRemaining, getTeamCopy, getTrialTimeRemaining, hexAlphaToPercent, parseTrialEndsAt, renderUpsellCopy };

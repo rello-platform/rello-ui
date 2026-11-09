@@ -133,6 +133,91 @@ function formatCopy(template, firstName, lastName) {
   return template.replace(/\{firstName\}/g, firstName).replace(/\{lastName\}/g, lastName);
 }
 
+// src/components/rello-upsell-nudge/copy.ts
+var TOKEN = /\{\{\s*([A-Za-z0-9_]+)\s*\}\}/g;
+function usableValue(name, values) {
+  const raw = name === "monthlyPrice" ? values.monthlyPrice : name === "roiCopy" ? values.roiCopy : void 0;
+  if (typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  if (trimmed === "") return null;
+  if (name === "monthlyPrice" && !/[1-9]/.test(trimmed)) return null;
+  return trimmed;
+}
+function splitSentences(template) {
+  const pieces = [];
+  const re = /([\s\S]*?)(?:([.!?]+)(\s+|$)|(\n\s*)|$)/g;
+  let match;
+  while ((match = re.exec(template)) !== null) {
+    const [whole, body = "", stop = "", stopSep = "", lineSep = ""] = match;
+    if (whole === "") break;
+    pieces.push({ text: body + stop, sep: stop ? stopSep : lineSep });
+    if (re.lastIndex >= template.length) break;
+  }
+  return pieces;
+}
+function newlineCount(s) {
+  return (s.match(/\n/g) ?? []).length;
+}
+function renderUpsellCopy(template, values = {}) {
+  if (typeof template !== "string") return "";
+  if (!template.includes("{{") && !template.includes("}}")) return template;
+  const pieces = splitSentences(template);
+  const kept = [];
+  let pendingSep = "";
+  for (const piece of pieces) {
+    let missing = false;
+    const rendered = piece.text.replace(TOKEN, (_match, name) => {
+      const value = usableValue(name, values);
+      if (value === null) {
+        missing = true;
+        return "";
+      }
+      return value;
+    });
+    const leftover = missing ? false : /\{\{|\}\}/.test(rendered);
+    if (missing || leftover) {
+      if (kept.length > 0 && newlineCount(piece.sep) > newlineCount(pendingSep)) pendingSep = piece.sep;
+      continue;
+    }
+    if (kept.length > 0) kept[kept.length - 1].sep = pendingSep;
+    kept.push({ text: rendered, sep: piece.sep });
+    pendingSep = piece.sep;
+  }
+  return kept.map((p, i) => i < kept.length - 1 ? p.text + p.sep : p.text).join("").trim();
+}
+
+// src/components/rello-upsell-nudge/events.ts
+var UPSELL_EVENTS = ["shown", "engaged", "dismissed", "clicked", "converted"];
+var UPSELL_ENGAGED_DWELL_MS = 3e3;
+
+// src/components/trial-countdown-banner/remaining.ts
+var MINUTE_MS = 6e4;
+var HOUR_MS = 60 * MINUTE_MS;
+var DAY_MS = 24 * HOUR_MS;
+var TRIAL_URGENT_WINDOW_MS = 48 * HOUR_MS;
+function parseTrialEndsAt(trialEndsAt) {
+  let ms;
+  if (trialEndsAt instanceof Date) ms = trialEndsAt.getTime();
+  else if (typeof trialEndsAt === "number") ms = trialEndsAt;
+  else if (typeof trialEndsAt === "string" && trialEndsAt.trim() !== "") ms = Date.parse(trialEndsAt);
+  else return null;
+  return Number.isFinite(ms) ? ms : null;
+}
+function getTrialTimeRemaining(trialEndsAt, now = Date.now()) {
+  const end = parseTrialEndsAt(trialEndsAt);
+  if (end === null || !Number.isFinite(now)) return null;
+  const msRemaining = end - now;
+  if (msRemaining <= 0) return null;
+  const isUrgent = msRemaining <= TRIAL_URGENT_WINDOW_MS;
+  if (msRemaining >= DAY_MS) return { unit: "days", value: Math.ceil(msRemaining / DAY_MS), msRemaining, isUrgent };
+  if (msRemaining >= HOUR_MS) return { unit: "hours", value: Math.ceil(msRemaining / HOUR_MS), msRemaining, isUrgent };
+  return { unit: "minutes", value: Math.ceil(msRemaining / MINUTE_MS), msRemaining, isUrgent };
+}
+var UNIT_SINGULAR = { days: "day", hours: "hour", minutes: "minute" };
+function formatTrialTimeRemaining(remaining) {
+  return `${remaining.value} ${remaining.value === 1 ? UNIT_SINGULAR[remaining.unit] : remaining.unit}`;
+}
+
 // src/components/pipeline-thermometer/stages.ts
 var STAGES = ["cold", "warming", "engaged", "qualified", "hot"];
 var STAGE_LABELS = {
@@ -168,6 +253,9 @@ export {
   STAGES,
   STAGE_COLORS,
   STAGE_LABELS,
+  TRIAL_URGENT_WINDOW_MS,
+  UPSELL_ENGAGED_DWELL_MS,
+  UPSELL_EVENTS,
   agentRoleToTeamRole,
   alphaTint,
   badgeVariants,
@@ -175,7 +263,11 @@ export {
   buttonVariants,
   cn,
   formatCopy,
+  formatTrialTimeRemaining,
   getTeamCopy,
-  hexAlphaToPercent
+  getTrialTimeRemaining,
+  hexAlphaToPercent,
+  parseTrialEndsAt,
+  renderUpsellCopy
 };
 //# sourceMappingURL=index.js.map
