@@ -7299,7 +7299,7 @@ function usableValue(name, values) {
 }
 function splitSentences(template) {
   const pieces = [];
-  const re = /([\s\S]*?)(?:([.!?]+)(\s+|$)|(\n\s*)|$)/g;
+  const re = /([\s\S]*?)(?:([.!?\u2026]+["\u201D\u2019')\]]*)(\s+|$)|(\n\s*)|$)/g;
   let match;
   while ((match = re.exec(template)) !== null) {
     const [whole, body = "", stop = "", stopSep = "", lineSep = ""] = match;
@@ -7314,7 +7314,7 @@ function newlineCount(s) {
 }
 function renderUpsellCopy(template, values = {}) {
   if (typeof template !== "string") return "";
-  if (!template.includes("{{") && !template.includes("}}")) return template;
+  if (!template.includes("{{")) return template;
   const pieces = splitSentences(template);
   const kept = [];
   let pendingSep = "";
@@ -7368,9 +7368,15 @@ function RelloUpsellNudge({
   ...props
 }) {
   const values = { monthlyPrice, roiCopy };
-  const renderedHeadline = renderUpsellCopy(headline, values);
-  const renderedBody = renderUpsellCopy(body, values);
-  const renderedCta = renderUpsellCopy(ctaLabel, values) || DEFAULT_CTA_LABEL;
+  const headlineHasToken = typeof headline === "string" && headline.includes("{{");
+  const bodyHasToken = typeof body === "string" && body.includes("{{");
+  const ctaHasToken = typeof ctaLabel === "string" && ctaLabel.includes("{{");
+  const renderedHeadline = headlineHasToken ? renderUpsellCopy(headline, values) : headline;
+  const renderedBody = bodyHasToken ? renderUpsellCopy(body, values) : body;
+  const renderedCtaRaw = ctaHasToken ? renderUpsellCopy(ctaLabel, values) : ctaLabel;
+  const renderedCta = ctaHasToken && renderedCtaRaw === "" ? DEFAULT_CTA_LABEL : renderedCtaRaw;
+  const showHeadline = !headlineHasToken || renderedHeadline !== "";
+  const showBody = !bodyHasToken || renderedBody !== "";
   const panelId = React28.useId();
   const [detailsOpen, setDetailsOpen] = React28.useState(false);
   const onEngagedRef = React28.useRef(onEngaged);
@@ -7465,7 +7471,7 @@ function RelloUpsellNudge({
             }
           ) : null,
           /* @__PURE__ */ jsxs49("div", { className: "min-w-0 flex-1", children: [
-            renderedHeadline ? /* @__PURE__ */ jsx62(
+            showHeadline ? /* @__PURE__ */ jsx62(
               "h3",
               {
                 className: "text-sm font-semibold",
@@ -7473,7 +7479,7 @@ function RelloUpsellNudge({
                 children: renderedHeadline
               }
             ) : null,
-            renderedBody ? /* @__PURE__ */ jsx62(
+            showBody ? /* @__PURE__ */ jsx62(
               "p",
               {
                 className: "text-xs mt-1",

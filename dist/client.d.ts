@@ -1322,7 +1322,7 @@ interface RelloUpsellNudgeProps extends React.HTMLAttributes<HTMLElement> {
     headline: string;
     /** Body copy explaining the Rello-tier capability. May carry `{{monthlyPrice}}` / `{{roiCopy}}`. */
     body: string;
-    /** CTA text — defaults to "Upgrade to Rello". May carry tokens; falls back to the default if they empty it. */
+    /** CTA text — defaults to "Upgrade to Rello". May carry tokens; falls back to the default only if substitution empties it (an explicit "" stays empty). */
     ctaLabel?: string;
     /** Click handler — consumer fires `clicked` telemetry then navigates to upgrade flow. */
     onClick: () => void;

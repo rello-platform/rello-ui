@@ -145,7 +145,7 @@ function usableValue(name, values) {
 }
 function splitSentences(template) {
   const pieces = [];
-  const re = /([\s\S]*?)(?:([.!?]+)(\s+|$)|(\n\s*)|$)/g;
+  const re = /([\s\S]*?)(?:([.!?\u2026]+["\u201D\u2019')\]]*)(\s+|$)|(\n\s*)|$)/g;
   let match;
   while ((match = re.exec(template)) !== null) {
     const [whole, body = "", stop = "", stopSep = "", lineSep = ""] = match;
@@ -160,7 +160,7 @@ function newlineCount(s) {
 }
 function renderUpsellCopy(template, values = {}) {
   if (typeof template !== "string") return "";
-  if (!template.includes("{{") && !template.includes("}}")) return template;
+  if (!template.includes("{{")) return template;
   const pieces = splitSentences(template);
   const kept = [];
   let pendingSep = "";

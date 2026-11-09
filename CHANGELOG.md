@@ -28,9 +28,23 @@ mounts any of these (0 of 8 standalone spokes; 0 of 12 consumers import
     blank, or (for the price) has no non-zero digit, the sentence that uses it
     is omitted. The nudge still renders, and the copy never shows "$0", an
     empty "/mo" or a raw `{{token}}` (any unfilled token, e.g. `{{leadName}}`,
-    omits its sentence too). A headline the rule empties is omitted, not left as
-    an empty heading; a CTA label it empties falls back to "Upgrade to Rello".
-    Copy without `{{` renders exactly as before.
+    omits its sentence too).
+  - **Copy without `{{` is unchanged, per field.** A headline, body or CTA
+    label with no `{{` renders exactly as at v2.37.1. Literal or unbalanced
+    braces stay as written (`"Literal }} text"`), an empty headline or body
+    keeps its element, and an explicit `ctaLabel=""` stays empty. A test
+    renders a fixed corpus (the v2.37.1 stories plus audit cases) and requires
+    HTML byte-equal to the v2.37.1 build at 2d5e639. Only a field that contains
+    `{{` is templated, and only there can a sentence be omitted for a leftover
+    brace. A templated headline or body that substitution empties is left out,
+    and a templated CTA label it empties falls back to "Upgrade to Rello".
+  - **Only the sentence holding the token is omitted.** A sentence ends at
+    `.`, `!`, `?` or `…` (runs such as "..." count as one end), optionally
+    followed by closing quotes or brackets (`" ” ’ ' ) ]`), and then whitespace
+    or the end. A newline also ends one, and paragraph breaks survive. So
+    `Before. "Price {{monthlyPrice}}/mo." After.` with no price gives
+    `Before. After.`. A full stop with no space after it ("$1.99",
+    "rello.com") does not split a sentence.
   - Fixed: a caller's `onKeyDown` used to replace the nudge's Escape-to-dismiss
     handler, because the props spread came after it. Caller `onKeyDown`,
     `onMouseEnter`, `onMouseLeave`, `onFocus` and `onBlur` are now composed with

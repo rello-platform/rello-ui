@@ -79,6 +79,40 @@ describe("RelloUpsellNudge — {{monthlyPrice}} / {{roiCopy}} tokens", () => {
   });
 });
 
+describe("RelloUpsellNudge — fields with no {{ are unchanged from v2.37.1 (GD-11)", () => {
+  it('renders a legacy headline "Literal }} text" as its h3', () => {
+    render(<RelloUpsellNudge {...baseProps} headline="Literal }} text" body="Plain copy" ctaLabel="See plans" />);
+    expect(screen.getByRole("heading", { level: 3 }).textContent).toBe("Literal }} text");
+    expect(screen.getByText("Plain copy")).toBeInTheDocument();
+  });
+
+  it('keeps an explicit ctaLabel="" empty, as v2.37.1 did', () => {
+    render(<RelloUpsellNudge {...baseProps} ctaLabel="" />);
+    expect(screen.queryByRole("button", { name: "Upgrade to Rello" })).toBeNull();
+    const buttons = screen.getAllByRole("button");
+    // CTA (empty) + dismiss.
+    expect(buttons).toHaveLength(2);
+    expect(buttons[0].textContent).toBe("");
+  });
+
+  it("still renders the h3 and p for an empty headline and body", () => {
+    const { container } = render(<RelloUpsellNudge {...baseProps} headline="" body="" ctaLabel="See plans" />);
+    const h3 = container.querySelector("h3");
+    const p = container.querySelector("p");
+    expect(h3).not.toBeNull();
+    expect(h3?.textContent).toBe("");
+    expect(p).not.toBeNull();
+    expect(p?.textContent).toBe("");
+  });
+
+  it("applies the omit rule per field: a token in the body leaves a literal-brace headline alone", () => {
+    render(<RelloUpsellNudge {...baseProps} headline="Literal }} text." body="Keep. {{monthlyPrice}}/mo." />);
+    expect(screen.getByRole("heading", { level: 3 }).textContent).toBe("Literal }} text.");
+    expect(region().textContent).toContain("Keep.");
+    expect(region().textContent).not.toContain("/mo");
+  });
+});
+
 describe("RelloUpsellNudge — engaged event", () => {
   it("fires onEngaged once after a 3-second hover", () => {
     vi.useFakeTimers();

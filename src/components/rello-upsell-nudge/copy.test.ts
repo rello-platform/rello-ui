@@ -114,6 +114,70 @@ describe("renderUpsellCopy", () => {
     );
   });
 
+  // ── GD-11 (audit 78): copy with no "{{" is the caller's text, byte for byte ──
+  it.each([
+    ["a literal closing pair", "Before. Literal }} text. After."],
+    ["only a closing pair", "}}"],
+    ["unbalanced single braces", "a { b } c }"],
+    ["a closing pair with values given", "Ends with }} and that is fine."],
+  ])("returns copy with no opening token unchanged: %s", (_label, input) => {
+    expect(renderUpsellCopy(input, {})).toBe(input);
+    expect(renderUpsellCopy(input, { monthlyPrice: "$199", roiCopy: "x" })).toBe(input);
+  });
+
+  it("returns an empty template unchanged", () => {
+    expect(renderUpsellCopy("", {})).toBe("");
+  });
+
+  // ── GD-12 (audit 78): omission drops only the sentence holding the token ──
+  it("ends a sentence at a full stop inside closing quotes", () => {
+    expect(renderUpsellCopy('Before. "Price {{monthlyPrice}}/mo." After.', {})).toBe("Before. After.");
+    expect(renderUpsellCopy("Before. \u201CPrice {{monthlyPrice}}/mo.\u201D After.", {})).toBe("Before. After.");
+    expect(renderUpsellCopy("Before. 'Price {{monthlyPrice}}/mo.' After.", {})).toBe("Before. After.");
+    expect(renderUpsellCopy("Before. \u2018Price {{monthlyPrice}}/mo.\u2019 After.", {})).toBe("Before. After.");
+  });
+
+  it("ends a sentence at the Unicode ellipsis and at three full stops", () => {
+    expect(renderUpsellCopy("Before\u2026 {{monthlyPrice}}/mo\u2026 After.", {})).toBe("Before\u2026 After.");
+    expect(renderUpsellCopy("Before... {{monthlyPrice}}/mo... After.", {})).toBe("Before... After.");
+  });
+
+  it("ends a sentence at a full stop inside closing brackets", () => {
+    expect(renderUpsellCopy("Before. (Only {{monthlyPrice}}/mo.) After.", {})).toBe("Before. After.");
+    expect(renderUpsellCopy("Before. [Only {{monthlyPrice}}/mo.] After.", {})).toBe("Before. After.");
+  });
+
+  it("drops the whole sentence when the token sits inside parentheses", () => {
+    expect(renderUpsellCopy("Before. Rello ({{monthlyPrice}}/mo) runs it. After.", {})).toBe("Before. After.");
+    expect(renderUpsellCopy("Before. Rello ({{monthlyPrice}}/mo) runs it. After.", { monthlyPrice: "$199" })).toBe(
+      "Before. Rello ($199/mo) runs it. After.",
+    );
+  });
+
+  it("drops a last sentence with no end punctuation and keeps the rest", () => {
+    expect(renderUpsellCopy("Before. After. Price {{monthlyPrice}}/mo", {})).toBe("Before. After.");
+  });
+
+  it("does not split a sentence at a decimal point in the copy or in a value", () => {
+    expect(renderUpsellCopy("Was $1.99 a day. {{roiCopy}} After.", {})).toBe("Was $1.99 a day.");
+    expect(renderUpsellCopy("Was $1.99 a day. {{roiCopy}}", { roiCopy: "Worth it." })).toBe("Was $1.99 a day. Worth it.");
+    expect(renderUpsellCopy("Before. Only {{monthlyPrice}}/mo. After.", { monthlyPrice: "$1.99" })).toBe(
+      "Before. Only $1.99/mo. After.",
+    );
+  });
+
+  it("drops a sentence holding a decimal and a missing token whole, not from the decimal point on", () => {
+    // Over-splitting at "$1." would keep "Save $1." and drop only "99 a day…".
+    expect(renderUpsellCopy("Before. Save $1.99 a day for {{monthlyPrice}}/mo. After.", {})).toBe("Before. After.");
+    expect(renderUpsellCopy("Before. See rello.com for {{monthlyPrice}}/mo. After.", {})).toBe("Before. After.");
+  });
+
+  it("keeps a thousands separator in a value", () => {
+    expect(renderUpsellCopy("Before. Only {{monthlyPrice}}/mo. After.", { monthlyPrice: "$1,299" })).toBe(
+      "Before. Only $1,299/mo. After.",
+    );
+  });
+
   it("returns an empty string for a non-string template", () => {
     expect(renderUpsellCopy(undefined as unknown as string, {})).toBe("");
   });

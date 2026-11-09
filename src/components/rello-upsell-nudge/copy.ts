@@ -15,6 +15,8 @@
  *   - an empty "/mo" left behind by a blank price,
  *   - a raw `{{token}}`, including tokens this package does not fill
  *     (e.g. `{{leadName}}`, which the spoke must substitute first).
+ * Copy with no `{{` is never touched: the rule applies only to copy that
+ * asked for a substitution.
  */
 
 export interface UpsellCopyValues {
@@ -48,13 +50,16 @@ interface Piece {
 }
 
 /**
- * Split into sentences. A sentence ends at `.`, `!` or `?` followed by
- * whitespace or the end of the string, or at a newline. The whitespace after
- * it is kept as its separator so paragraph breaks survive.
+ * Split into sentences. A sentence ends at `.`, `!`, `?` or the ellipsis `…`
+ * (runs such as "..." or "?!" count as one end), optionally followed by
+ * closing quotes or brackets (" ” ’ ' ) ]), and then whitespace or the end of
+ * the string. A newline also ends one. The whitespace after a sentence is kept
+ * as its separator so paragraph breaks survive. A full stop with no
+ * whitespace after it ("$1.99") does not end a sentence.
  */
 function splitSentences(template: string): Piece[] {
   const pieces: Piece[] = [];
-  const re = /([\s\S]*?)(?:([.!?]+)(\s+|$)|(\n\s*)|$)/g;
+  const re = /([\s\S]*?)(?:([.!?\u2026]+["\u201D\u2019')\]]*)(\s+|$)|(\n\s*)|$)/g;
   let match: RegExpExecArray | null;
   while ((match = re.exec(template)) !== null) {
     const [whole, body = "", stop = "", stopSep = "", lineSep = ""] = match;
@@ -70,12 +75,15 @@ function newlineCount(s: string): number {
 }
 
 /**
- * Render an upsell copy template. Copy with no `{{` is returned unchanged,
- * byte for byte, so callers that pass plain copy see no difference.
+ * Render an upsell copy template. Copy with no `{{` is the caller's text and
+ * is returned unchanged, byte for byte, literal or unbalanced braces included
+ * ("Literal }} text" stays as written). Only copy that contains `{{` is
+ * templated, and only there does a sentence with a leftover brace pair get
+ * omitted.
  */
 export function renderUpsellCopy(template: string, values: UpsellCopyValues = {}): string {
   if (typeof template !== "string") return "";
-  if (!template.includes("{{") && !template.includes("}}")) return template;
+  if (!template.includes("{{")) return template;
 
   const pieces = splitSentences(template);
   const kept: Piece[] = [];

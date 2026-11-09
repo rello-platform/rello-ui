@@ -161,6 +161,8 @@ declare function formatCopy(template: string, firstName: string, lastName: strin
  *   - an empty "/mo" left behind by a blank price,
  *   - a raw `{{token}}`, including tokens this package does not fill
  *     (e.g. `{{leadName}}`, which the spoke must substitute first).
+ * Copy with no `{{` is never touched: the rule applies only to copy that
+ * asked for a substitution.
  */
 interface UpsellCopyValues {
     /**
@@ -173,8 +175,11 @@ interface UpsellCopyValues {
     roiCopy?: string | null;
 }
 /**
- * Render an upsell copy template. Copy with no `{{` is returned unchanged,
- * byte for byte, so callers that pass plain copy see no difference.
+ * Render an upsell copy template. Copy with no `{{` is the caller's text and
+ * is returned unchanged, byte for byte, literal or unbalanced braces included
+ * ("Literal }} text" stays as written). Only copy that contains `{{` is
+ * templated, and only there does a sentence with a leftover brace pair get
+ * omitted.
  */
 declare function renderUpsellCopy(template: string, values?: UpsellCopyValues): string;
 

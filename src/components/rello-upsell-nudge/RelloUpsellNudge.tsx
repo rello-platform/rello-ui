@@ -16,7 +16,7 @@ export interface RelloUpsellNudgeProps extends React.HTMLAttributes<HTMLElement>
   headline: string;
   /** Body copy explaining the Rello-tier capability. May carry `{{monthlyPrice}}` / `{{roiCopy}}`. */
   body: string;
-  /** CTA text — defaults to "Upgrade to Rello". May carry tokens; falls back to the default if they empty it. */
+  /** CTA text — defaults to "Upgrade to Rello". May carry tokens; falls back to the default only if substitution empties it (an explicit "" stays empty). */
   ctaLabel?: string;
   /** Click handler — consumer fires `clicked` telemetry then navigates to upgrade flow. */
   onClick: () => void;
@@ -67,10 +67,20 @@ function RelloUpsellNudge({
   onBlur,
   ...props
 }: RelloUpsellNudgeProps) {
+  // Per field. A field with no "{{" renders exactly as at v2.37.1 (an empty
+  // headline/body keeps its element; an explicit ctaLabel="" stays empty).
+  // Only a field that asked for a substitution and was emptied by it loses
+  // its element, or for the CTA falls back to the default label.
   const values = { monthlyPrice, roiCopy };
-  const renderedHeadline = renderUpsellCopy(headline, values);
-  const renderedBody = renderUpsellCopy(body, values);
-  const renderedCta = renderUpsellCopy(ctaLabel, values) || DEFAULT_CTA_LABEL;
+  const headlineHasToken = typeof headline === "string" && headline.includes("{{");
+  const bodyHasToken = typeof body === "string" && body.includes("{{");
+  const ctaHasToken = typeof ctaLabel === "string" && ctaLabel.includes("{{");
+  const renderedHeadline = headlineHasToken ? renderUpsellCopy(headline, values) : headline;
+  const renderedBody = bodyHasToken ? renderUpsellCopy(body, values) : body;
+  const renderedCtaRaw = ctaHasToken ? renderUpsellCopy(ctaLabel, values) : ctaLabel;
+  const renderedCta = ctaHasToken && renderedCtaRaw === "" ? DEFAULT_CTA_LABEL : renderedCtaRaw;
+  const showHeadline = !headlineHasToken || renderedHeadline !== "";
+  const showBody = !bodyHasToken || renderedBody !== "";
 
   const panelId = React.useId();
   const [detailsOpen, setDetailsOpen] = React.useState(false);
@@ -176,7 +186,7 @@ function RelloUpsellNudge({
           </div>
         ) : null}
         <div className="min-w-0 flex-1">
-          {renderedHeadline ? (
+          {showHeadline ? (
             <h3
               className="text-sm font-semibold"
               style={{ color: "var(--foreground, #111827)" }}
@@ -184,7 +194,7 @@ function RelloUpsellNudge({
               {renderedHeadline}
             </h3>
           ) : null}
-          {renderedBody ? (
+          {showBody ? (
             <p
               className="text-xs mt-1"
               style={{ color: "var(--neutral-700, #374151)" }}
