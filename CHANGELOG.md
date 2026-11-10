@@ -5,7 +5,7 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
-## v2.39.0 — 2026-11-10
+## v2.40.0 — 2026-11-10
 
 **Changed: consumer email names the sender in its header and says "Powered by Rello" in its footer**
 
@@ -17,10 +17,10 @@ consumer kicker. Pro and admin mail are unchanged, byte for byte.
 - **Consumer default kicker** (only when `kicker` is not given; a given kicker still
   wins, written as given):
   - a company is known (`companyName`): `From <company>`;
-  - no company, under a `brand`: the brand's name (the same name as the text part's
-    first line: C0/C1 controls removed). A brand with no name gets no kicker at all,
-    so the header and text never fall back to "Rello";
-  - no company, no brand: the app's name, as at v2.38.0.
+  - no company, under a `brand`: `From <brand>` (the brand's name as the text part's
+    first line prints it: C0/C1 controls removed). A brand with no name gets no kicker
+    at all, so the header and text never fall back to "Rello";
+  - no company, no brand: the app's name, as at v2.39.0.
 - **Consumer footer**: a last line, `Powered by Rello`, linked to
   `https://hellorello.app` (new export `RELLO_EMAIL_POWERED_BY_URL`), in the same small
   muted footer color as the other footer lines. The plain-text part ends with
@@ -29,17 +29,46 @@ consumer kicker. Pro and admin mail are unchanged, byte for byte.
 - **Opt-out**: `footer.poweredBy?: boolean` on `RelloEmailFooter`. Default on; `false`
   leaves the line out (HTML and text); any other value keeps it. Pro and admin mail never
   carry the line, whatever it says.
-- **Pro and admin**: every byte of the HTML and text is as at v2.38.0. A new fixture
-  (`src/email/fixtures/v2.38.0-before-consumer-kicker.json`, captured from v2.38.0 at
-  19f04a9) pins 342 pro and admin renders across every slug, plus 38 consumer renders
-  with the v2.38.0 kicker passed and `poweredBy: false`, which match v2.38.0 exactly:
-  the kicker and the one footer line are the only consumer changes. The older v2.32.0 and
-  v2.33.0 consumer hash pins now render through `asBeforeV239` (src/test) for the same
-  reason; their pro and admin pins are untouched.
+- **Pro and admin**: every byte of the HTML and text is as at v2.39.0 (and v2.38.0:
+  v2.39.0 changed nothing under `src/email/`). A new fixture
+  (`src/email/fixtures/v2.38.0-before-consumer-kicker.json`, captured from 19f04a9 and
+  re-checked against 9c054e7, v2.39.0) pins 342 pro and admin renders across every slug,
+  plus 38 consumer renders with the old kicker passed and `poweredBy: false`, which match
+  exactly: the kicker and the one footer line are the only consumer changes. The older
+  v2.32.0 and v2.33.0 consumer hash pins now render through `asBeforeV240` (src/test) for
+  the same reason; their pro and admin pins are untouched.
 - Callers that pass their own consumer kicker keep it. A caller whose own kicker says
   "Rello · from …" needs to drop it to get the new default.
 
-Consumers pick this up on their next pin bump to `#v2.39.0` (published after audit).
+Consumers pick this up on their next pin bump to `#v2.40.0` (published after audit).
+
+## v2.39.0 — 2026-11-10
+
+**Added: an "unknown" outcome for `<TrialStartModal>` (Platform KA 875, GD-541)**
+
+A spoke whose trial-start request may or may not have started the trial (the
+response was lost or timed out, a gateway 5xx, Rello answered
+`rello_state_unknown`) had only `{ status: "error" }` to return, and the modal
+prefixes every error with "We couldn't start your trial." and offers Try again,
+which calls `onConfirm` again. Seen live in Harvest Home: the trial started, the
+response was lost, the modal said it failed, and Try again sent a second start.
+
+- **`TrialStartResult` gains `{ status: "unknown"; message?: string }`**
+  (`TrialStartUnknown`, exported from the root entry and the client entry).
+- The modal renders it as "We couldn't confirm whether your trial started."
+  plus the message (default "Check your plan to see whether it did."), in
+  neutral text with `role="alert"`. It never says "couldn't start".
+- Its action is **"Check my plan"**, which calls `onConfirm` again under the
+  same one-in-flight guard. The spoke reads the tenant's plan first on that
+  call and posts a new start only when the plan says the tenant is definitely
+  not entitled (the platform's send rule: after an unknown outcome, read the
+  provider's record before any retry). The modal itself still never calls Rello.
+- Closing and reopening keeps the unknown state, so the next action is still
+  "Check my plan", never a fresh "Start trial". An error still starts fresh.
+- **Every v2.38.0 outcome renders byte for byte as before.** A test drives a
+  16-case corpus (confirm step, started, already-used, error, an unreadable
+  result) through the v2.38.0 build at 19f04a9 and through the current source
+  and requires equal dialog HTML.
 
 ## v2.38.0 — 2026-11-08
 

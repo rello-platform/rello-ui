@@ -45,15 +45,19 @@ type Phase =
   | { kind: "pending" }
   | { kind: "started"; trialEndsAt?: TrialStartEndsAt }
   | { kind: "already-used"; trialEndsAt?: TrialStartEndsAt }
-  | { kind: "error"; message?: string };
+  | { kind: "error"; message?: string }
+  | { kind: "unknown"; message?: string };
 
 const DEFAULT_ERROR_HINT = "Check your connection and try again.";
+const DEFAULT_UNKNOWN_HINT = "Check your plan to see whether it did.";
 
-/** A value that is none of the three outcomes is an error, never a success. */
+/** A value that is none of the four outcomes is an error, never a success. */
 function readResult(raw: unknown): TrialStartResult | null {
   if (!raw || typeof raw !== "object") return null;
   const status = (raw as { status?: unknown }).status;
-  if (status === "started" || status === "already-used" || status === "error") return raw as TrialStartResult;
+  if (status === "started" || status === "already-used" || status === "error" || status === "unknown") {
+    return raw as TrialStartResult;
+  }
   return null;
 }
 
@@ -83,7 +87,9 @@ const SECONDARY_STYLE: React.CSSProperties = {
  * Confirm-to-start modal for a Rello trial (ANSWERS Q-CS-7): explicit
  * confirmation, no auto-enroll. States: confirm → pending → started |
  * already used (409, with the existing end date and an upgrade link) |
- * error with retry.
+ * error with retry | unknown (v2.39.0: the spoke cannot tell whether the trial
+ * started; "Check my plan" calls onConfirm again so the spoke reads the plan
+ * before any new start request).
  */
 function TrialStartModal({
   open,
@@ -120,7 +126,8 @@ function TrialStartModal({
   }, []);
 
   // Reopening after an error starts fresh; a pending request, a started
-  // trial or a 409 is kept so the user cannot fire a second start.
+  // trial, a 409 or an unknown outcome is kept so the user cannot fire a
+  // second start (after "unknown" the next action stays "Check my plan").
   const wasOpenRef = React.useRef(open);
   React.useEffect(() => {
     if (open && !wasOpenRef.current && !inFlightRef.current) {
@@ -162,7 +169,10 @@ function TrialStartModal({
     if (!mountedRef.current) return;
     if (result.status === "started") setPhase({ kind: "started", trialEndsAt: result.trialEndsAt });
     else if (result.status === "already-used") setPhase({ kind: "already-used", trialEndsAt: result.trialEndsAt });
-    else {
+    else if (result.status === "unknown") {
+      const message = typeof result.message === "string" && result.message.trim() !== "" ? result.message.trim() : undefined;
+      setPhase({ kind: "unknown", message });
+    } else {
       const message = typeof result.message === "string" && result.message.trim() !== "" ? result.message.trim() : undefined;
       setPhase({ kind: "error", message });
     }
@@ -237,6 +247,25 @@ function TrialStartModal({
               </button>
               <button type="button" className={PRIMARY_CLASS} style={PRIMARY_STYLE} onClick={submit}>
                 Try again
+              </button>
+            </div>
+          </>
+        );
+      case "unknown":
+        // Never "We couldn't start your trial.": the trial may have started.
+        return (
+          <>
+            <DialogPrimitive.Description asChild>
+              <p role="alert" className="text-sm" style={{ color: "var(--neutral-700, #434B52)" }}>
+                We couldn&apos;t confirm whether your trial started. {phase.message ?? DEFAULT_UNKNOWN_HINT}
+              </p>
+            </DialogPrimitive.Description>
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <button type="button" className={SECONDARY_CLASS} style={SECONDARY_STYLE} onClick={onClose}>
+                {cancelLabel}
+              </button>
+              <button type="button" className={PRIMARY_CLASS} style={PRIMARY_STYLE} onClick={submit}>
+                Check my plan
               </button>
             </div>
           </>

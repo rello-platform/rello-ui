@@ -240,9 +240,18 @@ declare function formatTrialTimeRemaining(remaining: TrialTimeRemaining): string
  *
  *   2xx                     → { status: "started", trialEndsAt }
  *   409 (one trial per tenant lifetime) → { status: "already-used", trialEndsAt: <existing end> }
- *   anything else           → { status: "error", message? }   (or reject / throw)
+ *   a known refusal         → { status: "error", message? }   (or reject / throw)
+ *   an outcome nobody knows → { status: "unknown", message? }  (v2.39.0)
  *
- * A rejected or thrown `onConfirm`, or a value that is none of the three, is
+ * "unknown" is for a request that may or may not have started the trial: the
+ * response was lost or timed out, a gateway 5xx, or Rello said it could not
+ * tell. The modal says "We couldn't confirm whether your trial started." and
+ * offers "Check my plan", which calls `onConfirm` again: the spoke should read
+ * the tenant's plan FIRST on that call and post a new start only when the plan
+ * says the tenant is definitely not entitled (the platform's send rule: after
+ * an unknown outcome, read the provider's record before any retry).
+ *
+ * A rejected or thrown `onConfirm`, or a value that is none of the four, is
  * shown as the error state with a retry. It is never shown as a success.
  */
 type TrialStartEndsAt = Date | string | number | null | undefined;
@@ -261,7 +270,12 @@ interface TrialStartError {
     /** Shown after "We couldn't start your trial." Defaults to a connection hint. */
     message?: string;
 }
-type TrialStartResult = TrialStartStarted | TrialStartAlreadyUsed | TrialStartError;
+interface TrialStartUnknown {
+    status: "unknown";
+    /** Shown after "We couldn't confirm whether your trial started." Defaults to a check-your-plan hint. */
+    message?: string;
+}
+type TrialStartResult = TrialStartStarted | TrialStartAlreadyUsed | TrialStartError | TrialStartUnknown;
 
 /**
  * Pure pipeline stage constants.
@@ -324,4 +338,4 @@ type PlatformIllustrationKey = AppSlug;
 type FeatureIllustrationKey = "accountability-tracker" | "lead-capture-forms";
 type IllustrationKey = PlatformIllustrationKey | FeatureIllustrationKey;
 
-export { type AgentRole, type BadgeVariant, type BadgeVariantProps, type ButtonVariantProps, DEFAULT_TEAM_COPY, type FeatureIllustrationKey, type IllustrationKey, type PipelineData, type PlatformIllustrationKey, STAGES, STAGE_COLORS, STAGE_LABELS, type StructuredAddress, TRIAL_URGENT_WINDOW_MS, type TeamCopy, type TeamCopyOverride, type TeamMember, type TeamRole, type TeamRosterVariant, type TrialEndsAtInput, type TrialStartAlreadyUsed, type TrialStartEndsAt, type TrialStartError, type TrialStartResult, type TrialStartStarted, type TrialTimeRemaining, type TrialTimeUnit, UPSELL_ENGAGED_DWELL_MS, UPSELL_EVENTS, type UpsellCopyValues, type UpsellEvent, agentRoleToTeamRole, alphaTint, badgeVariants, buildLocationTagSlug, buttonVariants, cn, formatCopy, formatTrialTimeRemaining, getTeamCopy, getTrialTimeRemaining, hexAlphaToPercent, parseTrialEndsAt, renderUpsellCopy };
+export { type AgentRole, type BadgeVariant, type BadgeVariantProps, type ButtonVariantProps, DEFAULT_TEAM_COPY, type FeatureIllustrationKey, type IllustrationKey, type PipelineData, type PlatformIllustrationKey, STAGES, STAGE_COLORS, STAGE_LABELS, type StructuredAddress, TRIAL_URGENT_WINDOW_MS, type TeamCopy, type TeamCopyOverride, type TeamMember, type TeamRole, type TeamRosterVariant, type TrialEndsAtInput, type TrialStartAlreadyUsed, type TrialStartEndsAt, type TrialStartError, type TrialStartResult, type TrialStartStarted, type TrialStartUnknown, type TrialTimeRemaining, type TrialTimeUnit, UPSELL_ENGAGED_DWELL_MS, UPSELL_EVENTS, type UpsellCopyValues, type UpsellEvent, agentRoleToTeamRole, alphaTint, badgeVariants, buildLocationTagSlug, buttonVariants, cn, formatCopy, formatTrialTimeRemaining, getTeamCopy, getTrialTimeRemaining, hexAlphaToPercent, parseTrialEndsAt, renderUpsellCopy };

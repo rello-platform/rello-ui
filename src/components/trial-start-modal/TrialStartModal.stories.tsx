@@ -86,3 +86,21 @@ export const ErrorMessage: Story = {
     />
   ),
 };
+
+/** v2.39.0: the outcome is unknown; "Check my plan" lets the spoke read the plan before any new start. */
+export const UnknownThenCheckPlan: Story = {
+  render: () => {
+    let calls = 0;
+    return (
+      <Demo
+        onConfirm={async () => {
+          calls += 1;
+          await wait(800);
+          if (calls === 1) return { status: "unknown", message: "We lost the connection before Rello answered." };
+          return { status: "started", trialEndsAt: later(14) };
+        }}
+        upgradeHref="/upgrade"
+      />
+    );
+  },
+};
