@@ -103,7 +103,11 @@ export interface RelloEmailFooter {
  * the app behind the email. Admin mail ignores it.
  */
 export interface RelloEmailBrand {
-  /** Header text when there is no usable logo, and the logo's alt text. Empty: the header names nobody. */
+  /**
+   * Header text when there is no usable logo, and the logo's alt text. Empty: the header names nobody.
+   * Consumer mail (TE-1341) prints it with C0/C1 controls removed and, when nothing is left, falls
+   * through to `companyName`, then `signer.name`, the same name in the HTML and the text part.
+   */
   name: string;
   /** Drawn only when a clean https URL whose path ends .png, .jpg, .jpeg or .gif; else the name is the header text. */
   logoUrl?: string | null;
@@ -812,10 +816,18 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
       ? input.app
       : "rello";
   const logoUrl = brand ? brandLogoUrl(brand.logoUrl) : relloEmailLogoUrl(logoSlug);
-  const logoAlt = brand ? line(brand.name) : appName(logoSlug);
   // The TEXT part's name line only (the HTML keeps logoAlt exactly as before): plainName() of the brand
   // name. Nothing left = no name line.
   const textName = brand ? plainName(brand.name) : "";
+  // TE-1341: consumer mail under a brand prints ONE sender name, the same string in the HTML (header
+  // text or logo alt) and the TEXT part: plainName() of the brand, else of the company, else of the
+  // signer; nothing usable = the header names nobody (a brand never shows the app's name). Pro and
+  // admin keep logoAlt and textName exactly as before.
+  const senderName =
+    audience === "consumer" && brand
+      ? textName || plainName(input.companyName) || plainName(input.signer?.name)
+      : textName;
+  const logoAlt = brand ? (audience === "consumer" ? senderName : line(brand.name)) : appName(logoSlug);
   // TE-1340: the consumer kicker's company, by the same rule (C0/C1 controls removed). A company that is
   // all controls is no company: the kicker falls through to the brand, then the app. Pro and admin keep
   // `company` exactly as before.
@@ -1047,8 +1059,9 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   // TE-1207: under a brand the text part opens with the brand's name, the same name the HTML header
   // prints (its logo's alt text, or the name as header text), then the kicker as before. A brand with
   // no name names nobody, as in the header. With no brand every line is as it was at v2.36.0. The name
-  // here is textName (TE-1222: C0/C1 controls removed), not logoAlt, so the HTML header is untouched.
-  if (brand && textName) push(textName);
+  // here is senderName (TE-1222/TE-1341: C0/C1 controls removed); for consumer mail it is also the HTML
+  // header's name, for pro mail it is textName and the HTML header is untouched.
+  if (brand && senderName) push(senderName);
   // An empty kicker (a nameless brand, no company) adds only blank lines, which the trim below removes.
   push(kicker);
   if (headline) push("", headline);

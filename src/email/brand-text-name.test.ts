@@ -75,9 +75,28 @@ describe("TE-1207: under a brand the text part opens with the brand's name, then
     expect(r.text.split("\n")[0]).toBe("Summit Realty & Co <Utah>");
   });
 
-  it("a brand with no name names nobody, in the header and in the text: the text opens with the kicker as before", () => {
+  it("a consumer brand with no name: the company names the sender, else the signer, else nobody (TE-1341)", () => {
     for (const brand of [{ name: "" }, { name: "   " }, { name: "\n" }, { name: undefined as unknown as string }, { name: 7 as unknown as string }]) {
-      const r = renderRelloEmail({ ...baselineInput("home-scout", "consumer"), brand });
+      const base = baselineInput("home-scout", "consumer");
+      // The company, in the header and as text line 1; the kicker follows.
+      const r = renderRelloEmail({ ...base, brand });
+      expect(headerName(r.html)).toBe("ClearPath Utah Mortgage");
+      expect(r.text.split("\n").slice(0, 2)).toEqual(["ClearPath Utah Mortgage", kickerOf(r.html)]);
+      // No company: the signer.
+      const s = renderRelloEmail({ ...base, companyName: null, brand });
+      expect(headerName(s.html)).toBe("Kelly Sansom");
+      expect(s.text.split("\n")[0]).toBe("Kelly Sansom");
+      // Neither: nobody, and the text opens with the headline (no kicker under a nameless brand).
+      const n = renderRelloEmail({ ...base, companyName: null, signer: null, brand });
+      expect(headerName(n.html)).toBeNull();
+      expect(n.text.startsWith("\n")).toBe(false);
+      expect(n.text.split("\n")[0]).toBe(base.headline);
+    }
+  });
+
+  it("a pro brand with no name still names nobody, in the header and in the text: the text opens with the kicker as before", () => {
+    for (const brand of [{ name: "" }, { name: "   " }, { name: "\n" }, { name: undefined as unknown as string }, { name: 7 as unknown as string }]) {
+      const r = renderRelloEmail({ ...baselineInput("home-scout", "pro"), brand });
       expect(headerName(r.html)).toBeNull();
       expect(r.text.split("\n")[0]).toBe(kickerOf(r.html));
       expect(r.text.startsWith("\n")).toBe(false);

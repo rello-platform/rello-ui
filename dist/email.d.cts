@@ -95,7 +95,11 @@ interface RelloEmailFooter {
  * the app behind the email. Admin mail ignores it.
  */
 interface RelloEmailBrand {
-    /** Header text when there is no usable logo, and the logo's alt text. Empty: the header names nobody. */
+    /**
+     * Header text when there is no usable logo, and the logo's alt text. Empty: the header names nobody.
+     * Consumer mail (TE-1341) prints it with C0/C1 controls removed and, when nothing is left, falls
+     * through to `companyName`, then `signer.name`, the same name in the HTML and the text part.
+     */
     name: string;
     /** Drawn only when a clean https URL whose path ends .png, .jpg, .jpeg or .gif; else the name is the header text. */
     logoUrl?: string | null;

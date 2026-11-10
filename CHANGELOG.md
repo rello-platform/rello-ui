@@ -26,6 +26,13 @@ consumer kicker. Pro and admin mail are unchanged, byte for byte.
     `plainName`, now serves both). A company that is all controls counts as no
     company and falls through to the brand, then the app's name. Pro and admin keep
     the company as given, byte for byte (342 renders checked against v2.39.0).
+  - TE-1341: consumer mail under a brand prints one sender name, the same cleaned string
+    in the HTML header (name text or logo alt) and as the plain-text part's first line:
+    `plainName` of the brand, else of the company, else of the signer; nothing usable
+    names nobody (a brand never shows the app's name). Before, the HTML kept the brand's
+    raw name, C0/C1 controls and all, while the kicker and text were clean. Never held.
+    Pro and admin unchanged: 342 of 342 renders, plus 152 with control or nameless
+    brands and companies, byte-identical to v2.39.0.
 - **Consumer footer**: a last line, `Powered by Rello`, linked to
   `https://hellorello.app` (new export `RELLO_EMAIL_POWERED_BY_URL`), in the same small
   muted footer color as the other footer lines. The plain-text part ends with

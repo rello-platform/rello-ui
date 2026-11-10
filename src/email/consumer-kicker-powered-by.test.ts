@@ -113,9 +113,10 @@ describe("consumer kicker: the sender, never Rello by default", () => {
       const plain = renderRelloEmail(consumer("home-scout", { companyName }));
       expect(kickerHtml(plain.html), JSON.stringify(companyName)).toBe("Home Scout");
       expect(plain.text.split("\n")[0]).toBe("Home Scout");
+      // TE-1341: a nameless brand with no usable company names the signer (no kicker under a brand).
       const nameless = renderRelloEmail(consumer("home-scout", { brand: { name: "\u0000" }, companyName }));
       expect(kickerHtml(nameless.html), JSON.stringify(companyName)).toBeNull();
-      expect(nameless.text.split("\n")[0]).toBe("Your plan is ready, Sarah.");
+      expect(nameless.text.split("\n").slice(0, 2)).toEqual(["Kelly Sansom", ""]);
     }
   });
 
@@ -128,10 +129,15 @@ describe("consumer kicker: the sender, never Rello by default", () => {
 
   it("under a brand with no name and no company: no kicker at all, and no Rello", () => {
     for (const name of ["", "   ", "\u0000"]) {
+      // TE-1341: the signer names the sender; with no signer, nobody.
       const r = renderRelloEmail(consumer("home-scout", { brand: { name }, companyName: null }));
       expect(kickerHtml(r.html), JSON.stringify(name)).toBeNull();
       expect(header(r.html)).not.toMatch(/rello/i);
-      expect(r.text.split("\n")[0], JSON.stringify(name)).toBe("Your plan is ready, Sarah.");
+      expect(r.text.split("\n")[0], JSON.stringify(name)).toBe("Kelly Sansom");
+      const n = renderRelloEmail(consumer("home-scout", { brand: { name }, companyName: null, signer: null }));
+      expect(kickerHtml(n.html), JSON.stringify(name)).toBeNull();
+      expect(header(n.html)).not.toMatch(/rello/i);
+      expect(n.text.split("\n")[0], JSON.stringify(name)).toBe("Your plan is ready, Sarah.");
     }
   });
 
@@ -253,5 +259,78 @@ describe("byte-for-byte against v2.38.0 (19f04a9)", () => {
     const r = renderRelloEmail(baselineInput("home-ready", "consumer"));
     expect(sha256(r.html)).not.toBe(renders[c.id].html);
     expect(sha256(r.text)).not.toBe(renders[c.id].text);
+  });
+});
+
+describe("TE-1341: the consumer header names one cleaned sender, the same in HTML and text", () => {
+  // eslint-disable-next-line no-control-regex
+  const ANY_CONTROL = /[\u0000-\u001f\u007f-\u009f]/;
+  const HEADLINE = "Your plan is ready, Sarah.";
+  const unescape = (s: string) =>
+    s.replace(/<wbr>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&");
+  /** The header's visible sender name: the brand logo's alt, else the 22px name div; null when neither. */
+  function htmlName(html: string): string | null {
+    const h = header(html);
+    const img = h.match(/<img [^>]*alt="([^"]*)"[^>]*max-height:64px/);
+    if (img) return unescape(img[1]);
+    const div = h.match(/<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">(.*?)<\/div>/);
+    return div ? unescape(div[1]) : null;
+  }
+  /** Every text line before the headline: the text part's whole header. */
+  const textHeader = (text: string) => text.split("\n").slice(0, text.split("\n").indexOf(HEADLINE));
+
+  // [label, brand name, company, signer name, expected name, expected kicker]
+  const WITNESSES: ReadonlyArray<readonly [string, string, string | null, string | null, string | null, string | null]> = [
+    ["all controls", "\u0000", "\u0085", "\u0007", null, null],
+    ["control brand, clean company", "\u0000", "Clean Company", "Jane Doe", "Clean Company", "From Clean Company"],
+    ["control brand, no company, clean signer", "\u0000", null, "Jane Doe", "Jane Doe", null],
+    ["NUL + NEL in both", "A\u0000B\u0085C", "A\u0000B\u0085C", "Jane Doe", "ABC", "From ABC"],
+    ["é, NUL, emoji, NEL", "é\u0000😀\u0085C", "é\u0000😀\u0085C", "Jane Doe", "é😀C", "From é😀C"],
+    ["tab", "A\tB", "A\tB", "Jane Doe", "A B", "From A B"],
+    ["ESC, CSI, DEL", "\u001b[31mSummit\u009b\u007f Peak", "Summit Peak Mortgage", "Jane Doe", "[31mSummit Peak", "From Summit Peak Mortgage"],
+  ];
+
+  for (const logoUrl of [BRAND.logoUrl, null]) {
+    for (const app of ["home-scout", "newsletter-studio", "open-house-hub"] as const) {
+      for (const [label, name, companyName, signerName, wantName, wantKicker] of WITNESSES) {
+        it(`${app}, ${logoUrl ? "logo" : "no logo"}, ${label}`, () => {
+          const base = consumer(app);
+          const signer = signerName === null ? null : { ...base.signer!, name: signerName };
+          const r = renderRelloEmail({ ...base, brand: { name, logoUrl, primary: "#1d4ed8" }, companyName, signer });
+          const h = header(r.html);
+          const th = textHeader(r.text);
+          // Never held: the email renders whole.
+          expect(r.html).toContain(HEADLINE);
+          expect(r.text).toContain(POWERED_TEXT);
+          // The WHOLE header, both parts: no control character, no Rello.
+          expect(h).not.toMatch(ANY_CONTROL);
+          expect(h).not.toMatch(/rello/i);
+          for (const l of th) expect(l).not.toMatch(ANY_CONTROL);
+          for (const l of th) expect(l).not.toMatch(/rello/i);
+          // One sender name: the HTML's equals the text's.
+          const textName = th.length > 0 && th[0] !== wantKicker ? th[0] : null;
+          expect(htmlName(r.html)).toBe(logoUrl && wantName === null ? "" : wantName);
+          expect(textName).toBe(wantName);
+          expect(kickerHtml(r.html) === null ? null : unescape(kickerHtml(r.html)!)).toBe(wantKicker);
+          expect(th.filter((l) => l.startsWith("From "))).toEqual(wantKicker ? [wantKicker] : []);
+        });
+      }
+    }
+  }
+
+  it("unbranded consumer: the app logo names the sender, the kicker is clean, no control anywhere in the header", () => {
+    for (const app of ["home-scout", "newsletter-studio", "open-house-hub"] as const) {
+      for (const [, , companyName] of WITNESSES) {
+        const r = renderRelloEmail(consumer(app, { companyName }));
+        expect(header(r.html)).not.toMatch(ANY_CONTROL);
+        for (const l of textHeader(r.text)) expect(l).not.toMatch(ANY_CONTROL);
+      }
+    }
+  });
+
+  it("pro keeps its header byte for byte: the name with its controls, as before", () => {
+    const r = renderRelloEmail({ ...baselineInput("home-scout", "pro"), brand: { name: "A\u0000B\u0085C" } });
+    expect(htmlName(r.html)).toBe("A\u0000B\u0085C");
+    expect(r.text.split("\n")[0]).toBe("ABC");
   });
 });

@@ -582,8 +582,9 @@ function renderRelloEmail(input) {
   const color = pal.primary;
   const logoSlug = audience !== "admin" && isKnownApp(input.app) ? input.app : "rello";
   const logoUrl = brand ? brandLogoUrl(brand.logoUrl) : relloEmailLogoUrl(logoSlug);
-  const logoAlt = brand ? line(brand.name) : appName(logoSlug);
   const textName = brand ? plainName(brand.name) : "";
+  const senderName = audience === "consumer" && brand ? textName || plainName(input.companyName) || plainName(input.signer?.name) : textName;
+  const logoAlt = brand ? audience === "consumer" ? senderName : line(brand.name) : appName(logoSlug);
   const consumerCompany = audience === "consumer" ? plainName(input.companyName) : "";
   const subject = line(input.subject);
   const preheader = line(input.preheader);
@@ -685,7 +686,7 @@ function renderRelloEmail(input) {
   const html = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="x-apple-disable-message-reformatting"><title>${e(subject)}</title></head><body style="margin:0;padding:24px 12px;background:#eef1f5;font-family:${FONT};color:#1f2937;">` + (preheader ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#eef1f5;opacity:0;">${e(preheader)}</div>` : "") + `<!--[if mso]><table role="presentation" width="600" align="center" cellpadding="0" cellspacing="0"><tr><td><![endif]--><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:10px;font-family:${FONT};">` + rows.join("") + `</table><!--[if mso]></td></tr></table><![endif]--></body></html>`;
   const t = [];
   const push = (...ls) => t.push(...ls);
-  if (brand && textName) push(textName);
+  if (brand && senderName) push(senderName);
   push(kicker);
   if (headline) push("", headline);
   if (badgeLabel || detail) push("", ...[badgeLabel, detail].filter(Boolean));

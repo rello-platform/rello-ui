@@ -11,7 +11,8 @@ import * as distEsm from "../../dist/email.js";
  * CR/LF and JS whitespace but keeps C0/C1 controls, so "Summit\u0085Realty\u0000Group" put NEL and NUL into
  * text line 1. U+0085 is a line break to a Unicode-aware reader. The name line now drops every C0/C1
  * control (U+0000-U+001F, U+007F-U+009F) after line()'s flattening, then collapses and trims; nothing
- * left means no name line. The HTML is untouched: its header still prints logoAlt exactly as before.
+ * left means no name line. Pro HTML is untouched: its header still prints logoAlt exactly as before. Consumer
+ * HTML prints the same cleaned name since TE-1341.
  */
 
 const require_ = createRequire(import.meta.url);
@@ -74,11 +75,16 @@ describe("TE-1222: the text name line carries no C0/C1 control character", () =>
     }
   });
 
-  it("the HTML is unchanged: the header still prints the name as before, controls and all (out of scope here)", () => {
+  it("pro HTML is unchanged (the name as before, controls and all); consumer HTML prints the cleaned name (TE-1341)", () => {
     for (const [entry, render] of ENTRIES) {
       for (const c of CALLERS) {
         const r = render(make(c, withLogo("Summit\u0085Realty\u0000Group")));
-        expect(r.html, `${entry} ${c.app}`).toContain("Summit\u0085Realty\u0000Group");
+        if (c.audience === "pro") {
+          expect(r.html, `${entry} ${c.app}`).toContain("Summit\u0085Realty\u0000Group");
+        } else {
+          expect(r.html, `${entry} ${c.app}`).toContain('alt="SummitRealtyGroup"');
+          expect(r.html, `${entry} ${c.app}`).not.toMatch(ANY_CONTROL);
+        }
       }
     }
   });

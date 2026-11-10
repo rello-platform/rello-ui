@@ -140,10 +140,18 @@ describe("brand: the header logo", () => {
     expect(tag).toContain(`alt="A &amp; B &quot;Homes&quot; &lt;x&gt;"`);
   });
 
-  it("with no brand name and no usable logo, the header names nobody (no app name)", () => {
-    const r = renderRelloEmail({ ...branded("home-scout", { name: "  " }), companyName: null, kicker: "Rello" });
+  it("with no brand name, no company, no signer and no usable logo, the header names nobody (no app name)", () => {
+    const r = renderRelloEmail({ ...branded("home-scout", { name: "  " }), companyName: null, signer: null, kicker: "Rello" });
     expect(headerImg(r.html)).toBeNull();
     expect(header(r.html)).not.toContain("font-size:22px");
+    expect(r.html).not.toMatch(/home scout/i);
+    expect(r.text).not.toMatch(/home scout/i);
+  });
+
+  it("with no brand name and no company, a consumer header names the signer, never the app (TE-1341)", () => {
+    const r = renderRelloEmail({ ...branded("home-scout", { name: "  " }), companyName: null, kicker: "Rello" });
+    expect(headerImg(r.html)).toBeNull();
+    expect(header(r.html)).toContain(`<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">Kelly Sansom</div>`);
     expect(r.html).not.toMatch(/home scout/i);
     expect(r.text).not.toMatch(/home scout/i);
   });
@@ -248,8 +256,9 @@ describe("brand: nothing is gated", () => {
       for (const piece of ["Your plan is ready, Sarah.", "See my plan", "https://example.com/plan?a=1&amp;b=2", "Talk to me", "Kelly Sansom", "Your numbers", "Email preferences"]) {
         expect(r.html, `${JSON.stringify(brand)} ${piece}`).toContain(piece);
       }
-      // v2.37.0 (TE-1207): a named brand opens the text with its name, then the kicker line.
-      const drop = brand.name ? 2 : 1;
+      // v2.37.0 (TE-1207): a named brand opens the text with its name, then the kicker line. TE-1341: a
+      // nameless consumer brand opens with the company's name instead, so every case drops two lines.
+      const drop = 2;
       expect(r.text.split("\n").slice(drop).join("\n")).toBe(plain.text.split("\n").slice(1).join("\n"));
     }
   });
