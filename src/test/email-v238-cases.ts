@@ -5,14 +5,15 @@ import { baselineInput } from "./email-logo-baseline";
 /**
  * The inputs behind src/email/fixtures/v2.38.0-before-consumer-kicker.json, the
  * golden hashes captured by rendering each one with render-email.ts at v2.38.0
- * (19f04a9), before v2.39.0 changed the consumer kicker and added the consumer
+ * (19f04a9; v2.39.0 at 9c054e7 did not touch src/email/ and renders the same),
+ * before v2.40.0 changed the consumer kicker and added the consumer
  * "Powered by Rello" footer line.
  *
- * Pro and admin cases: v2.39.0 must render each byte-for-byte as v2.38.0 did,
+ * Pro and admin cases: v2.40.0 must render each byte-for-byte as v2.38.0 did,
  * `footer.poweredBy` set or not (v2.38.0 had no such field and ignored it).
  *
  * Consumer "pinned" cases: the v2.38.0 default kicker passed explicitly and the
- * new line turned off. v2.39.0 must render those byte-for-byte as v2.38.0
+ * new line turned off. v2.40.0 must render those byte-for-byte as v2.38.0
  * rendered the same input, which proves the kicker and the one footer line are
  * the only consumer changes.
  */

@@ -622,7 +622,7 @@ function renderRelloEmail(input) {
   const preheader = line(input.preheader);
   const headline = line(input.headline);
   const detail = line(input.detail);
-  const kicker = line(input.kicker) || (audience === "admin" ? `${app} \xB7 Platform alert` : audience === "consumer" ? company ? `From ${company}` : brand ? textName : app : company ? `${app} \xB7 ${company}` : app);
+  const kicker = line(input.kicker) || (audience === "admin" ? `${app} \xB7 Platform alert` : audience === "consumer" ? company ? `From ${company}` : brand ? textName && `From ${textName}` : app : company ? `${app} \xB7 ${company}` : app);
   const badgeLabel = line(input.badge?.label);
   const paragraphs = (input.paragraphs ?? []).map(block).filter(Boolean);
   const cardTitle = line(input.card?.title);

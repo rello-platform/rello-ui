@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { APP_SLUGS, ENGINE_SLUGS, type PlatformSlug } from "@rello-platform/slugs";
 import baseline from "./fixtures/v2.32.0-logo-baseline.json";
 import { RELLO_EMAIL_APP_NAMES, relloEmailLogoUrl, renderRelloEmail } from "./index";
-import { BASELINE_AUDIENCES, asBeforeV239, baselineInput, cutLogo, hasNewTokens, sha256 } from "../test/email-logo-baseline";
+import { BASELINE_AUDIENCES, asBeforeV240, baselineInput, cutLogo, hasNewTokens, sha256 } from "../test/email-logo-baseline";
 
 /**
  * v2.33.0 (KA ruling 2026-10-29): every app's email carries that app's logo,
@@ -54,8 +54,8 @@ describe("renderRelloEmail: nothing but the logo changed since v2.32.0", () => {
   it("each render, its header logo cut out, hashes as it did at v2.32.0; the text part is identical", () => {
     for (const slug of SLUGS) {
       for (const audience of BASELINE_AUDIENCES) {
-        // v2.39.0: consumer mail with its pre-v2.39.0 kicker and no "Powered by Rello" line (asBeforeV239).
-        const r = renderRelloEmail(asBeforeV239(baselineInput(slug, audience)));
+        // v2.40.0: consumer mail with its pre-v2.40.0 kicker and no "Powered by Rello" line (asBeforeV240).
+        const r = renderRelloEmail(asBeforeV240(baselineInput(slug, audience)));
         if (!hasNewTokens(slug, audience)) expect(sha256(cutLogo(r.html)), `${slug} ${audience} html`).toBe(renders[slug][audience].html);
         expect(sha256(r.text), `${slug} ${audience} text`).toBe(renders[slug][audience].text);
       }

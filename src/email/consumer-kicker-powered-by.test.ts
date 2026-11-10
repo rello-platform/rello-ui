@@ -12,7 +12,7 @@ import { baselineInput, sha256 } from "../test/email-logo-baseline";
 import { V238_SLUGS, v238Cases } from "../test/email-v238-cases";
 
 /**
- * v2.39.0. Kelly 2026-11-10, on whether "Rello" should come out of the header
+ * v2.40.0. Kelly 2026-11-10, on whether "Rello" should come out of the header
  * of consumer email: "yes it should be branded for the MLO sending it but the
  * footer could mention rello as a small marketing piece". This replaces the
  * earlier "Rello · from <company>" consumer kicker. Pro and admin mail keep
@@ -65,19 +65,24 @@ describe("consumer kicker: the sender, never Rello by default", () => {
     expect(r.text.split("\n")[0]).toBe(`From A & B "Home" <Loans>`);
   });
 
-  it("under a brand with no company: the brand's name", () => {
-    for (const companyName of [null, undefined, "", "   ", 42 as unknown as string]) {
-      const r = renderRelloEmail(consumer("home-scout", { brand: BRAND, companyName }));
-      expect(kickerHtml(r.html), String(companyName)).toBe("Summit Peak");
-      expect(r.text.split("\n").slice(0, 2), String(companyName)).toEqual(["Summit Peak", "Summit Peak"]);
-      expect(header(r.html)).not.toMatch(/rello/i);
+  it('under a brand with no company: "From <brand>" (KA ruling, a1-664), HTML and text', () => {
+    for (const app of ["home-scout", "home-ready", "rello"] as const) {
+      for (const companyName of [null, undefined, "", "   ", 42 as unknown as string]) {
+        const r = renderRelloEmail(consumer(app, { brand: BRAND, companyName }));
+        expect(kickerHtml(r.html), `${app} ${String(companyName)}`).toBe("From Summit Peak");
+        expect(r.text.split("\n").slice(0, 2), `${app} ${String(companyName)}`).toEqual(["Summit Peak", "From Summit Peak"]);
+        expect(header(r.html)).not.toMatch(/rello/i);
+      }
     }
+    const escaped = renderRelloEmail(consumer("home-scout", { brand: { name: `A & B "Homes" <x>` }, companyName: null }));
+    expect(kickerHtml(escaped.html)).toBe("From A &amp; B &quot;Homes&quot; &lt;x&gt;");
+    expect(escaped.text.split("\n").slice(0, 2)).toEqual([`A & B "Homes" <x>`, `From A & B "Homes" <x>`]);
   });
 
   it("the brand name in the kicker loses its control characters, as the text part's name line does", () => {
     const r = renderRelloEmail(consumer("home-scout", { brand: { name: "Summit\u0000 Peak\u0085" }, companyName: null }));
-    expect(kickerHtml(r.html)).toBe("Summit Peak");
-    expect(r.text.split("\n").slice(0, 2)).toEqual(["Summit Peak", "Summit Peak"]);
+    expect(kickerHtml(r.html)).toBe("From Summit Peak");
+    expect(r.text.split("\n").slice(0, 2)).toEqual(["Summit Peak", "From Summit Peak"]);
   });
 
   it("under a brand with no name and no company: no kicker at all, and no Rello", () => {

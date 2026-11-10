@@ -7,7 +7,7 @@ import { PlatformSlug } from '@rello-platform/slugs';
  * footer). One layout, three audiences:
  *
  *   consumer — leads and clients: the sending app's colors, the app's logo,
- *              the LO signer, the lender footer. Since v2.39.0 the kicker is
+ *              the LO signer, the lender footer. Since v2.40.0 the kicker is
  *              "From <Company>" (never Rello by default) and the footer ends
  *              with a small "Powered by Rello" line (`footer.poweredBy`).
  *   pro      — agents and LOs: the sending app's colors, the app's logo, an
@@ -133,8 +133,8 @@ interface RelloEmailInput {
     /**
      * Overrides the default kicker line in the header. Defaults: admin
      * "<app> · Platform alert"; pro "<app> · <company>", else "<app>"; consumer
-     * "From <company>", else under a brand the brand's name (no kicker when it
-     * has none), else the app's name. Under a brand, pro mail's <app> is "Rello".
+     * "From <company>", else under a brand "From <brand name>" (no kicker when
+     * it has no name), else the app's name. Under a brand, pro mail's <app> is "Rello".
      */
     kicker?: string | null;
     headline: string;
@@ -164,7 +164,7 @@ interface RelloEmailInput {
      * colors, so neither the app's name, logo nor color appears anywhere in the
      * email. Admin mail ignores it. Absent (or null), pro and admin mail are
      * exactly what they were at v2.33.0; consumer mail is too apart from the
-     * v2.39.0 kicker and "Powered by Rello" footer line.
+     * v2.40.0 kicker and "Powered by Rello" footer line.
      */
     brand?: RelloEmailBrand | null;
 }
@@ -175,7 +175,7 @@ interface RenderedRelloEmail {
     text: string;
 }
 declare const RELLO_EMAIL_LOGO_BASE_URL = "https://hellorello.app/email/logos";
-/** Where consumer mail's "Powered by Rello" footer line links (v2.39.0). */
+/** Where consumer mail's "Powered by Rello" footer line links (v2.40.0). */
 declare const RELLO_EMAIL_POWERED_BY_URL = "https://hellorello.app";
 /**
  * Display name for every platform slug. Typed as a full Record so a slug added

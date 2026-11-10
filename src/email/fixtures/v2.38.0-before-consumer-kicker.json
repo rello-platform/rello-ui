@@ -1,5 +1,5 @@
 {
-  "_about": "renderRelloEmail(input) at v2.38.0 (19f04a9), before the v2.39.0 consumer kicker and consumer 'Powered by Rello' footer line. renders: sha256 of the whole html and text for every case in src/test/email-v238-cases.ts. proHomeReady / adminHomeReady: the full home-ready baselineInput render, kept readable.",
+  "_about": "renderRelloEmail(input) at v2.38.0 (19f04a9; v2.39.0 at 9c054e7 changed nothing under src/email/ and renders the same), before the v2.40.0 consumer kicker and consumer 'Powered by Rello' footer line. renders: sha256 of the whole html and text for every case in src/test/email-v238-cases.ts. proHomeReady / adminHomeReady: the full home-ready baselineInput render, kept readable.",
   "renders": {
     "arive|pro|base": {
       "html": "57e0b09a19255ce1fde0a32220a42d3f1b18d5b1c3312bf9463bbcdf39b06320",

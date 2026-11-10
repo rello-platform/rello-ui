@@ -319,7 +319,7 @@ describe("renderRelloEmail — omitted fields", () => {
       expect(out).not.toContain(" · from ");
     }
     expect(r.html).not.toContain("Button not working?");
-    // v2.39.0: consumer mail's footer always closes with "Powered by Rello"; with nothing else to say
+    // v2.40.0: consumer mail's footer always closes with "Powered by Rello"; with nothing else to say
     // that line is the whole footer, and footer.poweredBy: false leaves no footer row at all.
     expect(r.html).toContain(
       `border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:${resolveRelloEmailPalette("consumer", "home-ready").secondaryText};line-height:1.6;"><a href="https://hellorello.app"`,
@@ -356,7 +356,7 @@ describe("renderRelloEmail — header and logos", () => {
     const { html } = renderRelloEmail(full());
     expect(html).toContain('src="https://hellorello.app/email/logos/home-ready.png"');
     expect(html).toContain('width="96" height="96" alt="Home Ready"');
-    // v2.39.0: the consumer kicker names the sender, not the app.
+    // v2.40.0: the consumer kicker names the sender, not the app.
     expect(html).toContain(">From ClearPath Utah Mortgage</div>");
   });
 
@@ -426,7 +426,7 @@ describe("renderRelloEmail — structure and plain text", () => {
     const htmlWords = new Set(
       decode(body.replace(/<!--[\s\S]*?-->/g, " ").replace(/<[^>]+>/g, " ")).split(/\s+/).concat(hrefs).filter(Boolean),
     );
-    // "(hellorello.app)" is how the text part writes the "Powered by Rello" link (v2.39.0).
+    // "(hellorello.app)" is how the text part writes the "Powered by Rello" link (v2.40.0).
     const textWords = text
       .split(/\s+/)
       .map((w) => (w === "(hellorello.app)" ? "https://hellorello.app" : w.replace(/:$/, "")))
@@ -500,7 +500,7 @@ describe("renderRelloEmail — inherited map keys (audit TE-002)", () => {
       expect(r.html, app).toContain('alt="Rello"');
       expect(r.html, app).toContain("https://hellorello.app/email/logos/rello.png");
       expect(r.text.startsWith("From ClearPath Utah Mortgage\n"), app).toBe(true);
-      // With no company the consumer kicker is the app's name: the Rello fallback (v2.39.0).
+      // With no company the consumer kicker is the app's name: the Rello fallback (v2.40.0).
       expect(renderRelloEmail({ ...full(), app: app as RelloEmailInput["app"], companyName: null }).text.startsWith("Rello\n"), app).toBe(true);
       expect(r.html, app).not.toMatch(/undefined|\[object|function /);
     }

@@ -5,7 +5,7 @@
  * footer). One layout, three audiences:
  *
  *   consumer — leads and clients: the sending app's colors, the app's logo,
- *              the LO signer, the lender footer. Since v2.39.0 the kicker is
+ *              the LO signer, the lender footer. Since v2.40.0 the kicker is
  *              "From <Company>" (never Rello by default) and the footer ends
  *              with a small "Powered by Rello" line (`footer.poweredBy`).
  *   pro      — agents and LOs: the sending app's colors, the app's logo, an
@@ -144,8 +144,8 @@ export interface RelloEmailInput {
   /**
    * Overrides the default kicker line in the header. Defaults: admin
    * "<app> · Platform alert"; pro "<app> · <company>", else "<app>"; consumer
-   * "From <company>", else under a brand the brand's name (no kicker when it
-   * has none), else the app's name. Under a brand, pro mail's <app> is "Rello".
+   * "From <company>", else under a brand "From <brand name>" (no kicker when
+   * it has no name), else the app's name. Under a brand, pro mail's <app> is "Rello".
    */
   kicker?: string | null;
   headline: string;
@@ -169,7 +169,7 @@ export interface RelloEmailInput {
    * colors, so neither the app's name, logo nor color appears anywhere in the
    * email. Admin mail ignores it. Absent (or null), pro and admin mail are
    * exactly what they were at v2.33.0; consumer mail is too apart from the
-   * v2.39.0 kicker and "Powered by Rello" footer line.
+   * v2.40.0 kicker and "Powered by Rello" footer line.
    */
   brand?: RelloEmailBrand | null;
 }
@@ -183,7 +183,7 @@ export interface RenderedRelloEmail {
 
 export const RELLO_EMAIL_LOGO_BASE_URL = "https://hellorello.app/email/logos";
 
-/** Where consumer mail's "Powered by Rello" footer line links (v2.39.0). */
+/** Where consumer mail's "Powered by Rello" footer line links (v2.40.0). */
 export const RELLO_EMAIL_POWERED_BY_URL = "https://hellorello.app";
 
 /**
@@ -813,11 +813,11 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const preheader = line(input.preheader);
   const headline = line(input.headline);
   const detail = line(input.detail);
-  // v2.39.0 (Kelly 2026-11-10: "yes it should be branded for the MLO sending it but the footer could
+  // v2.40.0 (Kelly 2026-11-10: "yes it should be branded for the MLO sending it but the footer could
   // mention rello as a small marketing piece"): consumer mail's default kicker names the sender, never
-  // Rello. "From <company>"; with no company, under a brand, the brand's name (textName: controls
-  // removed), and a nameless brand gets no kicker; with no brand, the app's name as before. Pro and
-  // admin defaults are unchanged.
+  // Rello. "From <company>"; with no company, under a brand, "From <brand>" (KA ruling a1-664; textName:
+  // controls removed), and a nameless brand gets no kicker; with no brand, the app's name as before.
+  // Pro and admin defaults are unchanged.
   const kicker =
     line(input.kicker) ||
     (audience === "admin"
@@ -826,7 +826,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         ? company
           ? `From ${company}`
           : brand
-            ? textName
+            ? textName && `From ${textName}`
             : app
         : company
           ? `${app} · ${company}`
@@ -874,7 +874,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const pref = prefUrl && prefLabel ? { url: prefUrl, label: prefLabel } : null;
   const footerLine1 = [footerCompany, footerNmls ? `Company NMLS #${footerNmls}` : ""].filter(Boolean).join(" · ");
   const footerLine2 = [footerAddress, f.equalHousing === true ? "Equal Housing Opportunity" : ""].filter(Boolean).join(" · ");
-  // v2.39.0: consumer mail closes its footer with a small "Powered by Rello" line, unless the caller
+  // v2.40.0: consumer mail closes its footer with a small "Powered by Rello" line, unless the caller
   // passes footer.poweredBy === false. Pro and admin mail never carry it.
   const poweredByUrl = audience === "consumer" && f.poweredBy !== false ? safeEmailUrl(RELLO_EMAIL_POWERED_BY_URL) : null;
 

@@ -14,7 +14,7 @@ import {
   type RelloEmailBrand,
   type RelloEmailInput,
 } from "./index";
-import { BASELINE_AUDIENCES, asBeforeV239, baselineInput, cutLogo, hasNewTokens, sha256 } from "../test/email-logo-baseline";
+import { BASELINE_AUDIENCES, asBeforeV240, baselineInput, cutLogo, hasNewTokens, sha256 } from "../test/email-logo-baseline";
 
 /**
  * v2.34.0 (KA ruling 2026-10-29, prompt 097): consumer mail can carry the
@@ -175,7 +175,7 @@ describe("brand: the app's name and logo appear nowhere", () => {
     for (const audience of ["consumer", "pro"] as const) {
       const r = renderRelloEmail(baselineInput("home-scout", audience));
       expect(r.html.toLowerCase()).toContain("home scout");
-      // v2.39.0: a consumer kicker with a company names the company, so the app's name reaches the
+      // v2.40.0: a consumer kicker with a company names the company, so the app's name reaches the
       // text part through the no-company kicker.
       expect(renderRelloEmail({ ...baselineInput("home-scout", audience), companyName: null }).text.toLowerCase()).toContain("home scout");
     }
@@ -262,17 +262,17 @@ describe("brand: the kicker", () => {
     expect(r.text.split("\n").slice(0, 2)).toEqual(["Summit Realty Group", "Rello · from Summit Realty Group"]); // v2.37.0: name, then the kicker as given
   });
 
-  it("v2.39.0: consumer's default kicker names the sender, never Rello; pro's keeps Rello in the app's place", () => {
+  it("v2.40.0: consumer's default kicker names the sender, never Rello; pro's keeps Rello in the app's place", () => {
     // Kelly 2026-11-10: "yes it should be branded for the MLO sending it but the footer could mention
     // rello as a small marketing piece". Replaces "Rello · from <company>" on consumer mail.
     expect(renderRelloEmail(branded("home-scout", BRAND)).text.split("\n")[1]).toBe("From ClearPath Utah Mortgage");
-    expect(renderRelloEmail({ ...branded("home-scout", BRAND), companyName: null }).text.split("\n")[1]).toBe("Summit Realty Group");
+    expect(renderRelloEmail({ ...branded("home-scout", BRAND), companyName: null }).text.split("\n")[1]).toBe("From Summit Realty Group"); // a1-664 ruling: "From <brand>"
     expect(renderRelloEmail(branded("home-scout", BRAND, "pro")).text.split("\n")[1]).toBe("Rello · ClearPath Utah Mortgage");
     expect(renderRelloEmail({ ...branded("home-scout", BRAND, "pro"), companyName: null }).text.split("\n")[1]).toBe("Rello");
   });
 });
 
-// v2.39.0: consumer inputs go through asBeforeV239 (the pre-v2.39.0 kicker passed, no "Powered by
+// v2.40.0: consumer inputs go through asBeforeV240 (the pre-v2.40.0 kicker passed, no "Powered by
 // Rello" line), so these pins still hold every other consumer byte; pro and admin inputs are untouched.
 describe("brand: without it, every render is byte-identical to v2.33.0", () => {
   const fixtures = { consumer: consumerFixture, pro: proFixture, admin: adminFixture } as const;
@@ -283,7 +283,7 @@ describe("brand: without it, every render is byte-identical to v2.33.0", () => {
       expect(Object.keys(renders).sort()).toEqual([...SLUGS].sort());
       for (const slug of SLUGS) {
         for (const input of [baselineInput(slug, audience), branded(slug, undefined, audience), branded(slug, null, audience)]) {
-          const r = renderRelloEmail(asBeforeV239(input));
+          const r = renderRelloEmail(asBeforeV240(input));
           if (!hasNewTokens(slug, audience)) expect(sha256(r.html), `${slug} ${audience} html`).toBe(renders[slug].html);
           expect(sha256(r.text), `${slug} ${audience} text`).toBe(renders[slug].text);
         }
@@ -291,7 +291,7 @@ describe("brand: without it, every render is byte-identical to v2.33.0", () => {
     });
 
     it(`${audience}: the home-scout render equals the stored v2.33.0 copy, character for character`, () => {
-      const r = renderRelloEmail(asBeforeV239(baselineInput("home-scout", audience)));
+      const r = renderRelloEmail(asBeforeV240(baselineInput("home-scout", audience)));
       expect(r).toEqual(fixtures[audience].homeScout);
     });
   }
@@ -300,7 +300,7 @@ describe("brand: without it, every render is byte-identical to v2.33.0", () => {
     const renders = baseline.renders as Record<string, Record<string, { html: string; text: string }>>;
     for (const slug of SLUGS) {
       for (const audience of BASELINE_AUDIENCES) {
-        const r = renderRelloEmail(asBeforeV239(branded(slug, null, audience)));
+        const r = renderRelloEmail(asBeforeV240(branded(slug, null, audience)));
         if (!hasNewTokens(slug, audience)) expect(sha256(cutLogo(r.html)), `${slug} ${audience}`).toBe(renders[slug][audience].html);
         expect(sha256(r.text), `${slug} ${audience}`).toBe(renders[slug][audience].text);
       }

@@ -47,13 +47,13 @@ export function baselineInput(app: PlatformSlug, audience: RelloEmailAudience): 
 }
 
 /**
- * v2.39.0 changed consumer mail in two places only: the default kicker ("From <company>", or the
+ * v2.40.0 changed consumer mail in two places only: the default kicker ("From <company>", or the
  * brand's name, instead of "<app or Rello> · from <company>") and a closing "Powered by Rello" footer
- * line. This returns the same input with the pre-v2.39.0 default kicker passed explicitly and that
+ * line. This returns the same input with the pre-v2.40.0 default kicker passed explicitly and that
  * line turned off, so the older consumer hash baselines still pin every other byte. A given kicker is
  * kept. Pro and admin inputs are returned as they are: their output did not change at all.
  */
-export function asBeforeV239(input: RelloEmailInput): RelloEmailInput {
+export function asBeforeV240(input: RelloEmailInput): RelloEmailInput {
   if (input.audience !== "consumer") return input;
   const branded = !!input.brand && typeof input.brand === "object";
   const app = branded
