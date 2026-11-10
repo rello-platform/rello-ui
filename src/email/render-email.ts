@@ -501,6 +501,16 @@ function line(value: unknown): string {
   return typeof value === "string" ? value.replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim() : "";
 }
 
+/**
+ * A name shown as plain text (the TEXT part's brand line, the consumer kicker's name): line()'s
+ * flattening, then every C0/C1 control removed (NUL, NEL and the rest can read as line breaks or
+ * vanish in a client), then whitespace collapsed and trimmed. "" when nothing is left.
+ */
+function plainName(value: unknown): string {
+  // eslint-disable-next-line no-control-regex
+  return line(value).replace(/[\u0000-\u001f\u007f-\u009f]/g, "").replace(/\s+/g, " ").trim();
+}
+
 /** A block of text: trimmed, inner line breaks kept (normalised to \n). */
 function block(value: unknown): string {
   return typeof value === "string" ? value.replace(/\r\n?/g, "\n").trim() : "";
@@ -803,11 +813,13 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
       : "rello";
   const logoUrl = brand ? brandLogoUrl(brand.logoUrl) : relloEmailLogoUrl(logoSlug);
   const logoAlt = brand ? line(brand.name) : appName(logoSlug);
-  // The TEXT part's name line only (the HTML keeps logoAlt exactly as before): the brand name with every
-  // C0/C1 control removed after line()'s flattening (NUL, NEL and the rest can read as line breaks or
-  // vanish in a client), then whitespace collapsed and trimmed. Nothing left = no name line.
-  // eslint-disable-next-line no-control-regex
-  const textName = brand ? line(brand.name).replace(/[\u0000-\u001f\u007f-\u009f]/g, "").replace(/\s+/g, " ").trim() : "";
+  // The TEXT part's name line only (the HTML keeps logoAlt exactly as before): plainName() of the brand
+  // name. Nothing left = no name line.
+  const textName = brand ? plainName(brand.name) : "";
+  // TE-1340: the consumer kicker's company, by the same rule (C0/C1 controls removed). A company that is
+  // all controls is no company: the kicker falls through to the brand, then the app. Pro and admin keep
+  // `company` exactly as before.
+  const consumerCompany = audience === "consumer" ? plainName(input.companyName) : "";
 
   const subject = line(input.subject);
   const preheader = line(input.preheader);
@@ -823,8 +835,8 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     (audience === "admin"
       ? `${app} · Platform alert`
       : audience === "consumer"
-        ? company
-          ? `From ${company}`
+        ? consumerCompany
+          ? `From ${consumerCompany}`
           : brand
             ? textName && `From ${textName}`
             : app

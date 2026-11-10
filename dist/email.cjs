@@ -441,6 +441,9 @@ function escapeSignerName(name) {
 function line(value) {
   return typeof value === "string" ? value.replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim() : "";
 }
+function plainName(value) {
+  return line(value).replace(/[\u0000-\u001f\u007f-\u009f]/g, "").replace(/\s+/g, " ").trim();
+}
 function block(value) {
   return typeof value === "string" ? value.replace(/\r\n?/g, "\n").trim() : "";
 }
@@ -617,12 +620,13 @@ function renderRelloEmail(input) {
   const logoSlug = audience !== "admin" && isKnownApp(input.app) ? input.app : "rello";
   const logoUrl = brand ? brandLogoUrl(brand.logoUrl) : relloEmailLogoUrl(logoSlug);
   const logoAlt = brand ? line(brand.name) : appName(logoSlug);
-  const textName = brand ? line(brand.name).replace(/[\u0000-\u001f\u007f-\u009f]/g, "").replace(/\s+/g, " ").trim() : "";
+  const textName = brand ? plainName(brand.name) : "";
+  const consumerCompany = audience === "consumer" ? plainName(input.companyName) : "";
   const subject = line(input.subject);
   const preheader = line(input.preheader);
   const headline = line(input.headline);
   const detail = line(input.detail);
-  const kicker = line(input.kicker) || (audience === "admin" ? `${app} \xB7 Platform alert` : audience === "consumer" ? company ? `From ${company}` : brand ? textName && `From ${textName}` : app : company ? `${app} \xB7 ${company}` : app);
+  const kicker = line(input.kicker) || (audience === "admin" ? `${app} \xB7 Platform alert` : audience === "consumer" ? consumerCompany ? `From ${consumerCompany}` : brand ? textName && `From ${textName}` : app : company ? `${app} \xB7 ${company}` : app);
   const badgeLabel = line(input.badge?.label);
   const paragraphs = (input.paragraphs ?? []).map(block).filter(Boolean);
   const cardTitle = line(input.card?.title);

@@ -85,6 +85,47 @@ describe("consumer kicker: the sender, never Rello by default", () => {
     expect(r.text.split("\n").slice(0, 2)).toEqual(["Summit Peak", "From Summit Peak"]);
   });
 
+  // TE-1340 (AUDIT 34): the company in the consumer kicker gets the same rule as the brand line.
+  const CONTROLS = /[\u0000-\u001f\u007f-\u009f]/;
+  /** The text part's kicker line: the first line, or the second under a brand (the name line comes first). */
+  const textKicker = (text: string, branded: boolean) => text.split("\n")[branded ? 1 : 0];
+
+  it("TE-1340: a company with C0/C1 controls prints clean, in the header and the text part, unbranded and branded", () => {
+    for (const brand of [null, BRAND]) {
+      for (const companyName of ["A\u0000B\u0085C", "Summit\u0000 Peak\u0007 Mortgage\u009f", "\u001b[31mAcme\u007f Loans"]) {
+        const r = renderRelloEmail(consumer("home-scout", { brand, companyName }));
+        const want = `From ${companyName.replace(/[\u0000-\u001f\u007f-\u009f]/g, "").replace(/\s+/g, " ").trim()}`;
+        const label = `${brand ? "branded" : "plain"} ${JSON.stringify(companyName)}`;
+        expect(kickerHtml(r.html), label).toBe(want);
+        expect(kickerHtml(r.html), label).not.toMatch(CONTROLS);
+        expect(textKicker(r.text, !!brand), label).toBe(want);
+        expect(textKicker(r.text, !!brand), label).not.toMatch(CONTROLS);
+      }
+    }
+    expect(kickerHtml(renderRelloEmail(consumer("home-scout", { companyName: "A\u0000B\u0085C" })).html)).toBe("From ABC");
+  });
+
+  it("TE-1340: a company that is all controls is no company: the brand, else the app's name; never held", () => {
+    for (const companyName of ["\u0000", "\u0085\u0000 \u009f", "\u001f\u007f"]) {
+      const branded = renderRelloEmail(consumer("home-scout", { brand: BRAND, companyName }));
+      expect(kickerHtml(branded.html), JSON.stringify(companyName)).toBe("From Summit Peak");
+      expect(branded.text.split("\n").slice(0, 2)).toEqual(["Summit Peak", "From Summit Peak"]);
+      const plain = renderRelloEmail(consumer("home-scout", { companyName }));
+      expect(kickerHtml(plain.html), JSON.stringify(companyName)).toBe("Home Scout");
+      expect(plain.text.split("\n")[0]).toBe("Home Scout");
+      const nameless = renderRelloEmail(consumer("home-scout", { brand: { name: "\u0000" }, companyName }));
+      expect(kickerHtml(nameless.html), JSON.stringify(companyName)).toBeNull();
+      expect(nameless.text.split("\n")[0]).toBe("Your plan is ready, Sarah.");
+    }
+  });
+
+  it("TE-1340: the strip is consumer-only; pro keeps its company as before, admin keeps its alert kicker", () => {
+    const pro = renderRelloEmail({ ...baselineInput("home-scout", "pro"), companyName: "A\u0000B" });
+    expect(pro.text.split("\n")[0]).toBe("Home Scout · A\u0000B");
+    const admin = renderRelloEmail({ ...baselineInput("home-scout", "admin"), companyName: "A\u0000B" });
+    expect(admin.text.split("\n")[0]).toBe("Home Scout · Platform alert");
+  });
+
   it("under a brand with no name and no company: no kicker at all, and no Rello", () => {
     for (const name of ["", "   ", "\u0000"]) {
       const r = renderRelloEmail(consumer("home-scout", { brand: { name }, companyName: null }));
