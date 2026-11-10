@@ -5,6 +5,34 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.39.0 — 2026-11-10
+
+**Added: an "unknown" outcome for `<TrialStartModal>` (Platform KA 875, GD-541)**
+
+A spoke whose trial-start request may or may not have started the trial (the
+response was lost or timed out, a gateway 5xx, Rello answered
+`rello_state_unknown`) had only `{ status: "error" }` to return, and the modal
+prefixes every error with "We couldn't start your trial." and offers Try again,
+which calls `onConfirm` again. Seen live in Harvest Home: the trial started, the
+response was lost, the modal said it failed, and Try again sent a second start.
+
+- **`TrialStartResult` gains `{ status: "unknown"; message?: string }`**
+  (`TrialStartUnknown`, exported from the root entry and the client entry).
+- The modal renders it as "We couldn't confirm whether your trial started."
+  plus the message (default "Check your plan to see whether it did."), in
+  neutral text with `role="alert"`. It never says "couldn't start".
+- Its action is **"Check my plan"**, which calls `onConfirm` again under the
+  same one-in-flight guard. The spoke reads the tenant's plan first on that
+  call and posts a new start only when the plan says the tenant is definitely
+  not entitled (the platform's send rule: after an unknown outcome, read the
+  provider's record before any retry). The modal itself still never calls Rello.
+- Closing and reopening keeps the unknown state, so the next action is still
+  "Check my plan", never a fresh "Start trial". An error still starts fresh.
+- **Every v2.38.0 outcome renders byte for byte as before.** A test drives a
+  16-case corpus (confirm step, started, already-used, error, an unreadable
+  result) through the v2.38.0 build at 19f04a9 and through the current source
+  and requires equal dialog HTML.
+
 ## v2.38.0 — 2026-11-08
 
 **Added: the RELLO UPSELL Phase 3 components, a 5th upsell event and price/ROI tokens**

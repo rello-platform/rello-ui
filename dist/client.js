@@ -7655,10 +7655,13 @@ import * as React30 from "react";
 import * as DialogPrimitive3 from "@radix-ui/react-dialog";
 import { Fragment as Fragment7, jsx as jsx64, jsxs as jsxs51 } from "react/jsx-runtime";
 var DEFAULT_ERROR_HINT = "Check your connection and try again.";
+var DEFAULT_UNKNOWN_HINT = "Check your plan to see whether it did.";
 function readResult(raw) {
   if (!raw || typeof raw !== "object") return null;
   const status = raw.status;
-  if (status === "started" || status === "already-used" || status === "error") return raw;
+  if (status === "started" || status === "already-used" || status === "error" || status === "unknown") {
+    return raw;
+  }
   return null;
 }
 function toDate(value) {
@@ -7743,7 +7746,10 @@ function TrialStartModal({
     if (!mountedRef.current) return;
     if (result.status === "started") setPhase({ kind: "started", trialEndsAt: result.trialEndsAt });
     else if (result.status === "already-used") setPhase({ kind: "already-used", trialEndsAt: result.trialEndsAt });
-    else {
+    else if (result.status === "unknown") {
+      const message = typeof result.message === "string" && result.message.trim() !== "" ? result.message.trim() : void 0;
+      setPhase({ kind: "unknown", message });
+    } else {
       const message = typeof result.message === "string" && result.message.trim() !== "" ? result.message.trim() : void 0;
       setPhase({ kind: "error", message });
     }
@@ -7798,6 +7804,17 @@ function TrialStartModal({
           /* @__PURE__ */ jsxs51("div", { className: "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", children: [
             /* @__PURE__ */ jsx64("button", { type: "button", className: SECONDARY_CLASS, style: SECONDARY_STYLE, onClick: onClose, children: cancelLabel }),
             /* @__PURE__ */ jsx64("button", { type: "button", className: PRIMARY_CLASS, style: PRIMARY_STYLE, onClick: submit, children: "Try again" })
+          ] })
+        ] });
+      case "unknown":
+        return /* @__PURE__ */ jsxs51(Fragment7, { children: [
+          /* @__PURE__ */ jsx64(DialogPrimitive3.Description, { asChild: true, children: /* @__PURE__ */ jsxs51("p", { role: "alert", className: "text-sm", style: { color: "var(--neutral-700, #434B52)" }, children: [
+            "We couldn't confirm whether your trial started. ",
+            phase.message ?? DEFAULT_UNKNOWN_HINT
+          ] }) }),
+          /* @__PURE__ */ jsxs51("div", { className: "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", children: [
+            /* @__PURE__ */ jsx64("button", { type: "button", className: SECONDARY_CLASS, style: SECONDARY_STYLE, onClick: onClose, children: cancelLabel }),
+            /* @__PURE__ */ jsx64("button", { type: "button", className: PRIMARY_CLASS, style: PRIMARY_STYLE, onClick: submit, children: "Check my plan" })
           ] })
         ] });
       default: {

@@ -82,6 +82,7 @@ export type {
   TrialStartError,
   TrialStartResult,
   TrialStartStarted,
+  TrialStartUnknown,
 } from "./components/trial-start-modal/types";
 
 /* ─── Pipeline stage constants (pure data) ─── */
