@@ -7,7 +7,9 @@ import { PlatformSlug } from '@rello-platform/slugs';
  * footer). One layout, three audiences:
  *
  *   consumer — leads and clients: the sending app's colors, the app's logo,
- *              the LO signer, the lender footer.
+ *              the LO signer, the lender footer. Since v2.39.0 the kicker is
+ *              "From <Company>" (never Rello by default) and the footer ends
+ *              with a small "Powered by Rello" line (`footer.poweredBy`).
  *   pro      — agents and LOs: the sending app's colors, the app's logo, an
  *              optional info card, a "why you get this" footer.
  *   admin    — platform admins: Rello's colors, the Rello logo, short.
@@ -80,6 +82,12 @@ interface RelloEmailFooter {
     reason?: string | null;
     /** e.g. "Change your alerts" → the app's preference page. */
     preferenceLink?: RelloEmailLink | null;
+    /**
+     * Consumer mail only: the small "Powered by Rello" line (linked to
+     * hellorello.app) that closes the footer. Default on; `false` leaves it
+     * out, any other value keeps it. Pro and admin mail never carry it.
+     */
+    poweredBy?: boolean;
 }
 /**
  * The sender's own brand (the agent's or tenant's), for consumer and pro mail
@@ -114,12 +122,20 @@ interface RelloEmailInput {
      * consumer and pro mail, the logo.
      */
     app: PlatformSlug;
-    /** The sender company (tenant). Omitted from the kicker when empty. */
+    /**
+     * The sender company (tenant). Consumer mail's default kicker is
+     * "From <company>"; pro mail's is "<app> · <company>". Omitted when empty.
+     */
     companyName?: string | null;
     subject: string;
     /** Inbox preview text. */
     preheader?: string | null;
-    /** Overrides the default kicker line in the header. */
+    /**
+     * Overrides the default kicker line in the header. Defaults: admin
+     * "<app> · Platform alert"; pro "<app> · <company>", else "<app>"; consumer
+     * "From <company>", else under a brand the brand's name (no kicker when it
+     * has none), else the app's name. Under a brand, pro mail's <app> is "Rello".
+     */
     kicker?: string | null;
     headline: string;
     /** A short line under the headline, e.g. "4 minutes ago · from your Home Ready page". */
@@ -146,8 +162,9 @@ interface RelloEmailInput {
     /**
      * Consumer and pro mail: the sender's brand replaces the app's logo, name and
      * colors, so neither the app's name, logo nor color appears anywhere in the
-     * email. Admin mail ignores it. Absent (or null), the email is exactly what
-     * it was at v2.33.0.
+     * email. Admin mail ignores it. Absent (or null), pro and admin mail are
+     * exactly what they were at v2.33.0; consumer mail is too apart from the
+     * v2.39.0 kicker and "Powered by Rello" footer line.
      */
     brand?: RelloEmailBrand | null;
 }
@@ -158,6 +175,8 @@ interface RenderedRelloEmail {
     text: string;
 }
 declare const RELLO_EMAIL_LOGO_BASE_URL = "https://hellorello.app/email/logos";
+/** Where consumer mail's "Powered by Rello" footer line links (v2.39.0). */
+declare const RELLO_EMAIL_POWERED_BY_URL = "https://hellorello.app";
 /**
  * Display name for every platform slug. Typed as a full Record so a slug added
  * to @rello-platform/slugs fails this package's typecheck until it is named.
@@ -229,4 +248,4 @@ declare function resolveRelloEmailBrand(args: {
 }): ResolvedRelloEmailBrand;
 declare function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail;
 
-export { RELLO_EMAIL_APP_NAMES, RELLO_EMAIL_LOGO_BASE_URL, RELLO_EMAIL_LOGO_SLUGS, RELLO_EMAIL_TOKEN_KEY_FOR_SLUG, type RelloEmailAudience, type RelloEmailBadgeTone, type RelloEmailBrand, type RelloEmailBrandLevelInput, type RelloEmailButton, type RelloEmailCardRow, type RelloEmailFooter, type RelloEmailInput, type RelloEmailLink, type RelloEmailPalette, type RelloEmailSigner, type RenderedRelloEmail, type ResolvedRelloEmailBrand, escapeEmailHtml, relloEmailContrast, relloEmailLogoUrl, renderRelloEmail, resolveRelloEmailBrand, resolveRelloEmailPalette, safeEmailUrl };
+export { RELLO_EMAIL_APP_NAMES, RELLO_EMAIL_LOGO_BASE_URL, RELLO_EMAIL_LOGO_SLUGS, RELLO_EMAIL_POWERED_BY_URL, RELLO_EMAIL_TOKEN_KEY_FOR_SLUG, type RelloEmailAudience, type RelloEmailBadgeTone, type RelloEmailBrand, type RelloEmailBrandLevelInput, type RelloEmailButton, type RelloEmailCardRow, type RelloEmailFooter, type RelloEmailInput, type RelloEmailLink, type RelloEmailPalette, type RelloEmailSigner, type RenderedRelloEmail, type ResolvedRelloEmailBrand, escapeEmailHtml, relloEmailContrast, relloEmailLogoUrl, renderRelloEmail, resolveRelloEmailBrand, resolveRelloEmailPalette, safeEmailUrl };

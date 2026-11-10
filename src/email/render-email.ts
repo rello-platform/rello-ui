@@ -5,7 +5,9 @@
  * footer). One layout, three audiences:
  *
  *   consumer — leads and clients: the sending app's colors, the app's logo,
- *              the LO signer, the lender footer.
+ *              the LO signer, the lender footer. Since v2.39.0 the kicker is
+ *              "From <Company>" (never Rello by default) and the footer ends
+ *              with a small "Powered by Rello" line (`footer.poweredBy`).
  *   pro      — agents and LOs: the sending app's colors, the app's logo, an
  *              optional info card, a "why you get this" footer.
  *   admin    — platform admins: Rello's colors, the Rello logo, short.
@@ -87,6 +89,12 @@ export interface RelloEmailFooter {
   reason?: string | null;
   /** e.g. "Change your alerts" → the app's preference page. */
   preferenceLink?: RelloEmailLink | null;
+  /**
+   * Consumer mail only: the small "Powered by Rello" line (linked to
+   * hellorello.app) that closes the footer. Default on; `false` leaves it
+   * out, any other value keeps it. Pro and admin mail never carry it.
+   */
+  poweredBy?: boolean;
 }
 
 /**
@@ -125,12 +133,20 @@ export interface RelloEmailInput {
    * consumer and pro mail, the logo.
    */
   app: PlatformSlug;
-  /** The sender company (tenant). Omitted from the kicker when empty. */
+  /**
+   * The sender company (tenant). Consumer mail's default kicker is
+   * "From <company>"; pro mail's is "<app> · <company>". Omitted when empty.
+   */
   companyName?: string | null;
   subject: string;
   /** Inbox preview text. */
   preheader?: string | null;
-  /** Overrides the default kicker line in the header. */
+  /**
+   * Overrides the default kicker line in the header. Defaults: admin
+   * "<app> · Platform alert"; pro "<app> · <company>", else "<app>"; consumer
+   * "From <company>", else under a brand the brand's name (no kicker when it
+   * has none), else the app's name. Under a brand, pro mail's <app> is "Rello".
+   */
   kicker?: string | null;
   headline: string;
   /** A short line under the headline, e.g. "4 minutes ago · from your Home Ready page". */
@@ -151,8 +167,9 @@ export interface RelloEmailInput {
   /**
    * Consumer and pro mail: the sender's brand replaces the app's logo, name and
    * colors, so neither the app's name, logo nor color appears anywhere in the
-   * email. Admin mail ignores it. Absent (or null), the email is exactly what
-   * it was at v2.33.0.
+   * email. Admin mail ignores it. Absent (or null), pro and admin mail are
+   * exactly what they were at v2.33.0; consumer mail is too apart from the
+   * v2.39.0 kicker and "Powered by Rello" footer line.
    */
   brand?: RelloEmailBrand | null;
 }
@@ -165,6 +182,9 @@ export interface RenderedRelloEmail {
 }
 
 export const RELLO_EMAIL_LOGO_BASE_URL = "https://hellorello.app/email/logos";
+
+/** Where consumer mail's "Powered by Rello" footer line links (v2.39.0). */
+export const RELLO_EMAIL_POWERED_BY_URL = "https://hellorello.app";
 
 /**
  * Display name for every platform slug. Typed as a full Record so a slug added
@@ -770,7 +790,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     input.audience === "pro" || input.audience === "admin" ? input.audience : "consumer";
   // The sender's brand, on consumer and pro mail. Null keeps every byte of v2.33.0.
   const brand = audience !== "admin" && input.brand && typeof input.brand === "object" ? input.brand : null;
-  // Under a brand the app is never named; "Rello" is the platform's word in the default kicker.
+  // Under a brand the app is never named; "Rello" is the platform's word in pro mail's default kicker.
   const app = brand ? "Rello" : appName(input.app);
   const company = line(input.companyName);
   const pal = brand ? brandPalette(audience, brand.primary) : resolveRelloEmailPalette(audience, input.app);
@@ -793,15 +813,24 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const preheader = line(input.preheader);
   const headline = line(input.headline);
   const detail = line(input.detail);
+  // v2.39.0 (Kelly 2026-11-10: "yes it should be branded for the MLO sending it but the footer could
+  // mention rello as a small marketing piece"): consumer mail's default kicker names the sender, never
+  // Rello. "From <company>"; with no company, under a brand, the brand's name (textName: controls
+  // removed), and a nameless brand gets no kicker; with no brand, the app's name as before. Pro and
+  // admin defaults are unchanged.
   const kicker =
     line(input.kicker) ||
     (audience === "admin"
       ? `${app} · Platform alert`
-      : company
-        ? audience === "consumer"
-          ? `${app} · from ${company}`
-          : `${app} · ${company}`
-        : app);
+      : audience === "consumer"
+        ? company
+          ? `From ${company}`
+          : brand
+            ? textName
+            : app
+        : company
+          ? `${app} · ${company}`
+          : app);
 
   const badgeLabel = line(input.badge?.label);
   const paragraphs = (input.paragraphs ?? []).map(block).filter(Boolean);
@@ -845,6 +874,9 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const pref = prefUrl && prefLabel ? { url: prefUrl, label: prefLabel } : null;
   const footerLine1 = [footerCompany, footerNmls ? `Company NMLS #${footerNmls}` : ""].filter(Boolean).join(" · ");
   const footerLine2 = [footerAddress, f.equalHousing === true ? "Equal Housing Opportunity" : ""].filter(Boolean).join(" · ");
+  // v2.39.0: consumer mail closes its footer with a small "Powered by Rello" line, unless the caller
+  // passes footer.poweredBy === false. Pro and admin mail never carry it.
+  const poweredByUrl = audience === "consumer" && f.poweredBy !== false ? safeEmailUrl(RELLO_EMAIL_POWERED_BY_URL) : null;
 
   // ── HTML ──────────────────────────────────────────────────────────────────
   const rows: string[] = [];
@@ -863,7 +895,9 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         : logoUrl
           ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">`
           : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${ew(logoAlt)}</div>`) +
-      `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${ew(kicker)}</div>` +
+      (kicker
+        ? `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${ew(kicker)}</div>`
+        : "") +
       (headline
         ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${ew(headline)}</div>`
         : "") +
@@ -969,6 +1003,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     footerLine2 ? ew(footerLine2) : "",
     footerReason ? ew(footerReason) : "",
     pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${ew(pref.label)}</a>` : "",
+    poweredByUrl ? `<a href="${e(poweredByUrl)}" style="color:${pal.secondaryText};">Powered by Rello</a>` : "",
   ].filter(Boolean);
   if (footerParts.length > 0) {
     rows.push(
@@ -1002,6 +1037,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   // no name names nobody, as in the header. With no brand every line is as it was at v2.36.0. The name
   // here is textName (TE-1222: C0/C1 controls removed), not logoAlt, so the HTML header is untouched.
   if (brand && textName) push(textName);
+  // An empty kicker (a nameless brand, no company) adds only blank lines, which the trim below removes.
   push(kicker);
   if (headline) push("", headline);
   if (badgeLabel || detail) push("", ...[badgeLabel, detail].filter(Boolean));
@@ -1024,7 +1060,13 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     if (signerMeta) push(signerMeta);
     if (signer.phone) push(signer.phone);
   }
-  const footerText = [footerLine1, footerLine2, footerReason, pref ? `${pref.label}: ${pref.url}` : ""].filter(Boolean);
+  const footerText = [
+    footerLine1,
+    footerLine2,
+    footerReason,
+    pref ? `${pref.label}: ${pref.url}` : "",
+    poweredByUrl ? "Powered by Rello (hellorello.app)" : "",
+  ].filter(Boolean);
   if (footerText.length > 0) push("", "—", ...footerText);
   const text = t
     .join("\n")

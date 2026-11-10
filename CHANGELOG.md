@@ -5,6 +5,42 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.39.0 — 2026-11-10
+
+**Changed: consumer email names the sender in its header and says "Powered by Rello" in its footer**
+
+Kelly, 2026-11-10, asked whether "Rello" should come out of the header of consumer
+email: "yes it should be branded for the MLO sending it but the footer could mention
+rello as a small marketing piece". This replaces the earlier "Rello · from <company>"
+consumer kicker. Pro and admin mail are unchanged, byte for byte.
+
+- **Consumer default kicker** (only when `kicker` is not given; a given kicker still
+  wins, written as given):
+  - a company is known (`companyName`): `From <company>`;
+  - no company, under a `brand`: the brand's name (the same name as the text part's
+    first line: C0/C1 controls removed). A brand with no name gets no kicker at all,
+    so the header and text never fall back to "Rello";
+  - no company, no brand: the app's name, as at v2.38.0.
+- **Consumer footer**: a last line, `Powered by Rello`, linked to
+  `https://hellorello.app` (new export `RELLO_EMAIL_POWERED_BY_URL`), in the same small
+  muted footer color as the other footer lines. The plain-text part ends with
+  `Powered by Rello (hellorello.app)`. Consumer mail with no other footer facts now has a
+  footer row holding just that line.
+- **Opt-out**: `footer.poweredBy?: boolean` on `RelloEmailFooter`. Default on; `false`
+  leaves the line out (HTML and text); any other value keeps it. Pro and admin mail never
+  carry the line, whatever it says.
+- **Pro and admin**: every byte of the HTML and text is as at v2.38.0. A new fixture
+  (`src/email/fixtures/v2.38.0-before-consumer-kicker.json`, captured from v2.38.0 at
+  19f04a9) pins 342 pro and admin renders across every slug, plus 38 consumer renders
+  with the v2.38.0 kicker passed and `poweredBy: false`, which match v2.38.0 exactly:
+  the kicker and the one footer line are the only consumer changes. The older v2.32.0 and
+  v2.33.0 consumer hash pins now render through `asBeforeV239` (src/test) for the same
+  reason; their pro and admin pins are untouched.
+- Callers that pass their own consumer kicker keep it. A caller whose own kicker says
+  "Rello · from …" needs to drop it to get the new default.
+
+Consumers pick this up on their next pin bump to `#v2.39.0` (published after audit).
+
 ## v2.38.0 — 2026-11-08
 
 **Added: the RELLO UPSELL Phase 3 components, a 5th upsell event and price/ROI tokens**

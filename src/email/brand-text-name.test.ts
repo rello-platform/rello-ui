@@ -4,7 +4,7 @@ import consumerFixture from "./fixtures/v2.33.0-no-brand-consumer.json";
 import proFixture from "./fixtures/v2.33.0-no-brand-pro.json";
 import adminFixture from "./fixtures/v2.33.0-no-brand-admin.json";
 import { renderRelloEmail, type RelloEmailAudience, type RelloEmailBrand, type RelloEmailInput } from "./index";
-import { baselineInput, hasNewTokens, sha256 } from "../test/email-logo-baseline";
+import { asBeforeV239, baselineInput, hasNewTokens, sha256 } from "../test/email-logo-baseline";
 
 /**
  * v2.37.0 (TE-1207, AUDIT 27): under a brand the HTML header names the business (its logo's alt text,
@@ -115,7 +115,8 @@ describe("TE-1207: with no brand, the text part is byte-equal to v2.36.0 for eve
       const renders = fixtures[audience].renders as Record<string, { html: string; text: string }>;
       for (const slug of Object.keys(renders) as PlatformSlug[]) {
         for (const brand of [undefined, null]) {
-          const r = renderRelloEmail({ ...baselineInput(slug, audience), ...(brand === undefined ? {} : { brand }) });
+          // v2.39.0: consumer mail with its pre-v2.39.0 kicker and no "Powered by Rello" line (asBeforeV239).
+          const r = renderRelloEmail(asBeforeV239({ ...baselineInput(slug, audience), ...(brand === undefined ? {} : { brand }) }));
           expect(sha256(r.text), `${slug} ${audience} text`).toBe(renders[slug].text);
           if (!hasNewTokens(slug, audience)) expect(sha256(r.html), `${slug} ${audience} html`).toBe(renders[slug].html);
         }
