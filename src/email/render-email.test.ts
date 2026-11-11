@@ -319,7 +319,13 @@ describe("renderRelloEmail — omitted fields", () => {
       expect(out).not.toContain(" · from ");
     }
     expect(r.html).not.toContain("Button not working?");
-    expect(r.html).not.toContain("border-top:1px solid #e5e7eb");
+    // v2.40.0: consumer mail's footer always closes with "Powered by Rello"; with nothing else to say
+    // that line is the whole footer, and footer.poweredBy: false leaves no footer row at all.
+    expect(r.html).toContain(
+      `border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:${resolveRelloEmailPalette("consumer", "home-ready").secondaryText};line-height:1.6;"><a href="https://hellorello.app"`,
+    );
+    const off = renderRelloEmail({ audience: "consumer", app: "home-ready", subject: "Hi", headline: "Hello", footer: { poweredBy: false } });
+    expect(off.html).not.toContain("border-top:1px solid #e5e7eb");
   });
 
   it("drops empty NMLS, title and phone from the signer and footer", () => {
@@ -350,7 +356,8 @@ describe("renderRelloEmail — header and logos", () => {
     const { html } = renderRelloEmail(full());
     expect(html).toContain('src="https://hellorello.app/email/logos/home-ready.png"');
     expect(html).toContain('width="96" height="96" alt="Home Ready"');
-    expect(html).toContain("Home Ready · from ClearPath Utah Mortgage");
+    // v2.40.0: the consumer kicker names the sender, not the app.
+    expect(html).toContain(">From ClearPath Utah Mortgage</div>");
   });
 
   it("pro mail carries the app's PNG logo; admin mail carries the Rello logo", () => {
@@ -387,7 +394,7 @@ describe("renderRelloEmail — structure and plain text", () => {
   it("the text part has the same words and full links", () => {
     const { html, text } = renderRelloEmail(full());
     for (const words of [
-      "Home Ready · from ClearPath Utah Mortgage",
+      "From ClearPath Utah Mortgage",
       "Your Home Ready plan is ready, Sarah.",
       "New",
       "Ready now",
@@ -407,6 +414,7 @@ describe("renderRelloEmail — structure and plain text", () => {
       "123 Main Street, Salt Lake City, UT 84101 · Equal Housing Opportunity",
       "You're getting this because you started a Home Ready plan.",
       "Email preferences: https://homeready.app/preferences",
+      "Powered by Rello (hellorello.app)",
     ]) {
       expect(text).toContain(words);
     }
@@ -418,7 +426,11 @@ describe("renderRelloEmail — structure and plain text", () => {
     const htmlWords = new Set(
       decode(body.replace(/<!--[\s\S]*?-->/g, " ").replace(/<[^>]+>/g, " ")).split(/\s+/).concat(hrefs).filter(Boolean),
     );
-    const textWords = text.split(/\s+/).map((w) => w.replace(/:$/, "")).filter((w) => w && w !== "—");
+    // "(hellorello.app)" is how the text part writes the "Powered by Rello" link (v2.40.0).
+    const textWords = text
+      .split(/\s+/)
+      .map((w) => (w === "(hellorello.app)" ? "https://hellorello.app" : w.replace(/:$/, "")))
+      .filter((w) => w && w !== "—");
     for (const w of textWords) expect(htmlWords.has(w) || htmlWords.has(`${w}:`), `text word missing from html: ${w}`).toBe(true);
     const visible = decode(body.replace(/<!--[\s\S]*?-->/g, " ").replace(/<div style="display:none[^>]*>[^<]*<\/div>/, " ").replace(/<[^>]+>/g, " "))
       .split(/\s+/)
@@ -487,7 +499,9 @@ describe("renderRelloEmail — inherited map keys (audit TE-002)", () => {
       const r = renderRelloEmail({ ...full(), app: app as RelloEmailInput["app"] });
       expect(r.html, app).toContain('alt="Rello"');
       expect(r.html, app).toContain("https://hellorello.app/email/logos/rello.png");
-      expect(r.text.startsWith("Rello · from ClearPath Utah Mortgage"), app).toBe(true);
+      expect(r.text.startsWith("From ClearPath Utah Mortgage\n"), app).toBe(true);
+      // With no company the consumer kicker is the app's name: the Rello fallback (v2.40.0).
+      expect(renderRelloEmail({ ...full(), app: app as RelloEmailInput["app"], companyName: null }).text.startsWith("Rello\n"), app).toBe(true);
       expect(r.html, app).not.toMatch(/undefined|\[object|function /);
     }
   });

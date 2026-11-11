@@ -264,6 +264,7 @@ var app_overrides_default = {
 
 // src/email/render-email.ts
 var RELLO_EMAIL_LOGO_BASE_URL = "https://hellorello.app/email/logos";
+var RELLO_EMAIL_POWERED_BY_URL = "https://hellorello.app";
 var RELLO_EMAIL_APP_NAMES = {
   arive: "ARIVE",
   rello: "Rello",
@@ -402,6 +403,9 @@ function escapeSignerName(name) {
 }
 function line(value) {
   return typeof value === "string" ? value.replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim() : "";
+}
+function plainName(value) {
+  return line(value).replace(/[\u0000-\u001f\u007f-\u009f]/g, "").replace(/\s+/g, " ").trim();
 }
 function block(value) {
   return typeof value === "string" ? value.replace(/\r\n?/g, "\n").trim() : "";
@@ -578,13 +582,15 @@ function renderRelloEmail(input) {
   const color = pal.primary;
   const logoSlug = audience !== "admin" && isKnownApp(input.app) ? input.app : "rello";
   const logoUrl = brand ? brandLogoUrl(brand.logoUrl) : relloEmailLogoUrl(logoSlug);
-  const logoAlt = brand ? line(brand.name) : appName(logoSlug);
-  const textName = brand ? line(brand.name).replace(/[\u0000-\u001f\u007f-\u009f]/g, "").replace(/\s+/g, " ").trim() : "";
+  const textName = brand ? plainName(brand.name) : "";
+  const senderName = audience === "consumer" && brand ? textName || plainName(input.companyName) || plainName(input.signer?.name) : textName;
+  const logoAlt = brand ? audience === "consumer" ? senderName : line(brand.name) : appName(logoSlug);
+  const consumerCompany = audience === "consumer" ? plainName(input.companyName) : "";
   const subject = line(input.subject);
   const preheader = line(input.preheader);
   const headline = line(input.headline);
   const detail = line(input.detail);
-  const kicker = line(input.kicker) || (audience === "admin" ? `${app} \xB7 Platform alert` : company ? audience === "consumer" ? `${app} \xB7 from ${company}` : `${app} \xB7 ${company}` : app);
+  const kicker = line(input.kicker) || (audience === "admin" ? `${app} \xB7 Platform alert` : audience === "consumer" ? consumerCompany ? `From ${consumerCompany}` : brand ? textName && `From ${textName}` : app : company ? `${app} \xB7 ${company}` : app);
   const badgeLabel = line(input.badge?.label);
   const paragraphs = (input.paragraphs ?? []).map(block).filter(Boolean);
   const cardTitle = line(input.card?.title);
@@ -617,6 +623,7 @@ function renderRelloEmail(input) {
   const pref = prefUrl && prefLabel ? { url: prefUrl, label: prefLabel } : null;
   const footerLine1 = [footerCompany, footerNmls ? `Company NMLS #${footerNmls}` : ""].filter(Boolean).join(" \xB7 ");
   const footerLine2 = [footerAddress, f.equalHousing === true ? "Equal Housing Opportunity" : ""].filter(Boolean).join(" \xB7 ");
+  const poweredByUrl = audience === "consumer" && f.poweredBy !== false ? safeEmailUrl(RELLO_EMAIL_POWERED_BY_URL) : null;
   const rows = [];
   rows.push(
     `<tr><td align="center" bgcolor="${color}" style="background:${color};padding:30px 32px 26px;color:#ffffff;border-radius:10px 10px 0 0;">` + (brand ? logoUrl ? (
@@ -624,7 +631,7 @@ function renderRelloEmail(input) {
       // Outlook scales it in proportion; the style caps it at 200×64 elsewhere.
       // A distorted logo is worse than a large one (KA ruling, prompt 110).
       `<img src="${e(logoUrl)}" width="200" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;max-width:200px;max-height:64px;height:auto;border:0;outline:none;text-decoration:none;">`
-    ) : logoAlt ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${ew(logoAlt)}</div>` : "" : logoUrl ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">` : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${ew(logoAlt)}</div>`) + `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${ew(kicker)}</div>` + (headline ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${ew(headline)}</div>` : "") + `</td></tr>`
+    ) : logoAlt ? `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${ew(logoAlt)}</div>` : "" : logoUrl ? `<img src="${e(logoUrl)}" width="96" height="96" alt="${e(logoAlt)}" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">` : `<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">${ew(logoAlt)}</div>`) + (kicker ? `<div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffffff;">${ew(kicker)}</div>` : "") + (headline ? `<div style="font-size:25px;font-weight:700;margin-top:10px;line-height:1.25;color:#ffffff;">${ew(headline)}</div>` : "") + `</td></tr>`
   );
   if (badgeLabel || detail) {
     rows.push(
@@ -668,7 +675,8 @@ function renderRelloEmail(input) {
     footerLine1 ? ew(footerLine1) : "",
     footerLine2 ? ew(footerLine2) : "",
     footerReason ? ew(footerReason) : "",
-    pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${ew(pref.label)}</a>` : ""
+    pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${ew(pref.label)}</a>` : "",
+    poweredByUrl ? `<a href="${e(poweredByUrl)}" style="color:${pal.secondaryText};">Powered by Rello</a>` : ""
   ].filter(Boolean);
   if (footerParts.length > 0) {
     rows.push(
@@ -678,7 +686,7 @@ function renderRelloEmail(input) {
   const html = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="x-apple-disable-message-reformatting"><title>${e(subject)}</title></head><body style="margin:0;padding:24px 12px;background:#eef1f5;font-family:${FONT};color:#1f2937;">` + (preheader ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#eef1f5;opacity:0;">${e(preheader)}</div>` : "") + `<!--[if mso]><table role="presentation" width="600" align="center" cellpadding="0" cellspacing="0"><tr><td><![endif]--><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:10px;font-family:${FONT};">` + rows.join("") + `</table><!--[if mso]></td></tr></table><![endif]--></body></html>`;
   const t = [];
   const push = (...ls) => t.push(...ls);
-  if (brand && textName) push(textName);
+  if (brand && senderName) push(senderName);
   push(kicker);
   if (headline) push("", headline);
   if (badgeLabel || detail) push("", ...[badgeLabel, detail].filter(Boolean));
@@ -701,7 +709,13 @@ function renderRelloEmail(input) {
     if (signerMeta) push(signerMeta);
     if (signer.phone) push(signer.phone);
   }
-  const footerText = [footerLine1, footerLine2, footerReason, pref ? `${pref.label}: ${pref.url}` : ""].filter(Boolean);
+  const footerText = [
+    footerLine1,
+    footerLine2,
+    footerReason,
+    pref ? `${pref.label}: ${pref.url}` : "",
+    poweredByUrl ? "Powered by Rello (hellorello.app)" : ""
+  ].filter(Boolean);
   if (footerText.length > 0) push("", "\u2014", ...footerText);
   const text = t.join("\n").replace(/\n{3,}/g, "\n\n").trim();
   return { subject, preheader, html, text: `${text}
@@ -711,6 +725,7 @@ export {
   RELLO_EMAIL_APP_NAMES,
   RELLO_EMAIL_LOGO_BASE_URL,
   RELLO_EMAIL_LOGO_SLUGS,
+  RELLO_EMAIL_POWERED_BY_URL,
   RELLO_EMAIL_TOKEN_KEY_FOR_SLUG,
   escapeEmailHtml,
   relloEmailContrast,

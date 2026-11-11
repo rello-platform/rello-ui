@@ -4,7 +4,7 @@ import consumerFixture from "./fixtures/v2.33.0-no-brand-consumer.json";
 import proFixture from "./fixtures/v2.33.0-no-brand-pro.json";
 import adminFixture from "./fixtures/v2.33.0-no-brand-admin.json";
 import { renderRelloEmail, type RelloEmailAudience, type RelloEmailBrand, type RelloEmailInput } from "./index";
-import { baselineInput, hasNewTokens, sha256 } from "../test/email-logo-baseline";
+import { asBeforeV240, baselineInput, hasNewTokens, sha256 } from "../test/email-logo-baseline";
 
 /**
  * v2.37.0 (TE-1207, AUDIT 27): under a brand the HTML header names the business (its logo's alt text,
@@ -75,9 +75,28 @@ describe("TE-1207: under a brand the text part opens with the brand's name, then
     expect(r.text.split("\n")[0]).toBe("Summit Realty & Co <Utah>");
   });
 
-  it("a brand with no name names nobody, in the header and in the text: the text opens with the kicker as before", () => {
+  it("a consumer brand with no name: the company names the sender, else the signer, else nobody (TE-1341)", () => {
     for (const brand of [{ name: "" }, { name: "   " }, { name: "\n" }, { name: undefined as unknown as string }, { name: 7 as unknown as string }]) {
-      const r = renderRelloEmail({ ...baselineInput("home-scout", "consumer"), brand });
+      const base = baselineInput("home-scout", "consumer");
+      // The company, in the header and as text line 1; the kicker follows.
+      const r = renderRelloEmail({ ...base, brand });
+      expect(headerName(r.html)).toBe("ClearPath Utah Mortgage");
+      expect(r.text.split("\n").slice(0, 2)).toEqual(["ClearPath Utah Mortgage", kickerOf(r.html)]);
+      // No company: the signer.
+      const s = renderRelloEmail({ ...base, companyName: null, brand });
+      expect(headerName(s.html)).toBe("Kelly Sansom");
+      expect(s.text.split("\n")[0]).toBe("Kelly Sansom");
+      // Neither: nobody, and the text opens with the headline (no kicker under a nameless brand).
+      const n = renderRelloEmail({ ...base, companyName: null, signer: null, brand });
+      expect(headerName(n.html)).toBeNull();
+      expect(n.text.startsWith("\n")).toBe(false);
+      expect(n.text.split("\n")[0]).toBe(base.headline);
+    }
+  });
+
+  it("a pro brand with no name still names nobody, in the header and in the text: the text opens with the kicker as before", () => {
+    for (const brand of [{ name: "" }, { name: "   " }, { name: "\n" }, { name: undefined as unknown as string }, { name: 7 as unknown as string }]) {
+      const r = renderRelloEmail({ ...baselineInput("home-scout", "pro"), brand });
       expect(headerName(r.html)).toBeNull();
       expect(r.text.split("\n")[0]).toBe(kickerOf(r.html));
       expect(r.text.startsWith("\n")).toBe(false);
@@ -115,7 +134,8 @@ describe("TE-1207: with no brand, the text part is byte-equal to v2.36.0 for eve
       const renders = fixtures[audience].renders as Record<string, { html: string; text: string }>;
       for (const slug of Object.keys(renders) as PlatformSlug[]) {
         for (const brand of [undefined, null]) {
-          const r = renderRelloEmail({ ...baselineInput(slug, audience), ...(brand === undefined ? {} : { brand }) });
+          // v2.40.0: consumer mail with its pre-v2.40.0 kicker and no "Powered by Rello" line (asBeforeV240).
+          const r = renderRelloEmail(asBeforeV240({ ...baselineInput(slug, audience), ...(brand === undefined ? {} : { brand }) }));
           expect(sha256(r.text), `${slug} ${audience} text`).toBe(renders[slug].text);
           if (!hasNewTokens(slug, audience)) expect(sha256(r.html), `${slug} ${audience} html`).toBe(renders[slug].html);
         }

@@ -5,6 +5,55 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.40.0 — 2026-11-10
+
+**Changed: consumer email names the sender in its header and says "Powered by Rello" in its footer**
+
+Kelly, 2026-11-10, asked whether "Rello" should come out of the header of consumer
+email: "yes it should be branded for the MLO sending it but the footer could mention
+rello as a small marketing piece". This replaces the earlier "Rello · from <company>"
+consumer kicker. Pro and admin mail are unchanged, byte for byte.
+
+- **Consumer default kicker** (only when `kicker` is not given; a given kicker still
+  wins, written as given):
+  - a company is known (`companyName`): `From <company>`;
+  - no company, under a `brand`: `From <brand>` (the brand's name as the text part's
+    first line prints it: C0/C1 controls removed). A brand with no name gets no kicker
+    at all, so the header and text never fall back to "Rello";
+  - no company, no brand: the app's name, as at v2.39.0.
+  - TE-1340: the company in the consumer kicker gets the same rule as the brand's
+    name: C0/C1 controls removed, then whitespace collapsed and trimmed (one helper,
+    `plainName`, now serves both). A company that is all controls counts as no
+    company and falls through to the brand, then the app's name. Pro and admin keep
+    the company as given, byte for byte (342 renders checked against v2.39.0).
+  - TE-1341: consumer mail under a brand prints one sender name, the same cleaned string
+    in the HTML header (name text or logo alt) and as the plain-text part's first line:
+    `plainName` of the brand, else of the company, else of the signer; nothing usable
+    names nobody (a brand never shows the app's name). Before, the HTML kept the brand's
+    raw name, C0/C1 controls and all, while the kicker and text were clean. Never held.
+    Pro and admin unchanged: 342 of 342 renders, plus 152 with control or nameless
+    brands and companies, byte-identical to v2.39.0.
+- **Consumer footer**: a last line, `Powered by Rello`, linked to
+  `https://hellorello.app` (new export `RELLO_EMAIL_POWERED_BY_URL`), in the same small
+  muted footer color as the other footer lines. The plain-text part ends with
+  `Powered by Rello (hellorello.app)`. Consumer mail with no other footer facts now has a
+  footer row holding just that line.
+- **Opt-out**: `footer.poweredBy?: boolean` on `RelloEmailFooter`. Default on; `false`
+  leaves the line out (HTML and text); any other value keeps it. Pro and admin mail never
+  carry the line, whatever it says.
+- **Pro and admin**: every byte of the HTML and text is as at v2.39.0 (and v2.38.0:
+  v2.39.0 changed nothing under `src/email/`). A new fixture
+  (`src/email/fixtures/v2.38.0-before-consumer-kicker.json`, captured from 19f04a9 and
+  re-checked against 9c054e7, v2.39.0) pins 342 pro and admin renders across every slug,
+  plus 38 consumer renders with the old kicker passed and `poweredBy: false`, which match
+  exactly: the kicker and the one footer line are the only consumer changes. The older
+  v2.32.0 and v2.33.0 consumer hash pins now render through `asBeforeV240` (src/test) for
+  the same reason; their pro and admin pins are untouched.
+- Callers that pass their own consumer kicker keep it. A caller whose own kicker says
+  "Rello · from …" needs to drop it to get the new default.
+
+Consumers pick this up on their next pin bump to `#v2.40.0` (published after audit).
+
 ## v2.39.0 — 2026-11-10
 
 **Added: an "unknown" outcome for `<TrialStartModal>` (Platform KA 875, GD-541)**

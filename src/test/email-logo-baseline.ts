@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import type { PlatformSlug } from "@rello-platform/slugs";
-import type { RelloEmailAudience, RelloEmailInput } from "../email";
+import { RELLO_EMAIL_APP_NAMES, type RelloEmailAudience, type RelloEmailInput } from "../email";
 
 /**
  * Shared by src/email/logo-by-audience.test.ts and the one-off run that wrote
@@ -44,6 +44,26 @@ export function baselineInput(app: PlatformSlug, audience: RelloEmailAudience): 
       preferenceLink: { label: "Email preferences", url: "https://example.com/prefs" },
     },
   };
+}
+
+/**
+ * v2.40.0 changed consumer mail in two places only: the default kicker ("From <company>", or the
+ * brand's name, instead of "<app or Rello> · from <company>") and a closing "Powered by Rello" footer
+ * line. This returns the same input with the pre-v2.40.0 default kicker passed explicitly and that
+ * line turned off, so the older consumer hash baselines still pin every other byte. A given kicker is
+ * kept. Pro and admin inputs are returned as they are: their output did not change at all.
+ */
+export function asBeforeV240(input: RelloEmailInput): RelloEmailInput {
+  if (input.audience !== "consumer") return input;
+  const branded = !!input.brand && typeof input.brand === "object";
+  const app = branded
+    ? "Rello"
+    : Object.prototype.hasOwnProperty.call(RELLO_EMAIL_APP_NAMES, input.app)
+      ? RELLO_EMAIL_APP_NAMES[input.app]
+      : "Rello";
+  const company = typeof input.companyName === "string" ? input.companyName.replace(/\s+/g, " ").trim() : "";
+  const kicker = input.kicker || (company ? `${app} · from ${company}` : app);
+  return { ...input, kicker, footer: { ...input.footer, poweredBy: false } };
 }
 
 const LOGO_IMG =
