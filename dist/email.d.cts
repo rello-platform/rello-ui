@@ -205,6 +205,13 @@ interface RelloEmailInput {
     } | null;
     /** v2.41.0: one large figure as the hero, after the paragraphs and before the card (see RelloEmailSpotlight). Absent: every byte as at v2.40.0. */
     spotlight?: RelloEmailSpotlight | null;
+    /**
+     * v2.42.0: several spotlight panels, e.g. one per priced rate option (Home Scout Rate Watch). Drawn where
+     * `spotlight` is, AFTER it when both are given: `spotlight` first, then these in order. Neither replaces
+     * the other; both render. Each panel is followed by its own `disclosures`. An entry that is not an object,
+     * or has nothing to show, is skipped. Absent, null or empty: every byte as at v2.41.0.
+     */
+    spotlights?: ReadonlyArray<RelloEmailSpotlight | null | undefined> | null;
     button?: RelloEmailButton | null;
     /** A text link beside the button. */
     secondaryLink?: RelloEmailLink | null;

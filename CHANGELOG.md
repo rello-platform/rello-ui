@@ -5,6 +5,28 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.42.0 — 2026-11-12 (untagged until audit + merge)
+
+**Added: `spotlights`, several spotlight panels in one email**
+
+Home Scout Rate Watch (Platform KA prompt 1021, U0) sends a lead their own scenario's rates as
+several priced options, each with its own rate, APR, points, fees, payment and term (Kelly's
+GoRascal model). `spotlight` draws one panel; this draws one per option.
+
+- New optional `RelloEmailInput.spotlights` (`ReadonlyArray<RelloEmailSpotlight | null | undefined>`).
+  Each entry is drawn exactly as `spotlight` is (same panel, same styles), followed by its own
+  `disclosures` directly under it, then the next panel.
+- **Order:** `spotlight` first, then `spotlights` in the order given. Neither replaces the other;
+  both render.
+- An entry that is not an object, or has neither a panel nor a disclosure, is skipped. A
+  non-array value is ignored.
+- Plain text prints each entry's block in the same order.
+- **Byte-identical when unused:** with `spotlights` absent, null, `[]` or all-empty, every email
+  renders byte for byte as v2.41.0. Checked on 627 corpus cases × 8 `spotlight` forms (5,016
+  html + text hashes before/after the refactor, 0 differ) and in `spotlights.test.ts`.
+- Internal: the spotlight's field preparation moved into `prepareSpotlight` (one reader for
+  `spotlight` and each `spotlights` entry). No output change.
+
 ## v2.41.0 — 2026-11-12 (Kelly approved the look 11-12; untagged until the KA's audit)
 
 **Added: `spotlight`, one large figure as the email's hero**
