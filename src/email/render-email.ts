@@ -66,6 +66,41 @@ export interface RelloEmailCardRow {
   value: string;
 }
 
+/** One supporting figure in a spotlight: the value large and bold, its caption small and grey under it. */
+export interface RelloEmailSpotlightFact {
+  value: string;
+  label: string;
+}
+
+/**
+ * v2.41.0: one figure as the email's hero (Kelly 2026-11-11, a rate email: "look how rascal
+ * spotlights the rate? We need to do that"). A white bordered panel in the card position (after the
+ * paragraphs, before any card and the button): a small label, the value large and bold, an optional
+ * `secondary` beside it at the same size and weight, a change line under it, a two-column grid of
+ * supporting facts, a small note. `disclosures` follow the panel as body paragraphs, in order.
+ *
+ * The shell only lays it out: the caller writes every word, the change line's arrow included (say the
+ * direction in words; colour is never the only signal). A rate's APR goes in `secondary`, so it is
+ * drawn exactly as large as the rate (Reg Z 1026.24). Empty fields are omitted; with no value, no
+ * secondary and no fact there is no panel (disclosures still print).
+ */
+export interface RelloEmailSpotlight {
+  /** Small line above the figure, e.g. "30-year fixed average". */
+  label?: string | null;
+  /** The hero figure, e.g. "7.18%". */
+  value: string;
+  /** Drawn beside `value` at the same size and weight, after " / ", e.g. "7.53% APR". */
+  secondary?: string | null;
+  /** Under the figure, in words with an arrow, e.g. "▼ Down 0.25 from 7.43%". */
+  change?: string | null;
+  /** Two per row; an odd count leaves the last cell empty. A fact missing its value or label is left out. */
+  facts?: ReadonlyArray<RelloEmailSpotlightFact> | null;
+  /** Small grey text at the foot of the panel; a "\n" becomes a line break. */
+  note?: string | null;
+  /** Body paragraphs printed directly under the panel, in order, at body size; a "\n" becomes a line break. */
+  disclosures?: ReadonlyArray<string | null | undefined> | null;
+}
+
 export interface RelloEmailSigner {
   name: string;
   title?: string | null;
@@ -159,6 +194,8 @@ export interface RelloEmailInput {
   /** Body paragraphs; a "\n" inside one becomes a line break. */
   paragraphs?: ReadonlyArray<string | null | undefined>;
   card?: { title?: string | null; rows: ReadonlyArray<RelloEmailCardRow> } | null;
+  /** v2.41.0: one large figure as the hero, after the paragraphs and before the card (see RelloEmailSpotlight). Absent: every byte as at v2.40.0. */
+  spotlight?: RelloEmailSpotlight | null;
   button?: RelloEmailButton | null;
   /** A text link beside the button. */
   secondaryLink?: RelloEmailLink | null;
@@ -586,6 +623,12 @@ const CARD_VALUE_TEXT = "#111827";
 
 const WHITE = "#ffffff";
 
+/** A spotlight's figure and its `secondary`: one style for both, so an APR is never drawn smaller than its rate. */
+const SPOTLIGHT_FIGURE_STYLE = `font-size:40px;line-height:1.1;font-weight:800;color:${CARD_VALUE_TEXT};letter-spacing:-0.01em;`;
+
+/** A spotlight fact's value. */
+const SPOTLIGHT_FACT_STYLE = `font-size:20px;line-height:1.25;font-weight:700;color:${CARD_VALUE_TEXT};`;
+
 function validHex(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const hex = value.trim().toLowerCase();
@@ -862,6 +905,18 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const cardRows = (input.card?.rows ?? [])
     .map((r) => ({ label: line(r?.label), value: block(r?.value) }))
     .filter((r) => r.label && r.value);
+  const spot = input.spotlight && typeof input.spotlight === "object" ? input.spotlight : null;
+  const spotLabel = line(spot?.label);
+  const spotFigures = [line(spot?.value), line(spot?.secondary)].filter(Boolean);
+  const spotChange = line(spot?.change);
+  const rawFacts: unknown = spot?.facts;
+  const spotFacts = (Array.isArray(rawFacts) ? (rawFacts as ReadonlyArray<RelloEmailSpotlightFact | null | undefined>) : [])
+    .map((f) => ({ value: line(f?.value), label: line(f?.label) }))
+    .filter((f) => f.value && f.label);
+  const spotNote = block(spot?.note);
+  const spotPanel = spotFigures.length > 0 || spotFacts.length > 0;
+  const rawDisclosures: unknown = spot?.disclosures;
+  const spotDisclosures = (Array.isArray(rawDisclosures) ? (rawDisclosures as ReadonlyArray<unknown>) : []).map(block).filter(Boolean);
 
   const buttonUrl = safeEmailUrl(input.button?.url);
   const buttonLabel = line(input.button?.label);
@@ -948,6 +1003,63 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
           .map(
             (p, i) =>
               `<p style="margin:0 0 ${i === paragraphs.length - 1 ? "0" : "12px"};">${ew(p).replace(/\n/g, "<br>")}</p>`,
+          )
+          .join("") +
+        `</td></tr>`,
+    );
+  }
+
+  if (spotPanel) {
+    // A white panel, the app/brand color only as its top edge (non-text, ≥ 3:1 by construction). The change
+    // line is link-colored (≥ 4.5:1 on white by construction), else the card's value color.
+    const changeColor = relloEmailContrast(pal.link, WHITE) >= 4.5 ? pal.link : CARD_VALUE_TEXT;
+    const half = (f: { value: string; label: string } | undefined, side: "l" | "r") =>
+      `<td width="50%" valign="top" style="width:50%;padding:12px ${side === "l" ? "8px 0 0" : "0 0 8px"};${WRAP_STYLE}">` +
+      (f
+        ? `<div style="${SPOTLIGHT_FACT_STYLE}">${ew(f.value)}</div>` +
+          `<div style="font-size:13px;line-height:1.4;color:${pal.secondaryText};margin-top:2px;">${ew(f.label)}</div>`
+        : "") +
+      `</td>`;
+    const factRows: string[] = [];
+    for (let i = 0; i < spotFacts.length; i += 2) {
+      factRows.push(`<tr>${half(spotFacts[i], "l")}${half(spotFacts[i + 1], "r")}</tr>`);
+    }
+    rows.push(
+      `<tr><td style="padding:18px 32px 4px;">` +
+        `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${WHITE}" style="background:${WHITE};border:1px solid ${pal.cardBorder};border-top:4px solid ${color};border-radius:8px;">` +
+        `<tr><td style="padding:18px 20px 18px;${WRAP_STYLE}">` +
+        (spotLabel
+          ? `<div style="font-size:13px;line-height:1.4;font-weight:600;color:${pal.secondaryText};margin:0 0 6px;">${ew(spotLabel)}</div>`
+          : "") +
+        (spotFigures.length > 0
+          ? `<div style="margin:0;line-height:1.1;">` +
+            spotFigures
+              .map((v) => `<span style="${SPOTLIGHT_FIGURE_STYLE}">${ew(v)}</span>`)
+              .join(`<span style="font-size:28px;line-height:1.1;color:${pal.secondaryText};"> / </span>`) +
+            `</div>`
+          : "") +
+        (spotChange
+          ? `<div style="font-size:15px;line-height:1.4;font-weight:600;color:${changeColor};margin-top:8px;">${ew(spotChange)}</div>`
+          : "") +
+        (factRows.length > 0
+          ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:${spotFigures.length > 0 ? "14px" : "0"};border-top:1px solid ${pal.cardBorder};">` +
+            factRows.join("") +
+            `</table>`
+          : "") +
+        (spotNote
+          ? `<div style="font-size:13px;line-height:1.5;color:${pal.secondaryText};margin-top:14px;">${ew(spotNote).replace(/\n/g, "<br>")}</div>`
+          : "") +
+        `</td></tr></table></td></tr>`,
+    );
+  }
+
+  if (spotDisclosures.length > 0) {
+    rows.push(
+      `<tr><td style="padding:18px 32px 4px;font-size:16px;line-height:1.6;color:#1f2937;">` +
+        spotDisclosures
+          .map(
+            (p, i) =>
+              `<p style="margin:0 0 ${i === spotDisclosures.length - 1 ? "0" : "12px"};">${ew(p).replace(/\n/g, "<br>")}</p>`,
           )
           .join("") +
         `</td></tr>`,
@@ -1067,6 +1179,15 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   if (headline) push("", headline);
   if (badgeLabel || detail) push("", ...[badgeLabel, detail].filter(Boolean));
   for (const p of paragraphs) push("", p);
+  if (spotPanel) {
+    push("");
+    const figures = spotFigures.join(" / ");
+    if (figures) push(spotLabel ? `${spotLabel}: ${figures}` : figures);
+    if (spotChange) push(spotChange);
+    for (const f of spotFacts) push(`${f.label}: ${f.value}`);
+    if (spotNote) push(spotNote);
+  }
+  for (const d of spotDisclosures) push("", d);
   if (cardRows.length > 0) {
     push("");
     if (cardTitle) push(cardTitle);

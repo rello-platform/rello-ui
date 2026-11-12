@@ -20,6 +20,8 @@ export {
   type RelloEmailLink,
   type RelloEmailButton,
   type RelloEmailCardRow,
+  type RelloEmailSpotlight,
+  type RelloEmailSpotlightFact,
   type RelloEmailSigner,
   type RelloEmailFooter,
   type RelloEmailInput,
