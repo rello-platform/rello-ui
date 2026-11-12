@@ -60,6 +60,55 @@ interface RelloEmailCardRow {
     label: string;
     value: string;
 }
+/** One supporting figure in a spotlight: the value large and bold, its caption small and grey under it. */
+interface RelloEmailSpotlightFact {
+    value: string;
+    label: string;
+}
+/**
+ * v2.41.0: one figure as the email's hero (Kelly 2026-11-11, a rate email: "look how rascal
+ * spotlights the rate? We need to do that"). A white bordered panel in the card position (after the
+ * paragraphs, before any card and the button): a small label, the value large and bold, an optional
+ * `secondary` beside it at the same size and weight, a change line under it, a two-column grid of
+ * supporting facts, a small note, a "Brought to you by" byline. `disclosures` follow the panel as small print, in order.
+ *
+ * The shell only lays it out: the caller writes every word, the change line's arrow included (say the
+ * direction in words; colour is never the only signal). A rate's APR goes in `secondary`, so it is
+ * drawn exactly as large as the rate (Reg Z 1026.24). Empty fields are omitted; with no value, no
+ * secondary and no fact there is no panel (disclosures still print).
+ */
+interface RelloEmailSpotlight {
+    /** Small line above the figure, e.g. "30-year fixed average". */
+    label?: string | null;
+    /** The hero figure, e.g. "7.18%". */
+    value: string;
+    /** Drawn beside `value` at the same size and weight, after " / ", e.g. "7.53% APR". */
+    secondary?: string | null;
+    /** Under the figure, in words with an arrow, e.g. "▼ Down 0.25 from 7.43%". */
+    change?: string | null;
+    /** Two per row; an odd count leaves the last cell empty. A fact missing its value or label is left out. */
+    facts?: ReadonlyArray<RelloEmailSpotlightFact> | null;
+    /** Small grey text at the foot of the panel; a "\n" becomes a line break. */
+    note?: string | null;
+    /**
+     * v2.41.0 (TE 686): who brings the offer, at the foot of the panel under a hairline: a small uppercase
+     * label ("Brought to you by"), then the parties two to a row (name bold, detail small grey), an odd last
+     * one centered alone. Parties with no name are left out; no party, no byline.
+     */
+    byline?: RelloEmailSpotlightByline | null;
+    /** Small print directly under the panel (13px, secondary text), in order; a "\n" becomes a line break. */
+    disclosures?: ReadonlyArray<string | null | undefined> | null;
+}
+/** One party in a spotlight byline, e.g. { name: "ClearPath Utah Mortgage", detail: "NMLS #3146" }. */
+interface RelloEmailSpotlightParty {
+    name: string;
+    detail?: string | null;
+}
+interface RelloEmailSpotlightByline {
+    /** e.g. "Brought to you by". */
+    label?: string | null;
+    parties: ReadonlyArray<RelloEmailSpotlightParty>;
+}
 interface RelloEmailSigner {
     name: string;
     title?: string | null;
@@ -154,6 +203,8 @@ interface RelloEmailInput {
         title?: string | null;
         rows: ReadonlyArray<RelloEmailCardRow>;
     } | null;
+    /** v2.41.0: one large figure as the hero, after the paragraphs and before the card (see RelloEmailSpotlight). Absent: every byte as at v2.40.0. */
+    spotlight?: RelloEmailSpotlight | null;
     button?: RelloEmailButton | null;
     /** A text link beside the button. */
     secondaryLink?: RelloEmailLink | null;
@@ -252,4 +303,4 @@ declare function resolveRelloEmailBrand(args: {
 }): ResolvedRelloEmailBrand;
 declare function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail;
 
-export { RELLO_EMAIL_APP_NAMES, RELLO_EMAIL_LOGO_BASE_URL, RELLO_EMAIL_LOGO_SLUGS, RELLO_EMAIL_POWERED_BY_URL, RELLO_EMAIL_TOKEN_KEY_FOR_SLUG, type RelloEmailAudience, type RelloEmailBadgeTone, type RelloEmailBrand, type RelloEmailBrandLevelInput, type RelloEmailButton, type RelloEmailCardRow, type RelloEmailFooter, type RelloEmailInput, type RelloEmailLink, type RelloEmailPalette, type RelloEmailSigner, type RenderedRelloEmail, type ResolvedRelloEmailBrand, escapeEmailHtml, relloEmailContrast, relloEmailLogoUrl, renderRelloEmail, resolveRelloEmailBrand, resolveRelloEmailPalette, safeEmailUrl };
+export { RELLO_EMAIL_APP_NAMES, RELLO_EMAIL_LOGO_BASE_URL, RELLO_EMAIL_LOGO_SLUGS, RELLO_EMAIL_POWERED_BY_URL, RELLO_EMAIL_TOKEN_KEY_FOR_SLUG, type RelloEmailAudience, type RelloEmailBadgeTone, type RelloEmailBrand, type RelloEmailBrandLevelInput, type RelloEmailButton, type RelloEmailCardRow, type RelloEmailFooter, type RelloEmailInput, type RelloEmailLink, type RelloEmailPalette, type RelloEmailSigner, type RelloEmailSpotlight, type RelloEmailSpotlightByline, type RelloEmailSpotlightFact, type RelloEmailSpotlightParty, type RenderedRelloEmail, type ResolvedRelloEmailBrand, escapeEmailHtml, relloEmailContrast, relloEmailLogoUrl, renderRelloEmail, resolveRelloEmailBrand, resolveRelloEmailPalette, safeEmailUrl };

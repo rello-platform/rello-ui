@@ -5,6 +5,42 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.41.0 — 2026-11-12 (Kelly approved the look 11-12; untagged until the KA's audit)
+
+**Added: `spotlight`, one large figure as the email's hero**
+
+Kelly, 2026-11-11, on Home Scout's rate email: "look how rascal spotlights the rate? We need
+to do that". A rate printed as a sentence and a small card row reads like body text; the
+figure should be the first thing the reader sees.
+
+- New optional `RelloEmailInput.spotlight` (`RelloEmailSpotlight`, `RelloEmailSpotlightFact`
+  exported from `@rello-platform/ui/email`), drawn in the card position: after the
+  paragraphs, before any `card` and the button. A white panel with a 1px card border and the
+  app/brand color as a 4px top edge. Everything in the panel is centered (TE 686):
+  - `label`: small, above the figure;
+  - `value`: 40px, weight 800;
+  - `secondary`: beside `value` after " / ", in the same style (one constant draws both), so a
+    rate's APR is never smaller than the rate (Reg Z 1026.24);
+  - `change`: the caller's words with an arrow, link-colored (≥ 4.5:1 on white);
+  - `facts`: a two-column grid, centered, value 20px bold, caption 13px grey under it; an odd
+    last fact spans both columns; a fact missing its value or label is left out;
+  - `note`: small grey text at the foot of the panel ("\n" = line break);
+  - `byline` (`RelloEmailSpotlightByline` / `RelloEmailSpotlightParty`): at the foot of the
+    panel under a hairline, a small uppercase label ("Brought to you by") and the parties two to a
+    row (name 15px bold, detail 13px grey), an odd last one centered alone. Unnamed parties are
+    dropped; no party, no byline (its label included);
+  - `disclosures`: small print directly under the panel (13px, line-height 1.55, the palette's
+    secondary text), in order. They print even when the panel has nothing to show.
+- Plain text, before the button: `<label>: <value>[ / <secondary>]`, the change line,
+  `<caption>: <value>` per fact, the note, `<label>: <name> (<detail>) · <name> (<detail>)`,
+  then each disclosure as its own paragraph.
+- No value, no secondary and no fact: no panel. Every value is escaped; long unbroken runs
+  get break points as in every other text slot. Tables and inline styles only.
+- Unchanged: every input without a spotlight (absent, null, or nothing to show) renders byte
+  for byte as v2.40.0: 627 cases (every slug × consumer/pro/admin × 11 variants) × 4 empty
+  forms, checked against `src/email/fixtures/v2.40.0-before-spotlight.json`, hashes written
+  by v2.40.0's own renderer (706e854).
+
 ## v2.40.0 — 2026-11-10
 
 **Changed: consumer email names the sender in its header and says "Powered by Rello" in its footer**
