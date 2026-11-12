@@ -22,6 +22,8 @@ export {
   type RelloEmailCardRow,
   type RelloEmailSpotlight,
   type RelloEmailSpotlightFact,
+  type RelloEmailSpotlightParty,
+  type RelloEmailSpotlightByline,
   type RelloEmailSigner,
   type RelloEmailFooter,
   type RelloEmailInput,

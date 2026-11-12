@@ -91,14 +91,21 @@ describe("spotlight HTML", () => {
     expect(r.html).toContain("30-year fixed, $400,000 loan, 20% down, 740 credit<br>From Example Lending, NMLS #12345");
   });
 
-  it("lays the facts out two to a row; an odd count leaves the last cell empty", () => {
+  it("lays the facts out two to a row, centered; an odd last fact spans both columns", () => {
     const grid = r.html.slice(r.html.indexOf("$2,184/mo") - 400, r.html.indexOf("Points") + 200);
-    const rowsInGrid = grid.match(/<tr><td width="50%"/g) ?? [];
-    expect(rowsInGrid.length).toBe(2);
-    expect(r.html).toMatch(/Points<\/div><\/td><td width="50%" valign="top" style="[^"]*"><\/td><\/tr>/);
+    expect((grid.match(/<tr><td width="50%" align="center"/g) ?? []).length).toBe(1);
+    expect(r.html).toMatch(/<tr><td colspan="2" align="center" valign="top" style="padding:12px 4px 0;text-align:center;[^"]*"><div style="font-size:20px;[^"]*">0\.5<\/div><div [^>]*>Points<\/div><\/td><\/tr>/);
     for (const f of ["$2,184/mo", "30 years", "0.5"]) {
       expect(r.html).toContain(`<div style="font-size:20px;line-height:1.25;font-weight:700;color:#111827;">${f}</div>`);
     }
+    // An even count has no spanning cell.
+    const even = renderRelloEmail(consumer({ ...RATE, facts: RATE.facts!.slice(0, 2) })).html;
+    expect(even).not.toContain('colspan="2" align="center" valign="top"');
+  });
+
+  it("centers the panel's contents", () => {
+    expect(r.html).toContain('<tr><td align="center" style="padding:20px 20px 20px;text-align:center;');
+    for (const m of r.html.matchAll(/<td width="50%"[^>]*>/g)) expect(m[0]).toContain('align="center"');
   });
 
   it("sits after the paragraphs and before the card and the button; disclosures directly under it, in order", () => {
@@ -113,8 +120,10 @@ describe("spotlight HTML", () => {
     expect(at("Disclosure two.")).toBeLessThan(at("Disclosure three."));
     expect(at("Disclosure three.")).toBeLessThan(at("Your numbers"));
     expect(at("Your numbers")).toBeLessThan(at("See my plan"));
-    // Disclosures are body text, the same size as the paragraphs.
-    expect(r.html).toMatch(/<td style="padding:18px 32px 4px;font-size:16px;line-height:1\.6;color:#1f2937;"><p style="margin:0 0 12px;">Disclosure one\.<\/p>/);
+    // Disclosures are small print (TE 686): 13px, the palette's secondary text, ≥ 4.5:1 on white.
+    const m = r.html.match(/<td style="padding:14px 32px 4px;font-size:13px;line-height:1\.55;color:(#[0-9a-f]{6});"><p style="margin:0 0 10px;">Disclosure one\.<\/p>/);
+    expect(m).not.toBeNull();
+    expect(relloEmailContrast(m![1], "#ffffff")).toBeGreaterThanOrEqual(4.5);
   });
 
   it("is a white panel: email-safe tables and inline styles, no flex or grid", () => {
@@ -175,6 +184,57 @@ describe("spotlight HTML", () => {
   it("renders the same way on pro mail", () => {
     const html = renderRelloEmail({ ...baselineInput("pathfinder-pro", "pro"), spotlight: RATE }).html;
     expect(figureSpans(html).map((s) => s.inner)).toEqual(["7.50%", "7.53% APR"]);
+  });
+});
+
+describe("spotlight byline", () => {
+  const BYLINE = {
+    label: "Brought to you by",
+    parties: [
+      { name: "Summit Lending", detail: "NMLS #3146" },
+      { name: "A1 Test Realty 589", detail: "A1 RecruitTest" },
+    ],
+  };
+  const r = renderRelloEmail(consumer({ ...RATE, byline: BYLINE }));
+
+  it("sits at the foot of the panel, under a hairline, label then the parties side by side", () => {
+    const at = (x: string) => r.html.indexOf(x);
+    expect(at("Points")).toBeLessThan(at("Brought to you by"));
+    expect(at("From Example Lending, NMLS #12345")).toBeLessThan(at("Brought to you by"));
+    expect(at("Brought to you by")).toBeLessThan(at("Summit Lending"));
+    expect(at("Summit Lending")).toBeLessThan(at("A1 Test Realty 589"));
+    // Still inside the panel: before the disclosures that follow it.
+    expect(at("A1 RecruitTest")).toBeLessThan(at("Disclosure one."));
+    expect(r.html).toMatch(/text-transform:uppercase;font-weight:600;color:#[0-9a-f]{6};">Brought to you by<\/td><\/tr><tr><td width="50%" align="center"[^>]*><div style="font-size:15px;line-height:1\.3;font-weight:700;color:#111827;">Summit Lending<\/div><div style="font-size:13px;[^"]*">NMLS #3146<\/div><\/td><td width="50%" align="center"[^>]*><div [^>]*>A1 Test Realty 589<\/div><div [^>]*>A1 RecruitTest<\/div><\/td><\/tr>/);
+  });
+
+  it("text: label: name (detail) · name (detail), after the note", () => {
+    expect(r.text).toContain("From Example Lending, NMLS #12345\nBrought to you by: Summit Lending (NMLS #3146) · A1 Test Realty 589 (A1 RecruitTest)\n\nDisclosure one.");
+  });
+
+  it("one party is centered alone; three wrap two then one", () => {
+    const one = renderRelloEmail(consumer({ ...RATE, byline: { label: "Brought to you by", parties: [BYLINE.parties[0]] } }));
+    expect(one.html).toMatch(/<tr><td colspan="2" align="center" valign="top" style="padding:6px 4px 0;[^"]*"><div style="font-size:15px;[^"]*">Summit Lending/);
+    expect(one.text).toContain("Brought to you by: Summit Lending (NMLS #3146)\n");
+    const three = renderRelloEmail(consumer({ ...RATE, byline: { label: "By", parties: [...BYLINE.parties, { name: "Third Co" }] } }));
+    expect(three.html).toMatch(/<tr><td colspan="2" align="center" valign="top" style="padding:6px 4px 0;[^"]*"><div style="font-size:15px;[^"]*">Third Co<\/div><\/td><\/tr>/);
+    expect(three.text).toContain("By: Summit Lending (NMLS #3146) · A1 Test Realty 589 (A1 RecruitTest) · Third Co\n");
+  });
+
+  it("no named party: no byline, label included", () => {
+    for (const byline of [null, { label: "Brought to you by", parties: [] }, { label: "Brought to you by", parties: [{ name: "  ", detail: "x" }] }]) {
+      const res = renderRelloEmail(consumer({ ...RATE, byline }));
+      expect(res.html).not.toContain("Brought to you by");
+      expect(res.text).not.toContain("Brought to you by");
+      expect(res.html).toBe(renderRelloEmail(consumer(RATE)).html);
+    }
+  });
+
+  it("escapes the label, names and details", () => {
+    const evil = '<b x="1">&\'</b>';
+    const html = renderRelloEmail(consumer({ ...RATE, byline: { label: evil, parties: [{ name: evil, detail: evil }] } })).html;
+    expect(html).not.toContain('<b x="1">');
+    expect(html.split("&lt;b x=&quot;1&quot;&gt;&amp;&#39;&lt;/b&gt;").length - 1).toBe(3);
   });
 });
 

@@ -77,7 +77,7 @@ export interface RelloEmailSpotlightFact {
  * spotlights the rate? We need to do that"). A white bordered panel in the card position (after the
  * paragraphs, before any card and the button): a small label, the value large and bold, an optional
  * `secondary` beside it at the same size and weight, a change line under it, a two-column grid of
- * supporting facts, a small note. `disclosures` follow the panel as body paragraphs, in order.
+ * supporting facts, a small note, a "Brought to you by" byline. `disclosures` follow the panel as small print, in order.
  *
  * The shell only lays it out: the caller writes every word, the change line's arrow included (say the
  * direction in words; colour is never the only signal). A rate's APR goes in `secondary`, so it is
@@ -97,8 +97,26 @@ export interface RelloEmailSpotlight {
   facts?: ReadonlyArray<RelloEmailSpotlightFact> | null;
   /** Small grey text at the foot of the panel; a "\n" becomes a line break. */
   note?: string | null;
-  /** Body paragraphs printed directly under the panel, in order, at body size; a "\n" becomes a line break. */
+  /**
+   * v2.41.0 (TE 686): who brings the offer, at the foot of the panel under a hairline: a small uppercase
+   * label ("Brought to you by"), then the parties two to a row (name bold, detail small grey), an odd last
+   * one centered alone. Parties with no name are left out; no party, no byline.
+   */
+  byline?: RelloEmailSpotlightByline | null;
+  /** Small print directly under the panel (13px, secondary text), in order; a "\n" becomes a line break. */
   disclosures?: ReadonlyArray<string | null | undefined> | null;
+}
+
+/** One party in a spotlight byline, e.g. { name: "ClearPath Utah Mortgage", detail: "NMLS #3146" }. */
+export interface RelloEmailSpotlightParty {
+  name: string;
+  detail?: string | null;
+}
+
+export interface RelloEmailSpotlightByline {
+  /** e.g. "Brought to you by". */
+  label?: string | null;
+  parties: ReadonlyArray<RelloEmailSpotlightParty>;
 }
 
 export interface RelloEmailSigner {
@@ -626,6 +644,9 @@ const WHITE = "#ffffff";
 /** A spotlight's figure and its `secondary`: one style for both, so an APR is never drawn smaller than its rate. */
 const SPOTLIGHT_FIGURE_STYLE = `font-size:40px;line-height:1.1;font-weight:800;color:${CARD_VALUE_TEXT};letter-spacing:-0.01em;`;
 
+/** Disclosure small print if the palette's secondary text ever fell under 4.5:1 on white (it cannot by construction). */
+const DISCLOSURE_FALLBACK_TEXT = "#57534e";
+
 /** A spotlight fact's value. */
 const SPOTLIGHT_FACT_STYLE = `font-size:20px;line-height:1.25;font-weight:700;color:${CARD_VALUE_TEXT};`;
 
@@ -915,6 +936,14 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     .filter((f) => f.value && f.label);
   const spotNote = block(spot?.note);
   const spotPanel = spotFigures.length > 0 || spotFacts.length > 0;
+  const rawByline: unknown = spot?.byline;
+  const bylineObj = rawByline && typeof rawByline === "object" ? (rawByline as RelloEmailSpotlightByline) : null;
+  const rawParties: unknown = bylineObj?.parties;
+  const spotBylineParties = (Array.isArray(rawParties) ? (rawParties as ReadonlyArray<RelloEmailSpotlightParty | null | undefined>) : [])
+    .map((pt) => ({ name: line(pt?.name), detail: line(pt?.detail) }))
+    .filter((pt) => pt.name);
+  // A label with no party names nobody: no byline at all.
+  const spotBylineLabel = spotBylineParties.length > 0 ? line(bylineObj?.label) : "";
   const rawDisclosures: unknown = spot?.disclosures;
   const spotDisclosures = (Array.isArray(rawDisclosures) ? (rawDisclosures as ReadonlyArray<unknown>) : []).map(block).filter(Boolean);
 
@@ -1011,23 +1040,36 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
 
   if (spotPanel) {
     // A white panel, the app/brand color only as its top edge (non-text, ≥ 3:1 by construction). The change
-    // line is link-colored (≥ 4.5:1 on white by construction), else the card's value color.
+    // line is link-colored (≥ 4.5:1 on white by construction), else the card's value color. Everything in
+    // the panel is centered (Kelly's approved look, TE 686): `align` for Outlook, `text-align` for the rest.
     const changeColor = relloEmailContrast(pal.link, WHITE) >= 4.5 ? pal.link : CARD_VALUE_TEXT;
-    const half = (f: { value: string; label: string } | undefined, side: "l" | "r") =>
-      `<td width="50%" valign="top" style="width:50%;padding:12px ${side === "l" ? "8px 0 0" : "0 0 8px"};${WRAP_STYLE}">` +
-      (f
-        ? `<div style="${SPOTLIGHT_FACT_STYLE}">${ew(f.value)}</div>` +
-          `<div style="font-size:13px;line-height:1.4;color:${pal.secondaryText};margin-top:2px;">${ew(f.label)}</div>`
-        : "") +
+    const cell = (inner: string, span: 1 | 2, top: string) =>
+      (span === 2
+        ? `<td colspan="2" align="center" valign="top" style="padding:${top} 4px 0;text-align:center;${WRAP_STYLE}">`
+        : `<td width="50%" align="center" valign="top" style="width:50%;padding:${top} 4px 0;text-align:center;${WRAP_STYLE}">`) +
+      inner +
       `</td>`;
-    const factRows: string[] = [];
-    for (let i = 0; i < spotFacts.length; i += 2) {
-      factRows.push(`<tr>${half(spotFacts[i], "l")}${half(spotFacts[i + 1], "r")}</tr>`);
-    }
+    const fact = (f: { value: string; label: string }) =>
+      `<div style="${SPOTLIGHT_FACT_STYLE}">${ew(f.value)}</div>` +
+      `<div style="font-size:13px;line-height:1.4;color:${pal.secondaryText};margin-top:2px;">${ew(f.label)}</div>`;
+    const party = (pt: { name: string; detail: string }) =>
+      `<div style="font-size:15px;line-height:1.3;font-weight:700;color:${CARD_VALUE_TEXT};">${ew(pt.name)}</div>` +
+      (pt.detail ? `<div style="font-size:13px;line-height:1.4;color:${pal.secondaryText};">${ew(pt.detail)}</div>` : "");
+    // Two to a row; an odd last item spans both columns, centered.
+    const pairs = <T,>(items: readonly T[], draw: (x: T) => string, top: string): string[] => {
+      const out: string[] = [];
+      for (let i = 0; i < items.length; i += 2) {
+        const b = items[i + 1];
+        out.push(`<tr>${b === undefined ? cell(draw(items[i]), 2, top) : cell(draw(items[i]), 1, top) + cell(draw(b), 1, top)}</tr>`);
+      }
+      return out;
+    };
+    const factRows = pairs(spotFacts, fact, "12px");
+    const bylineRows = pairs(spotBylineParties, party, "6px");
     rows.push(
       `<tr><td style="padding:18px 32px 4px;">` +
         `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${WHITE}" style="background:${WHITE};border:1px solid ${pal.cardBorder};border-top:4px solid ${color};border-radius:8px;">` +
-        `<tr><td style="padding:18px 20px 18px;${WRAP_STYLE}">` +
+        `<tr><td align="center" style="padding:20px 20px 20px;text-align:center;${WRAP_STYLE}">` +
         (spotLabel
           ? `<div style="font-size:13px;line-height:1.4;font-weight:600;color:${pal.secondaryText};margin:0 0 6px;">${ew(spotLabel)}</div>`
           : "") +
@@ -1049,17 +1091,28 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
         (spotNote
           ? `<div style="font-size:13px;line-height:1.5;color:${pal.secondaryText};margin-top:14px;">${ew(spotNote).replace(/\n/g, "<br>")}</div>`
           : "") +
+        (bylineRows.length > 0
+          ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:16px;border-top:1px solid ${pal.cardBorder};">` +
+            (spotBylineLabel
+              ? `<tr><td colspan="2" align="center" style="padding:14px 0 2px;text-align:center;font-size:12px;line-height:1.4;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:${pal.secondaryText};">${ew(spotBylineLabel)}</td></tr>`
+              : "") +
+            bylineRows.join("") +
+            `</table>`
+          : "") +
         `</td></tr></table></td></tr>`,
     );
   }
 
   if (spotDisclosures.length > 0) {
+    // Small print under the panel (TE 686): 13px, the palette's secondary text (≥ 4.5:1 on white by
+    // construction; #57534e if it ever were not). Words and order exactly as given.
+    const finePrint = relloEmailContrast(pal.secondaryText, WHITE) >= 4.5 ? pal.secondaryText : DISCLOSURE_FALLBACK_TEXT;
     rows.push(
-      `<tr><td style="padding:18px 32px 4px;font-size:16px;line-height:1.6;color:#1f2937;">` +
+      `<tr><td style="padding:14px 32px 4px;font-size:13px;line-height:1.55;color:${finePrint};">` +
         spotDisclosures
           .map(
             (p, i) =>
-              `<p style="margin:0 0 ${i === spotDisclosures.length - 1 ? "0" : "12px"};">${ew(p).replace(/\n/g, "<br>")}</p>`,
+              `<p style="margin:0 0 ${i === spotDisclosures.length - 1 ? "0" : "10px"};">${ew(p).replace(/\n/g, "<br>")}</p>`,
           )
           .join("") +
         `</td></tr>`,
@@ -1186,6 +1239,10 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     if (spotChange) push(spotChange);
     for (const f of spotFacts) push(`${f.label}: ${f.value}`);
     if (spotNote) push(spotNote);
+    if (spotBylineParties.length > 0) {
+      const names = spotBylineParties.map((pt) => (pt.detail ? `${pt.name} (${pt.detail})` : pt.name)).join(" · ");
+      push(spotBylineLabel ? `${spotBylineLabel}: ${names}` : names);
+    }
   }
   for (const d of spotDisclosures) push("", d);
   if (cardRows.length > 0) {

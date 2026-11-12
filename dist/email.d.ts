@@ -70,7 +70,7 @@ interface RelloEmailSpotlightFact {
  * spotlights the rate? We need to do that"). A white bordered panel in the card position (after the
  * paragraphs, before any card and the button): a small label, the value large and bold, an optional
  * `secondary` beside it at the same size and weight, a change line under it, a two-column grid of
- * supporting facts, a small note. `disclosures` follow the panel as body paragraphs, in order.
+ * supporting facts, a small note, a "Brought to you by" byline. `disclosures` follow the panel as small print, in order.
  *
  * The shell only lays it out: the caller writes every word, the change line's arrow included (say the
  * direction in words; colour is never the only signal). A rate's APR goes in `secondary`, so it is
@@ -90,8 +90,24 @@ interface RelloEmailSpotlight {
     facts?: ReadonlyArray<RelloEmailSpotlightFact> | null;
     /** Small grey text at the foot of the panel; a "\n" becomes a line break. */
     note?: string | null;
-    /** Body paragraphs printed directly under the panel, in order, at body size; a "\n" becomes a line break. */
+    /**
+     * v2.41.0 (TE 686): who brings the offer, at the foot of the panel under a hairline: a small uppercase
+     * label ("Brought to you by"), then the parties two to a row (name bold, detail small grey), an odd last
+     * one centered alone. Parties with no name are left out; no party, no byline.
+     */
+    byline?: RelloEmailSpotlightByline | null;
+    /** Small print directly under the panel (13px, secondary text), in order; a "\n" becomes a line break. */
     disclosures?: ReadonlyArray<string | null | undefined> | null;
+}
+/** One party in a spotlight byline, e.g. { name: "ClearPath Utah Mortgage", detail: "NMLS #3146" }. */
+interface RelloEmailSpotlightParty {
+    name: string;
+    detail?: string | null;
+}
+interface RelloEmailSpotlightByline {
+    /** e.g. "Brought to you by". */
+    label?: string | null;
+    parties: ReadonlyArray<RelloEmailSpotlightParty>;
 }
 interface RelloEmailSigner {
     name: string;
@@ -287,4 +303,4 @@ declare function resolveRelloEmailBrand(args: {
 }): ResolvedRelloEmailBrand;
 declare function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail;
 
-export { RELLO_EMAIL_APP_NAMES, RELLO_EMAIL_LOGO_BASE_URL, RELLO_EMAIL_LOGO_SLUGS, RELLO_EMAIL_POWERED_BY_URL, RELLO_EMAIL_TOKEN_KEY_FOR_SLUG, type RelloEmailAudience, type RelloEmailBadgeTone, type RelloEmailBrand, type RelloEmailBrandLevelInput, type RelloEmailButton, type RelloEmailCardRow, type RelloEmailFooter, type RelloEmailInput, type RelloEmailLink, type RelloEmailPalette, type RelloEmailSigner, type RelloEmailSpotlight, type RelloEmailSpotlightFact, type RenderedRelloEmail, type ResolvedRelloEmailBrand, escapeEmailHtml, relloEmailContrast, relloEmailLogoUrl, renderRelloEmail, resolveRelloEmailBrand, resolveRelloEmailPalette, safeEmailUrl };
+export { RELLO_EMAIL_APP_NAMES, RELLO_EMAIL_LOGO_BASE_URL, RELLO_EMAIL_LOGO_SLUGS, RELLO_EMAIL_POWERED_BY_URL, RELLO_EMAIL_TOKEN_KEY_FOR_SLUG, type RelloEmailAudience, type RelloEmailBadgeTone, type RelloEmailBrand, type RelloEmailBrandLevelInput, type RelloEmailButton, type RelloEmailCardRow, type RelloEmailFooter, type RelloEmailInput, type RelloEmailLink, type RelloEmailPalette, type RelloEmailSigner, type RelloEmailSpotlight, type RelloEmailSpotlightByline, type RelloEmailSpotlightFact, type RelloEmailSpotlightParty, type RenderedRelloEmail, type ResolvedRelloEmailBrand, escapeEmailHtml, relloEmailContrast, relloEmailLogoUrl, renderRelloEmail, resolveRelloEmailBrand, resolveRelloEmailPalette, safeEmailUrl };
