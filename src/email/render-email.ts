@@ -214,6 +214,13 @@ export interface RelloEmailInput {
   card?: { title?: string | null; rows: ReadonlyArray<RelloEmailCardRow> } | null;
   /** v2.41.0: one large figure as the hero, after the paragraphs and before the card (see RelloEmailSpotlight). Absent: every byte as at v2.40.0. */
   spotlight?: RelloEmailSpotlight | null;
+  /**
+   * v2.42.0: several spotlight panels, e.g. one per priced rate option (Home Scout Rate Watch). Drawn where
+   * `spotlight` is, AFTER it when both are given: `spotlight` first, then these in order. Neither replaces
+   * the other; both render. Each panel is followed by its own `disclosures`. An entry that is not an object,
+   * or has nothing to show, is skipped. Absent, null or empty: every byte as at v2.41.0.
+   */
+  spotlights?: ReadonlyArray<RelloEmailSpotlight | null | undefined> | null;
   button?: RelloEmailButton | null;
   /** A text link beside the button. */
   secondaryLink?: RelloEmailLink | null;
@@ -650,6 +657,46 @@ const DISCLOSURE_FALLBACK_TEXT = "#57534e";
 /** A spotlight fact's value. */
 const SPOTLIGHT_FACT_STYLE = `font-size:20px;line-height:1.25;font-weight:700;color:${CARD_VALUE_TEXT};`;
 
+/** One spotlight's fields, read and cleaned once (v2.42.0: shared by `spotlight` and each `spotlights` entry). */
+interface PreparedSpotlight {
+  label: string;
+  figures: string[];
+  change: string;
+  facts: Array<{ value: string; label: string }>;
+  note: string;
+  panel: boolean;
+  bylineParties: Array<{ name: string; detail: string }>;
+  bylineLabel: string;
+  disclosures: string[];
+}
+
+/** Null when `raw` is not an object, or when it has neither a panel nor a disclosure to show. */
+function prepareSpotlight(raw: unknown): PreparedSpotlight | null {
+  const spot = raw && typeof raw === "object" ? (raw as RelloEmailSpotlight) : null;
+  if (!spot) return null;
+  const label = line(spot.label);
+  const figures = [line(spot.value), line(spot.secondary)].filter(Boolean);
+  const change = line(spot.change);
+  const rawFacts: unknown = spot.facts;
+  const facts = (Array.isArray(rawFacts) ? (rawFacts as ReadonlyArray<RelloEmailSpotlightFact | null | undefined>) : [])
+    .map((f) => ({ value: line(f?.value), label: line(f?.label) }))
+    .filter((f) => f.value && f.label);
+  const note = block(spot.note);
+  const panel = figures.length > 0 || facts.length > 0;
+  const rawByline: unknown = spot.byline;
+  const bylineObj = rawByline && typeof rawByline === "object" ? (rawByline as RelloEmailSpotlightByline) : null;
+  const rawParties: unknown = bylineObj?.parties;
+  const bylineParties = (Array.isArray(rawParties) ? (rawParties as ReadonlyArray<RelloEmailSpotlightParty | null | undefined>) : [])
+    .map((pt) => ({ name: line(pt?.name), detail: line(pt?.detail) }))
+    .filter((pt) => pt.name);
+  // A label with no party names nobody: no byline at all.
+  const bylineLabel = bylineParties.length > 0 ? line(bylineObj?.label) : "";
+  const rawDisclosures: unknown = spot.disclosures;
+  const disclosures = (Array.isArray(rawDisclosures) ? (rawDisclosures as ReadonlyArray<unknown>) : []).map(block).filter(Boolean);
+  if (!panel && disclosures.length === 0) return null;
+  return { label, figures, change, facts, note, panel, bylineParties, bylineLabel, disclosures };
+}
+
 function validHex(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const hex = value.trim().toLowerCase();
@@ -926,26 +973,11 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   const cardRows = (input.card?.rows ?? [])
     .map((r) => ({ label: line(r?.label), value: block(r?.value) }))
     .filter((r) => r.label && r.value);
-  const spot = input.spotlight && typeof input.spotlight === "object" ? input.spotlight : null;
-  const spotLabel = line(spot?.label);
-  const spotFigures = [line(spot?.value), line(spot?.secondary)].filter(Boolean);
-  const spotChange = line(spot?.change);
-  const rawFacts: unknown = spot?.facts;
-  const spotFacts = (Array.isArray(rawFacts) ? (rawFacts as ReadonlyArray<RelloEmailSpotlightFact | null | undefined>) : [])
-    .map((f) => ({ value: line(f?.value), label: line(f?.label) }))
-    .filter((f) => f.value && f.label);
-  const spotNote = block(spot?.note);
-  const spotPanel = spotFigures.length > 0 || spotFacts.length > 0;
-  const rawByline: unknown = spot?.byline;
-  const bylineObj = rawByline && typeof rawByline === "object" ? (rawByline as RelloEmailSpotlightByline) : null;
-  const rawParties: unknown = bylineObj?.parties;
-  const spotBylineParties = (Array.isArray(rawParties) ? (rawParties as ReadonlyArray<RelloEmailSpotlightParty | null | undefined>) : [])
-    .map((pt) => ({ name: line(pt?.name), detail: line(pt?.detail) }))
-    .filter((pt) => pt.name);
-  // A label with no party names nobody: no byline at all.
-  const spotBylineLabel = spotBylineParties.length > 0 ? line(bylineObj?.label) : "";
-  const rawDisclosures: unknown = spot?.disclosures;
-  const spotDisclosures = (Array.isArray(rawDisclosures) ? (rawDisclosures as ReadonlyArray<unknown>) : []).map(block).filter(Boolean);
+  // v2.42.0: `spotlight` first, then `spotlights` in order; entries with nothing to show are dropped here.
+  const rawSpotlights: unknown = input.spotlights;
+  const spots = [input.spotlight, ...(Array.isArray(rawSpotlights) ? (rawSpotlights as ReadonlyArray<unknown>) : [])]
+    .map(prepareSpotlight)
+    .filter((sp): sp is PreparedSpotlight => sp !== null);
 
   const buttonUrl = safeEmailUrl(input.button?.url);
   const buttonLabel = line(input.button?.label);
@@ -1038,85 +1070,88 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     );
   }
 
-  if (spotPanel) {
-    // A white panel, the app/brand color only as its top edge (non-text, ≥ 3:1 by construction). The change
-    // line is link-colored (≥ 4.5:1 on white by construction), else the card's value color. Everything in
-    // the panel is centered (Kelly's approved look, TE 686): `align` for Outlook, `text-align` for the rest.
-    const changeColor = relloEmailContrast(pal.link, WHITE) >= 4.5 ? pal.link : CARD_VALUE_TEXT;
-    const cell = (inner: string, span: 1 | 2, top: string) =>
-      (span === 2
-        ? `<td colspan="2" align="center" valign="top" style="padding:${top} 4px 0;text-align:center;${WRAP_STYLE}">`
-        : `<td width="50%" align="center" valign="top" style="width:50%;padding:${top} 4px 0;text-align:center;${WRAP_STYLE}">`) +
-      inner +
-      `</td>`;
-    const fact = (f: { value: string; label: string }) =>
-      `<div style="${SPOTLIGHT_FACT_STYLE}">${ew(f.value)}</div>` +
-      `<div style="font-size:13px;line-height:1.4;color:${pal.secondaryText};margin-top:2px;">${ew(f.label)}</div>`;
-    const party = (pt: { name: string; detail: string }) =>
-      `<div style="font-size:15px;line-height:1.3;font-weight:700;color:${CARD_VALUE_TEXT};">${ew(pt.name)}</div>` +
-      (pt.detail ? `<div style="font-size:13px;line-height:1.4;color:${pal.secondaryText};">${ew(pt.detail)}</div>` : "");
-    // Two to a row; an odd last item spans both columns, centered.
-    const pairs = <T,>(items: readonly T[], draw: (x: T) => string, top: string): string[] => {
-      const out: string[] = [];
-      for (let i = 0; i < items.length; i += 2) {
-        const b = items[i + 1];
-        out.push(`<tr>${b === undefined ? cell(draw(items[i]), 2, top) : cell(draw(items[i]), 1, top) + cell(draw(b), 1, top)}</tr>`);
-      }
-      return out;
-    };
-    const factRows = pairs(spotFacts, fact, "12px");
-    const bylineRows = pairs(spotBylineParties, party, "6px");
-    rows.push(
-      `<tr><td style="padding:18px 32px 4px;">` +
-        `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${WHITE}" style="background:${WHITE};border:1px solid ${pal.cardBorder};border-top:4px solid ${color};border-radius:8px;">` +
-        `<tr><td align="center" style="padding:20px 20px 20px;text-align:center;${WRAP_STYLE}">` +
-        (spotLabel
-          ? `<div style="font-size:13px;line-height:1.4;font-weight:600;color:${pal.secondaryText};margin:0 0 6px;">${ew(spotLabel)}</div>`
-          : "") +
-        (spotFigures.length > 0
-          ? `<div style="margin:0;line-height:1.1;">` +
-            spotFigures
-              .map((v) => `<span style="${SPOTLIGHT_FIGURE_STYLE}">${ew(v)}</span>`)
-              .join(`<span style="font-size:28px;line-height:1.1;color:${pal.secondaryText};"> / </span>`) +
-            `</div>`
-          : "") +
-        (spotChange
-          ? `<div style="font-size:15px;line-height:1.4;font-weight:600;color:${changeColor};margin-top:8px;">${ew(spotChange)}</div>`
-          : "") +
-        (factRows.length > 0
-          ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:${spotFigures.length > 0 ? "14px" : "0"};border-top:1px solid ${pal.cardBorder};">` +
-            factRows.join("") +
-            `</table>`
-          : "") +
-        (spotNote
-          ? `<div style="font-size:13px;line-height:1.5;color:${pal.secondaryText};margin-top:14px;">${ew(spotNote).replace(/\n/g, "<br>")}</div>`
-          : "") +
-        (bylineRows.length > 0
-          ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:16px;border-top:1px solid ${pal.cardBorder};">` +
-            (spotBylineLabel
-              ? `<tr><td colspan="2" align="center" style="padding:14px 0 2px;text-align:center;font-size:12px;line-height:1.4;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:${pal.secondaryText};">${ew(spotBylineLabel)}</td></tr>`
-              : "") +
-            bylineRows.join("") +
-            `</table>`
-          : "") +
-        `</td></tr></table></td></tr>`,
-    );
-  }
+  // v2.42.0: one panel per spotlight (`spotlight`, then `spotlights`), each followed by its own small print.
+  for (const sp of spots) {
+    if (sp.panel) {
+      // A white panel, the app/brand color only as its top edge (non-text, ≥ 3:1 by construction). The change
+      // line is link-colored (≥ 4.5:1 on white by construction), else the card's value color. Everything in
+      // the panel is centered (Kelly's approved look, TE 686): `align` for Outlook, `text-align` for the rest.
+      const changeColor = relloEmailContrast(pal.link, WHITE) >= 4.5 ? pal.link : CARD_VALUE_TEXT;
+      const cell = (inner: string, span: 1 | 2, top: string) =>
+        (span === 2
+          ? `<td colspan="2" align="center" valign="top" style="padding:${top} 4px 0;text-align:center;${WRAP_STYLE}">`
+          : `<td width="50%" align="center" valign="top" style="width:50%;padding:${top} 4px 0;text-align:center;${WRAP_STYLE}">`) +
+        inner +
+        `</td>`;
+      const fact = (f: { value: string; label: string }) =>
+        `<div style="${SPOTLIGHT_FACT_STYLE}">${ew(f.value)}</div>` +
+        `<div style="font-size:13px;line-height:1.4;color:${pal.secondaryText};margin-top:2px;">${ew(f.label)}</div>`;
+      const party = (pt: { name: string; detail: string }) =>
+        `<div style="font-size:15px;line-height:1.3;font-weight:700;color:${CARD_VALUE_TEXT};">${ew(pt.name)}</div>` +
+        (pt.detail ? `<div style="font-size:13px;line-height:1.4;color:${pal.secondaryText};">${ew(pt.detail)}</div>` : "");
+      // Two to a row; an odd last item spans both columns, centered.
+      const pairs = <T,>(items: readonly T[], draw: (x: T) => string, top: string): string[] => {
+        const out: string[] = [];
+        for (let i = 0; i < items.length; i += 2) {
+          const b = items[i + 1];
+          out.push(`<tr>${b === undefined ? cell(draw(items[i]), 2, top) : cell(draw(items[i]), 1, top) + cell(draw(b), 1, top)}</tr>`);
+        }
+        return out;
+      };
+      const factRows = pairs(sp.facts, fact, "12px");
+      const bylineRows = pairs(sp.bylineParties, party, "6px");
+      rows.push(
+        `<tr><td style="padding:18px 32px 4px;">` +
+          `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${WHITE}" style="background:${WHITE};border:1px solid ${pal.cardBorder};border-top:4px solid ${color};border-radius:8px;">` +
+          `<tr><td align="center" style="padding:20px 20px 20px;text-align:center;${WRAP_STYLE}">` +
+          (sp.label
+            ? `<div style="font-size:13px;line-height:1.4;font-weight:600;color:${pal.secondaryText};margin:0 0 6px;">${ew(sp.label)}</div>`
+            : "") +
+          (sp.figures.length > 0
+            ? `<div style="margin:0;line-height:1.1;">` +
+              sp.figures
+                .map((v) => `<span style="${SPOTLIGHT_FIGURE_STYLE}">${ew(v)}</span>`)
+                .join(`<span style="font-size:28px;line-height:1.1;color:${pal.secondaryText};"> / </span>`) +
+              `</div>`
+            : "") +
+          (sp.change
+            ? `<div style="font-size:15px;line-height:1.4;font-weight:600;color:${changeColor};margin-top:8px;">${ew(sp.change)}</div>`
+            : "") +
+          (factRows.length > 0
+            ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:${sp.figures.length > 0 ? "14px" : "0"};border-top:1px solid ${pal.cardBorder};">` +
+              factRows.join("") +
+              `</table>`
+            : "") +
+          (sp.note
+            ? `<div style="font-size:13px;line-height:1.5;color:${pal.secondaryText};margin-top:14px;">${ew(sp.note).replace(/\n/g, "<br>")}</div>`
+            : "") +
+          (bylineRows.length > 0
+            ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:16px;border-top:1px solid ${pal.cardBorder};">` +
+              (sp.bylineLabel
+                ? `<tr><td colspan="2" align="center" style="padding:14px 0 2px;text-align:center;font-size:12px;line-height:1.4;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:${pal.secondaryText};">${ew(sp.bylineLabel)}</td></tr>`
+                : "") +
+              bylineRows.join("") +
+              `</table>`
+            : "") +
+          `</td></tr></table></td></tr>`,
+      );
+    }
 
-  if (spotDisclosures.length > 0) {
-    // Small print under the panel (TE 686): 13px, the palette's secondary text (≥ 4.5:1 on white by
-    // construction; #57534e if it ever were not). Words and order exactly as given.
-    const finePrint = relloEmailContrast(pal.secondaryText, WHITE) >= 4.5 ? pal.secondaryText : DISCLOSURE_FALLBACK_TEXT;
-    rows.push(
-      `<tr><td style="padding:14px 32px 4px;font-size:13px;line-height:1.55;color:${finePrint};">` +
-        spotDisclosures
-          .map(
-            (p, i) =>
-              `<p style="margin:0 0 ${i === spotDisclosures.length - 1 ? "0" : "10px"};">${ew(p).replace(/\n/g, "<br>")}</p>`,
-          )
-          .join("") +
-        `</td></tr>`,
-    );
+    if (sp.disclosures.length > 0) {
+      // Small print under the panel (TE 686): 13px, the palette's secondary text (≥ 4.5:1 on white by
+      // construction; #57534e if it ever were not). Words and order exactly as given.
+      const finePrint = relloEmailContrast(pal.secondaryText, WHITE) >= 4.5 ? pal.secondaryText : DISCLOSURE_FALLBACK_TEXT;
+      rows.push(
+        `<tr><td style="padding:14px 32px 4px;font-size:13px;line-height:1.55;color:${finePrint};">` +
+          sp.disclosures
+            .map(
+              (p, i) =>
+                `<p style="margin:0 0 ${i === sp.disclosures.length - 1 ? "0" : "10px"};">${ew(p).replace(/\n/g, "<br>")}</p>`,
+            )
+            .join("") +
+          `</td></tr>`,
+      );
+    }
   }
 
   if (cardRows.length > 0) {
@@ -1232,19 +1267,21 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   if (headline) push("", headline);
   if (badgeLabel || detail) push("", ...[badgeLabel, detail].filter(Boolean));
   for (const p of paragraphs) push("", p);
-  if (spotPanel) {
-    push("");
-    const figures = spotFigures.join(" / ");
-    if (figures) push(spotLabel ? `${spotLabel}: ${figures}` : figures);
-    if (spotChange) push(spotChange);
-    for (const f of spotFacts) push(`${f.label}: ${f.value}`);
-    if (spotNote) push(spotNote);
-    if (spotBylineParties.length > 0) {
-      const names = spotBylineParties.map((pt) => (pt.detail ? `${pt.name} (${pt.detail})` : pt.name)).join(" · ");
-      push(spotBylineLabel ? `${spotBylineLabel}: ${names}` : names);
+  for (const sp of spots) {
+    if (sp.panel) {
+      push("");
+      const figures = sp.figures.join(" / ");
+      if (figures) push(sp.label ? `${sp.label}: ${figures}` : figures);
+      if (sp.change) push(sp.change);
+      for (const f of sp.facts) push(`${f.label}: ${f.value}`);
+      if (sp.note) push(sp.note);
+      if (sp.bylineParties.length > 0) {
+        const names = sp.bylineParties.map((pt) => (pt.detail ? `${pt.name} (${pt.detail})` : pt.name)).join(" · ");
+        push(sp.bylineLabel ? `${sp.bylineLabel}: ${names}` : names);
+      }
     }
+    for (const d of sp.disclosures) push("", d);
   }
-  for (const d of spotDisclosures) push("", d);
   if (cardRows.length > 0) {
     push("");
     if (cardTitle) push(cardTitle);
