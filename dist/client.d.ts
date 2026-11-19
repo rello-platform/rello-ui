@@ -1607,4 +1607,176 @@ interface UnderlineTabBarProps {
 }
 declare function UnderlineTabBar({ tabs, activeTab, onChange, ariaLabel, className, }: UnderlineTabBarProps): react_jsx_runtime.JSX.Element;
 
-export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, ActionsIcon, AddressAutocomplete, type AddressAutocompleteProps, type AgentRole, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppGridIcon, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BrainIcon, BrandColorPicker, type BrandColorPickerProps, type BrandColors, BroadcastIcon, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, CardTooltip, CardTooltipIcon, type CardTooltipIconProps, type CardTooltipProps, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, ClosingIcon, type Column, CompassIcon, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, DialButton, type DialButtonProps, type DialPath, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DocsIcon, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateAction, type EmptyStateLinkProps, type EmptyStateProps, ErrorBanner, type ErrorBannerProps, type FactorVariant, type FeatureIllustrationKey, FinishLineIcon, FlowIcon, FollowupIcon, FunnelIcon, HRAssessmentsIcon, HSProgressIcon, HarvestHomeIcon, HarvestIcon, HearthIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeScoutIcon, HomeStretchIcon, type IllustrationKey, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LeadPoolIcon, LoadingOverlay, LoanVolumeIcon, MailboxIcon, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, type MultiFeedbackOption, type MultiFeedbackVariant, MultiFeedbackWidget, type MultiFeedbackWidgetProps, MyPipelineIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OpenHouseIcon, OrbitalRings, OvenIcon, PATTERNS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, PathfinderIcon, type PipelineData, PipelineThermometer, type PipelineThermometerProps, type PlatformIllustrationKey, PreApprovalIcon, PreQualIcon, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, RateAlertIcon, RelloUpsellNudge, type RelloUpsellNudgeProps, RoutingIcon, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SessionRetryBanner, type SessionRetryBannerProps, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, type SocialLinks, SocialLinksInput, type SocialLinksInputProps, SpendPanel, type SpendPanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, TeamActivityIcon, type TeamCopy, type TeamCopyOverride, TeamDawnIcon, type TeamMember, TeamMemberCard, type TeamMemberCardProps, TeamPipelineIcon, type TeamRole, TeamRoster, type TeamRosterProps, type TeamRosterVariant, TendingIcon, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, TrialCountdownBanner, type TrialCountdownBannerProps, type TrialStartAlreadyUsed, type TrialStartEndsAt, type TrialStartError, TrialStartModal, type TrialStartModalProps, type TrialStartResult, type TrialStartStarted, type TrialStartUnknown, TrophyIcon, type UnderlineTab, UnderlineTabBar, type UnderlineTabBarProps, UpgradeMenuItem, type UpgradeMenuItemProps, VoiceCorpusInput, type VoiceCorpusInputProps, type VoiceCorpusSample, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, WelcomeMatIcon, type WizardAutosaveStatus, WizardShell, type WizardShellProps, type WizardStep, countWords, useToast };
+/**
+ * Upsell telemetry vocabulary. Pure data, server-safe (root entry).
+ *
+ * ANSWERS Q-CS-5: five events per seam. The component reports `engaged`
+ * (`onEngaged`), `dismissed` (`onDismiss`) and `clicked` (`onClick`); the
+ * spoke's wrapper reports `shown` when it mounts the nudge; Rello's
+ * trial-start / upgrade handler emits `converted`. Signal types are
+ * `<spoke>.upsell.<seam>.<event>`, typed with `UpsellEvent` so the event half
+ * cannot be misspelled.
+ */
+declare const UPSELL_EVENTS: readonly ["shown", "engaged", "dismissed", "clicked", "converted"];
+type UpsellEvent = (typeof UPSELL_EVENTS)[number];
+
+/**
+ * The locked-feature call to action, shared by LockedFeatureBanner and LockedFeatureDialog (v2.43.0).
+ * Exactly one target: a link (`href`, optional `onClick` alongside it) or a handler (`onClick`). The spoke owns what it
+ * does (start a trial, open a page); these components never start anything themselves.
+ */
+type LockedPrimaryAction = {
+    label: string;
+    href: string;
+    onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+} | {
+    label: string;
+    onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    href?: undefined;
+};
+/** "Learn more": always a link that opens in a new tab (`rel="noopener noreferrer"`). */
+interface LockedLearnMore {
+    label: string;
+    href: string;
+    /**
+     * Screen-reader-only words after the label, telling the reader it opens a new tab. Defaults to
+     * "(opens in a new tab)"; pass "" to omit.
+     */
+    newTabHint?: string;
+}
+/** Telemetry callback: one of the shared UPSELL_EVENTS plus the seam the spoke gave. */
+type LockedOnEvent = (event: UpsellEvent, seam: string) => void;
+
+type LockedFeatureBannerVariant = "page" | "section" | "card";
+interface LockedFeatureBannerProps {
+    /** Bold lead, e.g. "<Feature> is part of <plan>". Every word is the spoke's. */
+    title: string;
+    /** One value sentence after the title. */
+    body: React.ReactNode;
+    /** "page": over a whole locked page; "section": over one section; "card": inside a narrow card (buttons stack). */
+    variant: LockedFeatureBannerVariant;
+    /** The call to action (a link or a handler). */
+    primary: LockedPrimaryAction;
+    /** Optional "Learn more" link; opens in a new tab. */
+    learnMore?: LockedLearnMore;
+    /** Stable seam id the spoke binds to its telemetry namespace. */
+    seam: string;
+    /**
+     * UPSELL_EVENTS: `shown` once per mount, the first time the banner is in view (on mount where
+     * IntersectionObserver is unavailable); `clicked` on the primary button or "Learn more".
+     */
+    onEvent?: LockedOnEvent;
+    className?: string;
+}
+/**
+ * Cream banner over a locked page, section or card (PFP GATEWAY D58–D60). Says the feature is part of a bigger plan,
+ * with a primary action and an optional "Learn more". Carries no product words, prices or routes of its own.
+ */
+declare function LockedFeatureBanner({ title, body, variant, primary, learnMore, seam, onEvent, className }: LockedFeatureBannerProps): react_jsx_runtime.JSX.Element;
+
+type LockedBadgeSize = "sm" | "md";
+interface LockedBadgeProps {
+    /** Visible text and the accessible name, e.g. the plan or add-on that unlocks the item. */
+    label: string;
+    size: LockedBadgeSize;
+    className?: string;
+}
+/**
+ * Small lock + label marking a locked menu item, card or section (PFP GATEWAY D58–D60). Display only: not a control.
+ * The lock is decorative (aria-hidden); the label is what assistive tech reads.
+ */
+declare function LockedBadge({ label, size, className }: LockedBadgeProps): react_jsx_runtime.JSX.Element;
+
+interface LockedFeatureDialogProps {
+    /** Controlled open state. */
+    open: boolean;
+    /** Escape, the close button and a backdrop click all call this; the spoke sets `open` false. */
+    onClose: () => void;
+    /** Small line above the title. */
+    eyebrow?: string;
+    /** Dialog title; also its accessible name (aria-labelledby). */
+    title: string;
+    body: React.ReactNode;
+    primary: LockedPrimaryAction;
+    learnMore?: LockedLearnMore;
+    /** Stable seam id the spoke binds to its telemetry namespace. */
+    seam: string;
+    /**
+     * UPSELL_EVENTS: `shown` each time it opens, `clicked` on the primary button or "Learn more",
+     * `dismissed` when closed by Escape, the close button or the backdrop.
+     */
+    onEvent?: LockedOnEvent;
+    /** Accessible name of the close button. Defaults to "Close". */
+    closeLabel?: string;
+    className?: string;
+}
+/**
+ * The locked-action modal (PFP GATEWAY D58–D60): opened from a locked menu item or quick action. role=dialog,
+ * aria-modal, aria-labelledby the title; Escape, × and backdrop close; focus is trapped inside and returned to the
+ * element that opened it. Carries no product words, prices or routes of its own.
+ */
+declare function LockedFeatureDialog({ open, onClose, eyebrow, title, body, primary, learnMore, seam, onEvent, closeLabel, className, }: LockedFeatureDialogProps): react_jsx_runtime.JSX.Element;
+
+type PreviewFrameMode = "sample" | "greyed";
+interface PreviewFrameProps {
+    children: React.ReactNode;
+    /**
+     * "sample" (default): a sample-data preview of a locked page. It stays explorable (tabs, expanders and links work),
+     * but its form controls are read-only, and trying to change one shows `blockedHint`.
+     * "greyed": a dimmed, non-interactive picture (no names or numbers). Its content is hidden from assistive tech
+     * and cannot take focus; the banner above it is the accessible text.
+     */
+    mode?: PreviewFrameMode;
+    /** "sample" only: a small label over the preview (e.g. that the data is a sample). The frame is described by it. */
+    sampleLabel?: string;
+    /** "sample" only: the line shown when a viewer tries to change a value. */
+    blockedHint?: string;
+    /** "sample" only: called whenever a change is blocked, with the control the viewer tried to change. */
+    onBlockedInteract?: (target: HTMLElement) => void;
+    className?: string;
+}
+/** How long the blocked hint stays up. */
+declare const PREVIEW_BLOCKED_HINT_MS = 2600;
+/**
+ * Wraps a preview under a locked-feature banner (PFP GATEWAY D60 / K-747; Rello Home Insight uses "greyed").
+ * Carries no words of its own: every string is a prop.
+ */
+declare function PreviewFrame({ children, mode, sampleLabel, blockedHint, onBlockedInteract, className }: PreviewFrameProps): react_jsx_runtime.JSX.Element;
+
+interface SetupProgressStep {
+    /** Stable id (the React key). */
+    id: string;
+    /** What to set up. */
+    label: string;
+    /** Where in the app the data is saved. */
+    where: string;
+    /** What makes it count as done, in plain words. */
+    rule: string;
+    /** Read from saved data by the spoke. Only `true` counts. Never set by a click here. */
+    done: boolean;
+    /** Link to where the data is saved. */
+    href: string;
+}
+interface SetupProgressCardProps {
+    title: string;
+    steps: SetupProgressStep[];
+    /** A smaller card (e.g. on a home page): the step list without the where/rule lines. */
+    compact?: boolean;
+    /** Render nothing once every step is done. Default true. */
+    hideWhenComplete?: boolean;
+    /** The progress line. Defaults to "N of M done". */
+    progressText?: (done: number, total: number) => string;
+    /** Accessible name of a done step's mark. Defaults to "done". */
+    doneLabel?: string;
+    /** Accessible name of a not-done step's mark. Defaults to "not done". */
+    notDoneLabel?: string;
+    className?: string;
+}
+/**
+ * "Get set up N of M" (PFP GATEWAY D58–D60). There is deliberately NO toggle or onCheck prop (Kelly, K-750): a step
+ * is done only when the spoke reads its data saved in its place. Each step is a link to that place; its mark is a
+ * status (role="img"), never a control.
+ */
+declare function SetupProgressCard({ title, steps, compact, hideWhenComplete, progressText, doneLabel, notDoneLabel, className, }: SetupProgressCardProps): react_jsx_runtime.JSX.Element | null;
+
+export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, ActionsIcon, AddressAutocomplete, type AddressAutocompleteProps, type AgentRole, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppGridIcon, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BrainIcon, BrandColorPicker, type BrandColorPickerProps, type BrandColors, BroadcastIcon, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, CardTooltip, CardTooltipIcon, type CardTooltipIconProps, type CardTooltipProps, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, ClosingIcon, type Column, CompassIcon, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, DialButton, type DialButtonProps, type DialPath, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DocsIcon, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateAction, type EmptyStateLinkProps, type EmptyStateProps, ErrorBanner, type ErrorBannerProps, type FactorVariant, type FeatureIllustrationKey, FinishLineIcon, FlowIcon, FollowupIcon, FunnelIcon, HRAssessmentsIcon, HSProgressIcon, HarvestHomeIcon, HarvestIcon, HearthIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeScoutIcon, HomeStretchIcon, type IllustrationKey, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LeadPoolIcon, LoadingOverlay, LoanVolumeIcon, LockedBadge, type LockedBadgeProps, type LockedBadgeSize, LockedFeatureBanner, type LockedFeatureBannerProps, type LockedFeatureBannerVariant, LockedFeatureDialog, type LockedFeatureDialogProps, type LockedLearnMore, type LockedOnEvent, type LockedPrimaryAction, MailboxIcon, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, type MultiFeedbackOption, type MultiFeedbackVariant, MultiFeedbackWidget, type MultiFeedbackWidgetProps, MyPipelineIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OpenHouseIcon, OrbitalRings, OvenIcon, PATTERNS, PREVIEW_BLOCKED_HINT_MS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, PathfinderIcon, type PipelineData, PipelineThermometer, type PipelineThermometerProps, type PlatformIllustrationKey, PreApprovalIcon, PreQualIcon, PreviewFrame, type PreviewFrameMode, type PreviewFrameProps, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, RateAlertIcon, RelloUpsellNudge, type RelloUpsellNudgeProps, RoutingIcon, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SessionRetryBanner, type SessionRetryBannerProps, SetupProgressCard, type SetupProgressCardProps, type SetupProgressStep, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, type SocialLinks, SocialLinksInput, type SocialLinksInputProps, SpendPanel, type SpendPanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, TeamActivityIcon, type TeamCopy, type TeamCopyOverride, TeamDawnIcon, type TeamMember, TeamMemberCard, type TeamMemberCardProps, TeamPipelineIcon, type TeamRole, TeamRoster, type TeamRosterProps, type TeamRosterVariant, TendingIcon, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, TrialCountdownBanner, type TrialCountdownBannerProps, type TrialStartAlreadyUsed, type TrialStartEndsAt, type TrialStartError, TrialStartModal, type TrialStartModalProps, type TrialStartResult, type TrialStartStarted, type TrialStartUnknown, TrophyIcon, type UnderlineTab, UnderlineTabBar, type UnderlineTabBarProps, UpgradeMenuItem, type UpgradeMenuItemProps, VoiceCorpusInput, type VoiceCorpusInputProps, type VoiceCorpusSample, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, WelcomeMatIcon, type WizardAutosaveStatus, WizardShell, type WizardShellProps, type WizardStep, countWords, useToast };

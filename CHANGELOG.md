@@ -5,6 +5,37 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.43.0 — 2026-11-19 (untagged until the PFP GATEWAY audit; the KA tags)
+
+**Added: the shared locked-feature pattern: five components (client entry)**
+
+PFP GATEWAY (Kelly D58–D60; Platform KA 1417 ruling, 1425 API GO; KA ruling K-757). A smaller plan
+still sees the whole app; locked items carry a lock and explain themselves. PFP is the first
+consumer; Rello's Home Insight adopts it later. Additive only: no existing export renamed or removed.
+
+- `LockedFeatureBanner` — `{ title, body, variant: "page" | "section" | "card", primary, learnMore?, seam, onEvent? }`.
+  A note labelled by its title. `primary` is `{ label, href }` (a link, optional `onClick`) or
+  `{ label, onClick }` (a button). `learnMore` opens a new tab (`rel="noopener noreferrer"`), with a
+  screen-reader "(opens in a new tab)" (`newTabHint`, "" to omit). Events reuse `UPSELL_EVENTS`
+  (imported from `rello-upsell-nudge/events`, not redeclared): `shown` once per mount, the first time it
+  is in view (on mount where IntersectionObserver is unavailable); `clicked` on either button.
+- `LockedBadge` — `{ label, size: "sm" | "md" }`. Lock icon aria-hidden; the label is the accessible name.
+- `LockedFeatureDialog` — `{ open, onClose, eyebrow?, title, body, primary, learnMore?, seam, onEvent?, closeLabel? }`.
+  Radix dialog: role=dialog, aria-modal, aria-labelledby the title; Escape, × and backdrop close;
+  focus trapped and returned to the opener. Events: `shown` per opening, `clicked`, `dismissed`.
+- `PreviewFrame` — `{ children, mode?: "sample" | "greyed", sampleLabel?, blockedHint?, onBlockedInteract? }`
+  (+ `PREVIEW_BLOCKED_HINT_MS`). "sample" (default): explorable (tabs, expanders, links); form controls
+  read-only, including ones rendered later; a try to change one shows `blockedHint` (aria-live polite)
+  and calls `onBlockedInteract`; the frame is described by `sampleLabel`. "greyed" (Home Insight,
+  Platform 1425): dimmed, no label, `aria-hidden` + `inert`, nothing focusable.
+- `SetupProgressCard` — `{ title, steps: { id, label, where, rule, done, href }[], compact?, hideWhenComplete? (default true), progressText?, doneLabel?, notDoneLabel? }`.
+  "N of M done" (aria-live polite) + a progressbar. Each step links to where its data is saved; its
+  mark is a status (role="img", "done" / "not done"), never a control. There is deliberately **no**
+  toggle / onCheck prop (Kelly, K-750): `done` comes from saved data only. Only `done === true` counts.
+
+No product words, prices or routes inside any component: every string is a prop. Colours by tokens
+with fallbacks equal to the token defaults; 44px targets; wraps at phone width.
+
 ## v2.42.0 — 2026-11-12 (untagged until audit + merge)
 
 **Added: `spotlights`, several spotlight panels in one email**
