@@ -5,6 +5,34 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.44.0 — 2026-11-20 (untagged until the GROWTH audit; the KA tags)
+
+**Added: `DropdownMenu` and `Popover` (client entry)**
+
+RELLO GROWTH MARKETING, Audience redesign (KA K371 Q4 + K388): the saved-cohort "⋯" menu and the
+"+ Add filter" chip editors. Kelly's rule: builds use Rello UI, never native or one-off controls; v2.43.0
+had neither. Additive only: no existing export renamed or removed; Select, Dialog and tokens untouched.
+New dependencies: `@radix-ui/react-dropdown-menu` ^2.1.16 (the range Rello already uses) and
+`@radix-ui/react-popover` ^1.1.15 (shares the Radix internals already installed: popper 1.2.8,
+dismissable-layer 1.1.11, focus-scope 1.1.7).
+
+- `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuLabel`,
+  `DropdownMenuSeparator`, `DropdownMenuGroup`, `DropdownMenuPortal` (+ prop types). Radix keyboard:
+  Enter / Space / ArrowDown open on the first item, arrows move (no loop, Radix default), Home / End,
+  typeahead, Escape closes and focus returns to the trigger. `DropdownMenuItem` takes
+  `disabledReason?: string`: the item is `aria-disabled`, the reason shows as text under the label and is
+  its accessible description, and selecting it does nothing (the menu stays open). A locked item stays
+  focusable (WAI-ARIA menu pattern) so its reason can be reached by keyboard; plain `disabled` behaves the
+  same, without a reason line.
+- `Popover`, `PopoverTrigger`, `PopoverContent`, `PopoverAnchor`, `PopoverClose` (+ prop types).
+  `PopoverContent` takes `showCloseButton?` (default true) and `closeLabel?` (default "Close"); name the
+  content with `aria-label`. Escape and outside click close; focus moves to the first control on open and
+  back to the trigger on close; a Select opened inside does not close it. `collisionPadding` 16 and a
+  width/height cap from Radix's measured available space keep it on a 390px screen. Default `align="start"`.
+- Both use Select content's surface (z-50, rounded-md, border, shadow-md; `min-w-[8rem] p-1` on the menu)
+  with every colour a token with a fallback, and `--card-background` instead of a literal white, so a
+  dark token set turns them dark. Triggers and items are at least 44px.
+
 ## v2.43.0 — 2026-11-19 (untagged until the PFP GATEWAY audit; the KA tags)
 
 **Added: the shared locked-feature pattern: five components (client entry)**
