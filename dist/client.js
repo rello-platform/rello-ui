@@ -8495,6 +8495,717 @@ function UnderlineTabBar({
     }
   );
 }
+
+// src/components/locked-feature-banner/LockedFeatureBanner.tsx
+import * as React33 from "react";
+import { Lock } from "iconoir-react";
+
+// src/components/locked-feature-banner/actions.tsx
+import { jsx as jsx69, jsxs as jsxs56 } from "react/jsx-runtime";
+function emitLockedEvent(onEvent, event, seam, source) {
+  if (!onEvent) return;
+  try {
+    onEvent(event, seam);
+  } catch (err) {
+    console.error(`[${source}] onEvent threw`, { event, seam, err });
+  }
+}
+var LOCKED_PRIMARY_CLASS = "inline-flex items-center justify-center gap-2 min-h-[44px] min-w-[44px] px-4 rounded-md text-sm font-semibold text-center no-underline transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary,#3B5998)] focus-visible:ring-offset-2";
+var LOCKED_PRIMARY_STYLE = {
+  backgroundColor: "var(--brand-primary, #3B5998)",
+  color: "var(--brand-primary-foreground, #FFFFFF)"
+};
+var LOCKED_SECONDARY_CLASS = "inline-flex items-center justify-center gap-2 min-h-[44px] min-w-[44px] px-4 rounded-md text-sm font-semibold text-center no-underline border transition-colors hover:bg-[var(--neutral-50,#FAFBFC)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary,#3B5998)] focus-visible:ring-offset-2";
+var LOCKED_SECONDARY_STYLE = {
+  borderColor: "var(--card-border, #D1D5DB)",
+  color: "var(--neutral-700, #434B52)",
+  backgroundColor: "var(--card-background, #FFFFFF)"
+};
+var SR_ONLY = "sr-only";
+function LockedActions({ primary, learnMore, seam, onEvent, source, stacked = false, className }) {
+  const primaryEl = typeof primary.href === "string" && primary.href !== "" ? /* @__PURE__ */ jsx69(
+    "a",
+    {
+      href: primary.href,
+      className: LOCKED_PRIMARY_CLASS,
+      style: LOCKED_PRIMARY_STYLE,
+      onClick: (event) => {
+        emitLockedEvent(onEvent, "clicked", seam, source);
+        primary.onClick?.(event);
+      },
+      children: primary.label
+    }
+  ) : /* @__PURE__ */ jsx69(
+    "button",
+    {
+      type: "button",
+      className: LOCKED_PRIMARY_CLASS,
+      style: LOCKED_PRIMARY_STYLE,
+      onClick: (event) => {
+        emitLockedEvent(onEvent, "clicked", seam, source);
+        primary.onClick?.(event);
+      },
+      children: primary.label
+    }
+  );
+  const hint = learnMore?.newTabHint ?? "(opens in a new tab)";
+  return /* @__PURE__ */ jsxs56("div", { className: cn("flex flex-wrap gap-2", stacked ? "flex-col items-stretch" : "items-center", className), children: [
+    primaryEl,
+    learnMore ? /* @__PURE__ */ jsxs56(
+      "a",
+      {
+        href: learnMore.href,
+        target: "_blank",
+        rel: "noopener noreferrer",
+        className: LOCKED_SECONDARY_CLASS,
+        style: LOCKED_SECONDARY_STYLE,
+        onClick: () => emitLockedEvent(onEvent, "clicked", seam, source),
+        children: [
+          learnMore.label,
+          hint !== "" ? /* @__PURE__ */ jsxs56("span", { className: SR_ONLY, children: [
+            " ",
+            hint
+          ] }) : null
+        ]
+      }
+    ) : null
+  ] });
+}
+
+// src/components/locked-feature-banner/LockedFeatureBanner.tsx
+import { jsx as jsx70, jsxs as jsxs57 } from "react/jsx-runtime";
+var VARIANT_CLASS = {
+  page: "flex-col items-start gap-3 p-4 sm:flex-row sm:items-center sm:gap-4 sm:p-5",
+  section: "flex-col items-start gap-3 p-4 sm:flex-row sm:items-center",
+  card: "flex-col items-start gap-3 p-3"
+};
+function LockedFeatureBanner({ title, body, variant, primary, learnMore, seam, onEvent, className }) {
+  const titleId = React33.useId();
+  const rootRef = React33.useRef(null);
+  const onEventRef = React33.useRef(onEvent);
+  onEventRef.current = onEvent;
+  const seamRef = React33.useRef(seam);
+  seamRef.current = seam;
+  const shownRef = React33.useRef(false);
+  React33.useEffect(() => {
+    const fireShown = () => {
+      if (shownRef.current) return;
+      shownRef.current = true;
+      emitLockedEvent(onEventRef.current, "shown", seamRef.current, "LockedFeatureBanner");
+    };
+    const el = rootRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      fireShown();
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        fireShown();
+        observer.disconnect();
+      }
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return /* @__PURE__ */ jsxs57(
+    "div",
+    {
+      ref: rootRef,
+      role: "note",
+      "aria-labelledby": titleId,
+      "data-seam": seam,
+      "data-variant": variant,
+      className: cn("flex w-full min-w-0 rounded-xl border", VARIANT_CLASS[variant], className),
+      style: {
+        backgroundColor: "var(--warning-light, rgba(212, 168, 75, 0.15))",
+        borderColor: "color-mix(in srgb, var(--warning, #D4A84B) 45%, transparent)",
+        color: "var(--foreground, #2D3339)"
+      },
+      children: [
+        /* @__PURE__ */ jsx70(
+          Lock,
+          {
+            "aria-hidden": "true",
+            width: variant === "card" ? 20 : 26,
+            height: variant === "card" ? 20 : 26,
+            className: "shrink-0",
+            style: { color: "var(--warning, #D4A84B)" }
+          }
+        ),
+        /* @__PURE__ */ jsxs57("p", { className: "m-0 min-w-0 flex-1 text-sm [overflow-wrap:anywhere]", children: [
+          /* @__PURE__ */ jsx70("strong", { id: titleId, className: "font-semibold", children: title }),
+          " ",
+          body
+        ] }),
+        /* @__PURE__ */ jsx70(
+          LockedActions,
+          {
+            primary,
+            learnMore,
+            seam,
+            onEvent,
+            source: "LockedFeatureBanner",
+            stacked: variant === "card",
+            className: variant === "card" ? "w-full" : "shrink-0"
+          }
+        )
+      ]
+    }
+  );
+}
+
+// src/components/locked-badge/LockedBadge.tsx
+import { Lock as Lock2 } from "iconoir-react";
+import { jsx as jsx71, jsxs as jsxs58 } from "react/jsx-runtime";
+var SIZE = {
+  sm: { cls: "gap-1 px-2 py-0.5 text-[11px]", icon: 12 },
+  md: { cls: "gap-1.5 px-2.5 py-1 text-xs", icon: 14 }
+};
+function LockedBadge({ label, size, className }) {
+  const s = SIZE[size];
+  return /* @__PURE__ */ jsxs58(
+    "span",
+    {
+      "data-size": size,
+      className: cn("inline-flex max-w-full items-center rounded-full font-bold uppercase tracking-wider", s.cls, className),
+      style: { backgroundColor: "var(--neutral-50, #FAFBFC)", border: "1px solid var(--neutral-100, #D1D5DB)", color: "var(--neutral-700, #434B52)" },
+      children: [
+        /* @__PURE__ */ jsx71(Lock2, { "aria-hidden": "true", width: s.icon, height: s.icon, className: "shrink-0" }),
+        /* @__PURE__ */ jsx71("span", { className: "min-w-0 truncate", children: label })
+      ]
+    }
+  );
+}
+
+// src/components/locked-feature-dialog/LockedFeatureDialog.tsx
+import * as React34 from "react";
+import * as DialogPrimitive4 from "@radix-ui/react-dialog";
+import { Xmark as Xmark4 } from "iconoir-react";
+import { jsx as jsx72, jsxs as jsxs59 } from "react/jsx-runtime";
+function LockedFeatureDialog({
+  open,
+  onClose,
+  eyebrow,
+  title,
+  body,
+  primary,
+  learnMore,
+  seam,
+  onEvent,
+  closeLabel = "Close",
+  className
+}) {
+  const returnFocusRef = React34.useRef(null);
+  const onEventRef = React34.useRef(onEvent);
+  onEventRef.current = onEvent;
+  const onCloseRef = React34.useRef(onClose);
+  onCloseRef.current = onClose;
+  const shownForOpenRef = React34.useRef(false);
+  React34.useEffect(() => {
+    if (open && !shownForOpenRef.current) {
+      shownForOpenRef.current = true;
+      emitLockedEvent(onEventRef.current, "shown", seam, "LockedFeatureDialog");
+    }
+    if (!open) shownForOpenRef.current = false;
+  }, [open, seam]);
+  const dismiss = React34.useCallback(() => {
+    emitLockedEvent(onEventRef.current, "dismissed", seam, "LockedFeatureDialog");
+    onCloseRef.current();
+  }, [seam]);
+  return /* @__PURE__ */ jsx72(
+    DialogPrimitive4.Root,
+    {
+      open,
+      onOpenChange: (next) => {
+        if (!next) dismiss();
+      },
+      children: /* @__PURE__ */ jsxs59(DialogPrimitive4.Portal, { children: [
+        /* @__PURE__ */ jsx72(
+          DialogPrimitive4.Overlay,
+          {
+            "data-testid": "locked-feature-dialog-backdrop",
+            className: "fixed inset-0",
+            style: {
+              zIndex: "var(--z-modal, 50)",
+              backgroundColor: "color-mix(in srgb, var(--neutral-900, #2D3339) 50%, transparent)"
+            }
+          }
+        ),
+        /* @__PURE__ */ jsxs59(
+          DialogPrimitive4.Content,
+          {
+            "aria-modal": "true",
+            "data-seam": seam,
+            onOpenAutoFocus: () => {
+              const active = typeof document !== "undefined" ? document.activeElement : null;
+              returnFocusRef.current = active instanceof HTMLElement && active !== document.body ? active : null;
+            },
+            onCloseAutoFocus: (event) => {
+              event.preventDefault();
+              const el = returnFocusRef.current;
+              returnFocusRef.current = null;
+              if (el && el.isConnected) el.focus();
+            },
+            className: cn(
+              "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-xl max-h-[calc(100dvh-2rem)] overflow-y-auto overflow-x-hidden rounded-2xl shadow-lg outline-none",
+              className
+            ),
+            style: {
+              zIndex: "var(--z-modal, 50)",
+              backgroundColor: "var(--card-background, #FFFFFF)",
+              color: "var(--foreground, #2D3339)"
+            },
+            children: [
+              /* @__PURE__ */ jsx72(
+                "div",
+                {
+                  className: "flex items-center justify-end px-2 py-1",
+                  style: { backgroundColor: "var(--brand-primary, #3B5998)", color: "var(--brand-primary-foreground, #FFFFFF)" },
+                  children: /* @__PURE__ */ jsx72(
+                    "button",
+                    {
+                      type: "button",
+                      "aria-label": closeLabel,
+                      onClick: dismiss,
+                      className: "inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary-foreground,#FFFFFF)]",
+                      style: { color: "inherit", backgroundColor: "transparent" },
+                      children: /* @__PURE__ */ jsx72(Xmark4, { "aria-hidden": "true", width: 22, height: 22 })
+                    }
+                  )
+                }
+              ),
+              /* @__PURE__ */ jsxs59("div", { className: "space-y-3 p-5 sm:p-6", children: [
+                eyebrow ? /* @__PURE__ */ jsx72("p", { className: "m-0 text-xs font-extrabold uppercase tracking-widest", style: { color: "var(--brand-accent, #C9785D)" }, children: eyebrow }) : null,
+                /* @__PURE__ */ jsx72(DialogPrimitive4.Title, { className: "m-0 text-2xl font-bold leading-tight [overflow-wrap:anywhere]", children: title }),
+                /* @__PURE__ */ jsx72(DialogPrimitive4.Description, { asChild: true, children: /* @__PURE__ */ jsx72("div", { className: "text-base [overflow-wrap:anywhere]", style: { color: "var(--neutral-700, #434B52)" }, children: body }) }),
+                /* @__PURE__ */ jsx72(
+                  LockedActions,
+                  {
+                    primary,
+                    learnMore,
+                    seam,
+                    onEvent,
+                    source: "LockedFeatureDialog",
+                    className: "pt-2"
+                  }
+                )
+              ] })
+            ]
+          }
+        )
+      ] })
+    }
+  );
+}
+
+// src/components/preview-frame/PreviewFrame.tsx
+import * as React35 from "react";
+import { jsx as jsx73, jsxs as jsxs60 } from "react/jsx-runtime";
+var PREVIEW_BLOCKED_HINT_MS = 2600;
+var TEXT_LIKE = /* @__PURE__ */ new Set(["", "text", "search", "email", "url", "tel", "password", "number"]);
+var NOT_A_VALUE = /* @__PURE__ */ new Set(["button", "submit", "reset", "image", "hidden"]);
+var FOCUSABLE = 'a[href], area[href], button, input, select, textarea, iframe, summary, [tabindex], [contenteditable=""], [contenteditable="true"]';
+var EDITABLE_HOST = '[contenteditable=""], [contenteditable="true"], [contenteditable="plaintext-only"]';
+var isEditable = (el) => el.isContentEditable === true || el.closest(EDITABLE_HOST) !== null;
+function valueControl(target) {
+  if (!(target instanceof HTMLElement)) return null;
+  if (target instanceof HTMLOptionElement || target instanceof HTMLOptGroupElement) return target.closest("select");
+  if (target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) return target;
+  if (target instanceof HTMLInputElement) return NOT_A_VALUE.has(target.type) ? null : target;
+  if (isEditable(target)) return target.closest(EDITABLE_HOST) ?? target;
+  return null;
+}
+var isTextLike = (el) => el instanceof HTMLTextAreaElement || el instanceof HTMLInputElement && TEXT_LIKE.has(el.type) || isEditable(el);
+var NAV_KEYS = /* @__PURE__ */ new Set(["Tab", "Shift", "Escape", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown", "Alt", "Control", "Meta", "CapsLock"]);
+var MODIFIER_ONLY = /* @__PURE__ */ new Set(["Alt", "AltGraph", "Control", "Meta", "Shift", "CapsLock", "Fn", "OS", "Hyper", "Super"]);
+var MODIFIED_EDIT_KEYS = /* @__PURE__ */ new Set(["Backspace", "Delete", "Enter", "x", "v", "z", "y", "b", "i", "u"]);
+var MODIFIED_PICK_KEYS = /* @__PURE__ */ new Set(["a", " ", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"]);
+function modifiedKeyAllowed(key, textLike) {
+  if (MODIFIER_ONLY.has(key)) return true;
+  const k = key.length === 1 ? key.toLowerCase() : key;
+  if (MODIFIED_EDIT_KEYS.has(k)) return false;
+  return textLike || !MODIFIED_PICK_KEYS.has(k);
+}
+function markReadOnly(root) {
+  root.querySelectorAll("input, textarea, select").forEach((el) => {
+    if (el instanceof HTMLInputElement && NOT_A_VALUE.has(el.type)) return;
+    if ((el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && !el.readOnly) el.readOnly = true;
+    el.setAttribute("aria-readonly", "true");
+  });
+}
+function snapshotNodes(node) {
+  if (node instanceof CharacterData) return { node, data: node.data };
+  return { node, children: Array.from(node.childNodes, snapshotNodes) };
+}
+function restoreNodes(snap) {
+  const { node } = snap;
+  if (snap.data !== void 0) {
+    if (node instanceof CharacterData && node.data !== snap.data) node.data = snap.data;
+    return;
+  }
+  const kids = snap.children ?? [];
+  const now = node.childNodes;
+  if (now.length !== kids.length || kids.some((c, i) => now[i] !== c.node)) {
+    node.replaceChildren(...kids.map((c) => c.node));
+  }
+  kids.forEach(restoreNodes);
+}
+function snapshotOf(el) {
+  if (el instanceof HTMLSelectElement) {
+    return { kind: "select", selectedIndex: el.selectedIndex, selected: Array.from(el.options, (o) => o.selected) };
+  }
+  if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+    return { kind: "field", value: el.value, checked: el instanceof HTMLInputElement ? el.checked : false };
+  }
+  if (isEditable(el)) return { kind: "editable", nodes: snapshotNodes(el) };
+  return null;
+}
+function restoreSnapshot(el, snap) {
+  if (snap.kind === "select") {
+    if (!(el instanceof HTMLSelectElement)) return;
+    if (!el.multiple) {
+      if (el.selectedIndex !== snap.selectedIndex) el.selectedIndex = snap.selectedIndex;
+      return;
+    }
+    Array.from(el.options).forEach((o, i) => {
+      const want = snap.selected[i] === true;
+      if (o.selected !== want) o.selected = want;
+    });
+    return;
+  }
+  if (snap.kind === "editable") {
+    restoreNodes(snap.nodes);
+    return;
+  }
+  if (el instanceof HTMLInputElement && (el.type === "checkbox" || el.type === "radio")) {
+    if (el.checked !== snap.checked) el.checked = snap.checked;
+    return;
+  }
+  if ((el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && el.value !== snap.value) el.value = snap.value;
+}
+function radioGroup(root, el) {
+  if (!el.name) return [el];
+  return Array.from(root.querySelectorAll('input[type="radio"]')).filter((r) => r.name === el.name && r.form === el.form);
+}
+var STARTS_ATTEMPT = /* @__PURE__ */ new Set(["mousedown", "keydown", "paste", "cut", "drop", "submit", "reset"]);
+var PHASE_RANK = { click: 1, beforeinput: 2, input: 3, change: 4 };
+function continuesAttempt(attempt, type, target, repeat) {
+  if (!attempt || attempt.target !== target) return false;
+  if (type === "keydown") return repeat && attempt.phases.has("keydown");
+  if (STARTS_ATTEMPT.has(type)) return false;
+  const rank = PHASE_RANK[type];
+  if (rank === void 0) return false;
+  if (type === "click") return attempt.phases.has("mousedown");
+  if (type === "beforeinput") {
+    return attempt.rank <= rank && Array.from(attempt.phases).some((p) => STARTS_ATTEMPT.has(p));
+  }
+  return rank > attempt.rank;
+}
+var PREV_TABINDEX = "data-preview-prev-tabindex";
+function unfocusable(root) {
+  root.querySelectorAll(FOCUSABLE).forEach((el) => {
+    if (!el.hasAttribute(PREV_TABINDEX)) el.setAttribute(PREV_TABINDEX, el.getAttribute("tabindex") ?? "");
+    el.setAttribute("tabindex", "-1");
+  });
+}
+function restoreFocusable(root) {
+  root.querySelectorAll(`[${PREV_TABINDEX}]`).forEach((el) => {
+    const prev = el.getAttribute(PREV_TABINDEX);
+    if (prev === null || prev === "") el.removeAttribute("tabindex");
+    else el.setAttribute("tabindex", prev);
+    el.removeAttribute(PREV_TABINDEX);
+  });
+}
+function PreviewFrame({ children, mode = "sample", sampleLabel, blockedHint, onBlockedInteract, className }) {
+  const labelId = React35.useId();
+  const contentRef = React35.useRef(null);
+  const [hintOn, setHintOn] = React35.useState(false);
+  const hintTimer = React35.useRef(null);
+  const onBlockedRef = React35.useRef(onBlockedInteract);
+  onBlockedRef.current = onBlockedInteract;
+  const snapshots = React35.useRef(/* @__PURE__ */ new WeakMap());
+  const attempt = React35.useRef(null);
+  const radioBefore = React35.useRef(null);
+  const radioTimer = React35.useRef(null);
+  const block = (event, target) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.type === "input" || event.type === "change") {
+      const snap = snapshots.current.get(target);
+      if (snap) restoreSnapshot(target, snap);
+    }
+    if (event.type === "click" && target instanceof HTMLInputElement && target.type === "radio") {
+      const before = radioBefore.current;
+      if (radioTimer.current) clearTimeout(radioTimer.current);
+      radioTimer.current = setTimeout(() => {
+        radioTimer.current = null;
+        if (!before || !before.group.includes(target)) return;
+        for (const r of before.group) {
+          const want = r === before.checked;
+          if (r.checked !== want) r.checked = want;
+        }
+      }, 0);
+    }
+    const repeat = "repeat" in event && event.repeat === true;
+    const current = attempt.current;
+    if (current && continuesAttempt(current, event.type, target, repeat)) {
+      current.phases.add(event.type);
+      current.rank = Math.max(current.rank, PHASE_RANK[event.type] ?? 0);
+      return;
+    }
+    attempt.current = { target, phases: /* @__PURE__ */ new Set([event.type]), rank: PHASE_RANK[event.type] ?? 0 };
+    if (blockedHint) {
+      setHintOn(true);
+      if (hintTimer.current) clearTimeout(hintTimer.current);
+      hintTimer.current = setTimeout(() => {
+        hintTimer.current = null;
+        setHintOn(false);
+      }, PREVIEW_BLOCKED_HINT_MS);
+    }
+    try {
+      onBlockedRef.current?.(target);
+    } catch (err) {
+      console.error("[PreviewFrame] onBlockedInteract threw", err);
+    }
+  };
+  const blockRef = React35.useRef(block);
+  blockRef.current = block;
+  React35.useEffect(() => {
+    const root = contentRef.current;
+    if (!root) return;
+    const greyed = mode === "greyed";
+    const remember2 = () => root.querySelectorAll(`input, textarea, select, ${EDITABLE_HOST}`).forEach((el) => {
+      if (snapshots.current.has(el)) return;
+      const snap = snapshotOf(el);
+      if (snap) snapshots.current.set(el, snap);
+    });
+    const apply = greyed ? () => unfocusable(root) : () => {
+      markReadOnly(root);
+      remember2();
+    };
+    const beforeInput = (event) => {
+      const el = valueControl(event.target);
+      if (el) blockRef.current(event, el);
+    };
+    if (greyed) root.setAttribute("inert", "");
+    else root.addEventListener("beforeinput", beforeInput, true);
+    apply();
+    const observer = typeof MutationObserver === "undefined" ? null : new MutationObserver(apply);
+    observer?.observe(root, { childList: true, subtree: true });
+    return () => {
+      observer?.disconnect();
+      root.removeEventListener("beforeinput", beforeInput, true);
+      if (greyed) {
+        root.removeAttribute("inert");
+        restoreFocusable(root);
+      }
+    };
+  }, [mode]);
+  React35.useEffect(
+    () => () => {
+      if (hintTimer.current) clearTimeout(hintTimer.current);
+      if (radioTimer.current) clearTimeout(radioTimer.current);
+    },
+    []
+  );
+  if (mode === "greyed") {
+    return /* @__PURE__ */ jsx73("div", { "data-mode": "greyed", className: cn("relative w-full min-w-0 overflow-hidden", className), children: /* @__PURE__ */ jsx73(
+      "div",
+      {
+        ref: contentRef,
+        "aria-hidden": "true",
+        className: "pointer-events-none select-none",
+        style: { opacity: 0.45, filter: "grayscale(1)" },
+        children
+      }
+    ) });
+  }
+  const keyDown = (event) => {
+    if (!event.repeat) attempt.current = null;
+    const el = valueControl(event.target);
+    if (!el) return;
+    if (event.metaKey || event.ctrlKey) {
+      if (!modifiedKeyAllowed(event.key, isTextLike(el))) block(event, el);
+      return;
+    }
+    if (isTextLike(el) && NAV_KEYS.has(event.key)) return;
+    if (!isTextLike(el) && (event.key === "Tab" || event.key === "Shift" || event.key === "Escape")) return;
+    block(event, el);
+  };
+  const editAttempt = (event) => {
+    const el = valueControl(event.target);
+    if (el) block(event, el);
+  };
+  const pointerAttempt = (event) => {
+    const el = valueControl(event.target);
+    if (el && !isTextLike(el)) block(event, el);
+  };
+  const remember = (event) => {
+    const el = valueControl(event.target);
+    if (!el) return;
+    const snap = snapshotOf(el);
+    if (snap) snapshots.current.set(el, snap);
+    const root = contentRef.current;
+    if (root && el instanceof HTMLInputElement && el.type === "radio") {
+      const group = radioGroup(root, el);
+      radioBefore.current = { group, checked: group.find((r) => r.checked) ?? null };
+    }
+  };
+  const pressAttempt = (event) => {
+    attempt.current = null;
+    remember(event);
+    pointerAttempt(event);
+  };
+  return /* @__PURE__ */ jsxs60(
+    "div",
+    {
+      role: "group",
+      "data-mode": "sample",
+      "aria-describedby": sampleLabel ? labelId : void 0,
+      className: cn("relative w-full min-w-0", className),
+      children: [
+        sampleLabel ? /* @__PURE__ */ jsx73(
+          "p",
+          {
+            id: labelId,
+            className: "m-0 mb-2 text-[11px] font-bold uppercase tracking-widest",
+            style: { color: "var(--neutral-500, #646F77)" },
+            children: sampleLabel
+          }
+        ) : null,
+        /* @__PURE__ */ jsx73(
+          "div",
+          {
+            ref: contentRef,
+            className: "min-w-0",
+            onFocusCapture: remember,
+            onPointerDownCapture: remember,
+            onKeyDownCapture: keyDown,
+            onBeforeInputCapture: editAttempt,
+            onInputCapture: editAttempt,
+            onChangeCapture: editAttempt,
+            onPasteCapture: editAttempt,
+            onCutCapture: editAttempt,
+            onDropCapture: editAttempt,
+            onMouseDownCapture: pressAttempt,
+            onClickCapture: pointerAttempt,
+            onSubmitCapture: (event) => block(event, event.target),
+            onResetCapture: (event) => block(event, event.target),
+            children
+          }
+        ),
+        /* @__PURE__ */ jsx73(
+          "p",
+          {
+            role: "status",
+            "aria-live": "polite",
+            className: cn("m-0 mt-2 text-sm", hintOn && blockedHint ? "" : "sr-only"),
+            style: { color: "var(--neutral-700, #434B52)" },
+            children: hintOn && blockedHint ? blockedHint : ""
+          }
+        )
+      ]
+    }
+  );
+}
+
+// src/components/setup-progress-card/SetupProgressCard.tsx
+import * as React36 from "react";
+import { Check as Check6 } from "iconoir-react";
+import { Fragment as Fragment10, jsx as jsx74, jsxs as jsxs61 } from "react/jsx-runtime";
+var defaultProgressText = (done, total) => `${done} of ${total} done`;
+function SetupProgressCard({
+  title,
+  steps,
+  compact = false,
+  hideWhenComplete = true,
+  progressText = defaultProgressText,
+  doneLabel = "done",
+  notDoneLabel = "not done",
+  className
+}) {
+  const titleId = React36.useId();
+  const list = Array.isArray(steps) ? steps : [];
+  const total = list.length;
+  const done = list.filter((s) => s.done === true).length;
+  if (hideWhenComplete && done === total) return null;
+  const pct = total === 0 ? 0 : Math.round(done / total * 100);
+  return /* @__PURE__ */ jsxs61(
+    "section",
+    {
+      "aria-labelledby": titleId,
+      "data-compact": compact ? "true" : void 0,
+      className: cn("w-full min-w-0 rounded-2xl border", compact ? "p-4" : "p-5", className),
+      style: {
+        backgroundColor: "var(--card-background, #FFFFFF)",
+        borderColor: "var(--card-border, #D1D5DB)",
+        color: "var(--foreground, #2D3339)"
+      },
+      children: [
+        /* @__PURE__ */ jsxs61("div", { className: "flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1", children: [
+          /* @__PURE__ */ jsx74("h3", { id: titleId, className: cn("m-0 font-bold", compact ? "text-base" : "text-lg"), children: title }),
+          /* @__PURE__ */ jsx74("p", { "aria-live": "polite", className: "m-0 text-sm font-semibold", style: { color: "var(--neutral-700, #434B52)" }, children: progressText(done, total) })
+        ] }),
+        /* @__PURE__ */ jsx74(
+          "div",
+          {
+            role: "progressbar",
+            "aria-labelledby": titleId,
+            "aria-valuemin": 0,
+            "aria-valuemax": total,
+            "aria-valuenow": done,
+            className: "mt-3 h-2 w-full overflow-hidden rounded-full",
+            style: { backgroundColor: "var(--neutral-200, #BCC3CA)" },
+            children: /* @__PURE__ */ jsx74("div", { className: "h-full rounded-full", style: { width: `${pct}%`, backgroundColor: "var(--success, #6B9080)" } })
+          }
+        ),
+        /* @__PURE__ */ jsx74("ul", { className: cn("m-0 mt-2 grid list-none grid-cols-1 p-0", compact ? "" : "md:grid-cols-2 md:gap-x-7"), children: list.map((step, i) => {
+          const isDone = step.done === true;
+          return /* @__PURE__ */ jsxs61(
+            "li",
+            {
+              "data-done": isDone ? "true" : "false",
+              className: "flex min-w-0 items-start gap-3 border-b py-3",
+              style: { borderColor: "var(--neutral-100, #D1D5DB)" },
+              children: [
+                /* @__PURE__ */ jsx74(
+                  "span",
+                  {
+                    role: "img",
+                    "aria-label": isDone ? doneLabel : notDoneLabel,
+                    "data-setup-mark": "",
+                    className: "mt-2 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2",
+                    style: isDone ? { backgroundColor: "var(--success, #6B9080)", borderColor: "var(--success, #6B9080)", color: "var(--brand-primary-foreground, #FFFFFF)" } : { backgroundColor: "var(--card-background, #FFFFFF)", borderColor: "var(--neutral-400, #98A1AA)" },
+                    children: isDone ? /* @__PURE__ */ jsx74(Check6, { "aria-hidden": "true", width: 16, height: 16 }) : null
+                  }
+                ),
+                /* @__PURE__ */ jsxs61("div", { className: "min-w-0 flex-1", children: [
+                  /* @__PURE__ */ jsx74(
+                    "a",
+                    {
+                      href: step.href,
+                      className: cn(
+                        "inline-flex min-h-[44px] max-w-full items-center font-semibold no-underline hover:underline [overflow-wrap:anywhere] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary,#3B5998)] rounded-sm",
+                        isDone ? "line-through" : ""
+                      ),
+                      style: { color: isDone ? "var(--neutral-600, #525B62)" : "var(--brand-primary, #3B5998)" },
+                      children: step.label
+                    }
+                  ),
+                  compact ? null : /* @__PURE__ */ jsxs61(Fragment10, { children: [
+                    /* @__PURE__ */ jsx74("p", { className: "m-0 text-sm [overflow-wrap:anywhere]", style: { color: "var(--neutral-600, #525B62)" }, children: step.where }),
+                    /* @__PURE__ */ jsx74("p", { className: "m-0 mt-1 text-xs [overflow-wrap:anywhere]", style: { color: "var(--neutral-500, #646F77)" }, children: step.rule })
+                  ] })
+                ] })
+              ]
+            },
+            step.id || `step-${i}`
+          );
+        }) })
+      ]
+    }
+  );
+}
 export {
   APP_ICONS,
   APP_ILLUSTRATIONS,
@@ -8589,6 +9300,9 @@ export {
   LeadPoolIcon,
   LoadingOverlay,
   LoanVolumeIcon,
+  LockedBadge,
+  LockedFeatureBanner,
+  LockedFeatureDialog,
   MailboxIcon,
   MarketIntelIcon,
   MiniKanban,
@@ -8603,6 +9317,7 @@ export {
   OrbitalRings,
   OvenIcon,
   PATTERNS,
+  PREVIEW_BLOCKED_HINT_MS,
   PageContainer,
   PageLoader,
   Pagination,
@@ -8610,6 +9325,7 @@ export {
   PipelineThermometer,
   PreApprovalIcon,
   PreQualIcon,
+  PreviewFrame,
   Progress,
   PulseIcon,
   RadialBurst,
@@ -8630,6 +9346,7 @@ export {
   SelectValue,
   SelfPacedIcon,
   SessionRetryBanner,
+  SetupProgressCard,
   SignalIcon,
   Skeleton,
   SkeletonCircle,

@@ -77,3 +77,11 @@ export * from "./spend-panel";
 
 // v2.15.0 — RELLO II T4 hoist (canonical underline tab bar; 12 Rello consumers + future spokes)
 export * from "./underline-tab-bar";
+
+// v2.43.0 — PFP GATEWAY LOCK-UI (Kelly D58–D60, Platform 1417/1425, K-757): the shared locked-feature pattern.
+// Every string is a prop; telemetry reuses UPSELL_EVENTS from ./rello-upsell-nudge/events.
+export * from "./locked-feature-banner";
+export * from "./locked-badge";
+export * from "./locked-feature-dialog";
+export * from "./preview-frame";
+export * from "./setup-progress-card";
