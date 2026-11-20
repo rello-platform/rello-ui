@@ -85,3 +85,8 @@ export * from "./locked-badge";
 export * from "./locked-feature-dialog";
 export * from "./preview-frame";
 export * from "./setup-progress-card";
+
+// v2.44.0 — RELLO GROWTH MARKETING Audience redesign (KA K371 Q4 + K388): the "⋯" cohort menu and the
+// "+ Add filter" chip editors. Radix-based, Select-content surface, client entry only.
+export * from "./dropdown-menu";
+export * from "./popover";

@@ -9206,6 +9206,146 @@ function SetupProgressCard({
     }
   );
 }
+
+// src/components/dropdown-menu/DropdownMenu.tsx
+import * as React37 from "react";
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+
+// src/lib/floating-surface.ts
+var floatingSurfaceClasses = "relative z-50 rounded-md border shadow-md outline-none bg-[var(--card-background,#ffffff)] border-[var(--neutral-200,#bcc3ca)] text-[var(--foreground,#2d3339)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0";
+var floatingTriggerClasses = "inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary,#3b5998)]/20 disabled:cursor-not-allowed disabled:opacity-50";
+
+// src/components/dropdown-menu/DropdownMenu.tsx
+import { Fragment as Fragment11, jsx as jsx75, jsxs as jsxs62 } from "react/jsx-runtime";
+var DropdownMenu = DropdownMenuPrimitive.Root;
+var DropdownMenuGroup = DropdownMenuPrimitive.Group;
+var DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+var DropdownMenuTrigger = React37.forwardRef(
+  ({ className, ...props }, ref) => /* @__PURE__ */ jsx75(DropdownMenuPrimitive.Trigger, { ref, className: cn(floatingTriggerClasses, className), ...props })
+);
+DropdownMenuTrigger.displayName = DropdownMenuPrimitive.Trigger.displayName;
+var DropdownMenuContent = React37.forwardRef(
+  ({ className, sideOffset = 4, collisionPadding = 16, ...props }, ref) => /* @__PURE__ */ jsx75(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx75(
+    DropdownMenuPrimitive.Content,
+    {
+      ref,
+      sideOffset,
+      collisionPadding,
+      className: cn(
+        floatingSurfaceClasses,
+        "min-w-[8rem] p-1 overflow-y-auto",
+        "max-h-[var(--radix-dropdown-menu-content-available-height,24rem)]",
+        "max-w-[var(--radix-dropdown-menu-content-available-width,calc(100vw-2rem))]",
+        className
+      ),
+      ...props
+    }
+  ) })
+);
+DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
+var DropdownMenuItem = React37.forwardRef(
+  ({ className, children, disabled, disabledReason, onSelect, textValue, ...props }, ref) => {
+    const reason = disabledReason?.trim() ? disabledReason.trim() : void 0;
+    const locked = Boolean(disabled) || reason !== void 0;
+    const baseId = React37.useId();
+    const labelId = `${baseId}-label`;
+    const reasonId = `${baseId}-reason`;
+    const handleSelect = React37.useCallback(
+      (event) => {
+        if (locked) {
+          event.preventDefault();
+          return;
+        }
+        onSelect?.(event);
+      },
+      [locked, onSelect]
+    );
+    return /* @__PURE__ */ jsx75(
+      DropdownMenuPrimitive.Item,
+      {
+        ref,
+        ...props,
+        disabled: false,
+        onSelect: handleSelect,
+        textValue: textValue ?? (typeof children === "string" ? children : void 0),
+        "aria-disabled": locked ? true : void 0,
+        "data-disabled": locked ? "" : void 0,
+        "aria-labelledby": reason ? labelId : props["aria-labelledby"],
+        "aria-describedby": reason ? reasonId : props["aria-describedby"],
+        className: cn(
+          "relative flex min-h-[44px] w-full cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none",
+          "text-[var(--foreground,#2d3339)]",
+          "focus:bg-[var(--neutral-100,#d1d5db)] data-[highlighted]:bg-[var(--neutral-100,#d1d5db)]",
+          "data-[disabled]:cursor-not-allowed",
+          reason && "flex-col items-start justify-center gap-0.5",
+          className
+        ),
+        children: reason ? /* @__PURE__ */ jsxs62(Fragment11, { children: [
+          /* @__PURE__ */ jsx75("span", { id: labelId, className: "flex items-center gap-2 opacity-60", children }),
+          /* @__PURE__ */ jsx75("span", { id: reasonId, className: "text-xs text-[var(--neutral-500,#646f77)]", children: reason })
+        ] }) : /* @__PURE__ */ jsx75("span", { className: cn("flex items-center gap-2", locked && "opacity-60"), children })
+      }
+    );
+  }
+);
+DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
+var DropdownMenuLabel = React37.forwardRef(
+  ({ className, ...props }, ref) => /* @__PURE__ */ jsx75(DropdownMenuPrimitive.Label, { ref, className: cn("px-2 py-1.5 text-xs text-[var(--neutral-500,#646f77)]", className), ...props })
+);
+DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
+var DropdownMenuSeparator = React37.forwardRef(
+  ({ className, ...props }, ref) => /* @__PURE__ */ jsx75(DropdownMenuPrimitive.Separator, { ref, className: cn("-mx-1 my-1 h-px bg-[var(--neutral-100,#d1d5db)]", className), ...props })
+);
+DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
+
+// src/components/popover/Popover.tsx
+import * as React38 from "react";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+import { Xmark as Xmark5 } from "iconoir-react";
+import { jsx as jsx76, jsxs as jsxs63 } from "react/jsx-runtime";
+var Popover = PopoverPrimitive.Root;
+var PopoverAnchor = PopoverPrimitive.Anchor;
+var PopoverClose = PopoverPrimitive.Close;
+var PopoverTrigger = React38.forwardRef(
+  ({ className, ...props }, ref) => /* @__PURE__ */ jsx76(PopoverPrimitive.Trigger, { ref, className: cn(floatingTriggerClasses, className), ...props })
+);
+PopoverTrigger.displayName = PopoverPrimitive.Trigger.displayName;
+var PopoverContent = React38.forwardRef(
+  ({ className, children, align = "start", sideOffset = 4, collisionPadding = 16, showCloseButton = true, closeLabel = "Close", ...props }, ref) => /* @__PURE__ */ jsx76(PopoverPrimitive.Portal, { children: /* @__PURE__ */ jsxs63(
+    PopoverPrimitive.Content,
+    {
+      ref,
+      align,
+      sideOffset,
+      collisionPadding,
+      className: cn(
+        floatingSurfaceClasses,
+        "w-72 p-4 overflow-y-auto",
+        "max-w-[var(--radix-popover-content-available-width,calc(100vw-2rem))]",
+        "max-h-[var(--radix-popover-content-available-height,24rem)]",
+        showCloseButton && "pr-12",
+        className
+      ),
+      ...props,
+      children: [
+        children,
+        showCloseButton && /* @__PURE__ */ jsx76(
+          PopoverPrimitive.Close,
+          {
+            "aria-label": closeLabel,
+            className: cn(
+              "absolute top-0 right-0 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md outline-none",
+              "text-[var(--neutral-500,#646f77)] hover:text-[var(--foreground,#2d3339)]",
+              "focus-visible:ring-2 focus-visible:ring-[var(--brand-primary,#3b5998)]/20"
+            ),
+            children: /* @__PURE__ */ jsx76(Xmark5, { className: "size-4", "aria-hidden": "true" })
+          }
+        )
+      ]
+    }
+  ) })
+);
+PopoverContent.displayName = PopoverPrimitive.Content.displayName;
 export {
   APP_ICONS,
   APP_ILLUSTRATIONS,
@@ -9275,6 +9415,14 @@ export {
   DownPaymentIcon,
   DragHint,
   DreamHomeIcon,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
   DrumbeatIcon,
   DtiIcon,
   EmptyState,
@@ -9323,6 +9471,11 @@ export {
   Pagination,
   PathfinderIcon,
   PipelineThermometer,
+  Popover,
+  PopoverAnchor,
+  PopoverClose,
+  PopoverContent,
+  PopoverTrigger,
   PreApprovalIcon,
   PreQualIcon,
   PreviewFrame,
