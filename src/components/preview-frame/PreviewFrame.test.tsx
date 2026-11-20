@@ -153,11 +153,11 @@ describe("PreviewFrame — sample (default)", () => {
     fireEvent.keyDown(term, { key: "ArrowDown" });
     expect(term.value).toBe("30");
     fireEvent.paste(screen.getByLabelText("Loan amount"));
+    // A-797: the submit never reaches the form at all (not merely default-prevented): no listener on it runs.
     const submit = vi.fn();
     screen.getByRole("button", { name: "Price it" }).closest("form")!.addEventListener("submit", submit);
     await user.click(screen.getByRole("button", { name: "Price it" }));
-    expect(submit).toHaveBeenCalledTimes(1);
-    expect(submit.mock.calls[0][0].defaultPrevented).toBe(true);
+    expect(submit).not.toHaveBeenCalled();
     expect(onBlocked.mock.calls.length).toBeGreaterThanOrEqual(4);
   });
 

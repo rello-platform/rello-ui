@@ -8805,14 +8805,16 @@ var PREVIEW_BLOCKED_HINT_MS = 2600;
 var TEXT_LIKE = /* @__PURE__ */ new Set(["", "text", "search", "email", "url", "tel", "password", "number"]);
 var NOT_A_VALUE = /* @__PURE__ */ new Set(["button", "submit", "reset", "image", "hidden"]);
 var FOCUSABLE = 'a[href], area[href], button, input, select, textarea, iframe, summary, [tabindex], [contenteditable=""], [contenteditable="true"]';
+var EDITABLE_HOST = '[contenteditable=""], [contenteditable="true"], [contenteditable="plaintext-only"]';
+var isEditable = (el) => el.isContentEditable === true || el.closest(EDITABLE_HOST) !== null;
 function valueControl(target) {
   if (!(target instanceof HTMLElement)) return null;
   if (target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) return target;
   if (target instanceof HTMLInputElement) return NOT_A_VALUE.has(target.type) ? null : target;
-  if (target.isContentEditable) return target;
+  if (isEditable(target)) return target;
   return null;
 }
-var isTextLike = (el) => el instanceof HTMLTextAreaElement || el instanceof HTMLInputElement && TEXT_LIKE.has(el.type) || el.isContentEditable;
+var isTextLike = (el) => el instanceof HTMLTextAreaElement || el instanceof HTMLInputElement && TEXT_LIKE.has(el.type) || isEditable(el);
 var NAV_KEYS = /* @__PURE__ */ new Set(["Tab", "Shift", "Escape", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown", "Alt", "Control", "Meta", "CapsLock"]);
 function markReadOnly(root) {
   root.querySelectorAll("input, textarea, select").forEach((el) => {
@@ -8821,6 +8823,29 @@ function markReadOnly(root) {
     el.setAttribute("aria-readonly", "true");
   });
 }
+function snapshotOf(el) {
+  if (el instanceof HTMLSelectElement) return { value: el.value, checked: false, selectedIndex: el.selectedIndex };
+  if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+    return { value: el.value, checked: el instanceof HTMLInputElement ? el.checked : false, selectedIndex: -1 };
+  }
+  return null;
+}
+function restoreSnapshot(el, snap) {
+  if (el instanceof HTMLSelectElement) {
+    if (el.selectedIndex !== snap.selectedIndex) el.selectedIndex = snap.selectedIndex;
+    return;
+  }
+  if (el instanceof HTMLInputElement && (el.type === "checkbox" || el.type === "radio")) {
+    if (el.checked !== snap.checked) el.checked = snap.checked;
+    return;
+  }
+  if ((el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && el.value !== snap.value) el.value = snap.value;
+}
+function radioGroup(root, el) {
+  if (!el.name) return [el];
+  return Array.from(root.querySelectorAll('input[type="radio"]')).filter((r) => r.name === el.name && r.form === el.form);
+}
+var SAME_ATTEMPT_MS = 700;
 var PREV_TABINDEX = "data-preview-prev-tabindex";
 function unfocusable(root) {
   root.querySelectorAll(FOCUSABLE).forEach((el) => {
@@ -8843,11 +8868,23 @@ function PreviewFrame({ children, mode = "sample", sampleLabel, blockedHint, onB
   const hintTimer = React35.useRef(null);
   const onBlockedRef = React35.useRef(onBlockedInteract);
   onBlockedRef.current = onBlockedInteract;
+  const snapshots = React35.useRef(/* @__PURE__ */ new WeakMap());
+  const lastReport = React35.useRef(null);
+  const radioBefore = React35.useRef(null);
+  const radioTimer = React35.useRef(null);
   React35.useEffect(() => {
     const root = contentRef.current;
     if (!root) return;
     const greyed = mode === "greyed";
-    const apply = greyed ? () => unfocusable(root) : () => markReadOnly(root);
+    const remember2 = () => root.querySelectorAll("input, textarea, select").forEach((el) => {
+      if (snapshots.current.has(el)) return;
+      const snap = snapshotOf(el);
+      if (snap) snapshots.current.set(el, snap);
+    });
+    const apply = greyed ? () => unfocusable(root) : () => {
+      markReadOnly(root);
+      remember2();
+    };
     if (greyed) root.setAttribute("inert", "");
     apply();
     const observer = typeof MutationObserver === "undefined" ? null : new MutationObserver(apply);
@@ -8863,11 +8900,33 @@ function PreviewFrame({ children, mode = "sample", sampleLabel, blockedHint, onB
   React35.useEffect(
     () => () => {
       if (hintTimer.current) clearTimeout(hintTimer.current);
+      if (radioTimer.current) clearTimeout(radioTimer.current);
     },
     []
   );
   const block = (event, target) => {
     event.preventDefault();
+    event.stopPropagation();
+    if (event.type === "input" || event.type === "change") {
+      const snap = snapshots.current.get(target);
+      if (snap) restoreSnapshot(target, snap);
+    }
+    if (event.type === "click" && target instanceof HTMLInputElement && target.type === "radio") {
+      const before = radioBefore.current;
+      if (radioTimer.current) clearTimeout(radioTimer.current);
+      radioTimer.current = setTimeout(() => {
+        radioTimer.current = null;
+        if (!before || !before.group.includes(target)) return;
+        for (const r of before.group) {
+          const want = r === before.checked;
+          if (r.checked !== want) r.checked = want;
+        }
+      }, 0);
+    }
+    const now = Date.now();
+    const last = lastReport.current;
+    if (last && last.target === target && now - last.at < SAME_ATTEMPT_MS) return;
+    lastReport.current = { target, at: now };
     if (blockedHint) {
       setHintOn(true);
       if (hintTimer.current) clearTimeout(hintTimer.current);
@@ -8909,6 +8968,21 @@ function PreviewFrame({ children, mode = "sample", sampleLabel, blockedHint, onB
     const el = valueControl(event.target);
     if (el && !isTextLike(el)) block(event, el);
   };
+  const remember = (event) => {
+    const el = valueControl(event.target);
+    if (!el) return;
+    const snap = snapshotOf(el);
+    if (snap) snapshots.current.set(el, snap);
+    const root = contentRef.current;
+    if (root && el instanceof HTMLInputElement && el.type === "radio") {
+      const group = radioGroup(root, el);
+      radioBefore.current = { group, checked: group.find((r) => r.checked) ?? null };
+    }
+  };
+  const pressAttempt = (event) => {
+    remember(event);
+    pointerAttempt(event);
+  };
   return /* @__PURE__ */ jsxs60(
     "div",
     {
@@ -8931,14 +9005,19 @@ function PreviewFrame({ children, mode = "sample", sampleLabel, blockedHint, onB
           {
             ref: contentRef,
             className: "min-w-0",
+            onFocusCapture: remember,
+            onPointerDownCapture: remember,
             onKeyDownCapture: keyDown,
             onBeforeInputCapture: editAttempt,
+            onInputCapture: editAttempt,
+            onChangeCapture: editAttempt,
             onPasteCapture: editAttempt,
             onCutCapture: editAttempt,
             onDropCapture: editAttempt,
-            onMouseDownCapture: pointerAttempt,
+            onMouseDownCapture: pressAttempt,
             onClickCapture: pointerAttempt,
             onSubmitCapture: (event) => block(event, event.target),
+            onResetCapture: (event) => block(event, event.target),
             children
           }
         ),

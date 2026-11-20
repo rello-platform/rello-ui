@@ -36,3 +36,45 @@ type Story = StoryObj<typeof meta>;
 export const Sample: Story = { args: { sampleLabel: "Sample label", blockedHint: "Hint shown when a value is changed" } };
 /** Dimmed, hidden from assistive tech, nothing focusable. */
 export const Greyed: Story = { args: { mode: "greyed" } };
+
+/**
+ * A-797: a sample's own handlers never run for a change or a submit. The checkbox's React state, the submit counter
+ * and the select's state all stay put; the tabs still switch.
+ */
+function ControlledSample() {
+  const [checked, setChecked] = React.useState(false);
+  const [submits, setSubmits] = React.useState(0);
+  const [term, setTerm] = React.useState("30");
+  const [tab, setTab] = React.useState("a");
+  const box = { minHeight: 44, minWidth: 44 };
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        setSubmits((n) => n + 1);
+      }}
+      style={{ display: "grid", gap: 12, border: "1px solid #D1D5DB", borderRadius: 12, padding: 16, background: "#fff" }}
+    >
+      <div role="tablist" style={{ display: "flex", gap: 8 }}>
+        <button type="button" role="tab" aria-selected={tab === "a"} style={box} onClick={() => setTab("a")}>Tab A</button>
+        <button type="button" role="tab" aria-selected={tab === "b"} style={box} onClick={() => setTab("b")}>Tab B</button>
+      </div>
+      <label>
+        <input aria-label="Check" type="checkbox" checked={checked} onChange={(e) => setChecked(e.target.checked)} style={box} /> Check
+      </label>
+      <label>
+        Term
+        <select aria-label="Term" value={term} onChange={(e) => setTerm(e.target.value)} style={box}>
+          <option value="30">30</option>
+          <option value="15">15</option>
+        </select>
+      </label>
+      <button type="submit" style={box}>Submit sample</button>
+      <output id="state">{JSON.stringify({ checked, submits, term, tab })}</output>
+    </form>
+  );
+}
+
+export const BlockedChanges: Story = {
+  args: { sampleLabel: "Sample label", blockedHint: "Hint shown when a value is changed", children: <ControlledSample /> },
+};

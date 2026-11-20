@@ -26,7 +26,10 @@ consumer; Rello's Home Insight adopts it later. Additive only: no existing expor
 - `PreviewFrame` — `{ children, mode?: "sample" | "greyed", sampleLabel?, blockedHint?, onBlockedInteract? }`
   (+ `PREVIEW_BLOCKED_HINT_MS`). "sample" (default): explorable (tabs, expanders, links); form controls
   read-only, including ones rendered later; a try to change one shows `blockedHint` (aria-live polite)
-  and calls `onBlockedInteract`; the frame is described by `sampleLabel`. "greyed" (Home Insight,
+  and calls `onBlockedInteract` once per attempt; the frame is described by `sampleLabel`. A refused change or submit
+  never reaches the sample's own handlers (AUDIT 33 A-797): `onChange`, `onInput`, `onSubmit`, `onReset`, `onPaste`,
+  `onCut`, `onDrop` and value keys stop at the frame, so a controlled sample's React state cannot move; a value a
+  synthetic `input`/`change` moved is put back. Tabs, expanders, links and focus still work. "greyed" (Home Insight,
   Platform 1425): dimmed, no label, `aria-hidden` + `inert`, nothing focusable.
 - `SetupProgressCard` — `{ title, steps: { id, label, where, rule, done, href }[], compact?, hideWhenComplete? (default true), progressText?, doneLabel?, notDoneLabel? }`.
   "N of M done" (aria-live polite) + a progressbar. Each step links to where its data is saved; its
