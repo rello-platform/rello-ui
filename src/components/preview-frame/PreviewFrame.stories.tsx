@@ -78,3 +78,40 @@ function ControlledSample() {
 export const BlockedChanges: Story = {
   args: { sampleLabel: "Sample label", blockedHint: "Hint shown when a value is changed", children: <ControlledSample /> },
 };
+
+/**
+ * A-801 / A-802 / A-803: a multiple select keeps its whole set (an option press, select-all), editable text survives
+ * Cmd / Ctrl editing keys, and one press is one report (a long press is one; two quick clicks are two). The line
+ * under the frame counts the reports and any change a sample handler heard.
+ */
+function GestureSample() {
+  const [reports, setReports] = React.useState(0);
+  const [heard, setHeard] = React.useState(0);
+  const hear = () => setHeard((n) => n + 1);
+  const box = { minHeight: 44, minWidth: 44 };
+  return (
+    <div style={{ display: "grid", gap: 12 }}>
+      <PreviewFrame sampleLabel="Sample label" blockedHint="Hint shown when a value is changed" onBlockedInteract={() => setReports((n) => n + 1)}>
+        <div style={{ display: "grid", gap: 12, border: "1px solid #D1D5DB", borderRadius: 12, padding: 16, background: "#fff" }}>
+          <label>
+            Programs
+            <select aria-label="Programs" multiple size={3} defaultValue={["a", "c"]} onChange={hear} style={{ display: "block", width: "100%", fontSize: 16 }}>
+              <option value="a">Alpha</option>
+              <option value="b">Beta</option>
+              <option value="c">Gamma</option>
+            </select>
+          </label>
+          <div aria-label="Notes" role="textbox" contentEditable suppressContentEditableWarning onInput={hear} style={{ ...box, border: "1px solid #D1D5DB", padding: 12 }}>
+            Sample note words
+          </div>
+          <label>
+            <input aria-label="Escrow" type="checkbox" onChange={hear} style={box} /> Escrow
+          </label>
+        </div>
+      </PreviewFrame>
+      <output id="gesture-state">{JSON.stringify({ reports, heard })}</output>
+    </div>
+  );
+}
+
+export const GestureContainment: Story = { args: { children: null }, render: () => <GestureSample /> };

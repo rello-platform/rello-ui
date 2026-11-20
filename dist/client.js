@@ -8809,13 +8809,23 @@ var EDITABLE_HOST = '[contenteditable=""], [contenteditable="true"], [contentedi
 var isEditable = (el) => el.isContentEditable === true || el.closest(EDITABLE_HOST) !== null;
 function valueControl(target) {
   if (!(target instanceof HTMLElement)) return null;
+  if (target instanceof HTMLOptionElement || target instanceof HTMLOptGroupElement) return target.closest("select");
   if (target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) return target;
   if (target instanceof HTMLInputElement) return NOT_A_VALUE.has(target.type) ? null : target;
-  if (isEditable(target)) return target;
+  if (isEditable(target)) return target.closest(EDITABLE_HOST) ?? target;
   return null;
 }
 var isTextLike = (el) => el instanceof HTMLTextAreaElement || el instanceof HTMLInputElement && TEXT_LIKE.has(el.type) || isEditable(el);
 var NAV_KEYS = /* @__PURE__ */ new Set(["Tab", "Shift", "Escape", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown", "Alt", "Control", "Meta", "CapsLock"]);
+var MODIFIER_ONLY = /* @__PURE__ */ new Set(["Alt", "AltGraph", "Control", "Meta", "Shift", "CapsLock", "Fn", "OS", "Hyper", "Super"]);
+var MODIFIED_EDIT_KEYS = /* @__PURE__ */ new Set(["Backspace", "Delete", "Enter", "x", "v", "z", "y", "b", "i", "u"]);
+var MODIFIED_PICK_KEYS = /* @__PURE__ */ new Set(["a", " ", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"]);
+function modifiedKeyAllowed(key, textLike) {
+  if (MODIFIER_ONLY.has(key)) return true;
+  const k = key.length === 1 ? key.toLowerCase() : key;
+  if (MODIFIED_EDIT_KEYS.has(k)) return false;
+  return textLike || !MODIFIED_PICK_KEYS.has(k);
+}
 function markReadOnly(root) {
   root.querySelectorAll("input, textarea, select").forEach((el) => {
     if (el instanceof HTMLInputElement && NOT_A_VALUE.has(el.type)) return;
@@ -8823,16 +8833,48 @@ function markReadOnly(root) {
     el.setAttribute("aria-readonly", "true");
   });
 }
-function snapshotOf(el) {
-  if (el instanceof HTMLSelectElement) return { value: el.value, checked: false, selectedIndex: el.selectedIndex };
-  if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
-    return { value: el.value, checked: el instanceof HTMLInputElement ? el.checked : false, selectedIndex: -1 };
+function snapshotNodes(node) {
+  if (node instanceof CharacterData) return { node, data: node.data };
+  return { node, children: Array.from(node.childNodes, snapshotNodes) };
+}
+function restoreNodes(snap) {
+  const { node } = snap;
+  if (snap.data !== void 0) {
+    if (node instanceof CharacterData && node.data !== snap.data) node.data = snap.data;
+    return;
   }
+  const kids = snap.children ?? [];
+  const now = node.childNodes;
+  if (now.length !== kids.length || kids.some((c, i) => now[i] !== c.node)) {
+    node.replaceChildren(...kids.map((c) => c.node));
+  }
+  kids.forEach(restoreNodes);
+}
+function snapshotOf(el) {
+  if (el instanceof HTMLSelectElement) {
+    return { kind: "select", selectedIndex: el.selectedIndex, selected: Array.from(el.options, (o) => o.selected) };
+  }
+  if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+    return { kind: "field", value: el.value, checked: el instanceof HTMLInputElement ? el.checked : false };
+  }
+  if (isEditable(el)) return { kind: "editable", nodes: snapshotNodes(el) };
   return null;
 }
 function restoreSnapshot(el, snap) {
-  if (el instanceof HTMLSelectElement) {
-    if (el.selectedIndex !== snap.selectedIndex) el.selectedIndex = snap.selectedIndex;
+  if (snap.kind === "select") {
+    if (!(el instanceof HTMLSelectElement)) return;
+    if (!el.multiple) {
+      if (el.selectedIndex !== snap.selectedIndex) el.selectedIndex = snap.selectedIndex;
+      return;
+    }
+    Array.from(el.options).forEach((o, i) => {
+      const want = snap.selected[i] === true;
+      if (o.selected !== want) o.selected = want;
+    });
+    return;
+  }
+  if (snap.kind === "editable") {
+    restoreNodes(snap.nodes);
     return;
   }
   if (el instanceof HTMLInputElement && (el.type === "checkbox" || el.type === "radio")) {
@@ -8845,7 +8887,20 @@ function radioGroup(root, el) {
   if (!el.name) return [el];
   return Array.from(root.querySelectorAll('input[type="radio"]')).filter((r) => r.name === el.name && r.form === el.form);
 }
-var SAME_ATTEMPT_MS = 700;
+var STARTS_ATTEMPT = /* @__PURE__ */ new Set(["mousedown", "keydown", "paste", "cut", "drop", "submit", "reset"]);
+var PHASE_RANK = { click: 1, beforeinput: 2, input: 3, change: 4 };
+function continuesAttempt(attempt, type, target, repeat) {
+  if (!attempt || attempt.target !== target) return false;
+  if (type === "keydown") return repeat && attempt.phases.has("keydown");
+  if (STARTS_ATTEMPT.has(type)) return false;
+  const rank = PHASE_RANK[type];
+  if (rank === void 0) return false;
+  if (type === "click") return attempt.phases.has("mousedown");
+  if (type === "beforeinput") {
+    return attempt.rank <= rank && Array.from(attempt.phases).some((p) => STARTS_ATTEMPT.has(p));
+  }
+  return rank > attempt.rank;
+}
 var PREV_TABINDEX = "data-preview-prev-tabindex";
 function unfocusable(root) {
   root.querySelectorAll(FOCUSABLE).forEach((el) => {
@@ -8869,41 +8924,9 @@ function PreviewFrame({ children, mode = "sample", sampleLabel, blockedHint, onB
   const onBlockedRef = React35.useRef(onBlockedInteract);
   onBlockedRef.current = onBlockedInteract;
   const snapshots = React35.useRef(/* @__PURE__ */ new WeakMap());
-  const lastReport = React35.useRef(null);
+  const attempt = React35.useRef(null);
   const radioBefore = React35.useRef(null);
   const radioTimer = React35.useRef(null);
-  React35.useEffect(() => {
-    const root = contentRef.current;
-    if (!root) return;
-    const greyed = mode === "greyed";
-    const remember2 = () => root.querySelectorAll("input, textarea, select").forEach((el) => {
-      if (snapshots.current.has(el)) return;
-      const snap = snapshotOf(el);
-      if (snap) snapshots.current.set(el, snap);
-    });
-    const apply = greyed ? () => unfocusable(root) : () => {
-      markReadOnly(root);
-      remember2();
-    };
-    if (greyed) root.setAttribute("inert", "");
-    apply();
-    const observer = typeof MutationObserver === "undefined" ? null : new MutationObserver(apply);
-    observer?.observe(root, { childList: true, subtree: true });
-    return () => {
-      observer?.disconnect();
-      if (greyed) {
-        root.removeAttribute("inert");
-        restoreFocusable(root);
-      }
-    };
-  }, [mode]);
-  React35.useEffect(
-    () => () => {
-      if (hintTimer.current) clearTimeout(hintTimer.current);
-      if (radioTimer.current) clearTimeout(radioTimer.current);
-    },
-    []
-  );
   const block = (event, target) => {
     event.preventDefault();
     event.stopPropagation();
@@ -8923,10 +8946,14 @@ function PreviewFrame({ children, mode = "sample", sampleLabel, blockedHint, onB
         }
       }, 0);
     }
-    const now = Date.now();
-    const last = lastReport.current;
-    if (last && last.target === target && now - last.at < SAME_ATTEMPT_MS) return;
-    lastReport.current = { target, at: now };
+    const repeat = "repeat" in event && event.repeat === true;
+    const current = attempt.current;
+    if (current && continuesAttempt(current, event.type, target, repeat)) {
+      current.phases.add(event.type);
+      current.rank = Math.max(current.rank, PHASE_RANK[event.type] ?? 0);
+      return;
+    }
+    attempt.current = { target, phases: /* @__PURE__ */ new Set([event.type]), rank: PHASE_RANK[event.type] ?? 0 };
     if (blockedHint) {
       setHintOn(true);
       if (hintTimer.current) clearTimeout(hintTimer.current);
@@ -8941,6 +8968,46 @@ function PreviewFrame({ children, mode = "sample", sampleLabel, blockedHint, onB
       console.error("[PreviewFrame] onBlockedInteract threw", err);
     }
   };
+  const blockRef = React35.useRef(block);
+  blockRef.current = block;
+  React35.useEffect(() => {
+    const root = contentRef.current;
+    if (!root) return;
+    const greyed = mode === "greyed";
+    const remember2 = () => root.querySelectorAll(`input, textarea, select, ${EDITABLE_HOST}`).forEach((el) => {
+      if (snapshots.current.has(el)) return;
+      const snap = snapshotOf(el);
+      if (snap) snapshots.current.set(el, snap);
+    });
+    const apply = greyed ? () => unfocusable(root) : () => {
+      markReadOnly(root);
+      remember2();
+    };
+    const beforeInput = (event) => {
+      const el = valueControl(event.target);
+      if (el) blockRef.current(event, el);
+    };
+    if (greyed) root.setAttribute("inert", "");
+    else root.addEventListener("beforeinput", beforeInput, true);
+    apply();
+    const observer = typeof MutationObserver === "undefined" ? null : new MutationObserver(apply);
+    observer?.observe(root, { childList: true, subtree: true });
+    return () => {
+      observer?.disconnect();
+      root.removeEventListener("beforeinput", beforeInput, true);
+      if (greyed) {
+        root.removeAttribute("inert");
+        restoreFocusable(root);
+      }
+    };
+  }, [mode]);
+  React35.useEffect(
+    () => () => {
+      if (hintTimer.current) clearTimeout(hintTimer.current);
+      if (radioTimer.current) clearTimeout(radioTimer.current);
+    },
+    []
+  );
   if (mode === "greyed") {
     return /* @__PURE__ */ jsx73("div", { "data-mode": "greyed", className: cn("relative w-full min-w-0 overflow-hidden", className), children: /* @__PURE__ */ jsx73(
       "div",
@@ -8954,8 +9021,13 @@ function PreviewFrame({ children, mode = "sample", sampleLabel, blockedHint, onB
     ) });
   }
   const keyDown = (event) => {
+    if (!event.repeat) attempt.current = null;
     const el = valueControl(event.target);
-    if (!el || event.metaKey || event.ctrlKey) return;
+    if (!el) return;
+    if (event.metaKey || event.ctrlKey) {
+      if (!modifiedKeyAllowed(event.key, isTextLike(el))) block(event, el);
+      return;
+    }
     if (isTextLike(el) && NAV_KEYS.has(event.key)) return;
     if (!isTextLike(el) && (event.key === "Tab" || event.key === "Shift" || event.key === "Escape")) return;
     block(event, el);
@@ -8980,6 +9052,7 @@ function PreviewFrame({ children, mode = "sample", sampleLabel, blockedHint, onB
     }
   };
   const pressAttempt = (event) => {
+    attempt.current = null;
     remember(event);
     pointerAttempt(event);
   };
