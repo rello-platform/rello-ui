@@ -5,6 +5,20 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.44.1 — 2026-11-21 (untagged until the GROWTH audit; the KA tags)
+
+**Fixed: Escape in a Select inside a Popover closed both (consumers on a newer Popover)**
+
+`@radix-ui/react-popover` is now pinned **exactly** to `1.1.15` (was `^1.1.15`). Radix pins its internals
+exactly, and a consumer resolving `^1.1.15` got 1.3.1, whose `@radix-ui/react-dismissable-layer` 1.2.1 is a
+second copy beside the 1.1.11 that Select (2.2.6), Dialog (1.1.15) and DropdownMenu (2.1.16) use. Two copies
+keep two layer stacks, so neither knew the other was open: in Rello, one Escape inside a Select opened in a
+Popover closed the Select AND the Popover. With one shared dismiss layer, Escape closes only the innermost
+layer: the first closes the Select, the second the Popover, and focus returns to the trigger.
+`~1.1.15` would not do: it resolves 1.1.23, whose dismiss layer is 1.1.19, still a second copy.
+Tests pin the alignment (an exact version; Popover's dismiss layer = Select's, Dialog's and DropdownMenu's
+menu) and the Escape order. No API change; `dist/` unchanged (Radix stays external).
+
 ## v2.44.0 — 2026-11-20 (untagged until the GROWTH audit; the KA tags)
 
 **Added: `DropdownMenu` and `Popover` (client entry)**

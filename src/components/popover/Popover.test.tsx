@@ -127,7 +127,7 @@ describe("Popover — focus and dismissal", () => {
 });
 
 describe("Popover — holds a Select", () => {
-  it("choosing a Select option inside does not close the popover", async () => {
+  it("choosing a Select option inside does not close the popover; Escape closes the Select first, then the popover", async () => {
     // Radix Select needs these in jsdom.
     const proto = Element.prototype as unknown as Record<string, unknown>;
     const saved = { h: proto.hasPointerCapture, r: proto.releasePointerCapture, s: proto.scrollIntoView };
@@ -159,6 +159,16 @@ describe("Popover — holds a Select", () => {
       await user.click(await screen.findByRole("option", { name: "Active" }));
       expect(onValueChange).toHaveBeenCalledWith("active");
       expect(screen.getByRole("dialog", { name: "Status filter" })).toBeInTheDocument();
+
+      // v2.44.1: Escape closes only the innermost layer. First the Select, then the Popover.
+      await user.click(screen.getByRole("combobox", { name: "License status" }));
+      await screen.findByRole("listbox");
+      await user.keyboard("{Escape}");
+      await waitFor(() => expect(screen.queryByRole("listbox")).toBeNull());
+      expect(screen.getByRole("dialog", { name: "Status filter" })).toBeInTheDocument();
+      await user.keyboard("{Escape}");
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+      await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("button", { name: "Status" })));
     } finally {
       proto.hasPointerCapture = saved.h;
       proto.releasePointerCapture = saved.r;
