@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { RelloUpsellNudge } from "./RelloUpsellNudge";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 const baseProps = {
   seam: "lead-ready-threshold",
@@ -11,7 +12,7 @@ const baseProps = {
 };
 
 function region() {
-  return screen.getByRole("region", { name: /rello upgrade option/i });
+  return screen.getByRole("region", { name: `${PLATFORM_BRAND.name} upgrade option` });
 }
 
 afterEach(() => {
@@ -44,7 +45,7 @@ describe("RelloUpsellNudge — {{monthlyPrice}} / {{roiCopy}} tokens", () => {
     expect(text).not.toContain("$0");
     expect(text).not.toContain("/mo");
     // The prompt itself is kept: CTA and dismiss are still there.
-    fireEvent.click(screen.getByRole("button", { name: "Upgrade to Rello" }));
+    fireEvent.click(screen.getByRole("button", { name: `Upgrade to ${PLATFORM_BRAND.name}` }));
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("button", { name: /dismiss upgrade nudge/i })).toBeInTheDocument();
   });
@@ -67,7 +68,7 @@ describe("RelloUpsellNudge — {{monthlyPrice}} / {{roiCopy}} tokens", () => {
     // Headline needed the missing price: no empty heading is left behind.
     expect(screen.queryByRole("heading")).toBeNull();
     // CTA label needed it: the default label is used, never a raw token.
-    expect(screen.getByRole("button", { name: "Upgrade to Rello" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: `Upgrade to ${PLATFORM_BRAND.name}` })).toBeInTheDocument();
     expect(region().textContent ?? "").not.toMatch(/\{\{|\}\}/);
   });
 
@@ -88,7 +89,7 @@ describe("RelloUpsellNudge — fields with no {{ are unchanged from v2.37.1 (GD-
 
   it('keeps an explicit ctaLabel="" empty, as v2.37.1 did', () => {
     render(<RelloUpsellNudge {...baseProps} ctaLabel="" />);
-    expect(screen.queryByRole("button", { name: "Upgrade to Rello" })).toBeNull();
+    expect(screen.queryByRole("button", { name: `Upgrade to ${PLATFORM_BRAND.name}` })).toBeNull();
     const buttons = screen.getAllByRole("button");
     // CTA (empty) + dismiss.
     expect(buttons).toHaveLength(2);
@@ -156,7 +157,7 @@ describe("RelloUpsellNudge — engaged event", () => {
     const onEngaged = vi.fn();
     render(<RelloUpsellNudge {...baseProps} onEngaged={onEngaged} />);
     act(() => {
-      screen.getByRole("button", { name: "Upgrade to Rello" }).focus();
+      screen.getByRole("button", { name: `Upgrade to ${PLATFORM_BRAND.name}` }).focus();
     });
     // Moving focus between controls inside the nudge does not restart the clock.
     act(() => {
@@ -177,7 +178,7 @@ describe("RelloUpsellNudge — engaged event", () => {
       </>,
     );
     act(() => {
-      screen.getByRole("button", { name: "Upgrade to Rello" }).focus();
+      screen.getByRole("button", { name: `Upgrade to ${PLATFORM_BRAND.name}` }).focus();
       vi.advanceTimersByTime(2000);
       screen.getByRole("button", { name: "outside" }).focus();
       vi.advanceTimersByTime(5000);
@@ -247,11 +248,11 @@ describe("RelloUpsellNudge — engaged event", () => {
     fireEvent.mouseLeave(region());
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
     act(() => {
-      screen.getByRole("button", { name: "Upgrade to Rello" }).focus();
+      screen.getByRole("button", { name: `Upgrade to ${PLATFORM_BRAND.name}` }).focus();
     });
     expect(onFocus).toHaveBeenCalled();
     act(() => {
-      screen.getByRole("button", { name: "Upgrade to Rello" }).blur();
+      screen.getByRole("button", { name: `Upgrade to ${PLATFORM_BRAND.name}` }).blur();
     });
     expect(onBlur).toHaveBeenCalled();
   });
@@ -260,7 +261,7 @@ describe("RelloUpsellNudge — engaged event", () => {
     const onDismiss = vi.fn();
     const onKeyDown = vi.fn();
     render(<RelloUpsellNudge {...baseProps} onDismiss={onDismiss} onKeyDown={onKeyDown} />);
-    fireEvent.keyDown(screen.getByRole("button", { name: "Upgrade to Rello" }), { key: "Escape" });
+    fireEvent.keyDown(screen.getByRole("button", { name: `Upgrade to ${PLATFORM_BRAND.name}` }), { key: "Escape" });
     expect(onDismiss).toHaveBeenCalledTimes(1);
     expect(onKeyDown).toHaveBeenCalledTimes(1);
   });

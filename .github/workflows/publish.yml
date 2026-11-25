@@ -20,6 +20,18 @@ jobs:
           # gate would find no baseline and exit 2 UNVERIFIED on every release.
           fetch-depth: 0
 
+      # Node 22 FIRST, before anything runs npm or npx (v2.45.0). The tag gate
+      # below does a full dependency install, and .npmrc engine-strict plus
+      # engines.node ">=22 <23" refuses any other Node. While setup-node sat
+      # after the gate, the gate ran on the runner image's own Node: fine on
+      # ubuntu-24.04 (Node 22, last green run v2.42.0, 2026-11-13), but
+      # ubuntu-latest moved to ubuntu-26.04 (Node 24), and v2.43.0, v2.44.0 and
+      # v2.44.1 all failed "UNVERIFIED (install-failed) ... notsup Actual: v24".
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: https://npm.pkg.github.com
+
       # Backstop only. This guard sits on the REGISTRY path, and no consumer uses
       # it — measured 2026-08-20: of 403 @rello-platform/* dependency declarations
       # across 62 package.json files, 401 are `github:` git-refs and 2 are
@@ -53,11 +65,6 @@ jobs:
           printf 'refs/tags/%s %s refs/tags/%s %s\n' \
             "${GITHUB_REF_NAME}" "$SHA" "${GITHUB_REF_NAME}" "$SHA" \
             | npx --yes "github:rello-platform/scripts#v0.20.0" tag-dist-gate
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          registry-url: https://npm.pkg.github.com
 
       - run: npm ci
       - run: npm run compile

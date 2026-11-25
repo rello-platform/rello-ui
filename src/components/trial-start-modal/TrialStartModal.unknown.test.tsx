@@ -14,6 +14,7 @@ import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event";
 import { TrialStartModal, type TrialStartModalProps } from "./TrialStartModal";
 import type { TrialStartResult } from "./types";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -53,7 +54,7 @@ describe("TrialStartModal — unknown outcome", () => {
     );
     expect(screen.getByRole("dialog")).not.toHaveTextContent("couldn't start");
     expect(screen.queryByRole("button", { name: "Try again" })).toBeNull();
-    expect(screen.queryByText("Your Rello trial has started.")).toBeNull();
+    expect(screen.queryByText(`Your ${PLATFORM_BRAND.name} trial has started.`)).toBeNull();
   });
 
   it("uses a default line when the message is missing or blank", async () => {
@@ -84,7 +85,7 @@ describe("TrialStartModal — unknown outcome", () => {
       .mockResolvedValueOnce({ status: "started", trialEndsAt: "2099-06-15T12:00:00.000Z" });
     const user = await reachUnknown({ onConfirm });
     await user.click(screen.getByRole("button", { name: "Check my plan" }));
-    expect(await screen.findByText("Your Rello trial has started.")).toBeInTheDocument();
+    expect(await screen.findByText(`Your ${PLATFORM_BRAND.name} trial has started.`)).toBeInTheDocument();
     expect(onConfirm).toHaveBeenCalledTimes(2);
   });
 
@@ -113,7 +114,7 @@ describe("TrialStartModal — unknown outcome", () => {
     await act(async () => {
       d.resolve({ status: "started" });
     });
-    expect(await screen.findByText("Your Rello trial has started.")).toBeInTheDocument();
+    expect(await screen.findByText(`Your ${PLATFORM_BRAND.name} trial has started.`)).toBeInTheDocument();
     expect(onConfirm).toHaveBeenCalledTimes(2);
   });
 

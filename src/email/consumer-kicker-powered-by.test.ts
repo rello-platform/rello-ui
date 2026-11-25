@@ -10,6 +10,9 @@ import {
 } from "./index";
 import { baselineInput, sha256 } from "../test/email-logo-baseline";
 import { V238_SLUGS, v238Cases } from "../test/email-v238-cases";
+import { asLegacyBrand, asLegacyRender } from "../test/legacy-brand";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
+import { ANY_PLATFORM_NAME } from "../test/legacy-brand";
 
 /**
  * v2.40.0. Kelly 2026-11-10, on whether "Rello" should come out of the header
@@ -20,8 +23,8 @@ import { V238_SLUGS, v238Cases } from "../test/email-v238-cases";
  */
 
 const BRAND: RelloEmailBrand = { name: "Summit Peak", logoUrl: "https://cdn.example-mortgage.com/brand/logo.png", primary: "#1d4ed8" };
-const POWERED_HTML_RE = /<a href="https:\/\/hellorello\.app" style="color:(#[0-9a-f]{6});">Powered by Rello<\/a>/;
-const POWERED_TEXT = "Powered by Rello (hellorello.app)";
+const POWERED_HTML_RE = new RegExp(`<a href="https://hellorello\\.app" style="color:(#[0-9a-f]{6});">Powered by ${PLATFORM_BRAND.name}</a>`);
+const POWERED_TEXT = `Powered by ${PLATFORM_BRAND.name} (hellorello.app)`;
 
 function consumer(app: PlatformSlug, extra: Partial<RelloEmailInput> = {}): RelloEmailInput {
   return { ...baselineInput(app, "consumer"), companyName: "Summit Peak Mortgage", ...extra };
@@ -55,7 +58,7 @@ describe("consumer kicker: the sender, never Rello by default", () => {
       const branded = renderRelloEmail(consumer(app, { brand: BRAND }));
       expect(kickerHtml(branded.html), app).toBe("From Summit Peak Mortgage");
       expect(branded.text.split("\n").slice(0, 2), app).toEqual(["Summit Peak", "From Summit Peak Mortgage"]);
-      expect(header(branded.html), app).not.toMatch(/rello/i);
+      expect(header(branded.html), app).not.toMatch(ANY_PLATFORM_NAME);
     }
   });
 
@@ -71,7 +74,7 @@ describe("consumer kicker: the sender, never Rello by default", () => {
         const r = renderRelloEmail(consumer(app, { brand: BRAND, companyName }));
         expect(kickerHtml(r.html), `${app} ${String(companyName)}`).toBe("From Summit Peak");
         expect(r.text.split("\n").slice(0, 2), `${app} ${String(companyName)}`).toEqual(["Summit Peak", "From Summit Peak"]);
-        expect(header(r.html)).not.toMatch(/rello/i);
+        expect(header(r.html)).not.toMatch(ANY_PLATFORM_NAME);
       }
     }
     const escaped = renderRelloEmail(consumer("home-scout", { brand: { name: `A & B "Homes" <x>` }, companyName: null }));
@@ -132,17 +135,17 @@ describe("consumer kicker: the sender, never Rello by default", () => {
       // TE-1341: the signer names the sender; with no signer, nobody.
       const r = renderRelloEmail(consumer("home-scout", { brand: { name }, companyName: null }));
       expect(kickerHtml(r.html), JSON.stringify(name)).toBeNull();
-      expect(header(r.html)).not.toMatch(/rello/i);
+      expect(header(r.html)).not.toMatch(ANY_PLATFORM_NAME);
       expect(r.text.split("\n")[0], JSON.stringify(name)).toBe("Kelly Sansom");
       const n = renderRelloEmail(consumer("home-scout", { brand: { name }, companyName: null, signer: null }));
       expect(kickerHtml(n.html), JSON.stringify(name)).toBeNull();
-      expect(header(n.html)).not.toMatch(/rello/i);
+      expect(header(n.html)).not.toMatch(ANY_PLATFORM_NAME);
       expect(n.text.split("\n")[0], JSON.stringify(name)).toBe("Your plan is ready, Sarah.");
     }
   });
 
   it("unbranded with no company: the app's name, as at v2.38.0", () => {
-    for (const [app, name] of [["home-ready", "Home Ready"], ["home-scout", "Home Scout"], ["rello", "Rello"]] as const) {
+    for (const [app, name] of [["home-ready", "Home Ready"], ["home-scout", "Home Scout"], ["rello", PLATFORM_BRAND.name]] as const) {
       const r = renderRelloEmail(consumer(app, { companyName: null }));
       expect(kickerHtml(r.html), app).toBe(name);
       expect(r.text.split("\n")[0], app).toBe(name);
@@ -172,7 +175,7 @@ describe('consumer footer: "Powered by Rello", last and muted', () => {
       }
     }
     expect(footer(renderRelloEmail(consumer("home-ready")).html)).toContain(
-      `color:${resolveRelloEmailPalette("consumer", "home-ready").secondaryText};">Powered by Rello</a>`,
+      `color:${resolveRelloEmailPalette("consumer", "home-ready").secondaryText};">Powered by ${PLATFORM_BRAND.name}</a>`,
     );
   });
 
@@ -196,9 +199,9 @@ describe('consumer footer: "Powered by Rello", last and muted', () => {
   it("footer.poweredBy: false leaves it out, html and text; anything else keeps it", () => {
     const base = consumer("home-ready");
     const off = renderRelloEmail({ ...base, footer: { ...base.footer, poweredBy: false } });
-    expect(off.html).not.toContain("Powered by Rello");
+    expect(off.html).not.toContain(`Powered by ${PLATFORM_BRAND.name}`);
     expect(off.html).not.toContain('href="https://hellorello.app"');
-    expect(off.text).not.toContain("Powered by Rello");
+    expect(off.text).not.toContain(`Powered by ${PLATFORM_BRAND.name}`);
     expect(off.text.endsWith("Email preferences: https://example.com/prefs\n")).toBe(true);
     const bare = renderRelloEmail({ audience: "consumer", app: "home-ready", subject: "Hi", headline: "Hi there.", footer: { poweredBy: false } });
     expect(footer(bare.html)).toBeNull();
@@ -234,14 +237,14 @@ describe("byte-for-byte against v2.38.0 (19f04a9)", () => {
     expect(cases.length).toBe(V238_SLUGS.length * 2 * 9);
     for (const c of cases) {
       const r = renderRelloEmail(c.input);
-      expect(sha256(r.html), `${c.id} html`).toBe(renders[c.id].html);
-      expect(sha256(r.text), `${c.id} text`).toBe(renders[c.id].text);
+      expect(sha256(asLegacyBrand(r.html)), `${c.id} html`).toBe(renders[c.id].html);
+      expect(sha256(asLegacyBrand(r.text)), `${c.id} text`).toBe(renders[c.id].text);
     }
   });
 
   it("the home-ready pro and admin renders equal the stored v2.38.0 copies, character for character", () => {
-    expect(renderRelloEmail(baselineInput("home-ready", "pro"))).toEqual(golden.proHomeReady);
-    expect(renderRelloEmail(baselineInput("home-ready", "admin"))).toEqual(golden.adminHomeReady);
+    expect(asLegacyRender(renderRelloEmail(baselineInput("home-ready", "pro")))).toEqual(golden.proHomeReady);
+    expect(asLegacyRender(renderRelloEmail(baselineInput("home-ready", "admin")))).toEqual(golden.adminHomeReady);
   });
 
   it("consumer, with the v2.38.0 kicker passed and footer.poweredBy false: every slug hashes as at v2.38.0", () => {
@@ -249,16 +252,16 @@ describe("byte-for-byte against v2.38.0 (19f04a9)", () => {
     expect(cases.length).toBe(V238_SLUGS.length * 2);
     for (const c of cases) {
       const r = renderRelloEmail(c.input);
-      expect(sha256(r.html), `${c.id} html`).toBe(renders[c.id].html);
-      expect(sha256(r.text), `${c.id} text`).toBe(renders[c.id].text);
+      expect(sha256(asLegacyBrand(r.html)), `${c.id} html`).toBe(renders[c.id].html);
+      expect(sha256(asLegacyBrand(r.text)), `${c.id} text`).toBe(renders[c.id].text);
     }
   });
 
   it("the check can fail: the default consumer render no longer hashes as at v2.38.0", () => {
     const c = v238Cases().find((x) => x.id === "home-ready|consumer|pinned")!;
     const r = renderRelloEmail(baselineInput("home-ready", "consumer"));
-    expect(sha256(r.html)).not.toBe(renders[c.id].html);
-    expect(sha256(r.text)).not.toBe(renders[c.id].text);
+    expect(sha256(asLegacyBrand(r.html))).not.toBe(renders[c.id].html);
+    expect(sha256(asLegacyBrand(r.text))).not.toBe(renders[c.id].text);
   });
 });
 
@@ -304,9 +307,9 @@ describe("TE-1341: the consumer header names one cleaned sender, the same in HTM
           expect(r.text).toContain(POWERED_TEXT);
           // The WHOLE header, both parts: no control character, no Rello.
           expect(h).not.toMatch(ANY_CONTROL);
-          expect(h).not.toMatch(/rello/i);
+          expect(h).not.toMatch(ANY_PLATFORM_NAME);
           for (const l of th) expect(l).not.toMatch(ANY_CONTROL);
-          for (const l of th) expect(l).not.toMatch(/rello/i);
+          for (const l of th) expect(l).not.toMatch(ANY_PLATFORM_NAME);
           // One sender name: the HTML's equals the text's.
           const textName = th.length > 0 && th[0] !== wantKicker ? th[0] : null;
           expect(htmlName(r.html)).toBe(logoUrl && wantName === null ? "" : wantName);

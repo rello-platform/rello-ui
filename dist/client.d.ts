@@ -1324,7 +1324,7 @@ interface RelloUpsellNudgeProps extends React.HTMLAttributes<HTMLElement> {
     headline: string;
     /** Body copy explaining the Rello-tier capability. May carry `{{monthlyPrice}}` / `{{roiCopy}}`. */
     body: string;
-    /** CTA text — defaults to "Upgrade to Rello". May carry tokens; falls back to the default only if substitution empties it (an explicit "" stays empty). */
+    /** CTA text — defaults to "Upgrade to <PLATFORM_BRAND.name>". May carry tokens; falls back to the default only if substitution empties it (an explicit "" stays empty). */
     ctaLabel?: string;
     /** Click handler — consumer fires `clicked` telemetry then navigates to upgrade flow. */
     onClick: () => void;
@@ -1378,7 +1378,7 @@ interface TrialCountdownBannerProps extends Omit<React.HTMLAttributes<HTMLElemen
     ctaHref?: string;
     /** Fires on CTA click (`trial-banner.clicked`). With no `ctaHref` the CTA is a button. */
     onCtaClick?: () => void;
-    /** CTA text — defaults to "Upgrade to Rello". */
+    /** CTA text — defaults to "Upgrade to <PLATFORM_BRAND.name>". */
     ctaLabel?: string;
 }
 /**
@@ -1452,7 +1452,7 @@ interface TrialStartModalProps {
     onConfirm: () => Promise<TrialStartResult>;
     /** Where "Upgrade to Rello" goes when the trial was already used (409). */
     upgradeHref: string;
-    /** Label of the 409 upgrade link — defaults to "Upgrade to Rello". */
+    /** Label of the 409 upgrade link — defaults to "Upgrade to <PLATFORM_BRAND.name>". */
     upgradeLabel?: string;
     /** Dialog title and accessible name — defaults to "Start your 14-day free trial". */
     title?: string;

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { TrialCountdownBanner } from "./TrialCountdownBanner";
 import { getTrialTimeRemaining } from "./remaining";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 const NOW = new Date("2026-11-08T12:00:00.000Z").getTime();
 const MIN = 60_000;
@@ -79,8 +80,8 @@ describe("TrialCountdownBanner", () => {
     render(<TrialCountdownBanner trialEndsAt={new Date(NOW + 5 * DAY).toISOString()} />);
     const status = screen.getByRole("status");
     expect(status).toHaveAttribute("aria-live", "polite");
-    expect(status).toHaveTextContent("Your Rello trial ends in 5 days.");
-    expect(screen.getByRole("region", { name: "Rello trial" })).toBeInTheDocument();
+    expect(status).toHaveTextContent(`Your ${PLATFORM_BRAND.name} trial ends in 5 days.`);
+    expect(screen.getByRole("region", { name: `${PLATFORM_BRAND.name} trial` })).toBeInTheDocument();
   });
 
   it("uses the singular for one day, one hour and one minute", () => {
@@ -94,7 +95,7 @@ describe("TrialCountdownBanner", () => {
 
   it("marks the last 48 hours with an icon and a data flag, not colour alone", () => {
     const { rerender } = render(<TrialCountdownBanner trialEndsAt={NOW + 3 * DAY} />);
-    const banner = screen.getByRole("region", { name: "Rello trial" });
+    const banner = screen.getByRole("region", { name: `${PLATFORM_BRAND.name} trial` });
     expect(banner).toHaveAttribute("data-urgent", "false");
     expect(banner.querySelector("[data-urgent-icon]")).toBeNull();
     rerender(<TrialCountdownBanner trialEndsAt={NOW + 47 * HOUR} />);
@@ -148,7 +149,7 @@ describe("TrialCountdownBanner", () => {
   it("renders an upgrade link with a 44px touch target, and reports the click", () => {
     const onCtaClick = vi.fn();
     render(<TrialCountdownBanner trialEndsAt={NOW + 3 * DAY} ctaHref="/upgrade" onCtaClick={onCtaClick} />);
-    const link = screen.getByRole("link", { name: "Upgrade to Rello" });
+    const link = screen.getByRole("link", { name: `Upgrade to ${PLATFORM_BRAND.name}` });
     expect(link).toHaveAttribute("href", "/upgrade");
     expect(link.className).toMatch(/min-h-\[44px\]/);
     fireEvent.click(link);

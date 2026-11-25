@@ -12,6 +12,7 @@ import { Sparks } from "iconoir-react";
 import { RelloUpsellNudge, type RelloUpsellNudgeProps } from "./RelloUpsellNudge";
 import corpus from "./__fixtures__/legacy-corpus.json";
 import snapshot from "./__fixtures__/nudge-v2.37.1.json";
+import { asLegacyBrand } from "../../test/legacy-brand";
 
 const expected = new Map(snapshot.cases.map((c) => [c.name, c.html]));
 
@@ -32,6 +33,7 @@ describe("RelloUpsellNudge renders v2.37.1 copy exactly as v2.37.1 did", () => {
         onDismiss={() => {}}
       />,
     );
-    expect(html).toBe(expected.get(name));
+    // v2.45.0 changed only the product name (see src/test/legacy-brand.ts).
+    expect(asLegacyBrand(html)).toBe(expected.get(name));
   });
 });

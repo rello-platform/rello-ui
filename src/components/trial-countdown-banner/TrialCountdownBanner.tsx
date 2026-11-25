@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Clock, WarningCircle } from "iconoir-react";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 import { cn } from "../../lib/cn";
 import {
   formatTrialTimeRemaining,
@@ -27,7 +28,7 @@ export interface TrialCountdownBannerProps extends Omit<React.HTMLAttributes<HTM
   ctaHref?: string;
   /** Fires on CTA click (`trial-banner.clicked`). With no `ctaHref` the CTA is a button. */
   onCtaClick?: () => void;
-  /** CTA text — defaults to "Upgrade to Rello". */
+  /** CTA text — defaults to "Upgrade to <PLATFORM_BRAND.name>". */
   ctaLabel?: string;
 }
 
@@ -44,7 +45,7 @@ function TrialCountdownBanner({
   onShown,
   ctaHref,
   onCtaClick,
-  ctaLabel = "Upgrade to Rello",
+  ctaLabel = `Upgrade to ${PLATFORM_BRAND.name}`,
   className,
   style,
   ...props
@@ -90,7 +91,7 @@ function TrialCountdownBanner({
 
   return (
     <section
-      aria-label="Rello trial"
+      aria-label={`${PLATFORM_BRAND.name} trial`}
       data-urgent={isUrgent ? "true" : "false"}
       className={cn(
         "w-full flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 py-2 sm:px-6",
@@ -117,7 +118,7 @@ function TrialCountdownBanner({
           </span>
         )}
         <p role="status" aria-live="polite" aria-atomic="true" className="text-sm font-medium" suppressHydrationWarning>
-          Your Rello trial ends in {formatTrialTimeRemaining(remaining)}.
+          Your {PLATFORM_BRAND.name} trial ends in {formatTrialTimeRemaining(remaining)}.
         </p>
       </div>
       {ctaHref ? (

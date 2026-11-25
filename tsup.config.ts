@@ -20,6 +20,18 @@ import { defineConfig } from "tsup";
  * imports of pure utilities to resolve to client-reference proxies and
  * crash at call time in production.
  */
+/**
+ * Inlined into dist/ rather than imported at runtime (v2.45.0, RALLYROO).
+ * Visible copy reads PLATFORM_BRAND from @rello-platform/slugs. Consumers pin
+ * slugs anywhere from v0.7.0 to v0.14.0 (PLATFORM_BRAND arrived in v0.14.0),
+ * and PreQual Pro, which loads dist/email.cjs, has no slugs dependency at all.
+ * Bundling means every consumer gets the brand this package was built with,
+ * whatever slugs version it resolves; the source of truth is still slugs, so a
+ * rename is a slugs release plus a rello-ui rebuild. Type-only imports from
+ * slugs (PlatformSlug, AppSlug) are erased and unaffected.
+ */
+const BUNDLED = ["@rello-platform/slugs"];
+
 export default defineConfig([
   {
     entry: { index: "src/index.ts" },
@@ -29,6 +41,7 @@ export default defineConfig([
     sourcemap: true,
     clean: true,
     external: ["react", "react-dom", "next", "next/link"],
+    noExternal: BUNDLED,
   },
   {
     entry: { client: "src/client.ts" },
@@ -38,6 +51,7 @@ export default defineConfig([
     sourcemap: true,
     clean: false,
     external: ["react", "react-dom", "next", "next/link"],
+    noExternal: BUNDLED,
     banner: { js: '"use client";' },
   },
   {
@@ -53,5 +67,6 @@ export default defineConfig([
     sourcemap: true,
     clean: false,
     external: ["react", "react-dom", "next", "next/link"],
+    noExternal: BUNDLED,
   },
 ]);

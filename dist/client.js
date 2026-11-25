@@ -7287,6 +7287,55 @@ function WizardShell({
 import * as React28 from "react";
 import { Xmark as Xmark3 } from "iconoir-react";
 
+// node_modules/@rello-platform/slugs/dist/index.js
+var APP_SLUGS = [
+  "arive",
+  "rello",
+  "harvest-home",
+  "home-ready",
+  "home-stretch",
+  "home-scout",
+  "market-intel",
+  "newsletter-studio",
+  "the-oven",
+  "the-drumbeat",
+  "open-house-hub",
+  "pathfinder-pro",
+  // prequal-pro: consumer-facing pre-qualification app (its own repo,
+  // PreQual-Pro). Emits document-upload / signal traffic to Rello with
+  // sourceApp "prequal-pro" / "PREQUAL_PRO". Added v0.8.0 (C-49) — it had a
+  // Rello App row and emitters but was missing from this registry, which forced
+  // Rello's document-upload receiver to hand-roll a bridge for it (A-107).
+  "prequal-pro"
+];
+var ENGINE_SLUGS = [
+  "milo-engine",
+  "content-engine",
+  "property-engine",
+  "journey-engine",
+  "report-engine",
+  "drumbeat-video-engine",
+  "tracking-engine"
+];
+var PLATFORM_SLUGS = [...APP_SLUGS, ...ENGINE_SLUGS];
+var CANONICAL_SET = new Set(PLATFORM_SLUGS);
+var FEATURE_SLUGS = [
+  "pfp-rates",
+  "pfp-full",
+  "check-your-rate",
+  "refi-radar",
+  "pfp-signature"
+];
+var FEATURE_SET = new Set(FEATURE_SLUGS);
+var PLATFORM_BRAND = Object.freeze({
+  name: "Rallyroo",
+  domain: "hellorallyroo.com",
+  appUrl: "https://hellorallyroo.com",
+  supportEmail: "support@hellorallyroo.com",
+  logoUrl: "https://hellorallyroo.com/email/logos/rallyroo.png",
+  legacyName: "Rello"
+});
+
 // src/components/rello-upsell-nudge/copy.ts
 var TOKEN = /\{\{\s*([A-Za-z0-9_]+)\s*\}\}/g;
 function usableValue(name, values) {
@@ -7345,7 +7394,7 @@ var UPSELL_ENGAGED_DWELL_MS = 3e3;
 
 // src/components/rello-upsell-nudge/RelloUpsellNudge.tsx
 import { Fragment as Fragment6, jsx as jsx62, jsxs as jsxs49 } from "react/jsx-runtime";
-var DEFAULT_CTA_LABEL = "Upgrade to Rello";
+var DEFAULT_CTA_LABEL = `Upgrade to ${PLATFORM_BRAND.name}`;
 function RelloUpsellNudge({
   seam,
   headline,
@@ -7443,7 +7492,7 @@ function RelloUpsellNudge({
     "section",
     {
       role: "region",
-      "aria-label": "Rello upgrade option",
+      "aria-label": `${PLATFORM_BRAND.name} upgrade option`,
       "data-seam": seam,
       className: cn(
         "rounded-lg p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-3",
@@ -7582,7 +7631,7 @@ function TrialCountdownBanner({
   onShown,
   ctaHref,
   onCtaClick,
-  ctaLabel = "Upgrade to Rello",
+  ctaLabel = `Upgrade to ${PLATFORM_BRAND.name}`,
   className,
   style,
   ...props
@@ -7622,7 +7671,7 @@ function TrialCountdownBanner({
   return /* @__PURE__ */ jsxs50(
     "section",
     {
-      "aria-label": "Rello trial",
+      "aria-label": `${PLATFORM_BRAND.name} trial`,
       "data-urgent": isUrgent ? "true" : "false",
       className: cn(
         "w-full flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 py-2 sm:px-6",
@@ -7639,7 +7688,9 @@ function TrialCountdownBanner({
         /* @__PURE__ */ jsxs50("div", { className: "flex items-center gap-2 min-w-0", children: [
           isUrgent ? /* @__PURE__ */ jsx63("span", { "data-urgent-icon": "", "aria-hidden": "true", className: "inline-flex shrink-0", style: { color: accent }, children: /* @__PURE__ */ jsx63(WarningCircle3, { width: 18, height: 18 }) }) : /* @__PURE__ */ jsx63("span", { "aria-hidden": "true", className: "inline-flex shrink-0", style: { color: "var(--neutral-500, #646F77)" }, children: /* @__PURE__ */ jsx63(Clock, { width: 18, height: 18 }) }),
           /* @__PURE__ */ jsxs50("p", { role: "status", "aria-live": "polite", "aria-atomic": "true", className: "text-sm font-medium", suppressHydrationWarning: true, children: [
-            "Your Rello trial ends in ",
+            "Your ",
+            PLATFORM_BRAND.name,
+            " trial ends in ",
             formatTrialTimeRemaining(remaining),
             "."
           ] })
@@ -7686,9 +7737,9 @@ function TrialStartModal({
   onClose,
   onConfirm,
   upgradeHref,
-  upgradeLabel = "Upgrade to Rello",
+  upgradeLabel = `Upgrade to ${PLATFORM_BRAND.name}`,
   title = "Start your 14-day free trial",
-  description = "You'll have full Rello free for 14 days.",
+  description = `You'll have full ${PLATFORM_BRAND.name} free for 14 days.`,
   confirmLabel = "Start trial",
   cancelLabel = "Not now",
   successAction,
@@ -7763,7 +7814,11 @@ function TrialStartModal({
         const end = toDate(phase.trialEndsAt);
         return /* @__PURE__ */ jsxs51(Fragment7, { children: [
           /* @__PURE__ */ jsx64(DialogPrimitive3.Description, { asChild: true, children: /* @__PURE__ */ jsxs51("div", { className: "space-y-1", children: [
-            /* @__PURE__ */ jsx64("p", { className: "text-sm font-medium", children: "Your Rello trial has started." }),
+            /* @__PURE__ */ jsxs51("p", { className: "text-sm font-medium", children: [
+              "Your ",
+              PLATFORM_BRAND.name,
+              " trial has started."
+            ] }),
             end ? /* @__PURE__ */ jsxs51("p", { className: "text-sm", children: [
               "It runs until ",
               DATE_FORMAT.format(end),
@@ -7781,7 +7836,11 @@ function TrialStartModal({
         const ended = end ? end.getTime() <= Date.now() : false;
         return /* @__PURE__ */ jsxs51(Fragment7, { children: [
           /* @__PURE__ */ jsx64(DialogPrimitive3.Description, { asChild: true, children: /* @__PURE__ */ jsxs51("div", { className: "space-y-1", children: [
-            /* @__PURE__ */ jsx64("p", { className: "text-sm font-medium", children: "You've already used your Rello trial." }),
+            /* @__PURE__ */ jsxs51("p", { className: "text-sm font-medium", children: [
+              "You've already used your ",
+              PLATFORM_BRAND.name,
+              " trial."
+            ] }),
             end ? /* @__PURE__ */ jsxs51("p", { className: "text-sm", children: [
               ended ? "Your trial ended on" : "Your trial runs until",
               " ",

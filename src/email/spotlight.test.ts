@@ -3,6 +3,7 @@ import fixture from "./fixtures/v2.40.0-before-spotlight.json";
 import { relloEmailContrast, renderRelloEmail, type RelloEmailInput, type RelloEmailSpotlight } from "./index";
 import { baselineInput, sha256 } from "../test/email-logo-baseline";
 import { v240Cases } from "../test/email-v240-cases";
+import { asLegacyBrand } from "../test/legacy-brand";
 
 /**
  * v2.41.0 `spotlight` (Kelly 2026-11-11: "look how rascal spotlights the rate? We need to do that").
@@ -65,8 +66,8 @@ describe("v2.41.0 spotlight: absent, null or empty renders byte for byte as v2.4
       for (const c of cases) {
         const input = name === "absent" ? c.input : { ...c.input, spotlight };
         const r = renderRelloEmail(input);
-        expect(sha256(r.html), `${c.id} html`).toBe(renders[c.id].html);
-        expect(sha256(r.text), `${c.id} text`).toBe(renders[c.id].text);
+        expect(sha256(asLegacyBrand(r.html)), `${c.id} html`).toBe(renders[c.id].html);
+        expect(sha256(asLegacyBrand(r.text)), `${c.id} text`).toBe(renders[c.id].text);
         compared++;
       }
       expect(compared).toBe(627);

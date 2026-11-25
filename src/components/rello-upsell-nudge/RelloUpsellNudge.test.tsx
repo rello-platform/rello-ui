@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { RelloUpsellNudge } from "./RelloUpsellNudge";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 const baseProps = {
   seam: "pages-create-custom",
@@ -14,10 +15,10 @@ const baseProps = {
 describe("RelloUpsellNudge", () => {
   it("renders headline + body + default CTA label", () => {
     render(<RelloUpsellNudge {...baseProps} />);
-    expect(screen.getByRole("region", { name: /rello upgrade option/i })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: `${PLATFORM_BRAND.name} upgrade option` })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: baseProps.headline })).toBeInTheDocument();
     expect(screen.getByText(baseProps.body)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Upgrade to Rello" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: `Upgrade to ${PLATFORM_BRAND.name}` })).toBeInTheDocument();
   });
 
   it("renders custom ctaLabel when provided", () => {
@@ -29,7 +30,7 @@ describe("RelloUpsellNudge", () => {
     const user = userEvent.setup();
     const onClick = vi.fn();
     render(<RelloUpsellNudge {...baseProps} onClick={onClick} />);
-    await user.click(screen.getByRole("button", { name: "Upgrade to Rello" }));
+    await user.click(screen.getByRole("button", { name: `Upgrade to ${PLATFORM_BRAND.name}` }));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
@@ -45,7 +46,7 @@ describe("RelloUpsellNudge", () => {
     const user = userEvent.setup();
     const onDismiss = vi.fn();
     render(<RelloUpsellNudge {...baseProps} onDismiss={onDismiss} />);
-    const cta = screen.getByRole("button", { name: "Upgrade to Rello" });
+    const cta = screen.getByRole("button", { name: `Upgrade to ${PLATFORM_BRAND.name}` });
     cta.focus();
     await user.keyboard("{Escape}");
     expect(onDismiss).toHaveBeenCalledTimes(1);
@@ -53,7 +54,7 @@ describe("RelloUpsellNudge", () => {
 
   it("exposes seam via data attribute for telemetry correlation", () => {
     render(<RelloUpsellNudge {...baseProps} seam="revenue-attribution" />);
-    const region = screen.getByRole("region", { name: /rello upgrade option/i });
+    const region = screen.getByRole("region", { name: `${PLATFORM_BRAND.name} upgrade option` });
     expect(region).toHaveAttribute("data-seam", "revenue-attribution");
   });
 
@@ -76,7 +77,7 @@ describe("RelloUpsellNudge", () => {
 
   it("CTA button meets 44px minimum touch-target via inline class", () => {
     render(<RelloUpsellNudge {...baseProps} />);
-    const cta = screen.getByRole("button", { name: "Upgrade to Rello" });
+    const cta = screen.getByRole("button", { name: `Upgrade to ${PLATFORM_BRAND.name}` });
     expect(cta.className).toMatch(/min-h-\[44px\]/);
   });
 });

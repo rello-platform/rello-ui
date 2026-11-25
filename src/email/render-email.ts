@@ -39,7 +39,7 @@
  * not show SVG or WebP.
  */
 
-import type { PlatformSlug } from "@rello-platform/slugs";
+import { PLATFORM_BRAND, type PlatformSlug } from "@rello-platform/slugs";
 import appOverrides from "../../tokens/app-overrides.json";
 
 export type RelloEmailAudience = "consumer" | "pro" | "admin";
@@ -258,7 +258,7 @@ export const RELLO_EMAIL_POWERED_BY_URL = "https://hellorello.app";
  */
 export const RELLO_EMAIL_APP_NAMES: Readonly<Record<PlatformSlug, string>> = {
   arive: "ARIVE",
-  rello: "Rello",
+  rello: PLATFORM_BRAND.name,
   "harvest-home": "Harvest Home",
   "home-ready": "Home Ready",
   "home-stretch": "The Home Stretch",
@@ -276,6 +276,7 @@ export const RELLO_EMAIL_APP_NAMES: Readonly<Record<PlatformSlug, string>> = {
   "journey-engine": "Journey",
   "report-engine": "Report Engine",
   "drumbeat-video-engine": "Drumbeat Video",
+  "tracking-engine": "Tracking Engine",
 };
 
 /**
@@ -904,7 +905,7 @@ function isKnownApp(app: unknown): app is PlatformSlug {
 }
 
 function appName(app: unknown): string {
-  return isKnownApp(app) ? RELLO_EMAIL_APP_NAMES[app] : "Rello";
+  return isKnownApp(app) ? RELLO_EMAIL_APP_NAMES[app] : PLATFORM_BRAND.name;
 }
 
 export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
@@ -916,7 +917,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
   // The sender's brand, on consumer and pro mail. Null keeps every byte of v2.33.0.
   const brand = audience !== "admin" && input.brand && typeof input.brand === "object" ? input.brand : null;
   // Under a brand the app is never named; "Rello" is the platform's word in pro mail's default kicker.
-  const app = brand ? "Rello" : appName(input.app);
+  const app = brand ? PLATFORM_BRAND.name : appName(input.app);
   const company = line(input.companyName);
   const pal = brand ? brandPalette(audience, brand.primary) : resolveRelloEmailPalette(audience, input.app);
   const color = pal.primary;
@@ -1227,7 +1228,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     footerLine2 ? ew(footerLine2) : "",
     footerReason ? ew(footerReason) : "",
     pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${ew(pref.label)}</a>` : "",
-    poweredByUrl ? `<a href="${e(poweredByUrl)}" style="color:${pal.secondaryText};">Powered by Rello</a>` : "",
+    poweredByUrl ? `<a href="${e(poweredByUrl)}" style="color:${pal.secondaryText};">Powered by ${e(PLATFORM_BRAND.name)}</a>` : "",
   ].filter(Boolean);
   if (footerParts.length > 0) {
     rows.push(
@@ -1305,7 +1306,7 @@ export function renderRelloEmail(input: RelloEmailInput): RenderedRelloEmail {
     footerLine2,
     footerReason,
     pref ? `${pref.label}: ${pref.url}` : "",
-    poweredByUrl ? "Powered by Rello (hellorello.app)" : "",
+    poweredByUrl ? `Powered by ${PLATFORM_BRAND.name} (hellorello.app)` : "",
   ].filter(Boolean);
   if (footerText.length > 0) push("", "—", ...footerText);
   const text = t

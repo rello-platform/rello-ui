@@ -1,6 +1,7 @@
-import { APP_SLUGS, ENGINE_SLUGS, type PlatformSlug } from "@rello-platform/slugs";
+import type { PlatformSlug } from "@rello-platform/slugs";
 import type { RelloEmailBrand, RelloEmailInput } from "../email";
 import { BASELINE_AUDIENCES, baselineInput } from "./email-logo-baseline";
+import { FIXTURE_SLUGS } from "./fixture-slugs";
 
 /**
  * The inputs behind src/email/fixtures/v2.40.0-before-spotlight.json: sha256 of the html and the text
@@ -9,7 +10,7 @@ import { BASELINE_AUDIENCES, baselineInput } from "./email-logo-baseline";
  * must render each byte for byte as v2.40.0 did when `spotlight` is absent, null, or has nothing to show.
  */
 
-export const V240_SLUGS: readonly PlatformSlug[] = [...APP_SLUGS, ...ENGINE_SLUGS];
+export const V240_SLUGS: readonly PlatformSlug[] = FIXTURE_SLUGS;
 
 const BRAND: RelloEmailBrand = { name: "Summit Peak", logoUrl: "https://cdn.example-mortgage.com/brand/logo.png", primary: "#1d4ed8" };
 

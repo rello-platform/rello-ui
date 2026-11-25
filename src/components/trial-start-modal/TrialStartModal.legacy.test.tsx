@@ -10,6 +10,7 @@ import type * as React from "react";
 import { TrialStartModal } from "./TrialStartModal";
 import { MODAL_CORPUS, driveModal } from "./__fixtures__/drive-modal";
 import snapshot from "./__fixtures__/modal-v2.38.0.json";
+import { asLegacyBrand } from "../../test/legacy-brand";
 
 const expected = new Map(snapshot.cases.map((c) => [c.name, c.html]));
 
@@ -27,6 +28,7 @@ describe("TrialStartModal renders every v2.38.0 outcome exactly as v2.38.0 did",
   it.each(MODAL_CORPUS.map((c) => [c.name, c] as const))("%s", async (name, c) => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     const html = await driveModal(TrialStartModal as unknown as React.ComponentType<Record<string, unknown>>, c);
-    expect(html).toBe(expected.get(name));
+    // v2.45.0 changed only the product name (see src/test/legacy-brand.ts).
+    expect(asLegacyBrand(html)).toBe(expected.get(name));
   });
 });
