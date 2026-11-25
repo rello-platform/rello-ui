@@ -10,6 +10,7 @@ import {
 } from "iconoir-react";
 import { DashboardShell } from "./DashboardShell";
 import { Card } from "../card";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 const ICON = { width: 20, height: 20, strokeWidth: 1.5 };
 
@@ -48,7 +49,7 @@ export const Default: Story = {
         <span className="text-xl font-bold text-[var(--brand-accent)]">R</span>
       </div>
     ),
-    appTitle: "Rello",
+    appTitle: PLATFORM_BRAND.name,
     appSubtitle: "Your real estate command center",
     highlightText: "You have 12 hot leads and 3 pending closings this week.",
     agentName: "Kelly Sansom",
@@ -100,7 +101,7 @@ export const WithFooterCustomReturnToRello: Story = {
         className="flex items-center justify-center gap-2 w-full px-3 py-3 mx-3 mb-3 mt-auto rounded-lg text-sm font-semibold text-white transition-colors min-h-[44px]"
         style={{ backgroundColor: "#c05621" }}
       >
-        ← Return to Rello
+        ← Return to {PLATFORM_BRAND.name}
       </button>
     ),
   },
@@ -122,8 +123,8 @@ export const WithFooterCustomCollapseAware: Story = {
       collapsed ? (
         <button
           type="button"
-          aria-label="Return to Rello"
-          title="Return to Rello"
+          aria-label={`Return to ${PLATFORM_BRAND.name}`}
+          title={`Return to ${PLATFORM_BRAND.name}`}
           onClick={() => { window.location.href = "/mlo"; }}
           className="flex items-center justify-center mx-auto mb-3 rounded-lg text-white transition-colors size-11"
           style={{ backgroundColor: "#c05621" }}
@@ -138,7 +139,7 @@ export const WithFooterCustomCollapseAware: Story = {
           style={{ backgroundColor: "#c05621" }}
         >
           <FastArrowRight {...ICON} className="rotate-180" aria-hidden="true" />
-          Return to Rello
+          Return to {PLATFORM_BRAND.name}
         </button>
       ),
   },
