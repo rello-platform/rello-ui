@@ -2,6 +2,7 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { TrialStartModal, type TrialStartModalProps } from "./TrialStartModal";
 import type { TrialStartResult } from "./types";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 const later = (days: number) => new Date(Date.now() + days * 86_400_000).toISOString();
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -43,7 +44,7 @@ export const Success: Story = {
     <Demo
       onConfirm={started}
       upgradeHref="/upgrade"
-      description="You'll have full Rello free for 14 days. We'll spin up Pathfinder Pro and pre-fill Jordan's pre-qual intake right now."
+      description={`You'll have full ${PLATFORM_BRAND.name} free for 14 days. We'll spin up Pathfinder Pro and pre-fill Jordan's pre-qual intake right now.`}
       successAction={{ label: "Open Pathfinder Pro intake", href: "#pfp-intake" }}
     />
   ),
@@ -81,7 +82,7 @@ export const ErrorThenRetry: Story = {
 export const ErrorMessage: Story = {
   render: () => (
     <Demo
-      onConfirm={async () => ({ status: "error", message: "Rello is down for maintenance." })}
+      onConfirm={async () => ({ status: "error", message: `${PLATFORM_BRAND.name} is down for maintenance.` })}
       upgradeHref="/upgrade"
     />
   ),
@@ -96,7 +97,7 @@ export const UnknownThenCheckPlan: Story = {
         onConfirm={async () => {
           calls += 1;
           await wait(800);
-          if (calls === 1) return { status: "unknown", message: "We lost the connection before Rello answered." };
+          if (calls === 1) return { status: "unknown", message: `We lost the connection before ${PLATFORM_BRAND.name} answered.` };
           return { status: "started", trialEndsAt: later(14) };
         }}
         upgradeHref="/upgrade"

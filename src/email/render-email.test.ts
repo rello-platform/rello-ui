@@ -13,6 +13,7 @@ import {
   safeEmailUrl,
   type RelloEmailInput,
 } from "./index";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 const XSS = `<script>alert("x")</script>&'`;
 const ESCAPED = "&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;&amp;&#39;";
@@ -347,7 +348,7 @@ describe("renderRelloEmail — omitted fields", () => {
     });
     expect(r.html).toContain("Real");
     expect(r.html).not.toMatch(/undefined|null|\[object/);
-    expect(r.html).toContain('alt="Rello"');
+    expect(r.html).toContain(`alt="${PLATFORM_BRAND.name}"`);
   });
 });
 
@@ -414,7 +415,7 @@ describe("renderRelloEmail — structure and plain text", () => {
       "123 Main Street, Salt Lake City, UT 84101 · Equal Housing Opportunity",
       "You're getting this because you started a Home Ready plan.",
       "Email preferences: https://homeready.app/preferences",
-      "Powered by Rello (hellorello.app)",
+      `Powered by ${PLATFORM_BRAND.name} (hellorello.app)`,
     ]) {
       expect(text).toContain(words);
     }
@@ -497,11 +498,11 @@ describe("renderRelloEmail — inherited map keys (audit TE-002)", () => {
   it("an inherited key as the app falls back to Rello like any unknown app", () => {
     for (const app of INHERITED) {
       const r = renderRelloEmail({ ...full(), app: app as RelloEmailInput["app"] });
-      expect(r.html, app).toContain('alt="Rello"');
+      expect(r.html, app).toContain(`alt="${PLATFORM_BRAND.name}"`);
       expect(r.html, app).toContain("https://hellorello.app/email/logos/rello.png");
       expect(r.text.startsWith("From ClearPath Utah Mortgage\n"), app).toBe(true);
       // With no company the consumer kicker is the app's name: the Rello fallback (v2.40.0).
-      expect(renderRelloEmail({ ...full(), app: app as RelloEmailInput["app"], companyName: null }).text.startsWith("Rello\n"), app).toBe(true);
+      expect(renderRelloEmail({ ...full(), app: app as RelloEmailInput["app"], companyName: null }).text.startsWith(`${PLATFORM_BRAND.name}\n`), app).toBe(true);
       expect(r.html, app).not.toMatch(/undefined|\[object|function /);
     }
   });

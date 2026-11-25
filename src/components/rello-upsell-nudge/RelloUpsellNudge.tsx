@@ -3,11 +3,12 @@
 import * as React from "react";
 import { Xmark } from "iconoir-react";
 import { Button } from "../button/Button";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 import { cn } from "../../lib/cn";
 import { renderUpsellCopy } from "./copy";
 import { UPSELL_ENGAGED_DWELL_MS } from "./events";
 
-const DEFAULT_CTA_LABEL = "Upgrade to Rello";
+const DEFAULT_CTA_LABEL = `Upgrade to ${PLATFORM_BRAND.name}`;
 
 export interface RelloUpsellNudgeProps extends React.HTMLAttributes<HTMLElement> {
   /** Stable seam identifier — bound to telemetry namespace at the consumer wrapper. */
@@ -16,7 +17,7 @@ export interface RelloUpsellNudgeProps extends React.HTMLAttributes<HTMLElement>
   headline: string;
   /** Body copy explaining the Rello-tier capability. May carry `{{monthlyPrice}}` / `{{roiCopy}}`. */
   body: string;
-  /** CTA text — defaults to "Upgrade to Rello". May carry tokens; falls back to the default only if substitution empties it (an explicit "" stays empty). */
+  /** CTA text — defaults to "Upgrade to <PLATFORM_BRAND.name>". May carry tokens; falls back to the default only if substitution empties it (an explicit "" stays empty). */
   ctaLabel?: string;
   /** Click handler — consumer fires `clicked` telemetry then navigates to upgrade flow. */
   onClick: () => void;
@@ -158,7 +159,7 @@ function RelloUpsellNudge({
   return (
     <section
       role="region"
-      aria-label="Rello upgrade option"
+      aria-label={`${PLATFORM_BRAND.name} upgrade option`}
       data-seam={seam}
       className={cn(
         "rounded-lg p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-3",

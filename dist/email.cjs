@@ -35,6 +35,55 @@ __export(email_exports, {
 });
 module.exports = __toCommonJS(email_exports);
 
+// node_modules/@rello-platform/slugs/dist/index.js
+var APP_SLUGS = [
+  "arive",
+  "rello",
+  "harvest-home",
+  "home-ready",
+  "home-stretch",
+  "home-scout",
+  "market-intel",
+  "newsletter-studio",
+  "the-oven",
+  "the-drumbeat",
+  "open-house-hub",
+  "pathfinder-pro",
+  // prequal-pro: consumer-facing pre-qualification app (its own repo,
+  // PreQual-Pro). Emits document-upload / signal traffic to Rello with
+  // sourceApp "prequal-pro" / "PREQUAL_PRO". Added v0.8.0 (C-49) — it had a
+  // Rello App row and emitters but was missing from this registry, which forced
+  // Rello's document-upload receiver to hand-roll a bridge for it (A-107).
+  "prequal-pro"
+];
+var ENGINE_SLUGS = [
+  "milo-engine",
+  "content-engine",
+  "property-engine",
+  "journey-engine",
+  "report-engine",
+  "drumbeat-video-engine",
+  "tracking-engine"
+];
+var PLATFORM_SLUGS = [...APP_SLUGS, ...ENGINE_SLUGS];
+var CANONICAL_SET = new Set(PLATFORM_SLUGS);
+var FEATURE_SLUGS = [
+  "pfp-rates",
+  "pfp-full",
+  "check-your-rate",
+  "refi-radar",
+  "pfp-signature"
+];
+var FEATURE_SET = new Set(FEATURE_SLUGS);
+var PLATFORM_BRAND = Object.freeze({
+  name: "Rallyroo",
+  domain: "hellorallyroo.com",
+  appUrl: "https://hellorallyroo.com",
+  supportEmail: "support@hellorallyroo.com",
+  logoUrl: "https://hellorallyroo.com/email/logos/rallyroo.png",
+  legacyName: "Rello"
+});
+
 // tokens/app-overrides.json
 var app_overrides_default = {
   description: "Per-app color overrides. Each app inherits the default design tokens unless overridden here. Set a value to null to inherit the default.",
@@ -304,7 +353,7 @@ var RELLO_EMAIL_LOGO_BASE_URL = "https://hellorello.app/email/logos";
 var RELLO_EMAIL_POWERED_BY_URL = "https://hellorello.app";
 var RELLO_EMAIL_APP_NAMES = {
   arive: "ARIVE",
-  rello: "Rello",
+  rello: PLATFORM_BRAND.name,
   "harvest-home": "Harvest Home",
   "home-ready": "Home Ready",
   "home-stretch": "The Home Stretch",
@@ -321,7 +370,8 @@ var RELLO_EMAIL_APP_NAMES = {
   "property-engine": "Property Engine",
   "journey-engine": "Journey",
   "report-engine": "Report Engine",
-  "drumbeat-video-engine": "Drumbeat Video"
+  "drumbeat-video-engine": "Drumbeat Video",
+  "tracking-engine": "Tracking Engine"
 };
 var RELLO_EMAIL_LOGO_SLUGS = /* @__PURE__ */ new Set([
   "rello",
@@ -629,14 +679,14 @@ function isKnownApp(app) {
   return hasOwn(RELLO_EMAIL_APP_NAMES, app);
 }
 function appName(app) {
-  return isKnownApp(app) ? RELLO_EMAIL_APP_NAMES[app] : "Rello";
+  return isKnownApp(app) ? RELLO_EMAIL_APP_NAMES[app] : PLATFORM_BRAND.name;
 }
 function renderRelloEmail(input) {
   const e = escapeEmailHtml;
   const ew = escapeEmailHtmlBreakable;
   const audience = input.audience === "pro" || input.audience === "admin" ? input.audience : "consumer";
   const brand = audience !== "admin" && input.brand && typeof input.brand === "object" ? input.brand : null;
-  const app = brand ? "Rello" : appName(input.app);
+  const app = brand ? PLATFORM_BRAND.name : appName(input.app);
   const company = line(input.companyName);
   const pal = brand ? brandPalette(audience, brand.primary) : resolveRelloEmailPalette(audience, input.app);
   const color = pal.primary;
@@ -767,7 +817,7 @@ function renderRelloEmail(input) {
     footerLine2 ? ew(footerLine2) : "",
     footerReason ? ew(footerReason) : "",
     pref ? `<a href="${e(pref.url)}" style="color:${pal.secondaryText};">${ew(pref.label)}</a>` : "",
-    poweredByUrl ? `<a href="${e(poweredByUrl)}" style="color:${pal.secondaryText};">Powered by Rello</a>` : ""
+    poweredByUrl ? `<a href="${e(poweredByUrl)}" style="color:${pal.secondaryText};">Powered by ${e(PLATFORM_BRAND.name)}</a>` : ""
   ].filter(Boolean);
   if (footerParts.length > 0) {
     rows.push(
@@ -820,7 +870,7 @@ function renderRelloEmail(input) {
     footerLine2,
     footerReason,
     pref ? `${pref.label}: ${pref.url}` : "",
-    poweredByUrl ? "Powered by Rello (hellorello.app)" : ""
+    poweredByUrl ? `Powered by ${PLATFORM_BRAND.name} (hellorello.app)` : ""
   ].filter(Boolean);
   if (footerText.length > 0) push("", "\u2014", ...footerText);
   const text = t.join("\n").replace(/\n{3,}/g, "\n\n").trim();

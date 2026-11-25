@@ -5,6 +5,7 @@ import proFixture from "./fixtures/v2.33.0-no-brand-pro.json";
 import adminFixture from "./fixtures/v2.33.0-no-brand-admin.json";
 import { renderRelloEmail, type RelloEmailAudience, type RelloEmailBrand, type RelloEmailInput } from "./index";
 import { asBeforeV240, baselineInput, hasNewTokens, sha256 } from "../test/email-logo-baseline";
+import { asLegacyBrand } from "../test/legacy-brand";
 
 /**
  * v2.37.0 (TE-1207, AUDIT 27): under a brand the HTML header names the business (its logo's alt text,
@@ -136,8 +137,8 @@ describe("TE-1207: with no brand, the text part is byte-equal to v2.36.0 for eve
         for (const brand of [undefined, null]) {
           // v2.40.0: consumer mail with its pre-v2.40.0 kicker and no "Powered by Rello" line (asBeforeV240).
           const r = renderRelloEmail(asBeforeV240({ ...baselineInput(slug, audience), ...(brand === undefined ? {} : { brand }) }));
-          expect(sha256(r.text), `${slug} ${audience} text`).toBe(renders[slug].text);
-          if (!hasNewTokens(slug, audience)) expect(sha256(r.html), `${slug} ${audience} html`).toBe(renders[slug].html);
+          expect(sha256(asLegacyBrand(r.text)), `${slug} ${audience} text`).toBe(renders[slug].text);
+          if (!hasNewTokens(slug, audience)) expect(sha256(asLegacyBrand(r.html)), `${slug} ${audience} html`).toBe(renders[slug].html);
         }
       }
     });

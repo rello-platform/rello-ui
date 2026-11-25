@@ -5,6 +5,38 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.45.0 — 2026-11-25
+
+**Changed: the product name in visible copy is `PLATFORM_BRAND.name` ("Rallyroo")** (RALLYROO Phase 3)
+
+Every visible "Rello" in this package now reads `PLATFORM_BRAND.name` from `@rello-platform/slugs`
+(bumped `#v0.8.0` → `#v0.14.0`, which added `PLATFORM_BRAND`). No export, component, prop, CSS token,
+file or slug is renamed; logo files keep their names and pixels (Kelly 2026-11-25: same logo).
+
+- `RelloUpsellNudge`: default CTA "Upgrade to Rallyroo"; region label "Rallyroo upgrade option".
+- `TrialCountdownBanner`: "Your Rallyroo trial ends in …"; region label "Rallyroo trial"; default CTA.
+- `TrialStartModal`: default upgrade label and description; "Your Rallyroo trial has started." /
+  "You've already used your Rallyroo trial."
+- Email (`./email`): `RELLO_EMAIL_APP_NAMES.rello` (so the platform logo's `alt` and admin kickers),
+  the unknown-app and under-a-brand fallbacks, and the consumer "Powered by Rallyroo" footer line
+  (HTML and text). The logo image URL and the "Powered by" link still point at hellorello.app: domains
+  are a later phase. `RELLO_EMAIL_APP_NAMES` gains `"tracking-engine": "Tracking Engine"` (slugs v0.13.0).
+- Caller-supplied strings are passed through as given.
+- `PLATFORM_BRAND` is inlined into `dist/` (`noExternal`), so consumers on any slugs version, and
+  PreQual Pro with none, render the same name.
+
+**Added: lint, one rule.** `npm run lint` runs only `@rello-platform/platform-rules/no-legacy-brand-in-visible-text`
+(eslint-plugin-platform-rules `#v0.6.0`) over `src/`, inside `npm test`, so the pre-push hook and
+publish.yml run it. Inline disables are off (`noInlineConfig`). Reports: 17 before this change, 0 after.
+
+**Fixed: publish.yml.** `setup-node` (Node 22) now runs before the tag gate. ubuntu-latest moved to
+ubuntu-26.04 (Node 24), and the gate's install was refused by engine-strict, so v2.43.0, v2.44.0 and
+v2.44.1 never published to GitHub Packages. (Consumers install by git tag, so none was affected.)
+
+**Tests.** Frozen fixtures are untouched. Suites that pin older renders map the new name back to the
+legacy one before comparing (`src/test/legacy-brand.ts`), so equality proves the name is the only change.
+Byte-for-byte suites skip `tracking-engine`, which no fixture holds (`src/test/fixture-slugs.ts`).
+
 ## v2.44.1 — 2026-11-21 (untagged until the GROWTH audit; the KA tags)
 
 **Fixed: Escape in a Select inside a Popover closed both (consumers on a newer Popover)**

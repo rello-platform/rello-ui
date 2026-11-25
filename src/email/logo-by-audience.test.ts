@@ -3,6 +3,9 @@ import { APP_SLUGS, ENGINE_SLUGS, type PlatformSlug } from "@rello-platform/slug
 import baseline from "./fixtures/v2.32.0-logo-baseline.json";
 import { RELLO_EMAIL_APP_NAMES, relloEmailLogoUrl, renderRelloEmail } from "./index";
 import { BASELINE_AUDIENCES, asBeforeV240, baselineInput, cutLogo, hasNewTokens, sha256 } from "../test/email-logo-baseline";
+import { asLegacyBrand } from "../test/legacy-brand";
+import { FIXTURE_SLUGS } from "../test/fixture-slugs";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 /**
  * v2.33.0 (KA ruling 2026-10-29): every app's email carries that app's logo,
@@ -38,7 +41,7 @@ describe("renderRelloEmail: which logo each audience draws", () => {
   it("admin mail always draws the Rello logo", () => {
     for (const slug of SLUGS) {
       const logo = headerLogo(renderRelloEmail(baselineInput(slug, "admin")).html);
-      expect(logo, slug).toEqual({ src: "https://hellorello.app/email/logos/rello.png", alt: "Rello" });
+      expect(logo, slug).toEqual({ src: "https://hellorello.app/email/logos/rello.png", alt: PLATFORM_BRAND.name });
     }
   });
 });
@@ -47,23 +50,23 @@ describe("renderRelloEmail: nothing but the logo changed since v2.32.0", () => {
   const renders = baseline.renders as Record<string, Record<string, { html: string; text: string }>>;
 
   it("the baseline covers every slug and audience", () => {
-    expect(Object.keys(renders).sort()).toEqual([...SLUGS].sort());
-    for (const slug of SLUGS) expect(Object.keys(renders[slug]).sort(), slug).toEqual([...BASELINE_AUDIENCES].sort());
+    expect(Object.keys(renders).sort()).toEqual([...FIXTURE_SLUGS].sort());
+    for (const slug of FIXTURE_SLUGS) expect(Object.keys(renders[slug]).sort(), slug).toEqual([...BASELINE_AUDIENCES].sort());
   });
 
   it("each render, its header logo cut out, hashes as it did at v2.32.0; the text part is identical", () => {
-    for (const slug of SLUGS) {
+    for (const slug of FIXTURE_SLUGS) {
       for (const audience of BASELINE_AUDIENCES) {
         // v2.40.0: consumer mail with its pre-v2.40.0 kicker and no "Powered by Rello" line (asBeforeV240).
         const r = renderRelloEmail(asBeforeV240(baselineInput(slug, audience)));
-        if (!hasNewTokens(slug, audience)) expect(sha256(cutLogo(r.html)), `${slug} ${audience} html`).toBe(renders[slug][audience].html);
-        expect(sha256(r.text), `${slug} ${audience} text`).toBe(renders[slug][audience].text);
+        if (!hasNewTokens(slug, audience)) expect(sha256(asLegacyBrand(cutLogo(r.html))), `${slug} ${audience} html`).toBe(renders[slug][audience].html);
+        expect(sha256(asLegacyBrand(r.text)), `${slug} ${audience} text`).toBe(renders[slug][audience].text);
       }
     }
   });
 
   it("the comparison can fail: a one-character change to the body changes the hash", () => {
     const r = renderRelloEmail({ ...baselineInput("market-intel", "pro"), headline: "Your plan is ready, Sarah!" });
-    expect(sha256(cutLogo(r.html))).not.toBe(renders["market-intel"].pro.html);
+    expect(sha256(asLegacyBrand(cutLogo(r.html)))).not.toBe(renders["market-intel"].pro.html);
   });
 });

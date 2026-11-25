@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Bell, Menu, Search } from "iconoir-react";
 import { AppHeader, AppHeaderAction, AppHeaderDivider } from "./AppHeader";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 const ICON = { width: 20, height: 20, strokeWidth: 1.5 };
 
@@ -17,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <AppHeader
-      logo={<span className="font-bold text-lg">Rello</span>}
+      logo={<span className="font-bold text-lg">{PLATFORM_BRAND.name}</span>}
       title="MLO Command Center"
     />
   ),
@@ -26,7 +27,7 @@ export const Default: Story = {
 export const WithActions: Story = {
   render: () => (
     <AppHeader
-      logo={<span className="font-bold text-lg">Rello</span>}
+      logo={<span className="font-bold text-lg">{PLATFORM_BRAND.name}</span>}
       rightSlot={
         <>
           <AppHeaderAction aria-label="Search">
@@ -48,7 +49,7 @@ export const WithSlots: Story = {
   name: "Logo + Left Slot + Right Slot",
   render: () => (
     <AppHeader
-      logo={<span className="font-bold text-lg">Rello</span>}
+      logo={<span className="font-bold text-lg">{PLATFORM_BRAND.name}</span>}
       leftSlot={
         <>
           <AppHeaderDivider />

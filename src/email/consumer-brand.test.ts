@@ -15,6 +15,9 @@ import {
   type RelloEmailInput,
 } from "./index";
 import { BASELINE_AUDIENCES, asBeforeV240, baselineInput, cutLogo, hasNewTokens, sha256 } from "../test/email-logo-baseline";
+import { asLegacyBrand, asLegacyRender } from "../test/legacy-brand";
+import { FIXTURE_SLUGS } from "../test/fixture-slugs";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 /**
  * v2.34.0 (KA ruling 2026-10-29, prompt 097): consumer mail can carry the
@@ -276,8 +279,8 @@ describe("brand: the kicker", () => {
     // rello as a small marketing piece". Replaces "Rello · from <company>" on consumer mail.
     expect(renderRelloEmail(branded("home-scout", BRAND)).text.split("\n")[1]).toBe("From ClearPath Utah Mortgage");
     expect(renderRelloEmail({ ...branded("home-scout", BRAND), companyName: null }).text.split("\n")[1]).toBe("From Summit Realty Group"); // a1-664 ruling: "From <brand>"
-    expect(renderRelloEmail(branded("home-scout", BRAND, "pro")).text.split("\n")[1]).toBe("Rello · ClearPath Utah Mortgage");
-    expect(renderRelloEmail({ ...branded("home-scout", BRAND, "pro"), companyName: null }).text.split("\n")[1]).toBe("Rello");
+    expect(renderRelloEmail(branded("home-scout", BRAND, "pro")).text.split("\n")[1]).toBe(`${PLATFORM_BRAND.name} · ClearPath Utah Mortgage`);
+    expect(renderRelloEmail({ ...branded("home-scout", BRAND, "pro"), companyName: null }).text.split("\n")[1]).toBe(PLATFORM_BRAND.name);
   });
 });
 
@@ -289,29 +292,29 @@ describe("brand: without it, every render is byte-identical to v2.33.0", () => {
   for (const audience of BASELINE_AUDIENCES) {
     it(`${audience}: every slug hashes as at v2.33.0, with brand absent, undefined or null`, () => {
       const renders = fixtures[audience].renders as Record<string, { html: string; text: string }>;
-      expect(Object.keys(renders).sort()).toEqual([...SLUGS].sort());
-      for (const slug of SLUGS) {
+      expect(Object.keys(renders).sort()).toEqual([...FIXTURE_SLUGS].sort());
+      for (const slug of FIXTURE_SLUGS) {
         for (const input of [baselineInput(slug, audience), branded(slug, undefined, audience), branded(slug, null, audience)]) {
           const r = renderRelloEmail(asBeforeV240(input));
-          if (!hasNewTokens(slug, audience)) expect(sha256(r.html), `${slug} ${audience} html`).toBe(renders[slug].html);
-          expect(sha256(r.text), `${slug} ${audience} text`).toBe(renders[slug].text);
+          if (!hasNewTokens(slug, audience)) expect(sha256(asLegacyBrand(r.html)), `${slug} ${audience} html`).toBe(renders[slug].html);
+          expect(sha256(asLegacyBrand(r.text)), `${slug} ${audience} text`).toBe(renders[slug].text);
         }
       }
     });
 
     it(`${audience}: the home-scout render equals the stored v2.33.0 copy, character for character`, () => {
       const r = renderRelloEmail(asBeforeV240(baselineInput("home-scout", audience)));
-      expect(r).toEqual(fixtures[audience].homeScout);
+      expect(asLegacyRender(r)).toEqual(fixtures[audience].homeScout);
     });
   }
 
   it("and still matches the v2.32.0 baseline with its logo cut out", () => {
     const renders = baseline.renders as Record<string, Record<string, { html: string; text: string }>>;
-    for (const slug of SLUGS) {
+    for (const slug of FIXTURE_SLUGS) {
       for (const audience of BASELINE_AUDIENCES) {
         const r = renderRelloEmail(asBeforeV240(branded(slug, null, audience)));
-        if (!hasNewTokens(slug, audience)) expect(sha256(cutLogo(r.html)), `${slug} ${audience}`).toBe(renders[slug][audience].html);
-        expect(sha256(r.text), `${slug} ${audience}`).toBe(renders[slug][audience].text);
+        if (!hasNewTokens(slug, audience)) expect(sha256(asLegacyBrand(cutLogo(r.html))), `${slug} ${audience}`).toBe(renders[slug][audience].html);
+        expect(sha256(asLegacyBrand(r.text)), `${slug} ${audience}`).toBe(renders[slug][audience].text);
       }
     }
   });

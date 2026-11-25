@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { UpgradeMenuItem } from "./UpgradeMenuItem";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 const meta = {
   title: "Components/UpgradeMenuItem",
@@ -15,7 +16,7 @@ export const Default: Story = {};
 
 export const Active: Story = { args: { active: true } };
 
-export const CustomLabelNoIcon: Story = { args: { label: "Upgrade to Rello", hideIcon: true } };
+export const CustomLabelNoIcon: Story = { args: { label: `Upgrade to ${PLATFORM_BRAND.name}`, hideIcon: true } };
 
 export const InNavBar: Story = {
   render: (args) => (

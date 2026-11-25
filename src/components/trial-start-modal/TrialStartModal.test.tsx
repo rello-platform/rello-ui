@@ -4,6 +4,7 @@ import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event";
 import { TrialStartModal, type TrialStartModalProps } from "./TrialStartModal";
 import type { TrialStartResult } from "./types";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -151,7 +152,7 @@ describe("TrialStartModal — states", () => {
     await act(async () => {
       d.resolve({ status: "started", trialEndsAt: "2026-11-22T18:00:00.000Z" });
     });
-    expect(await screen.findByText("Your Rello trial has started.")).toBeInTheDocument();
+    expect(await screen.findByText(`Your ${PLATFORM_BRAND.name} trial has started.`)).toBeInTheDocument();
     expect(screen.getByText("It runs until November 22, 2026.")).toBeInTheDocument();
     expect(onResult).toHaveBeenCalledWith({ status: "started", trialEndsAt: "2026-11-22T18:00:00.000Z" });
     expect(screen.queryByRole("button", { name: "Start trial" })).toBeNull();
@@ -180,7 +181,7 @@ describe("TrialStartModal — states", () => {
       />,
     );
     await user.click(confirmButton());
-    expect(await screen.findByText("Your Rello trial has started.")).toBeInTheDocument();
+    expect(await screen.findByText(`Your ${PLATFORM_BRAND.name} trial has started.`)).toBeInTheDocument();
     expect(screen.queryByText(/runs until/)).toBeNull();
     expect(screen.getByRole("dialog").textContent).not.toMatch(/Invalid Date|NaN/);
   });
@@ -197,9 +198,9 @@ describe("TrialStartModal — states", () => {
       />,
     );
     await user.click(confirmButton());
-    expect(await screen.findByText("You've already used your Rello trial.")).toBeInTheDocument();
+    expect(await screen.findByText(`You've already used your ${PLATFORM_BRAND.name} trial.`)).toBeInTheDocument();
     expect(screen.getByText("Your trial ended on October 1, 2026.")).toBeInTheDocument();
-    const link = screen.getByRole("link", { name: "Upgrade to Rello" });
+    const link = screen.getByRole("link", { name: `Upgrade to ${PLATFORM_BRAND.name}` });
     expect(link).toHaveAttribute("href", "/billing/upgrade?source=homeready");
     expect(link.className).toMatch(/min-h-\[44px\]/);
     expect(screen.queryByRole("button", { name: "Start trial" })).toBeNull();
@@ -225,9 +226,9 @@ describe("TrialStartModal — states", () => {
     const user = userEvent.setup();
     render(<TrialStartModal {...baseProps} onConfirm={() => Promise.resolve({ status: "already-used" })} />);
     await user.click(confirmButton());
-    expect(await screen.findByText("You've already used your Rello trial.")).toBeInTheDocument();
+    expect(await screen.findByText(`You've already used your ${PLATFORM_BRAND.name} trial.`)).toBeInTheDocument();
     expect(screen.queryByText(/ended on|runs until/)).toBeNull();
-    expect(screen.getByRole("link", { name: "Upgrade to Rello" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: `Upgrade to ${PLATFORM_BRAND.name}` })).toBeInTheDocument();
   });
 
   it("a rejected request shows an alert with retry, and retry can succeed", async () => {
@@ -243,7 +244,7 @@ describe("TrialStartModal — states", () => {
     expect(alert).toHaveTextContent("We couldn't start your trial. Check your connection and try again.");
     expect(console.error).toHaveBeenCalled();
     await user.click(screen.getByRole("button", { name: "Try again" }));
-    expect(await screen.findByText("Your Rello trial has started.")).toBeInTheDocument();
+    expect(await screen.findByText(`Your ${PLATFORM_BRAND.name} trial has started.`)).toBeInTheDocument();
     expect(onConfirm).toHaveBeenCalledTimes(2);
   });
 
@@ -273,7 +274,7 @@ describe("TrialStartModal — states", () => {
     );
     await user.click(confirmButton());
     expect(await screen.findByRole("alert")).toBeInTheDocument();
-    expect(screen.queryByText("Your Rello trial has started.")).toBeNull();
+    expect(screen.queryByText(`Your ${PLATFORM_BRAND.name} trial has started.`)).toBeNull();
     expect(onResult).toHaveBeenCalledWith(expect.objectContaining({ status: "error" }));
   });
 
@@ -309,7 +310,7 @@ describe("TrialStartModal — double submit", () => {
     await act(async () => {
       d.resolve({ status: "started" });
     });
-    expect(await screen.findByText("Your Rello trial has started.")).toBeInTheDocument();
+    expect(await screen.findByText(`Your ${PLATFORM_BRAND.name} trial has started.`)).toBeInTheDocument();
   });
 
   it("releases the guard after an error so the user can retry", async () => {
@@ -327,7 +328,7 @@ describe("TrialStartModal — double submit", () => {
       retry.click();
     });
     expect(onConfirm).toHaveBeenCalledTimes(2);
-    expect(await screen.findByText("Your Rello trial has started.")).toBeInTheDocument();
+    expect(await screen.findByText(`Your ${PLATFORM_BRAND.name} trial has started.`)).toBeInTheDocument();
   });
 
   it("keeps the pending state (and the request) when closed and reopened mid-request", async () => {

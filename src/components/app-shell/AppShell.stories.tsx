@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { AppShell } from "./AppShell";
 import { AppHeader } from "../app-header/AppHeader";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 const meta = {
   title: "Layout/AppShell",
@@ -17,7 +18,7 @@ export const Default: Story = {
     <AppShell
       header={
         <AppHeader
-          logo={<span className="font-bold text-lg">Rello</span>}
+          logo={<span className="font-bold text-lg">{PLATFORM_BRAND.name}</span>}
           title="Dashboard"
         />
       }

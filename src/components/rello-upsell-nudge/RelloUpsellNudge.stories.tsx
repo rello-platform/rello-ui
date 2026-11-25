@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Sparks } from "iconoir-react";
 import { RelloUpsellNudge } from "./RelloUpsellNudge";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 const meta = {
   title: "Components/RelloUpsellNudge",
@@ -20,9 +21,9 @@ type Story = StoryObj<typeof meta>;
 export const StandaloneLight: Story = {
   args: {
     seam: "pages-create-custom",
-    headline: "Upgrade to Rello to create custom landing pages",
-    body: "Drumbeat surfaces your Home Scout landing-page library. Building net-new custom landing pages with full pipeline tracking and revenue attribution lives in Rello.",
-    ctaLabel: "Upgrade to Rello",
+    headline: `Upgrade to ${PLATFORM_BRAND.name} to create custom landing pages`,
+    body: `Drumbeat surfaces your Home Scout landing-page library. Building net-new custom landing pages with full pipeline tracking and revenue attribution lives in ${PLATFORM_BRAND.name}.`,
+    ctaLabel: `Upgrade to ${PLATFORM_BRAND.name}`,
     onClick: () => alert("upgrade clicked"),
     onDismiss: () => alert("dismissed"),
   },
@@ -35,8 +36,8 @@ export const StandaloneDark: Story = {
   args: {
     seam: "revenue-attribution",
     headline: "Tie sends to closed-loan revenue",
-    body: "Rello adds closed-loan revenue attribution + ROI per channel + per-source LTV on top of Drumbeat's touch counts.",
-    ctaLabel: "Upgrade to Rello",
+    body: `${PLATFORM_BRAND.name} adds closed-loan revenue attribution + ROI per channel + per-source LTV on top of Drumbeat's touch counts.`,
+    ctaLabel: `Upgrade to ${PLATFORM_BRAND.name}`,
     onClick: () => alert("upgrade clicked"),
     onDismiss: () => alert("dismissed"),
   },
@@ -49,8 +50,8 @@ export const MobileNarrow: Story = {
   args: {
     seam: "multi-channel-nurture",
     headline: "Build multi-step, multi-channel nurture",
-    body: "Drip composers live in Rello + Journey Engine. Upgrade to design email + SMS + direct-mail cadences that branch on lead behavior.",
-    ctaLabel: "Upgrade to Rello",
+    body: `Drip composers live in ${PLATFORM_BRAND.name} + Journey Engine. Upgrade to design email + SMS + direct-mail cadences that branch on lead behavior.`,
+    ctaLabel: `Upgrade to ${PLATFORM_BRAND.name}`,
     onClick: () => alert("upgrade clicked"),
     onDismiss: () => alert("dismissed"),
   },
@@ -60,8 +61,8 @@ export const WithIcon: Story = {
   args: {
     seam: "full-timeline",
     headline: "See the full lead timeline",
-    body: "Rello stitches your Drumbeat sends into the complete cross-app lead history — HH score, OHH check-ins, Newsletter Studio nurture, ad clicks, landing-page visits, and your manual notes — all on one timeline.",
-    ctaLabel: "Upgrade to Rello",
+    body: `${PLATFORM_BRAND.name} stitches your Drumbeat sends into the complete cross-app lead history — HH score, OHH check-ins, Newsletter Studio nurture, ad clicks, landing-page visits, and your manual notes — all on one timeline.`,
+    ctaLabel: `Upgrade to ${PLATFORM_BRAND.name}`,
     onClick: () => alert("upgrade clicked"),
     onDismiss: () => alert("dismissed"),
     icon: <Sparks width={20} height={20} />,
@@ -77,7 +78,7 @@ export const PriceAndRoiTokens: Story = {
     ctaLabel: "Start your 14-day free trial",
     monthlyPrice: "$199",
     roiCopy: "One closed loan covers a full year of platform fees.",
-    details: <p>Rello spins up Pathfinder Pro for your team and pre-fills this lead's pre-qual intake.</p>,
+    details: <p>{PLATFORM_BRAND.name} spins up Pathfinder Pro for your team and pre-fills this lead's pre-qual intake.</p>,
     onClick: () => {},
     onDismiss: () => {},
     onEngaged: () => {},

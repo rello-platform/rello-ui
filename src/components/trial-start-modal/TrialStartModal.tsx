@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 import { cn } from "../../lib/cn";
 import type { TrialStartEndsAt, TrialStartResult } from "./types";
 
@@ -19,7 +20,7 @@ export interface TrialStartModalProps {
   onConfirm: () => Promise<TrialStartResult>;
   /** Where "Upgrade to Rello" goes when the trial was already used (409). */
   upgradeHref: string;
-  /** Label of the 409 upgrade link — defaults to "Upgrade to Rello". */
+  /** Label of the 409 upgrade link — defaults to "Upgrade to <PLATFORM_BRAND.name>". */
   upgradeLabel?: string;
   /** Dialog title and accessible name — defaults to "Start your 14-day free trial". */
   title?: string;
@@ -96,9 +97,9 @@ function TrialStartModal({
   onClose,
   onConfirm,
   upgradeHref,
-  upgradeLabel = "Upgrade to Rello",
+  upgradeLabel = `Upgrade to ${PLATFORM_BRAND.name}`,
   title = "Start your 14-day free trial",
-  description = "You'll have full Rello free for 14 days.",
+  description = `You'll have full ${PLATFORM_BRAND.name} free for 14 days.`,
   confirmLabel = "Start trial",
   cancelLabel = "Not now",
   successAction,
@@ -190,7 +191,7 @@ function TrialStartModal({
           <>
             <DialogPrimitive.Description asChild>
               <div className="space-y-1">
-                <p className="text-sm font-medium">Your Rello trial has started.</p>
+                <p className="text-sm font-medium">Your {PLATFORM_BRAND.name} trial has started.</p>
                 {end ? <p className="text-sm">It runs until {DATE_FORMAT.format(end)}.</p> : null}
               </div>
             </DialogPrimitive.Description>
@@ -214,7 +215,7 @@ function TrialStartModal({
           <>
             <DialogPrimitive.Description asChild>
               <div className="space-y-1">
-                <p className="text-sm font-medium">You&apos;ve already used your Rello trial.</p>
+                <p className="text-sm font-medium">You&apos;ve already used your {PLATFORM_BRAND.name} trial.</p>
                 {end ? (
                   <p className="text-sm">
                     {ended ? "Your trial ended on" : "Your trial runs until"} {DATE_FORMAT.format(end)}.

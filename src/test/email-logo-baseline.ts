@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { PlatformSlug } from "@rello-platform/slugs";
+import { PLATFORM_BRAND, type PlatformSlug } from "@rello-platform/slugs";
 import { RELLO_EMAIL_APP_NAMES, type RelloEmailAudience, type RelloEmailInput } from "../email";
 
 /**
@@ -57,10 +57,10 @@ export function asBeforeV240(input: RelloEmailInput): RelloEmailInput {
   if (input.audience !== "consumer") return input;
   const branded = !!input.brand && typeof input.brand === "object";
   const app = branded
-    ? "Rello"
+    ? PLATFORM_BRAND.name
     : Object.prototype.hasOwnProperty.call(RELLO_EMAIL_APP_NAMES, input.app)
       ? RELLO_EMAIL_APP_NAMES[input.app]
-      : "Rello";
+      : PLATFORM_BRAND.name;
   const company = typeof input.companyName === "string" ? input.companyName.replace(/\s+/g, " ").trim() : "";
   const kicker = input.kicker || (company ? `${app} · from ${company}` : app);
   return { ...input, kicker, footer: { ...input.footer, poweredBy: false } };

@@ -20,7 +20,7 @@ This is a **library, not an app.** No business logic lives here. Breaking change
 - **Test:** `npm test` (Vitest run) / `npm run test:watch`
 - **Typecheck:** `npm run typecheck` (`tsc --noEmit`)
 - **Storybook:** `npm run storybook` (port 6006) / `npm run build-storybook`
-- **Lint:** none configured at this time
+- **Lint:** `npm run lint` — ONE rule only, `@rello-platform/platform-rules/no-legacy-brand-in-visible-text` (v2.45.0, RALLYROO): visible copy reads `PLATFORM_BRAND.name` from `@rello-platform/slugs`, never a typed "Rello" or "Rallyroo". It runs inside `npm test`, so the pre-push hook and publish.yml run it. `eslint.config.js` sets `noInlineConfig`, so the rule cannot be disabled in a comment; a genuine internal string gets an `allow` glob with a one-line reason. No other rules — adding them is a separate decision.
 - **Publish target:** `npm.pkg.github.com` (GitHub Packages registry, `@rello-platform/ui`).
 - **Configurator (sibling app, not the library):** `cd configurator && npm run dev` — Vite app at `~/Rello-UI/configurator/` for editing `tokens/app-overrides.json` and `specs/app-layouts.json` via UI. See § app-layouts.json + Configurator workflow.
 

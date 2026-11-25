@@ -1,6 +1,7 @@
-import { APP_SLUGS, ENGINE_SLUGS, type PlatformSlug } from "@rello-platform/slugs";
+import { PLATFORM_BRAND, type PlatformSlug } from "@rello-platform/slugs";
 import { RELLO_EMAIL_APP_NAMES, type RelloEmailBrand, type RelloEmailInput } from "../email";
 import { baselineInput } from "./email-logo-baseline";
+import { FIXTURE_SLUGS } from "./fixture-slugs";
 
 /**
  * The inputs behind src/email/fixtures/v2.38.0-before-consumer-kicker.json, the
@@ -18,14 +19,14 @@ import { baselineInput } from "./email-logo-baseline";
  * the only consumer changes.
  */
 
-export const V238_SLUGS: readonly PlatformSlug[] = [...APP_SLUGS, ...ENGINE_SLUGS];
+export const V238_SLUGS: readonly PlatformSlug[] = FIXTURE_SLUGS;
 
 const BRAND: RelloEmailBrand = { name: "Summit Peak", logoUrl: "https://cdn.example-mortgage.com/brand/logo.png", primary: "#1d4ed8" };
 const COMPANY = "ClearPath Utah Mortgage";
 
 /** The consumer kicker v2.38.0 wrote by default for baselineInput (company set). */
 export function v238ConsumerKicker(app: PlatformSlug, branded: boolean): string {
-  return `${branded ? "Rello" : RELLO_EMAIL_APP_NAMES[app]} · from ${COMPANY}`;
+  return `${branded ? PLATFORM_BRAND.name : RELLO_EMAIL_APP_NAMES[app]} · from ${COMPANY}`;
 }
 
 export interface V238Case {
