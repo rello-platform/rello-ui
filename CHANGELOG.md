@@ -5,6 +5,20 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.46.0 — 2026-11-27
+
+**Changed: the email shell's own addresses are on hellorallyroo.com** (RALLYROO Level 2, U3)
+
+- Email (`./email`): the header logo is served from `PLATFORM_BRAND.appUrl` + `/email/logos/`, the
+  consumer "Powered by Rallyroo" link goes to `PLATFORM_BRAND.appUrl`, and the text footer reads
+  "Powered by Rallyroo (hellorallyroo.com)". Logo files keep their names and pixels.
+- `RELLO_EMAIL_LOGO_BASE_URL` and `RELLO_EMAIL_POWERED_BY_URL` keep their names; their declared type
+  is now `string`.
+- Caller-supplied strings and URLs are passed through as given.
+- Tests only: `asLegacyBrand`, which lets frozen recordings be compared with current renders, maps
+  those three addresses back only where the shell writes them, so a change to a caller's own address
+  is no longer hidden.
+
 ## v2.45.0 — 2026-11-25
 
 **Changed: the product name in visible copy is `PLATFORM_BRAND.name` ("Rallyroo")** (RALLYROO Phase 3)
