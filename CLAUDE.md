@@ -164,7 +164,7 @@ Rello-UI ships two ways, and each needs its own proof:
 - **The library** `@rello-platform/ui`, which spokes install from git tags.
 - **A Railway service**: project "Rello UI", service `rello-ui`, `rello-ui-production.up.railway.app`. It is the configurator app, built by `./Dockerfile` from `main`, so **every merge to `main` deploys it**.
 
-A green npm publish (`publish.yml`) says nothing about the Railway build: the publish has the whole checkout, while the image has only what the Dockerfile's `COPY` lines name. Every deploy from 2026-10-29 failed that way, unnoticed, while publishes stayed green.
+A green npm publish (`publish.yml`) says nothing about the Railway build: the publish has the whole checkout, while the image has only what the Dockerfile's `COPY` lines name. Every Railway deploy listed from 2026-10-29 to 2026-11-27 failed (20 of 20; the two build logs read show this missing-COPY cause), while publishes stayed green.
 
 1. **Local (axis 1):** the husky pre-push hook (`.husky/pre-push`) runs `npx tsc --noEmit`, `npm run compile`, `npm test` and the lockfile and tag gates. Strict TypeScript; every component exports a typed prop interface that consumers import.
 2. **`npm run compile`:** `dist/` regenerates cleanly. Both entries (`dist/index.js`, `dist/client.js`) emit; only `dist/client.js` carries the `"use client"` banner. No regression vs prior `dist/`.
