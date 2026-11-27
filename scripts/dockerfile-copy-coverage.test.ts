@@ -10,11 +10,14 @@
  * `COPY tokens/ tokens/` was added.
  *
  * The COPY lines are read from the Dockerfile. There is no second list here.
+ * Only lines above the stage's `RUN npm run compile` count, and a COPY option
+ * that could change which files arrive is refused, not ignored.
  *
- * NOT covered: .dockerignore exclusions, files read at runtime (fs,
- * `new URL(..., import.meta.url)`), non-relative specifiers such as `@/…`,
- * computed `import()` paths, the later Dockerfile stages, and anything that
- * only breaks on Linux. The Railway deploy is still the proof of the image.
+ * NOT covered: .dockerignore exclusions, a RUN that deletes or moves copied
+ * files, files read at runtime (fs, `new URL(..., import.meta.url)`),
+ * non-relative specifiers such as `@/…`, computed `import()` paths, the later
+ * Dockerfile stages, and anything that only breaks on Linux. The Railway deploy
+ * is still the proof of the image.
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, posix } from "node:path";
@@ -27,6 +30,9 @@ const STAGE = "lib-build";
 const SCRIPT_FILE = /\.[cm]?[jt]sx?$/;
 const CSS_FILE = /\.css$/;
 const EXTENSIONS = ["", ".ts", ".tsx", ".d.ts", ".js", ".jsx", ".json"];
+const COMPILE_COMMAND = /\bnpm\s+run\s+compile(?![\w:.-])/;
+/** COPY options that leave the set of arriving files alone. `--from=` is handled apart. */
+const HARMLESS_COPY_OPTION = /^(--chown=.*|--chmod=.*|--link)$/;
 
 /**
  * The one exemption. A test may import the build output, to prove the committed
@@ -46,10 +52,14 @@ interface Copy {
   destInRoot: string;
 }
 
-/** The build-context COPY lines of one stage. Throws on any form it can't read. */
+/**
+ * The build-context COPY lines one stage has run by the time it compiles.
+ * Throws on any form it can't read, and when the stage never compiles.
+ */
 function stageCopies(dockerfile: string, stage: string): Copy[] {
   const copies: Copy[] = [];
   let inStage = false;
+  let compiles = false;
   let root: string | undefined;
   let workdir = "/";
 
@@ -64,11 +74,22 @@ function stageCopies(dockerfile: string, stage: string): Copy[] {
     }
     if (!inStage) continue;
 
+    if (instruction === "RUN" && COMPILE_COMMAND.test(args.join(" "))) {
+      compiles = true;
+      break; // A later COPY arrives too late for the compile step to see it.
+    }
     if (instruction === "WORKDIR") {
       workdir = posix.resolve(workdir, args[0]);
       root ??= workdir;
     } else if (instruction === "COPY") {
       if (args.some((a) => a.startsWith("--from="))) continue;
+      const unknown = args.find((a) => a.startsWith("--") && !HARMLESS_COPY_OPTION.test(a));
+      if (unknown) {
+        throw new Error(
+          `This ${stage} COPY line has an option that may change which files arrive (${unknown}): ${line.trim()}. ` +
+            `Remove it, or teach stageCopies() the form explicitly.`,
+        );
+      }
       const paths = args.filter((a) => !a.startsWith("--"));
       if (paths.length < 2 || paths.some((p) => /[*?[\]$"'<]/.test(p))) {
         throw new Error(
@@ -87,6 +108,12 @@ function stageCopies(dockerfile: string, stage: string): Copy[] {
     }
   }
 
+  if (!compiles) {
+    throw new Error(
+      `No RUN that runs "npm run compile" in a Dockerfile stage named "${stage}", ` +
+        `so no COPY can be shown to arrive before the compile step. Was the stage or the command renamed?`,
+    );
+  }
   if (copies.length === 0) {
     throw new Error(`No build-context COPY lines found in a Dockerfile stage named "${stage}".`);
   }
@@ -159,29 +186,65 @@ function filesUnder(dir: string): string[] {
 
 const isRepoDirectory = (path: string) => statSync(join(REPO, path)).isDirectory();
 
-describe(`Dockerfile ${STAGE} stage covers every relative import under src/`, () => {
-  it("has no import that resolves outside what the stage copies", () => {
-    const copies = stageCopies(readFileSync(join(REPO, "Dockerfile"), "utf8"), STAGE);
-    let examined = 0;
-    const missing: string[] = [];
+/** The check itself: every relative import under src/ the stage would not have. */
+function uncoveredImports(dockerfile: string): { examined: number; missing: string[] } {
+  const copies = stageCopies(dockerfile, STAGE);
+  let examined = 0;
+  const missing: string[] = [];
 
-    for (const file of filesUnder("src")) {
-      for (const { specifier, line } of relativeImports(file, readFileSync(join(REPO, file), "utf8"))) {
-        examined += 1;
-        const target = posix.join(posix.dirname(file), specifier).replace(/\/$/, "");
-        if (!isTestOfBuildOutput(file, target) && !isInImage(target, copies, isRepoDirectory)) {
-          missing.push(`${file}:${line} imports "${specifier}" -> ${target}`);
-        }
+  for (const file of filesUnder("src")) {
+    for (const { specifier, line } of relativeImports(file, readFileSync(join(REPO, file), "utf8"))) {
+      examined += 1;
+      const target = posix.join(posix.dirname(file), specifier).replace(/\/$/, "");
+      if (!isTestOfBuildOutput(file, target) && !isInImage(target, copies, isRepoDirectory)) {
+        missing.push(`${file}:${line} imports "${specifier}" -> ${target}`);
       }
     }
+  }
+  return { examined, missing };
+}
+
+const realDockerfile = () => readFileSync(join(REPO, "Dockerfile"), "utf8");
+
+describe(`Dockerfile ${STAGE} stage covers every relative import under src/`, () => {
+  it("has no import that resolves outside what the stage copies", () => {
+    const { examined, missing } = uncoveredImports(realDockerfile());
 
     // A scan that found nothing would pass for the wrong reason.
     expect(examined).toBeGreaterThan(100);
     expect(
       missing,
       `These files are not in the Docker image, so the Railway build will fail. ` +
-        `Add a COPY line to the Dockerfile's ${STAGE} stage:\n${missing.join("\n")}\n`,
+        `Add a COPY line to the Dockerfile's ${STAGE} stage, above RUN npm run compile:\n${missing.join("\n")}\n`,
     ).toEqual([]);
+  });
+});
+
+/**
+ * The real Dockerfile with one edit, in two shapes where the compile step can't
+ * see tokens/ although a `COPY tokens/ tokens/` is still in the stage.
+ */
+describe("the real Dockerfile, broken by one edit", () => {
+  const TOKENS_COPY = "COPY tokens/ tokens/\n";
+  const COMPILE_RUN = "RUN npm run compile\n";
+
+  /** Replaces exactly one occurrence, so an edit that stops applying can't pass quietly. */
+  const edit = (text: string, find: string, replacement: string) => {
+    expect(text.split(find), `the Dockerfile should contain ${JSON.stringify(find)} once`).toHaveLength(2);
+    return text.replace(find, () => replacement);
+  };
+
+  it("OA-180: refuses a COPY option that changes which files arrive", () => {
+    const broken = edit(realDockerfile(), TOKENS_COPY, "COPY --exclude=app-overrides.json tokens/ tokens/\n");
+    expect(() => uncoveredImports(broken)).toThrow(/COPY --exclude=app-overrides\.json tokens\/ tokens\//);
+  });
+
+  it("OA-181: gives no credit for a COPY after the compile step", () => {
+    const without = edit(realDockerfile(), TOKENS_COPY, "");
+    const broken = edit(without, COMPILE_RUN, COMPILE_RUN + TOKENS_COPY);
+    expect(uncoveredImports(broken).missing).toContain(
+      'src/email/render-email.ts:43 imports "../../tokens/app-overrides.json" -> tokens/app-overrides.json',
+    );
   });
 });
 
@@ -190,7 +253,9 @@ describe("the checker itself", () => {
   const isDir = (p: string) => dirs.has(p);
   const covered = (dockerfile: string, target: string) =>
     isInImage(target, stageCopies(dockerfile, STAGE), isDir);
-  const stage = (...lines: string[]) => [`FROM node AS ${STAGE}`, "WORKDIR /app", ...lines].join("\n");
+  const stageWithoutCompile = (...lines: string[]) =>
+    [`FROM node AS ${STAGE}`, "WORKDIR /app", ...lines].join("\n");
+  const stage = (...lines: string[]) => stageWithoutCompile(...lines, "RUN npm run compile");
 
   it("reads every import form, including after JSX text with an apostrophe", () => {
     const code = [
@@ -252,9 +317,32 @@ describe("the checker itself", () => {
     expect(isTestOfBuildOutput("src/email/a.test.ts", "tokens/app-overrides.json")).toBe(false);
   });
 
+  it("allows only the COPY options that leave the files alone", () => {
+    const options = "--chown=node:node --chmod=644 --link";
+    expect(covered(stage(`COPY ${options} tokens/ tokens/`), "tokens/a.json")).toBe(true);
+    for (const option of ["--exclude=*.json", "--parents", "--not-yet-invented=1"]) {
+      const line = `COPY ${option} tokens/ tokens/`;
+      expect(() => stageCopies(stage(line), STAGE), option).toThrow(`(${option}): ${line}.`);
+    }
+  });
+
+  it("counts only the COPY lines above the first compile", () => {
+    const late = stage("COPY src/ src/", "RUN npm ci && npm run compile", "COPY tokens/ tokens/", "RUN npm run compile");
+    expect(covered(late, "src/a")).toBe(true);
+    expect(covered(late, "tokens/a.json")).toBe(false);
+    for (const run of ["RUN npm ci", "RUN npm run compile:css", `RUN ["npm", "run", "compile"]`]) {
+      expect(() => stageCopies(stageWithoutCompile("COPY src/ src/", run), STAGE), run).toThrow(/No RUN that runs/);
+    }
+    const elsewhere = [stageWithoutCompile("COPY src/ src/"), "FROM node AS other", "RUN npm run compile"];
+    expect(() => stageCopies(elsewhere.join("\n"), STAGE)).toThrow(/No RUN that runs/);
+  });
+
   it("fails loudly instead of guessing", () => {
     expect(() => stageCopies(stage("COPY package*.json ./"), STAGE)).toThrow(/Can't read/);
     expect(() => stageCopies(stage(`COPY ["src/", "src/"]`), STAGE)).toThrow(/Can't read/);
-    expect(() => stageCopies("FROM node AS renamed\nCOPY src/ src/", STAGE)).toThrow(/No build-context COPY/);
+    expect(() => stageCopies("FROM node AS renamed\nCOPY src/ src/\nRUN npm run compile", STAGE)).toThrow(
+      /No RUN that runs/,
+    );
+    expect(() => stageCopies(stage(), STAGE)).toThrow(/No build-context COPY/);
   });
 });
