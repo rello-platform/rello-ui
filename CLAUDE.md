@@ -159,20 +159,27 @@ Drumbeat's `@rello-platform/ui` pin from raw SHA to `#v2.3.0` tag form.
 
 ## Build verification axes
 
-Rello-UI is a **library, not a Railway-deployed service**. The platform's universal three-axis build verification (post-2026-05-18 GH-Actions retirement: husky pre-push hook + Railway deploy + `/api/health.commit` smoke — see universal CLAUDE.md §Build verification) substitutes the deploy/health axes with **consumer-install verification**:
+Rello-UI ships two ways, and each needs its own proof:
 
-1. **`npx tsc --noEmit`** — zero new errors. Strict TypeScript; every component exports a typed prop interface that consumers import. (axis-1 equivalent — gated by husky pre-push in repos that have it; rello-ui currently relies on the npm-publish-time check + consumer-install verification below.)
-2. **`npm run compile`** — `dist/` regenerates cleanly. Both entries (`dist/index.js`, `dist/client.js`) emit; only `dist/client.js` carries the `"use client"` banner. No regression vs prior `dist/`.
-3. **Consumer-install verification (Rello-UI's substitute for the deploy/health axes):** in a temp worktree of any sibling spoke (e.g. `~/The-Drumbeat-rui-test/`), update the spoke's `package.json` to pin `github:rello-platform/rello-ui#<NEW-SHA>` (the SHA your push will produce — known after `git push` SHA-match). Run `npm install`. Confirm clean resolve, no peer-dep warnings beyond known noise. If the spoke's `next build` is also reasonable to run (Drumbeat is a good candidate — uses many Rello-UI components), run it. Any consumer-install regression → halt.
+- **The library** `@rello-platform/ui`, which spokes install from git tags.
+- **A Railway service**: project "Rello UI", service `rello-ui`, `rello-ui-production.up.railway.app`. It is the configurator app, built by `./Dockerfile` from `main`, so **every merge to `main` deploys it**.
 
-`tsc` and `build` are local; consumer-install is the structural substitute for "did this actually deploy."
+A green npm publish (`publish.yml`) says nothing about the Railway build: the publish has the whole checkout, while the image has only what the Dockerfile's `COPY` lines name. Every deploy from 2026-10-29 failed that way, unnoticed, while publishes stayed green.
+
+1. **Local (axis 1):** the husky pre-push hook (`.husky/pre-push`) runs `npx tsc --noEmit`, `npm run compile`, `npm test` and the lockfile and tag gates. Strict TypeScript; every component exports a typed prop interface that consumers import.
+2. **`npm run compile`:** `dist/` regenerates cleanly. Both entries (`dist/index.js`, `dist/client.js`) emit; only `dist/client.js` carries the `"use client"` banner. No regression vs prior `dist/`.
+3. **Railway deploy (axis 2), after every merge to `main`:** from `~/rello-ui` (the Railway-linked checkout), watch `railway deployment list --json` in the background to a terminal state. The `SUCCESS` row's `meta.commitHash` must equal the merge SHA. Check it at deploy time, because a superseded row is relabelled `REMOVED`. On `FAILED`, read `railway logs <deployment-id> --build --lines 400` and act on it as universal CLAUDE.md §Build verification says. Report `deployment id · terminal status · time`.
+4. **Health (axis 3):** `GET https://rello-ui-production.up.railway.app/api/health` returns `commit`, which must equal the merge SHA.
+5. **Consumer-install verification (for the library):** in a temp worktree of any sibling spoke (e.g. `~/The-Drumbeat-rui-test/`), update the spoke's `package.json` to pin `github:rello-platform/rello-ui#<NEW-SHA>` (the SHA your push will produce — known after `git push` SHA-match). Run `npm install`. Confirm clean resolve, no peer-dep warnings beyond known noise. If the spoke's `next build` is also reasonable to run (Drumbeat is a good candidate — uses many Rello-UI components), run it. Any consumer-install regression → halt.
+
+**Adding a relative import under `src/` that leaves `src/`:** `scripts/dockerfile-copy-coverage.test.ts` (part of `npm test`) reads the Dockerfile's `lib-build` `COPY` lines and fails if the target is not copied. Add the `COPY` line. The test does not examine `.dockerignore`, runtime file reads, non-relative or computed import paths, the later Dockerfile stages or Linux-only build failures; the Railway deploy is the proof of the image.
 
 ## Pre-commit / hook discipline
 
 - **Husky pre-commit:** `bash scripts/check-floating-refs.sh` (Phase 0 durability gate per `PERMISSIONS-CANONICALIZATION.md` Locks #1 + #4).
 - **NEVER skip hooks** unless Kelly has explicitly authorized in-session. Per universal CLAUDE.md: `--no-verify`, `--no-gpg-sign`, etc. are forbidden by default. If the hook fails, fix the underlying issue and create a NEW commit (never `--amend` after a hook failure — the commit didn't happen, so amend would modify the previous commit).
 - **No `console.log` in source** per `feedback_cli_stdout_not_console_log` (CLI scripts use `process.stdout.write`; library source uses `console.error` / `console.warn` for genuine error paths only). Pre-commit blocks on `console.log`.
-- **CI workflows:** `.github/workflows/publish.yml` (GitHub Packages publish on `v*` tag push) — RETAINED as carve-out per `PLATFORM-RETIRE-GH-ACTIONS-LOCAL-HUSKY-MIGRATION` 2026-05-18 (free-tier-bounded; replacing locally would require a GH PAT with `write:packages`). `ci.yml` (typecheck + build + test) and `dep-pin-check.yml` (dependency pin discipline) were retired in Phase 2 of the same workstream — verification now lives in the husky pre-push hook + consumer-install axis above.
+- **CI workflows:** `.github/workflows/publish.yml` (GitHub Packages publish on `v*` tag push) — RETAINED as carve-out per `PLATFORM-RETIRE-GH-ACTIONS-LOCAL-HUSKY-MIGRATION` 2026-05-18 (free-tier-bounded; replacing locally would require a GH PAT with `write:packages`). `ci.yml` (typecheck + build + test) and `dep-pin-check.yml` (dependency pin discipline) were retired in Phase 2 of the same workstream — verification now lives in the husky pre-push hook and the § Build verification axes above.
 
 ## Class-Level Rules applicability
 
