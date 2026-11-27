@@ -1,6 +1,18 @@
 import { PLATFORM_BRAND } from "@rello-platform/slugs";
 
 /**
+ * RALLYROO Level 2 (U3) then moved the three addresses the shell itself writes
+ * to the new domain. They are mapped back in exactly the form the shell writes
+ * each one (logo src base, "Powered by" href, text footer), so the new domain
+ * anywhere else in a render still fails the comparison.
+ */
+const SHELL_ADDRESSES: readonly (readonly [current: string, legacy: string])[] = [
+  [`${PLATFORM_BRAND.appUrl}/email/logos/`, "https://hellorello.app/email/logos/"],
+  [`href="${PLATFORM_BRAND.appUrl}"`, 'href="https://hellorello.app"'],
+  [`(${PLATFORM_BRAND.domain})`, "(hellorello.app)"],
+];
+
+/**
  * v2.45.0 (RALLYROO Phase 3) changed the product name a render carries, and
  * nothing else. The frozen fixtures and hash baselines were captured while the
  * name was "Rello", so a test that pins an older render maps the current name
@@ -11,7 +23,9 @@ import { PLATFORM_BRAND } from "@rello-platform/slugs";
  */
 export function asLegacyBrand(value: string): string {
   if (typeof value !== "string") throw new TypeError("asLegacyBrand: expected a string");
-  return value.split(PLATFORM_BRAND.name).join(PLATFORM_BRAND.legacyName);
+  let out = value;
+  for (const [current, legacy] of SHELL_ADDRESSES) out = out.split(current).join(legacy);
+  return out.split(PLATFORM_BRAND.name).join(PLATFORM_BRAND.legacyName);
 }
 
 /** Matches either product name, any case: for "the header names no platform" checks. */

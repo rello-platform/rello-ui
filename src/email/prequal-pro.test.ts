@@ -8,7 +8,7 @@ import { baselineInput, sha256 } from "../test/email-logo-baseline";
 
 /** PreQual Pro's own brand: ~/PreQual-Pro/CLAUDE.md § Colors, and the blue of its logo. */
 const PQP_PRIMARY = "#4060de";
-const LOGO = "https://hellorello.app/email/logos/prequal-pro.png";
+const LOGO = "https://hellorallyroo.com/email/logos/prequal-pro.png";
 
 describe("prequal-pro tokens (v2.35.0)", () => {
   it("consumer and pro mail draw PreQual Pro's primary and its hosted logo", () => {

@@ -67,7 +67,7 @@ export function asBeforeV240(input: RelloEmailInput): RelloEmailInput {
 }
 
 const LOGO_IMG =
-  /<img src="https:\/\/hellorello\.app\/email\/logos\/[a-z-]+\.png" width="96" height="96" alt="[^"]*" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">/g;
+  /<img src="https:\/\/hellorallyroo\.com\/email\/logos\/[a-z-]+\.png" width="96" height="96" alt="[^"]*" style="display:block;margin:0 auto 12px;width:96px;height:96px;border:0;outline:none;text-decoration:none;">/g;
 const LOGO_TEXT = /<div style="font-size:22px;font-weight:700;color:#ffffff;margin:0 0 10px;">[^<]*<\/div>/g;
 
 /** The html with its one header logo (image or name text) replaced by a marker. Throws unless exactly one was cut. */

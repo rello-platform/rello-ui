@@ -23,8 +23,8 @@ import { ANY_PLATFORM_NAME } from "../test/legacy-brand";
  */
 
 const BRAND: RelloEmailBrand = { name: "Summit Peak", logoUrl: "https://cdn.example-mortgage.com/brand/logo.png", primary: "#1d4ed8" };
-const POWERED_HTML_RE = new RegExp(`<a href="https://hellorello\\.app" style="color:(#[0-9a-f]{6});">Powered by ${PLATFORM_BRAND.name}</a>`);
-const POWERED_TEXT = `Powered by ${PLATFORM_BRAND.name} (hellorello.app)`;
+const POWERED_HTML_RE = new RegExp(`<a href="https://hellorallyroo\\.com" style="color:(#[0-9a-f]{6});">Powered by ${PLATFORM_BRAND.name}</a>`);
+const POWERED_TEXT = `Powered by ${PLATFORM_BRAND.name} (hellorallyroo.com)`;
 
 function consumer(app: PlatformSlug, extra: Partial<RelloEmailInput> = {}): RelloEmailInput {
   return { ...baselineInput(app, "consumer"), companyName: "Summit Peak Mortgage", ...extra };
@@ -161,7 +161,7 @@ describe("consumer kicker: the sender, never Rello by default", () => {
 });
 
 describe('consumer footer: "Powered by Rello", last and muted', () => {
-  it("is the footer's last line, linked to hellorello.app in the footer's muted color", () => {
+  it("is the footer's last line, linked to hellorallyroo.com in the footer's muted color", () => {
     for (const app of V238_SLUGS) {
       for (const brand of [null, BRAND]) {
         const r = renderRelloEmail(consumer(app, { brand }));
@@ -200,7 +200,7 @@ describe('consumer footer: "Powered by Rello", last and muted', () => {
     const base = consumer("home-ready");
     const off = renderRelloEmail({ ...base, footer: { ...base.footer, poweredBy: false } });
     expect(off.html).not.toContain(`Powered by ${PLATFORM_BRAND.name}`);
-    expect(off.html).not.toContain('href="https://hellorello.app"');
+    expect(off.html).not.toContain('href="https://hellorallyroo.com"');
     expect(off.text).not.toContain(`Powered by ${PLATFORM_BRAND.name}`);
     expect(off.text.endsWith("Email preferences: https://example.com/prefs\n")).toBe(true);
     const bare = renderRelloEmail({ audience: "consumer", app: "home-ready", subject: "Hi", headline: "Hi there.", footer: { poweredBy: false } });
@@ -221,7 +221,7 @@ describe('consumer footer: "Powered by Rello", last and muted', () => {
           const base = baselineInput("home-ready", audience);
           const r = renderRelloEmail({ ...base, brand, footer: { ...base.footer, poweredBy } });
           expect(r.html, `${audience} ${String(poweredBy)}`).not.toContain("Powered by");
-          expect(r.html, audience).not.toContain('href="https://hellorello.app"');
+          expect(r.html, audience).not.toContain('href="https://hellorallyroo.com"');
           expect(r.text, audience).not.toContain("Powered by");
         }
       }
