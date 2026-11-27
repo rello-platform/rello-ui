@@ -6,6 +6,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY src/ src/
+COPY tokens/ tokens/
 COPY tsconfig.json tsup.config.ts ./
 RUN npm run compile
 
