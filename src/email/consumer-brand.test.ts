@@ -175,7 +175,7 @@ describe("brand: the app's name and logo appear nowhere", () => {
             }
             const logo = relloEmailLogoUrl(slug);
             if (logo) expect(r.html.includes(logo), `${audience} ${slug} logo`).toBe(false);
-            expect(r.html, `${audience} ${slug}`).not.toContain("hellorello.app/email/logos");
+            expect(r.html, `${audience} ${slug}`).not.toContain("/email/logos/");
           }
         }
       }

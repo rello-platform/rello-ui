@@ -323,7 +323,7 @@ describe("renderRelloEmail — omitted fields", () => {
     // v2.40.0: consumer mail's footer always closes with "Powered by Rello"; with nothing else to say
     // that line is the whole footer, and footer.poweredBy: false leaves no footer row at all.
     expect(r.html).toContain(
-      `border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:${resolveRelloEmailPalette("consumer", "home-ready").secondaryText};line-height:1.6;"><a href="https://hellorello.app"`,
+      `border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:12px;color:${resolveRelloEmailPalette("consumer", "home-ready").secondaryText};line-height:1.6;"><a href="https://hellorallyroo.com"`,
     );
     const off = renderRelloEmail({ audience: "consumer", app: "home-ready", subject: "Hi", headline: "Hello", footer: { poweredBy: false } });
     expect(off.html).not.toContain("border-top:1px solid #e5e7eb");
@@ -355,7 +355,7 @@ describe("renderRelloEmail — omitted fields", () => {
 describe("renderRelloEmail — header and logos", () => {
   it("consumer mail carries the app's PNG logo", () => {
     const { html } = renderRelloEmail(full());
-    expect(html).toContain('src="https://hellorello.app/email/logos/home-ready.png"');
+    expect(html).toContain('src="https://hellorallyroo.com/email/logos/home-ready.png"');
     expect(html).toContain('width="96" height="96" alt="Home Ready"');
     // v2.40.0: the consumer kicker names the sender, not the app.
     expect(html).toContain(">From ClearPath Utah Mortgage</div>");
@@ -363,10 +363,10 @@ describe("renderRelloEmail — header and logos", () => {
 
   it("pro mail carries the app's PNG logo; admin mail carries the Rello logo", () => {
     const pro = renderRelloEmail(full({ audience: "pro" })).html;
-    expect(pro).toContain('src="https://hellorello.app/email/logos/home-ready.png"');
+    expect(pro).toContain('src="https://hellorallyroo.com/email/logos/home-ready.png"');
     expect(pro).not.toContain("rello.png");
     const admin = renderRelloEmail(full({ audience: "admin" })).html;
-    expect(admin).toContain('src="https://hellorello.app/email/logos/rello.png"');
+    expect(admin).toContain('src="https://hellorallyroo.com/email/logos/rello.png"');
     expect(admin).not.toContain("home-ready.png");
     expect(pro).toContain("Home Ready · ClearPath Utah Mortgage");
     expect(renderRelloEmail(full({ audience: "admin" })).html).toContain("Home Ready · Platform alert");
@@ -415,7 +415,7 @@ describe("renderRelloEmail — structure and plain text", () => {
       "123 Main Street, Salt Lake City, UT 84101 · Equal Housing Opportunity",
       "You're getting this because you started a Home Ready plan.",
       "Email preferences: https://homeready.app/preferences",
-      `Powered by ${PLATFORM_BRAND.name} (hellorello.app)`,
+      `Powered by ${PLATFORM_BRAND.name} (hellorallyroo.com)`,
     ]) {
       expect(text).toContain(words);
     }
@@ -427,10 +427,10 @@ describe("renderRelloEmail — structure and plain text", () => {
     const htmlWords = new Set(
       decode(body.replace(/<!--[\s\S]*?-->/g, " ").replace(/<[^>]+>/g, " ")).split(/\s+/).concat(hrefs).filter(Boolean),
     );
-    // "(hellorello.app)" is how the text part writes the "Powered by Rello" link (v2.40.0).
+    // "(hellorallyroo.com)" is how the text part writes the "Powered by Rello" link (v2.40.0).
     const textWords = text
       .split(/\s+/)
-      .map((w) => (w === "(hellorello.app)" ? "https://hellorello.app" : w.replace(/:$/, "")))
+      .map((w) => (w === "(hellorallyroo.com)" ? "https://hellorallyroo.com" : w.replace(/:$/, "")))
       .filter((w) => w && w !== "—");
     for (const w of textWords) expect(htmlWords.has(w) || htmlWords.has(`${w}:`), `text word missing from html: ${w}`).toBe(true);
     const visible = decode(body.replace(/<!--[\s\S]*?-->/g, " ").replace(/<div style="display:none[^>]*>[^<]*<\/div>/, " ").replace(/<[^>]+>/g, " "))
@@ -499,7 +499,7 @@ describe("renderRelloEmail — inherited map keys (audit TE-002)", () => {
     for (const app of INHERITED) {
       const r = renderRelloEmail({ ...full(), app: app as RelloEmailInput["app"] });
       expect(r.html, app).toContain(`alt="${PLATFORM_BRAND.name}"`);
-      expect(r.html, app).toContain("https://hellorello.app/email/logos/rello.png");
+      expect(r.html, app).toContain("https://hellorallyroo.com/email/logos/rello.png");
       expect(r.text.startsWith("From ClearPath Utah Mortgage\n"), app).toBe(true);
       // With no company the consumer kicker is the app's name: the Rello fallback (v2.40.0).
       expect(renderRelloEmail({ ...full(), app: app as RelloEmailInput["app"], companyName: null }).text.startsWith(`${PLATFORM_BRAND.name}\n`), app).toBe(true);

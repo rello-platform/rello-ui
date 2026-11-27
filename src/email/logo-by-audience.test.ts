@@ -41,7 +41,7 @@ describe("renderRelloEmail: which logo each audience draws", () => {
   it("admin mail always draws the Rello logo", () => {
     for (const slug of SLUGS) {
       const logo = headerLogo(renderRelloEmail(baselineInput(slug, "admin")).html);
-      expect(logo, slug).toEqual({ src: "https://hellorello.app/email/logos/rello.png", alt: PLATFORM_BRAND.name });
+      expect(logo, slug).toEqual({ src: "https://hellorallyroo.com/email/logos/rello.png", alt: PLATFORM_BRAND.name });
     }
   });
 });

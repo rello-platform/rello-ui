@@ -349,8 +349,8 @@ var app_overrides_default = {
 };
 
 // src/email/render-email.ts
-var RELLO_EMAIL_LOGO_BASE_URL = "https://hellorello.app/email/logos";
-var RELLO_EMAIL_POWERED_BY_URL = "https://hellorello.app";
+var RELLO_EMAIL_LOGO_BASE_URL = `${PLATFORM_BRAND.appUrl}/email/logos`;
+var RELLO_EMAIL_POWERED_BY_URL = PLATFORM_BRAND.appUrl;
 var RELLO_EMAIL_APP_NAMES = {
   arive: "ARIVE",
   rello: PLATFORM_BRAND.name,
@@ -870,7 +870,7 @@ function renderRelloEmail(input) {
     footerLine2,
     footerReason,
     pref ? `${pref.label}: ${pref.url}` : "",
-    poweredByUrl ? `Powered by ${PLATFORM_BRAND.name} (hellorello.app)` : ""
+    poweredByUrl ? `Powered by ${PLATFORM_BRAND.name} (${PLATFORM_BRAND.domain})` : ""
   ].filter(Boolean);
   if (footerText.length > 0) push("", "\u2014", ...footerText);
   const text = t.join("\n").replace(/\n{3,}/g, "\n\n").trim();

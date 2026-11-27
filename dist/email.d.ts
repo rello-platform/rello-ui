@@ -133,7 +133,7 @@ interface RelloEmailFooter {
     preferenceLink?: RelloEmailLink | null;
     /**
      * Consumer mail only: the small "Powered by Rello" line (linked to
-     * hellorello.app) that closes the footer. Default on; `false` leaves it
+     * PLATFORM_BRAND.appUrl) that closes the footer. Default on; `false` leaves it
      * out, any other value keeps it. Pro and admin mail never carry it.
      */
     poweredBy?: boolean;
@@ -236,9 +236,9 @@ interface RenderedRelloEmail {
     html: string;
     text: string;
 }
-declare const RELLO_EMAIL_LOGO_BASE_URL = "https://hellorello.app/email/logos";
+declare const RELLO_EMAIL_LOGO_BASE_URL: string;
 /** Where consumer mail's "Powered by Rello" footer line links (v2.40.0). */
-declare const RELLO_EMAIL_POWERED_BY_URL = "https://hellorello.app";
+declare const RELLO_EMAIL_POWERED_BY_URL: string;
 /**
  * Display name for every platform slug. Typed as a full Record so a slug added
  * to @rello-platform/slugs fails this package's typecheck until it is named.
