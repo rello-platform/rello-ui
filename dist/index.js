@@ -248,6 +248,95 @@ function buildLocationTagSlug(address) {
   }
   return `location:${slugify(address.formattedAddress)}`;
 }
+
+// src/lib/formatted-input.ts
+function digitsOnly(raw) {
+  return raw.replace(/\D/g, "");
+}
+function usNationalDigits(raw) {
+  let d = digitsOnly(raw);
+  if (d.length === 11 && d.startsWith("1")) d = d.slice(1);
+  return d.slice(0, 10);
+}
+function formatUsPhone(raw) {
+  const d = usNationalDigits(raw);
+  if (d.length === 0) return "";
+  if (d.length <= 3) return `(${d}`;
+  if (d.length <= 6) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
+  return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+}
+function usPhoneToE164(raw) {
+  const d = usNationalDigits(raw);
+  return d.length === 10 ? `+1${d}` : null;
+}
+function formatDateDigits(raw) {
+  const d = digitsOnly(raw).slice(0, 8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`;
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`;
+}
+function parseUsDate(raw) {
+  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(raw.trim());
+  if (!m) return null;
+  const month = Number(m[1]);
+  const day = Number(m[2]);
+  const year = Number(m[3]);
+  if (month < 1 || month > 12 || day < 1 || year < 1) return null;
+  const leap = year % 4 === 0 && year % 100 !== 0 || year % 400 === 0;
+  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+  if (day > days) return null;
+  return `${m[3]}-${m[1]}-${m[2]}`;
+}
+function isoDateToUs(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso ?? "");
+  return m ? `${m[2]}/${m[3]}/${m[1]}` : "";
+}
+function normalizeEmail(raw) {
+  return raw.trim().toLowerCase();
+}
+function normalizeUrl(raw) {
+  const t = raw.trim();
+  if (t === "") return "";
+  return /^[a-z][a-z0-9+.-]*:\/\//i.test(t) ? t : `https://${t}`;
+}
+function sanitizeDecimal(raw, maxDecimals) {
+  const kept = raw.replace(/[^\d.]/g, "");
+  const point = kept.indexOf(".");
+  if (point === -1 || maxDecimals <= 0) return kept.replace(/\./g, "");
+  const whole = kept.slice(0, point);
+  const frac = kept.slice(point + 1).replace(/\./g, "").slice(0, maxDecimals);
+  return `${whole}.${frac}`;
+}
+function formatCurrencyDisplay(sanitized) {
+  if (sanitized === "") return "";
+  const point = sanitized.indexOf(".");
+  const whole = point === -1 ? sanitized : sanitized.slice(0, point);
+  const rest = point === -1 ? "" : sanitized.slice(point);
+  const trimmed = whole.replace(/^0+(?=\d)/, "");
+  const grouped = (trimmed === "" ? "0" : trimmed).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return `$${grouped}${rest}`;
+}
+function parseDecimal(sanitized) {
+  if (!/\d/.test(sanitized)) return null;
+  const n = Number(sanitized.endsWith(".") ? sanitized.slice(0, -1) : sanitized);
+  return Number.isFinite(n) ? n : null;
+}
+function caretAfterFormat(rawBefore, caret, formatted, isSignificant = (c) => /\d/.test(c)) {
+  let sig = 0;
+  for (let i = 0; i < Math.min(caret, rawBefore.length); i += 1) if (isSignificant(rawBefore[i])) sig += 1;
+  if (sig === 0) {
+    const first = [...formatted].findIndex(isSignificant);
+    return first === -1 ? formatted.length : first;
+  }
+  let seen = 0;
+  for (let i = 0; i < formatted.length; i += 1) {
+    if (isSignificant(formatted[i])) {
+      seen += 1;
+      if (seen === sig) return i + 1;
+    }
+  }
+  return formatted.length;
+}
 export {
   DEFAULT_TEAM_COPY,
   STAGES,
@@ -261,13 +350,25 @@ export {
   badgeVariants,
   buildLocationTagSlug,
   buttonVariants,
+  caretAfterFormat,
   cn,
+  digitsOnly,
   formatCopy,
+  formatCurrencyDisplay,
+  formatDateDigits,
   formatTrialTimeRemaining,
+  formatUsPhone,
   getTeamCopy,
   getTrialTimeRemaining,
   hexAlphaToPercent,
+  isoDateToUs,
+  normalizeEmail,
+  normalizeUrl,
+  parseDecimal,
   parseTrialEndsAt,
-  renderUpsellCopy
+  parseUsDate,
+  renderUpsellCopy,
+  sanitizeDecimal,
+  usPhoneToE164
 };
 //# sourceMappingURL=index.js.map

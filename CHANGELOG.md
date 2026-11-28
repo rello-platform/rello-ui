@@ -5,6 +5,28 @@ All notable changes to `@rello-platform/ui` are documented here.
 This project adheres to [SemVer](https://semver.org/) and the change-class
 guidance in `CLAUDE.md` § Publishing convention.
 
+## v2.47.0 — 2026-11-28
+
+**Added: locked nav items and tabs; six as-you-type inputs** (HOME INSIGHT HI-05)
+
+- `UnderlineTab` and `DashboardNavItem` take `locked?`, `lockedLabel?` (default "Locked"; the spoke
+  passes its own copy, e.g. "Part of full <brand>") and `onLockedClick?`. A locked item is always a
+  focusable `<button>` (never a link, even with `href`), shows `LockedBadge`, keeps the 44 px target,
+  names its state to assistive tech, is never active or `aria-current`, and a click or Enter fires
+  `onLockedClick` instead of `onChange` / `onNavClick`. Arrow keys in the tab bar skip it. The
+  collapsed sidebar rail shows a small lock on the icon.
+- New client components `PhoneInput`, `DateInput`, `EmailInput`, `UrlInput`, `CurrencyInput`,
+  `PercentInput`: each wraps `Input`, takes `label` or `aria-label`, is 44 px tall, sets `inputMode`,
+  formats as you type and emits through `onValueChange` (E.164 phone, ISO date, lowercased email,
+  URL with `https://` added on blur, dollars, percent; `null` when empty or invalid, never NaN).
+- Root entry: the pure rules behind them (`digitsOnly`, `formatUsPhone`, `usPhoneToE164`,
+  `formatDateDigits`, `parseUsDate`, `isoDateToUs`, `normalizeEmail`, `normalizeUrl`,
+  `sanitizeDecimal`, `formatCurrencyDisplay`, `parseDecimal`, `caretAfterFormat`), server-safe.
+- `Input`: every `var()` now has a fallback, and an `error` / `hint` line is tied to the field with
+  `aria-describedby` (an error is `role="alert"`). No visual change.
+- Not in this release: the bottom tab bar. It is the consumer's own component, not part of this
+  package.
+
 ## v2.46.0 — 2026-11-27
 
 **Changed: the email shell's own addresses are on hellorallyroo.com** (RALLYROO Level 2, U3)

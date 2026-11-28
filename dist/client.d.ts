@@ -644,6 +644,19 @@ interface DashboardNavItem {
      * consistently between <Button> and nav items.
      */
     variant?: "primary" | "accent" | "danger";
+    /**
+     * Locked (HI-05): the item still shows and stays focusable, but it is never a
+     * link (even with `href`), never the current page, and a click fires
+     * `onLockedClick` — not `onNavClick` and not `onClick`. It shows `LockedBadge`
+     * with `lockedLabel` when the label is visible, and a small lock on the icon
+     * in the collapsed rail. The accessible name is "<label>, <lockedLabel>".
+     * Default false.
+     */
+    locked?: boolean;
+    /** Badge text and accessible state for a locked item, e.g. "Part of full <brand>" (the spoke's copy). Default "Locked". */
+    lockedLabel?: string;
+    /** Fires when a locked item is clicked or activated from the keyboard. */
+    onLockedClick?: () => void;
 }
 interface DashboardNavGroup {
     label?: string | null;
@@ -1594,6 +1607,16 @@ interface UnderlineTab {
      *  (router.replace) — preserves the browser-history-skip pattern for tab
      *  surfaces that don't want each tab visit to push a history entry. */
     replace?: boolean;
+    /** Locked (HI-05): the tab still shows and stays reachable by Tab and Enter,
+     *  but it is never a link and never becomes the active tab. It renders
+     *  `LockedBadge` with `lockedLabel`, and a click (or Enter / Space) fires
+     *  `onLockedClick` instead of `onChange`. Arrow keys skip it. Default false. */
+    locked?: boolean;
+    /** Text of the badge on a locked tab, also read by assistive tech, e.g.
+     *  "Part of full <brand>" (the spoke passes its own copy). Default "Locked". */
+    lockedLabel?: string;
+    /** Fires when a locked tab is clicked or activated from the keyboard. */
+    onLockedClick?: () => void;
 }
 interface UnderlineTabBarProps {
     tabs: UnderlineTab[];
@@ -1855,4 +1878,101 @@ declare const PopoverContent: React.ForwardRefExoticComponent<Omit<PopoverPrimit
     closeLabel?: string;
 } & React.RefAttributes<HTMLDivElement>>;
 
-export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, ActionsIcon, AddressAutocomplete, type AddressAutocompleteProps, type AgentRole, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppGridIcon, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BrainIcon, BrandColorPicker, type BrandColorPickerProps, type BrandColors, BroadcastIcon, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, CardTooltip, CardTooltipIcon, type CardTooltipIconProps, type CardTooltipProps, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, ClosingIcon, type Column, CompassIcon, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, DialButton, type DialButtonProps, type DialPath, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DocsIcon, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DropdownMenu, DropdownMenuContent, type DropdownMenuContentProps, DropdownMenuGroup, DropdownMenuItem, type DropdownMenuItemProps, DropdownMenuLabel, type DropdownMenuLabelProps, DropdownMenuPortal, DropdownMenuSeparator, type DropdownMenuSeparatorProps, DropdownMenuTrigger, type DropdownMenuTriggerProps, DrumbeatIcon, DtiIcon, EmptyState, type EmptyStateAction, type EmptyStateLinkProps, type EmptyStateProps, ErrorBanner, type ErrorBannerProps, type FactorVariant, type FeatureIllustrationKey, FinishLineIcon, FlowIcon, FollowupIcon, FunnelIcon, HRAssessmentsIcon, HSProgressIcon, HarvestHomeIcon, HarvestIcon, HearthIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeScoutIcon, HomeStretchIcon, type IllustrationKey, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LeadPoolIcon, LoadingOverlay, LoanVolumeIcon, LockedBadge, type LockedBadgeProps, type LockedBadgeSize, LockedFeatureBanner, type LockedFeatureBannerProps, type LockedFeatureBannerVariant, LockedFeatureDialog, type LockedFeatureDialogProps, type LockedLearnMore, type LockedOnEvent, type LockedPrimaryAction, MailboxIcon, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, type MultiFeedbackOption, type MultiFeedbackVariant, MultiFeedbackWidget, type MultiFeedbackWidgetProps, MyPipelineIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OpenHouseIcon, OrbitalRings, OvenIcon, PATTERNS, PREVIEW_BLOCKED_HINT_MS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, PathfinderIcon, type PipelineData, PipelineThermometer, type PipelineThermometerProps, type PlatformIllustrationKey, Popover, PopoverAnchor, PopoverClose, PopoverContent, type PopoverContentProps, PopoverTrigger, type PopoverTriggerProps, PreApprovalIcon, PreQualIcon, PreviewFrame, type PreviewFrameMode, type PreviewFrameProps, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, RateAlertIcon, RelloUpsellNudge, type RelloUpsellNudgeProps, RoutingIcon, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SessionRetryBanner, type SessionRetryBannerProps, SetupProgressCard, type SetupProgressCardProps, type SetupProgressStep, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, type SocialLinks, SocialLinksInput, type SocialLinksInputProps, SpendPanel, type SpendPanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, TeamActivityIcon, type TeamCopy, type TeamCopyOverride, TeamDawnIcon, type TeamMember, TeamMemberCard, type TeamMemberCardProps, TeamPipelineIcon, type TeamRole, TeamRoster, type TeamRosterProps, type TeamRosterVariant, TendingIcon, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, TrialCountdownBanner, type TrialCountdownBannerProps, type TrialStartAlreadyUsed, type TrialStartEndsAt, type TrialStartError, TrialStartModal, type TrialStartModalProps, type TrialStartResult, type TrialStartStarted, type TrialStartUnknown, TrophyIcon, type UnderlineTab, UnderlineTabBar, type UnderlineTabBarProps, UpgradeMenuItem, type UpgradeMenuItemProps, VoiceCorpusInput, type VoiceCorpusInputProps, type VoiceCorpusSample, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, WelcomeMatIcon, type WizardAutosaveStatus, WizardShell, type WizardShellProps, type WizardStep, countWords, useToast };
+interface PhoneInputProps extends Omit<InputProps, "value" | "defaultValue" | "type"> {
+    /** E.164 (`+18015550123`) or any US digits; `null` = empty. Omit for an uncontrolled field. */
+    value?: string | null;
+    defaultValue?: string | null;
+    /** Fires on every change: E.164 for a complete US number, `null` otherwise. */
+    onValueChange?: (e164: string | null) => void;
+}
+/**
+ * US phone number, formatted as you type: `(801) 555-0123`. Letters and symbols
+ * are dropped (typed or pasted); a leading country code 1 is accepted. Emits
+ * E.164. Label via `label` or `aria-label`; 44 px tall; numeric phone keypad.
+ */
+declare const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps & React.RefAttributes<HTMLInputElement>>;
+
+interface DateInputProps extends Omit<InputProps, "value" | "defaultValue" | "type"> {
+    /** ISO date (`2026-12-31`); `null` = empty. Omit for an uncontrolled field. */
+    value?: string | null;
+    defaultValue?: string | null;
+    /** Fires on every change: the ISO date for a real calendar date, `null` otherwise. */
+    onValueChange?: (isoDate: string | null) => void;
+    /** Shown when the date is complete but impossible, or left incomplete. Default "Enter a real date as MM/DD/YYYY". */
+    invalidMessage?: string;
+}
+/**
+ * Date typed as `MM/DD/YYYY` (slashes added as you type; letters dropped). Emits
+ * an ISO date, or `null` for an impossible or partial date, which also shows
+ * `invalidMessage` (at once when all 8 digits are in, otherwise on blur). A
+ * consumer `error` always wins. Label via `label` or `aria-label`; 44 px tall.
+ */
+declare const DateInput: React.ForwardRefExoticComponent<DateInputProps & React.RefAttributes<HTMLInputElement>>;
+
+interface EmailInputProps extends Omit<InputProps, "value" | "defaultValue" | "type"> {
+    value?: string | null;
+    defaultValue?: string | null;
+    /** Fires on every change: the trimmed, lowercased address, `null` when empty. */
+    onValueChange?: (email: string | null) => void;
+}
+/**
+ * Email address, lowercased as you type; spaces are dropped (an address has
+ * none). Emits the normalized address or `null`. It does not judge whether the
+ * address exists; the spoke does. Label via `label` or `aria-label`; 44 px tall.
+ */
+declare const EmailInput: React.ForwardRefExoticComponent<EmailInputProps & React.RefAttributes<HTMLInputElement>>;
+
+interface UrlInputProps extends Omit<InputProps, "value" | "defaultValue" | "type"> {
+    value?: string | null;
+    defaultValue?: string | null;
+    /** Fires on every change: the URL with a scheme (`https://` added when none), `null` when empty. */
+    onValueChange?: (url: string | null) => void;
+}
+/**
+ * Web address. Spaces are dropped as you type; on blur `https://` is added when
+ * no scheme was typed (an `http://` the person typed is kept). Emits the URL or
+ * `null`. Label via `label` or `aria-label`; 44 px tall.
+ */
+declare const UrlInput: React.ForwardRefExoticComponent<UrlInputProps & React.RefAttributes<HTMLInputElement>>;
+
+interface CurrencyInputProps extends Omit<InputProps, "value" | "defaultValue" | "type"> {
+    /** Dollars; `null` = empty. Omit for an uncontrolled field. */
+    value?: number | null;
+    defaultValue?: number | null;
+    /** Fires on every change: dollars (never negative, never NaN), `null` when empty. */
+    onValueChange?: (dollars: number | null) => void;
+    /** Allow cents (two decimals). Default true; false = whole dollars. */
+    cents?: boolean;
+}
+/**
+ * US dollar amount, grouped as you type: `$1,234.56`. Digits and one point only
+ * (a minus sign is dropped: amounts here are never negative); at most two
+ * decimals, or none with `cents={false}`. Emits a number or `null`. Label via
+ * `label` or `aria-label`; 44 px tall; decimal keypad.
+ */
+declare const CurrencyInput: React.ForwardRefExoticComponent<CurrencyInputProps & React.RefAttributes<HTMLInputElement>>;
+
+interface PercentInputProps extends Omit<InputProps, "value" | "defaultValue" | "type" | "min" | "max" | "rightIcon"> {
+    /** Percent as a number (`7.25` for 7.25%); `null` = empty. Omit for an uncontrolled field. */
+    value?: number | null;
+    defaultValue?: number | null;
+    /** Fires on every change: the number when it is within [min, max], `null` otherwise. */
+    onValueChange?: (percent: number | null) => void;
+    /** Default 0. */
+    min?: number;
+    /** Default 100. */
+    max?: number;
+    /** Decimal places allowed. Default 3 (e.g. 6.875). */
+    decimals?: number;
+    /** Shown when the number is outside [min, max]. Default "Enter a number from {min} to {max}". */
+    rangeMessage?: string;
+}
+/**
+ * Percentage typed as a plain number with a `%` sign beside it. Digits and one
+ * point only; emits the number, or `null` when empty or outside [min, max]
+ * (which also shows `rangeMessage`; a consumer `error` wins). Label via `label`
+ * or `aria-label`; 44 px tall; decimal keypad.
+ */
+declare const PercentInput: React.ForwardRefExoticComponent<PercentInputProps & React.RefAttributes<HTMLInputElement>>;
+
+export { APP_ICONS, APP_ILLUSTRATIONS, AccountabilityTrackerIcon, ActionsIcon, AddressAutocomplete, type AddressAutocompleteProps, type AgentRole, AppCard, AppCardIllustration, type AppCardIllustrationProps, type AppCardProps, AppGridIcon, AppHeader, AppHeaderAction, type AppHeaderActionProps, AppHeaderDivider, type AppHeaderProps, type AppIllustrationDef, AppShell, type AppShellProps, AtlasIcon, AudioPlayerCard, type AudioPlayerCardProps, Avatar, AvatarFallback, AvatarImage, Badge, type BadgeProps, type BadgeVariant, BehavioralTag, type BehavioralTagProps, BrainIcon, BrandColorPicker, type BrandColorPickerProps, type BrandColors, BroadcastIcon, BudgetIcon, Button, type ButtonProps, ButtonSpinner, Card, CardContent, CardDescription, CardFooter, CardHeader, CardIllustration, type CardIllustrationProps, CardLoader, type CardProps, CardTitle, CardTooltip, CardTooltipIcon, type CardTooltipIconProps, type CardTooltipProps, type CategoryApp, CategorySection, type CategorySectionProps, CelebrationIcon, Checkbox, ClosingIcon, type Column, CompassIcon, ConcentricCircles, ConversionScore, type ConversionScoreProps, CreditScoreIcon, CrossHatch, CurrencyInput, type CurrencyInputProps, DASHBOARD_ICONS, DASHBOARD_ILLUSTRATIONS, DailyExerciseIcon, DashboardCardIllustration, type DashboardCardIllustrationProps, type DashboardIllustrationDef, type DashboardNavGroup, type DashboardNavItem, DashboardShell, type DashboardShellProps, DateInput, type DateInputProps, DawnIcon, DecisionExplanationCard, type DecisionExplanationCardProps, type DecisionFactor, DialButton, type DialButtonProps, type DialPath, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DiamondGrid, DocsIcon, DotGrid, DownPaymentIcon, DragHint, type DragHintProps, DreamHomeIcon, DropdownMenu, DropdownMenuContent, type DropdownMenuContentProps, DropdownMenuGroup, DropdownMenuItem, type DropdownMenuItemProps, DropdownMenuLabel, type DropdownMenuLabelProps, DropdownMenuPortal, DropdownMenuSeparator, type DropdownMenuSeparatorProps, DropdownMenuTrigger, type DropdownMenuTriggerProps, DrumbeatIcon, DtiIcon, EmailInput, type EmailInputProps, EmptyState, type EmptyStateAction, type EmptyStateLinkProps, type EmptyStateProps, ErrorBanner, type ErrorBannerProps, type FactorVariant, type FeatureIllustrationKey, FinishLineIcon, FlowIcon, FollowupIcon, FunnelIcon, HRAssessmentsIcon, HSProgressIcon, HarvestHomeIcon, HarvestIcon, HearthIcon, HeroActionCard, type HeroActionCardProps, type HeroActionTask, HomeReadyIcon, HomeScoutIcon, HomeStretchIcon, type IllustrationKey, InlineLoading, Input, type InputProps, InsightCard, type InsightCardProps, Label, LeadCaptureFormsIcon, LeadPoolIcon, LoadingOverlay, LoanVolumeIcon, LockedBadge, type LockedBadgeProps, type LockedBadgeSize, LockedFeatureBanner, type LockedFeatureBannerProps, type LockedFeatureBannerVariant, LockedFeatureDialog, type LockedFeatureDialogProps, type LockedLearnMore, type LockedOnEvent, type LockedPrimaryAction, MailboxIcon, MarketIntelIcon, MiniKanban, type MiniKanbanColumn, type MiniKanbanItem, type MiniKanbanProps, MortgageTermsIcon, type MultiFeedbackOption, type MultiFeedbackVariant, MultiFeedbackWidget, type MultiFeedbackWidgetProps, MyPipelineIcon, NeighborhoodIcon, type NewsItem, NewsRow, type NewsRowProps, type NewsTagType, NewsletterStudioIcon, OpenHouseHubIcon, OpenHouseIcon, OrbitalRings, OvenIcon, PATTERNS, PREVIEW_BLOCKED_HINT_MS, PageContainer, type PageContainerProps, PageLoader, Pagination, type PaginationProps, PathfinderIcon, PercentInput, type PercentInputProps, PhoneInput, type PhoneInputProps, type PipelineData, PipelineThermometer, type PipelineThermometerProps, type PlatformIllustrationKey, Popover, PopoverAnchor, PopoverClose, PopoverContent, type PopoverContentProps, PopoverTrigger, type PopoverTriggerProps, PreApprovalIcon, PreQualIcon, PreviewFrame, type PreviewFrameMode, type PreviewFrameProps, Progress, type ProgressProps, type ProgressSegment, PulseIcon, type QuickStat, RadialBurst, RateAlertIcon, RelloUpsellNudge, type RelloUpsellNudgeProps, RoutingIcon, SavingsIcon, type ScheduleItem, SegmentedProgress, type SegmentedProgressProps, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelfPacedIcon, SessionRetryBanner, type SessionRetryBannerProps, SetupProgressCard, type SetupProgressCardProps, type SetupProgressStep, SignalIcon, Skeleton, SkeletonCircle, type SkeletonCircleProps, type SkeletonProps, SkeletonStyles, SkeletonText, type SkeletonTextProps, SlidePanel, SlidePanelBody, SlidePanelClose, SlidePanelFooter, SlidePanelHeader, type SlidePanelProps, type SocialLinks, SocialLinksInput, type SocialLinksInputProps, SpendPanel, type SpendPanelProps, Spinner, type SpinnerProps, StatCard, type StatCardProps, StreakIcon, type StructuredAddress, type SurveyInputType, type SurveyQuestion, SurveyStepCard, type SurveyStepCardProps, Switch, TRACK_ICONS, TRACK_ILLUSTRATIONS, Table, type TableProps, type TagItem, TagSelector, type TagSelectorProps, type TaskActionType, type TaskTemperature, TeamActivityIcon, type TeamCopy, type TeamCopyOverride, TeamDawnIcon, type TeamMember, TeamMemberCard, type TeamMemberCardProps, TeamPipelineIcon, type TeamRole, TeamRoster, type TeamRosterProps, type TeamRosterVariant, TendingIcon, Textarea, type TextareaProps, TimelineIcon, Toast, type ToastData, type ToastPosition, type ToastProps, ToastProvider, type ToastVariant, type ToasterProps, TodaySchedule, type TodayScheduleProps, TrackCardIllustration, type TrackCardIllustrationProps, type TrackIconProps, type TrackIllustrationDef, TrialCountdownBanner, type TrialCountdownBannerProps, type TrialStartAlreadyUsed, type TrialStartEndsAt, type TrialStartError, TrialStartModal, type TrialStartModalProps, type TrialStartResult, type TrialStartStarted, type TrialStartUnknown, TrophyIcon, type UnderlineTab, UnderlineTabBar, type UnderlineTabBarProps, UpgradeMenuItem, type UpgradeMenuItemProps, UrlInput, type UrlInputProps, VoiceCorpusInput, type VoiceCorpusInputProps, type VoiceCorpusSample, WasThisHelpful, type WasThisHelpfulProps, WeeklyChallengeIcon, WelcomeMatIcon, type WizardAutosaveStatus, WizardShell, type WizardShellProps, type WizardStep, countWords, useToast };
