@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
 import {
   Home,
   Archery,
@@ -142,5 +143,29 @@ export const WithFooterCustomCollapseAware: Story = {
           Return to {PLATFORM_BRAND.name}
         </button>
       ),
+  },
+};
+
+export const LockedNavItem: Story = {
+  name: "Locked nav item (HI-05: lock on the rail icon; badge when expanded and on mobile)",
+  args: {
+    ...Default.args,
+    navGroups: [
+      {
+        items: [
+          { icon: <Home {...ICON} />, label: "Dashboard", href: "/dashboard" },
+          { icon: <Group {...ICON} />, label: "Contacts", href: "/leads" },
+          {
+            icon: <GraphUp {...ICON} />,
+            label: "Reports",
+            href: "/reports",
+            locked: true,
+            lockedLabel: `Part of full ${PLATFORM_BRAND.name}`,
+            onLockedClick: () => action("onLockedClick")("Reports"),
+          },
+        ],
+      },
+    ],
+    activeNavLabel: "Dashboard",
   },
 };

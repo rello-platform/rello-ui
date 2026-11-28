@@ -27,6 +27,7 @@ import * as React from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import { NavArrowLeft, NavArrowRight } from "iconoir-react";
+import { LockedBadge } from "../locked-badge";
 
 export interface UnderlineTab {
   /** Lowercase-hyphenated slug; typically written to ?tab= URL state by the
@@ -49,6 +50,16 @@ export interface UnderlineTab {
    *  (router.replace) — preserves the browser-history-skip pattern for tab
    *  surfaces that don't want each tab visit to push a history entry. */
   replace?: boolean;
+  /** Locked (HI-05): the tab still shows and stays reachable by Tab and Enter,
+   *  but it is never a link and never becomes the active tab. It renders
+   *  `LockedBadge` with `lockedLabel`, and a click (or Enter / Space) fires
+   *  `onLockedClick` instead of `onChange`. Arrow keys skip it. Default false. */
+  locked?: boolean;
+  /** Text of the badge on a locked tab, also read by assistive tech, e.g.
+   *  "Part of full <brand>" (the spoke passes its own copy). Default "Locked". */
+  lockedLabel?: string;
+  /** Fires when a locked tab is clicked or activated from the keyboard. */
+  onLockedClick?: () => void;
 }
 
 export interface UnderlineTabBarProps {
@@ -158,12 +169,12 @@ export function UnderlineTabBar({
     let target = visibleTabs[nextIndex];
     // Skip disabled tabs in rotation (single pass; if all disabled, no-op).
     let safety = visibleTabs.length;
-    while (target && target.disabled && safety > 0) {
+    while (target && (target.disabled || target.locked) && safety > 0) {
       nextIndex = (nextIndex + 1) % visibleTabs.length;
       target = visibleTabs[nextIndex];
       safety -= 1;
     }
-    if (target && !target.disabled) onChange?.(target.id);
+    if (target && !target.disabled && !target.locked) onChange?.(target.id);
   }
 
   return (
@@ -219,7 +230,8 @@ export function UnderlineTabBar({
         className="flex gap-2 sm:gap-4 md:gap-6 -mb-px overflow-x-auto no-scrollbar px-1 -mx-1"
       >
         {visibleTabs.map((tab) => {
-          const isActive = tab.id === activeTab;
+          const isLocked = tab.locked === true;
+          const isActive = !isLocked && tab.id === activeTab;
           const tabClassName = clsx(
             "inline-flex items-center gap-2",
             "pb-3 pt-3 px-1",
@@ -247,6 +259,7 @@ export function UnderlineTabBar({
                 </span>
               )}
               <span>{tab.label}</span>
+              {isLocked && <LockedBadge label={tab.lockedLabel ?? "Locked"} size="sm" />}
               {typeof tab.count === "number" && tab.count > 0 && (
                 <span
                   className={clsx(
@@ -267,6 +280,29 @@ export function UnderlineTabBar({
           // Link branch: right-click / middle-click / cmd-click → native new-tab open.
           // `onChange` still fires via the Link's onClick so analytics side-effects
           // survive (URL-write side-effect is dropped; <Link> handles navigation natively).
+          // Locked: a button that is always a tab stop (roving tabindex would
+          // otherwise leave it unreachable, since arrow keys skip it) and never
+          // a link, so no navigation can start from it.
+          if (isLocked) {
+            return (
+              <button
+                key={tab.id}
+                role="tab"
+                type="button"
+                id={`tab-${tab.id}`}
+                aria-selected={false}
+                data-locked="true"
+                tabIndex={0}
+                disabled={tab.disabled}
+                onClick={() => !tab.disabled && tab.onLockedClick?.()}
+                onKeyDown={handleKeyDown}
+                className={tabClassName}
+              >
+                {inner}
+              </button>
+            );
+          }
+
           if (tab.href && !tab.disabled) {
             return (
               <Link

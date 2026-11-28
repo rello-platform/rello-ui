@@ -108,3 +108,20 @@ export type {
   FeatureIllustrationKey,
   IllustrationKey,
 } from "./components/card-illustration/app-illustrations";
+
+/* ─── As-you-type input rules (pure functions; HI-05) ─── */
+
+export {
+  digitsOnly,
+  formatUsPhone,
+  usPhoneToE164,
+  formatDateDigits,
+  parseUsDate,
+  isoDateToUs,
+  normalizeEmail,
+  normalizeUrl,
+  sanitizeDecimal,
+  formatCurrencyDisplay,
+  parseDecimal,
+  caretAfterFormat,
+} from "./lib/formatted-input";

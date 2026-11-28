@@ -338,4 +338,53 @@ type PlatformIllustrationKey = AppSlug;
 type FeatureIllustrationKey = "accountability-tracker" | "lead-capture-forms";
 type IllustrationKey = PlatformIllustrationKey | FeatureIllustrationKey;
 
-export { type AgentRole, type BadgeVariant, type BadgeVariantProps, type ButtonVariantProps, DEFAULT_TEAM_COPY, type FeatureIllustrationKey, type IllustrationKey, type PipelineData, type PlatformIllustrationKey, STAGES, STAGE_COLORS, STAGE_LABELS, type StructuredAddress, TRIAL_URGENT_WINDOW_MS, type TeamCopy, type TeamCopyOverride, type TeamMember, type TeamRole, type TeamRosterVariant, type TrialEndsAtInput, type TrialStartAlreadyUsed, type TrialStartEndsAt, type TrialStartError, type TrialStartResult, type TrialStartStarted, type TrialStartUnknown, type TrialTimeRemaining, type TrialTimeUnit, UPSELL_ENGAGED_DWELL_MS, UPSELL_EVENTS, type UpsellCopyValues, type UpsellEvent, agentRoleToTeamRole, alphaTint, badgeVariants, buildLocationTagSlug, buttonVariants, cn, formatCopy, formatTrialTimeRemaining, getTeamCopy, getTrialTimeRemaining, hexAlphaToPercent, parseTrialEndsAt, renderUpsellCopy };
+/**
+ * Pure formatting and parsing rules behind the as-you-type inputs
+ * (PhoneInput, DateInput, EmailInput, UrlInput, CurrencyInput, PercentInput —
+ * HI-05, Home Insight spec §9).
+ *
+ * Root entry (server-safe): no React, no DOM. A spoke's API route can re-check
+ * what a browser sent with the same rules the field used, so the two never
+ * drift. Every parser answers a value or `null`; none answers NaN, and none
+ * invents a default.
+ */
+/** Every non-digit removed. */
+declare function digitsOnly(raw: string): string;
+/** `(801) 555-0123`, built progressively so it can be shown while typing. */
+declare function formatUsPhone(raw: string): string;
+/** `+18015550123` for a complete US number; `null` for anything incomplete. */
+declare function usPhoneToE164(raw: string): string | null;
+/** `MM/DD/YYYY`, built progressively from up to 8 digits. */
+declare function formatDateDigits(raw: string): string;
+/**
+ * `MM/DD/YYYY` → `YYYY-MM-DD` when it is a real calendar date (leap years
+ * included); `null` when partial or impossible (13/40/2026).
+ */
+declare function parseUsDate(raw: string): string | null;
+/** `YYYY-MM-DD` → `MM/DD/YYYY`; anything else → "" (shown as an empty field). */
+declare function isoDateToUs(iso: string | null | undefined): string;
+/** Lowercased and trimmed. */
+declare function normalizeEmail(raw: string): string;
+/**
+ * Trimmed; `https://` added when the text has no scheme. An empty field stays
+ * empty (never `https://` on its own).
+ */
+declare function normalizeUrl(raw: string): string;
+/**
+ * Digits and at most one decimal point, with at most `maxDecimals` digits after
+ * it. A minus sign is dropped (these fields hold non-negative amounts). With
+ * `maxDecimals` 0 the point itself is dropped.
+ */
+declare function sanitizeDecimal(raw: string, maxDecimals: number): string;
+/** `$1,234.5` from a sanitized decimal string; a typed trailing point is kept. */
+declare function formatCurrencyDisplay(sanitized: string): string;
+/** A finite number from a sanitized decimal string, or `null` (never NaN). */
+declare function parseDecimal(sanitized: string): number | null;
+/**
+ * Where the caret belongs after re-formatting: just after the same count of
+ * significant characters (by default digits) that preceded it before. Keeps the
+ * caret in place when a separator is inserted or a character is dropped.
+ */
+declare function caretAfterFormat(rawBefore: string, caret: number, formatted: string, isSignificant?: (c: string) => boolean): number;
+
+export { type AgentRole, type BadgeVariant, type BadgeVariantProps, type ButtonVariantProps, DEFAULT_TEAM_COPY, type FeatureIllustrationKey, type IllustrationKey, type PipelineData, type PlatformIllustrationKey, STAGES, STAGE_COLORS, STAGE_LABELS, type StructuredAddress, TRIAL_URGENT_WINDOW_MS, type TeamCopy, type TeamCopyOverride, type TeamMember, type TeamRole, type TeamRosterVariant, type TrialEndsAtInput, type TrialStartAlreadyUsed, type TrialStartEndsAt, type TrialStartError, type TrialStartResult, type TrialStartStarted, type TrialStartUnknown, type TrialTimeRemaining, type TrialTimeUnit, UPSELL_ENGAGED_DWELL_MS, UPSELL_EVENTS, type UpsellCopyValues, type UpsellEvent, agentRoleToTeamRole, alphaTint, badgeVariants, buildLocationTagSlug, buttonVariants, caretAfterFormat, cn, digitsOnly, formatCopy, formatCurrencyDisplay, formatDateDigits, formatTrialTimeRemaining, formatUsPhone, getTeamCopy, getTrialTimeRemaining, hexAlphaToPercent, isoDateToUs, normalizeEmail, normalizeUrl, parseDecimal, parseTrialEndsAt, parseUsDate, renderUpsellCopy, sanitizeDecimal, usPhoneToE164 };

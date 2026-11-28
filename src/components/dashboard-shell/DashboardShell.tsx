@@ -3,9 +3,10 @@
 import * as React from "react";
 import { useState } from "react";
 import Link from "next/link";
-import { Menu } from "iconoir-react";
+import { Lock, Menu } from "iconoir-react";
 import { SlidePanel, SlidePanelHeader, SlidePanelBody } from "../slide-panel";
 import { Avatar, AvatarImage, AvatarFallback } from "../avatar";
+import { LockedBadge } from "../locked-badge";
 import { cn } from "../../lib/cn";
 
 /* ─── Types ─── */
@@ -50,6 +51,41 @@ export interface DashboardNavItem {
    * consistently between <Button> and nav items.
    */
   variant?: "primary" | "accent" | "danger";
+  /**
+   * Locked (HI-05): the item still shows and stays focusable, but it is never a
+   * link (even with `href`), never the current page, and a click fires
+   * `onLockedClick` — not `onNavClick` and not `onClick`. It shows `LockedBadge`
+   * with `lockedLabel` when the label is visible, and a small lock on the icon
+   * in the collapsed rail. The accessible name is "<label>, <lockedLabel>".
+   * Default false.
+   */
+  locked?: boolean;
+  /** Badge text and accessible state for a locked item, e.g. "Part of full <brand>" (the spoke's copy). Default "Locked". */
+  lockedLabel?: string;
+  /** Fires when a locked item is clicked or activated from the keyboard. */
+  onLockedClick?: () => void;
+}
+
+/** The pieces every nav renderer uses for a locked item (one rule for the rail and the mobile panel). */
+function lockedNavProps(item: DashboardNavItem) {
+  const lockedLabel = item.lockedLabel ?? "Locked";
+  return {
+    lockedLabel,
+    ariaLabel: `${item.ariaLabel ?? item.label}, ${lockedLabel}`,
+  };
+}
+
+function LockOnIcon() {
+  return (
+    <span
+      data-testid="locked-indicator"
+      aria-hidden="true"
+      className="absolute -right-1.5 -bottom-1.5 inline-flex items-center justify-center rounded-full size-3.5"
+      style={{ backgroundColor: "var(--neutral-50, #FAFBFC)", border: "1px solid var(--neutral-100, #D1D5DB)", color: "var(--neutral-700, #434B52)" }}
+    >
+      <Lock width={9} height={9} aria-hidden="true" />
+    </span>
+  );
 }
 
 export interface DashboardNavGroup {
@@ -185,7 +221,7 @@ function Sidebar({
             )}
             {group.items.map((item) => {
               const variant = item.variant;
-              const isActive = variant === undefined && item.label === activeNavLabel;
+              const isActive = variant === undefined && !item.locked && item.label === activeNavLabel;
               const variantBg = variant
                 ? {
                     primary: "var(--brand-primary, #3B5998)",
@@ -210,8 +246,9 @@ function Sidebar({
               };
               const inner = (
                 <>
-                  <div className="size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5">
+                  <div className="relative size-5 flex items-center justify-center shrink-0 [&>svg]:w-5 [&>svg]:h-5">
                     {item.icon}
+                    {item.locked && !hovered && <LockOnIcon />}
                   </div>
                   {hovered && (
                     <span
@@ -224,8 +261,26 @@ function Sidebar({
                       {item.label}
                     </span>
                   )}
+                  {item.locked && hovered && (
+                    <LockedBadge label={lockedNavProps(item).lockedLabel} size="sm" className="ml-auto" />
+                  )}
                 </>
               );
+              if (item.locked) {
+                return (
+                  <button
+                    key={item.label}
+                    type="button"
+                    data-locked="true"
+                    onClick={() => item.onLockedClick?.()}
+                    aria-label={lockedNavProps(item).ariaLabel}
+                    className={sharedClassName}
+                    style={sharedStyle}
+                  >
+                    {inner}
+                  </button>
+                );
+              }
               return item.href ? (
                 <Link
                   key={item.label}
@@ -335,7 +390,7 @@ function MobileNav({
               )}
               {group.items.map((item) => {
                 const variant = item.variant;
-                const isActive = variant === undefined && item.label === activeNavLabel;
+                const isActive = variant === undefined && !item.locked && item.label === activeNavLabel;
                 const variantClass = variant
                   ? {
                       primary: "bg-[var(--brand-primary,#3B5998)] text-white hover:opacity-90",
@@ -360,8 +415,31 @@ function MobileNav({
                       {item.icon}
                     </div>
                     {item.label}
+                    {item.locked && (
+                      <LockedBadge label={lockedNavProps(item).lockedLabel} size="sm" className="ml-auto" />
+                    )}
                   </>
                 );
+                if (item.locked) {
+                  // Close the panel first, like every other item, so the dialog the
+                  // spoke's onLockedClick usually opens is not stacked under it.
+                  return (
+                    <button
+                      key={item.label}
+                      type="button"
+                      data-locked="true"
+                      onClick={() => {
+                        onClose();
+                        item.onLockedClick?.();
+                      }}
+                      aria-label={lockedNavProps(item).ariaLabel}
+                      className={sharedClassName}
+                      style={sharedStyle}
+                    >
+                      {inner}
+                    </button>
+                  );
+                }
                 return item.href ? (
                   <Link
                     key={item.label}

@@ -90,3 +90,11 @@ export * from "./setup-progress-card";
 // "+ Add filter" chip editors. Radix-based, Select-content surface, client entry only.
 export * from "./dropdown-menu";
 export * from "./popover";
+
+// v2.47.0 — HOME INSIGHT HI-05: as-you-type inputs (each wraps Input; pure rules in the root entry).
+export * from "./phone-input";
+export * from "./date-input";
+export * from "./email-input";
+export * from "./url-input";
+export * from "./currency-input";
+export * from "./percent-input";

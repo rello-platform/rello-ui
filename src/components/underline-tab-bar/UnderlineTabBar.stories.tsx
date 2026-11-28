@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 import { useState } from "react";
+import { PLATFORM_BRAND } from "@rello-platform/slugs";
 import { UnderlineTabBar, type UnderlineTab } from "./UnderlineTabBar";
 
 const meta = {
@@ -107,5 +108,25 @@ export const Controlled: Story = {
     tabs: baseTabs,
     activeTab: "overview",
     ariaLabel: "Lead detail sections",
+  },
+};
+
+export const LockedTab: Story = {
+  name: "Locked tab (HI-05: focusable, not a link, fires onLockedClick)",
+  args: {
+    tabs: [
+      { id: "all", label: "All Leads", href: "/leads?tab=all" },
+      {
+        id: "pools",
+        label: "Pools",
+        href: "/leads?tab=pools",
+        locked: true,
+        lockedLabel: `Part of full ${PLATFORM_BRAND.name}`,
+        onLockedClick: () => action("onLockedClick")("pools"),
+      },
+      { id: "closings", label: "Closings", href: "/leads?tab=closings" },
+    ],
+    activeTab: "all",
+    ariaLabel: "Lead pipeline tabs",
   },
 };
